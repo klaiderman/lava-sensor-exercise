@@ -1,0 +1,49 @@
+URL: https://lavahq.io/research/neocloud-security-has-to-catch-up
+STATUS: 200
+DEPTH: 2
+---
+Dear neocloud providers,
+We had already written this letter. Then we saw this.
+"Neoclouds have limited cybersecurity."
+We've been looking at exactly that question from the inside.
+Over the last few months, we've been renting GPU infrastructure just like ordinary neocloud customers would. We wanted to understand security under the hood. Not just the GPU or VM, but also the security across all data center layers: networks, storage, management interfaces, monitoring systems and physical infrastructure used to operate the cloud.
+What we saw wasn't nice.
+And then SemiAnalysis published their "Most Neoclouds Suck At Security". The title is brutal, and the findings are too.
+As part of its ClusterMAX 3.0 work, SemiAnalysis tested 25 providers across 32 clusters. The impact included cross-tenant data exposure, access to infrastructure belonging to other customers, and even cross-tenant code execution. They are 100% correct. We have found many of the same classes of problems.
+If you operate a neocloud, you should be asking yourself some questions..
+We Are Seeing the Same Thing
+At one provider, we found multiple customers sharing the same InfiniBand network, with key security controls left at their defaults. From a rented GPU server, we could map the shared network and see information about other customers that should have been private. We could also reach a system that controls how the network operates and change it's configuration.
+These are the kinds of risks we cover in FORGE-02: Network & Interconnect Vulnerabilities and FORGE-03: Unsafe Multi-Tenant Isolation and Resource Reuse.
+In another environment, a customer-controlled server could reach the provider's private out-of-band management network, including infrastructure used to manage physical systems beneath the customer operating system.
+A customer workload should not have a route into that network.
+We have researched this layer from the public internet too. Our BMC research found internet-exposed IPMI interfaces, including modern hardware operated by GPU providers, with some exposing hashed passwords before login.
+We are currently preparing additional research into monitoring infrastructure across GPU providers, including cases where provider-operated systems exposed more information and functionality than intended. We expect to publish the full research soon.
+There is one pattern that underlies these individual findings. Problems are showing up below the customer workload, across management networks, high-speed networking, storage and operational infrastructure.
+That is why we created FORGE, the Top 10 Data Center and AI Infrastructure Security Risks. We have also written about the same problem from the customer's perspective in Rethinking the Shared Responsibility Model for Neocloud Security. Customers may not operate these layers, but they are still affected when security at those layers fails.
+How You Respond Matters Too
+There is another part of neocloud security that gets much less attention: what happens when somebody reports a problem?
+We've done this. With some providers, the security team responded quickly, investigated and remediated.
+With other neoclouds, we could not find someone that will own the disclosure process. Emails went unanswered, we sent multiple follow-ups and sometimes only the possibility of publication started the disclosure conversation.
+As we write this, we still have active security disclosures where we are waiting for providers to substantively engage with the findings.
+That should not happen. A researcher reporting a possible tenant-boundary failure should not be competing with normal support tickets for attention, and a security@ address is not much of a security process if nobody is actively monitoring it.
+SemiAnalysis described similar experiences, with some providers quickly investigating and fixing issues while others were slow to respond or confrontational about the findings.
+Three Things Every Neocloud Should Do
+There are hundreds of controls involved in securing GPU infrastructure. Based on what we and others are finding, we would start with four.
+1. Treat customer-controlled systems as untrusted
+Customers are supposed to control the infrastructure they rent. A customer should be free to inspect their own system, run diagnostics and use the access they have been given without that exposing another tenant or provider infrastructure.
+Your security model should assume that customers will explore everything reachable from their environment. Isolation needs to be enforced by the infrastructure, not by assumptions about what a customer will or will not try.
+But making that assumption is not enough. You need to test whether the boundaries actually hold from the customer's side.
+2. Test every shared layer from the position of a customer
+Tenant isolation is not only a VPC or firewall problem.
+If customers share an InfiniBand fabric, test the partitions and management controls. If they share storage, verify authorization from a customer node. If they share monitoring or operational systems, verify that tenant separation exists at the backend, not only in the UI. The same applies to the management plane.
+The question is simple: What can Tenant A see, reach or influence about Tenant B using only the access we intentionally gave Tenant A?
+Then actually test it.
+And when one of those boundaries does fail, the way the organization responds matters just as much.
+3. Treat serious security disclosures like incidents
+Publish a security contact and monitor it. Acknowledge serious findings quickly, bring engineering into the conversation, determine whether the issue affects one cluster or the broader fleet, fix it and verify the remediation.
+Do not make researchers spend weeks convincing the organization to investigate a report.
+The goal is not simply to be responsive to security researchers. It is to make sure your organization can react quickly when someone tells you that one of your security boundaries may have failed.
+What Happens Next
+We're going to see more of these stories in the next 12 months, and the solution will be a comprehensive approach to data center security. We'll have some news to tell there.
+Stay tuned.
+Sincerely yours, Lava

@@ -1,0 +1,23 @@
+URL: https://lavahq.io/research/securing-the-metal-beneath-the-model
+STATUS: 200
+DEPTH: 2
+---
+While the security industry remains fixated on application-layer risks like prompt injection and model alignment, another critical risk is expanding out of sight. The physical hardware, high-speed networks, and management systems underneath these models are being built too quickly, leaving dangerous security gaps.
+To understand why AI data centers are uniquely exposed, we must look at how two major industrial shifts are creating security crises on the ground.
+How the Shortage of AI Hardware Forces Risky Compromises
+Massive demand for specialized hardware, including GPUs, CPUs, and high-performance servers, has outpaced supply. This imbalance gives AI infrastructure providers outsized leverage, often forcing buyers to accept risky compromises.
+The Urgency to Deploy Fast Bypasses Standard Cloud Vetting
+In traditional cloud environments, enterprise security teams require rigorous vetting for isolation, access controls, and compliance. However, since GPUs are in short supply and companies are racing to launch AI models to stay competitive, buyers cannot wait. Consequently, many are accepting security risks from specialized neocloud providers that they would never tolerate in the public cloud.
+Stitching Together Multi-Vendor Nodes Multiplies Configuration Errors
+To get enough computing power, companies cannot afford to rely on a single vendor. They have to patch together hardware, accelerators, and networking components from a wide variety of OEMs and system integrators. This multi-vendor approach makes data center management and security incredibly complex.
+How the Move to the Cloud Left Physical Security Behind
+For the past fifteen years, the technology industry shifted its focus away from physical data centers toward the public cloud. This transition has left the physical hosting layer dangerously underprepared for the sudden return of high-performance, bare-metal computing.
+Years of Cloud Focus Created a Shortage of Hardware Security Talent
+Because the industry spent more than a decade educating, hiring, and training engineers to build for hyperscaler clouds, physical data center expertise has dried up. Since technologies like InfiniBand and RoCE do not exist in traditional cloud environments, the industry lacks the necessary expertise to secure them. This leaves us unprepared to manage the specialized, high-performance AI data centers that the industry now demands.
+Modern Security Tools Cannot Protect Physical Servers
+Modern security tools were built to monitor, manage, and secure virtualized cloud environments. They rely on cloud APIs and software-defined abstractions. Unfortunately, physical data center tooling has remained outdated. Security teams are trying to protect advanced, multi-tenant AI workloads using legacy platforms that often cannot detect hardware-level tampering or side-channel attacks.
+Introducing FORGE: Security Underneath the Model
+We cannot protect modern AI workloads using application-layer frameworks alone. We must secure the physical and fabric layers that host them.
+We are thrilled to introduce FORGE, a practical security framework designed specifically for AI data centers and hardware. By dividing security into five clear areas, Fleet, Operations, Resource Isolation, Grid, and Evidence, FORGE gives providers, buyers, and security teams a shared language to find and fix hardware risks.
+FORGE was made by the community, for the community, to help reduce security risks, increase awareness, and solve knowledge gaps.
+Before we can trust the intelligence of the model, we must be able to trust the safety of the metal running it.

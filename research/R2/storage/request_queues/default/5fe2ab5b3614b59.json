@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://lavahq.io/research?contact_us=true",
+  "url": "https://lavahq.io/research?contact_us=true",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-domain",
+      "state": 6,
+      "crawlDepth": 3
+    },
+    "depth": 3
+  },
+  "retry_count": 3,
+  "no_retry": false,
+  "loaded_url": "https://lavahq.io/research?contact_us=true",
+  "handled_at": "2026-09-08 22:39:17.797254+00:00"
+}

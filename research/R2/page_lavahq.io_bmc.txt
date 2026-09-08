@@ -1,0 +1,26 @@
+URL: https://lavahq.io/bmc
+STATUS: 200
+DEPTH: 1
+---
+How We Hacked Thousands of Data Centers in Minutes Using a 20-Year-Old Vulnerability
+An aggregate view of internet-exposed management controllers across the world.
+Every server has a second computer inside it. Most teams never watch it.
+A BMC (Baseboard Management Controller) is a dedicated processor on nearly every server. It can power the machine on or off, mount virtual media, reinstall it, open a remote console, and change low-level platform configuration - even when the operating system is down. When it faces the internet, it is one of the most powerful doors into a data center, and it sits beneath everything your security stack can see.
+36,000 reachable from the open internet
+More than 36,000 IPMI services answered on UDP/623 in a Shodan sweep · over 30,000 were live BMCs - hardware that was never meant to leave a private management network.
+25,000+ leak the hash before login
+Via CVE-2013-4786, an IPMI 2.0 flaw, a BMC returns password-derived RAKP material before authentication completes. Any unauthenticated attacker reachable on UDP/623 can capture it and recover the password through offline cracking.
+Below the line your tools watch
+EDR, cloud posture, and network tooling all live above the OS. The BMC sits beneath that boundary. It can act on the server from below while staying largely invisible to the controls meant to protect the host.
+How long would your BMC survive?
+If your controller leaked its password hash before you logged in - how long until an attacker had it?
+One exposed BMC. Total host takeover.
+A compromised BMC gives attackers control of the entire server below the operating system. In data centers, flat networks and reused credentials can turn one exposed interface into access to shared storage, critical systems, neighboring tenants, and potentially the entire cluster.
+- AdversaryAttackeranyone on the public internet
+- Entry pointExposed BMCreachable on UDP/623
+- Step 1Weak config / default credsadmin admin
+- STEP 3Full host controlpower · boot · console
+- Step 4Reimage & lock the hostvirtual media
+- ImpactHeld for ransomransomware
+Want to talk?
+We'd love to learn more about what brings you here. Whether you run a data center or you're just curious about what we found, let's talk.

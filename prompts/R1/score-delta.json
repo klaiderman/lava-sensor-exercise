@@ -1,0 +1,17 @@
+{
+  "source_model": "claude-opus-5",
+  "target_model": "claude-opus-5",
+  "note": "Prompt was authored directly in Claude 5.x XML for the exact target model — /translate-prompt ran as a validation/confirmation pass, not a structural conversion. Checked: XML structure present, 'think thoroughly' phrasing used (not 'step by step'), no forced tool-use assumptions, adaptive-thinking-compatible. No changes were needed.",
+  "axes": {
+    "clarity":            { "before": 8.0,  "after": 8.0 },
+    "completeness":       { "before": 10.0, "after": 10.0 },
+    "efficiency":         { "before": 8.0,  "after": 8.0 },
+    "model_fit":          { "before": 9.0,  "after": 9.0 },
+    "failure_resilience": { "before": 10.0, "after": 10.0 }
+  },
+  "overall_before": 9.2,
+  "overall_after": 9.2,
+  "sigma_before": 0.68,
+  "sigma_after": 0.68,
+  "verdict": "DEPLOY"
+}

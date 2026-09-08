@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://lavahq.io/research/breaking-the-trust-firmware-compromise",
+  "url": "https://lavahq.io/research/breaking-the-trust-firmware-compromise",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-domain",
+      "state": 4,
+      "crawlDepth": 2
+    },
+    "depth": 2
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": "https://lavahq.io/research/breaking-the-trust-firmware-compromise",
+  "handled_at": "2026-09-08 22:39:05.661035+00:00"
+}

@@ -1,0 +1,18 @@
+{"url": "https://lavahq.io", "status": 200, "depth": 0, "extractor": "trafilatura-short", "fetched_at": "2026-09-08T22:38:42.600167+00:00"}
+{"url": "https://lavahq.io/bmc", "status": 200, "depth": 1, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:38:44.571528+00:00"}
+{"url": "https://lavahq.io/research", "status": 200, "depth": 1, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:38:46.040917+00:00"}
+{"url": "https://lavahq.io/about-lava", "status": 200, "depth": 1, "extractor": "trafilatura-short", "fetched_at": "2026-09-08T22:38:47.382758+00:00"}
+{"url": "https://lavahq.io/bmcradar", "status": 200, "depth": 2, "extractor": "trafilatura-short", "fetched_at": "2026-09-08T22:38:48.892458+00:00"}
+{"url": "https://lavahq.io/research/bmc-exposure-alert", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:38:50.633865+00:00"}
+{"url": "https://lavahq.io/research/datacenter-security", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:38:52.639833+00:00"}
+{"url": "https://lavahq.io/research/neocloud-security-has-to-catch-up", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:38:54.237573+00:00"}
+{"url": "https://lavahq.io/research/neocloud-security", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:38:56.250844+00:00"}
+{"url": "https://lavahq.io/research/rethinking-the-shared-responsibility-model", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:38:58.601326+00:00"}
+{"url": "https://lavahq.io/research/securing-the-metal-beneath-the-model", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:39:00.215606+00:00"}
+{"url": "https://lavahq.io/research/breaking-the-trust-introducing-firmware", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:39:03.622312+00:00"}
+{"url": "https://lavahq.io/research/breaking-the-trust-firmware-compromise", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:39:05.644795+00:00"}
+{"url": "https://lavahq.io/research/breaking-the-trust-enforcing-firmware-integrity", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:39:07.117430+00:00"}
+{"url": "https://lavahq.io/research/runtime-integrity", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:39:08.581832+00:00"}
+{"url": "https://lavahq.io/research/attacks-infrastructure", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:39:10.431393+00:00"}
+{"url": "https://lavahq.io/research/enforcing-runtime-integrity", "status": 200, "depth": 2, "extractor": "trafilatura", "fetched_at": "2026-09-08T22:39:12.108406+00:00"}
+{"url": "https://lavahq.io/research?contact_us=true", "status": "ERROR", "depth": 2, "extractor": "none", "fetched_at": "2026-09-08T22:39:00Z", "note": "HTTP fetch succeeded (200, same content as /research) but local page-cache write failed 3x due to invalid Windows filename chars from query string; content identical to /research, not a distinct page; not re-attempted (duplicate)"}

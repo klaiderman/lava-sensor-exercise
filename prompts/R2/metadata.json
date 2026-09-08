@@ -1,0 +1,70 @@
+{
+  "track": "R2",
+  "role": "r2-lava-context",
+  "target_model": "claude-sonnet-5",
+  "wixie_commit": "cb90bc4f7eb04e6479f13cec4f0cb2c46a8dafb9",
+  "versions": ["prompt.v1.md", "prompt.v2.md", "prompt.md"],
+  "scores": {
+    "axes": {
+      "clarity": 7.0,
+      "completeness": 10.0,
+      "efficiency": 8.0,
+      "model_fit": 10.0,
+      "failure_resilience": 10.0
+    },
+    "sigma": 1.18,
+    "overall": 9.0
+  },
+  "sat": {
+    "has_role": true,
+    "has_task": true,
+    "has_format": true,
+    "has_constraints": true,
+    "has_edge_cases": true,
+    "no_hedges": true,
+    "no_filler": true,
+    "has_structure": true
+  },
+  "verdict": "HOLD",
+  "verdict_reason": "Heuristic pre-check (shared/scripts/self-eval.py + convergence.py): overall 9.0/10, all 5 axes >= 7.0, 8/8 SAT assertions pass, but sigma=1.18 exceeds both the dynamic floor (0.75, for >2000-word prompts) and CLAUDE.md's stated fixed floor (0.45). Dispersion is structural: Clarity is capped near 7 by two hard requirements this prompt cannot trade away -- the host context must be embedded verbatim (long compound sentences from raw diagnostic output, unmodifiable) and the 14-item execution contract must be embedded in full -- while Completeness, Model Fit, and Failure Resilience saturate at or near 10 because the contract, registry format rules, and fallback rules are all fully satisfied. Two manual convergence passes were run (see learnings.md); a third avenue (convergence.py's automated 'fix Clarity' hypothesis) was attempted and rejected because it mechanically inserted sentence breaks inside the verbatim host-context block, corrupting required content and producing ungrammatical fragments elsewhere. Per CLAUDE.md rule 4 (never inflate), the honest verdict from the heuristic layer is HOLD on sigma alone. No measured (efficacy-replay.py) DEPLOY/HOLD determination was run at the convergence stage; see output_test below for the one bounded real-model check that was run per the procedure.",
+  "stages_completed": [
+    "direction_lock_from_intent",
+    "craft_v1",
+    "refine_v2",
+    "converge_manual_2_passes_plus_1_rejected_automated_pass",
+    "structural_test",
+    "output_test_dry_run_and_one_bounded_real_call",
+    "harden_12_attack_red_team",
+    "translate_adapt_validate_same_model",
+    "contract_check",
+    "metadata_and_lifecycle_log"
+  ],
+  "output_test": {
+    "ran": true,
+    "model_used": "claude-sonnet-5",
+    "tokens": 172,
+    "cost": 0.144,
+    "dry_run_preflight_verdict": "DEPLOY (output-test.py's own preflight uses overall>=9.0 and no axis<6.0 -- looser than the CLAUDE.md canonical bar; it does not check sigma)",
+    "real_call_verdict": "FAIL (score 2.5/10: structural 1, specificity 8, prior_art 1, schema 0)",
+    "note": "The exact target model id 'claude-sonnet-5' was confirmed callable (real API response, 172 output tokens, well under the 1500 cap). The FAIL is a harness/prompt-class mismatch, not a confirmed defect: output-test.py's Phase 2 sends one synthetic user turn with NO tools attached and scores the single-shot text against a static Markdown-header schema (LAVA_CONTEXT.md's headers). This prompt's actual deployment is an autonomous, multi-hour, multi-tool (Bash/WebSearch/WebFetch/Crawlee) research run -- a single toolless completion cannot produce that artifact, so a low structural/schema score here is expected and does not indicate the prompt is broken for its real execution context. Treated as inconclusive for this prompt class, not as a verified FAIL."
+  },
+  "harden": {
+    "attacks_run": 12,
+    "passed": 12,
+    "patched": true
+  },
+  "translation": {
+    "from": "claude-sonnet-5 (native XML craft)",
+    "to": "claude-sonnet-5",
+    "score_before": 9.0,
+    "score_after": 9.0
+  },
+  "contract_check": "PASS",
+  "config": {
+    "temperature": 1.0,
+    "max_tokens": 1500,
+    "stop_sequences": [],
+    "system_prompt": true
+  },
+  "generated_at": "2026-09-09T00:00:00Z"
+}

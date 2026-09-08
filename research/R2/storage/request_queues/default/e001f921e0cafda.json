@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://lavahq.io/about-lava",
+  "url": "https://lavahq.io/about-lava",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-domain",
+      "state": 4,
+      "crawlDepth": 1
+    },
+    "depth": 1
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": "https://lavahq.io/about-lava",
+  "handled_at": "2026-09-08 22:38:47.397422+00:00"
+}

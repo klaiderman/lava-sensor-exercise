@@ -1,0 +1,9 @@
+URL: https://lavahq.io/about-lava
+STATUS: 200
+DEPTH: 1
+---
+About us
+Lava is built by infrastructure engineers and security experts with a track record of building enterprise products for mission-critical environments. We focus on the layers that are hardest to manage, secure, and control.
+WHY WE BUILT LAVA
+THE TEAM
+We're scaling fast and taking on massive engineering challenges. We are always looking for top-tier talent who want to make a real impact and join us on this journey. If that sounds like you, let's talk.

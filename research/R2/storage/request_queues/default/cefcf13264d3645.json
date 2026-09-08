@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://lavahq.io/research/breaking-the-trust-introducing-firmware",
+  "url": "https://lavahq.io/research/breaking-the-trust-introducing-firmware",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-domain",
+      "state": 4,
+      "crawlDepth": 2
+    },
+    "depth": 2
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": "https://lavahq.io/research/breaking-the-trust-introducing-firmware",
+  "handled_at": "2026-09-08 22:39:03.641285+00:00"
+}

@@ -1,0 +1,167 @@
+{
+  "sessions": [
+    {
+      "timestamp": "2026-09-09T00:58:55.547595",
+      "iterations": 2,
+      "start_score": 9.0,
+      "end_score": 9.0,
+      "improved": false,
+      "delta": 0.0,
+      "entries": [
+        {
+          "iteration": 1,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        },
+        {
+          "iteration": 2,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T01:01:23.422136",
+      "iterations": 2,
+      "start_score": 9.0,
+      "end_score": 9.0,
+      "improved": false,
+      "delta": 0.0,
+      "entries": [
+        {
+          "iteration": 1,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        },
+        {
+          "iteration": 2,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        }
+      ]
+    }
+  ],
+  "strategy_stats": {
+    "Clarity": {
+      "applied": 4,
+      "reverted": 0,
+      "total_delta": 0.0,
+      "best_delta": 0.0,
+      "worst_delta": 0.0,
+      "last_result": "applied",
+      "consecutive_failures": 0
+    }
+  },
+  "patterns": [
+    {
+      "type": "reliable",
+      "axis": "Clarity",
+      "confidence": "high",
+      "message": "Clarity: 4/4 succeeded, avg +0.0. Always try this first."
+    },
+    {
+      "type": "persistent_plateau",
+      "confidence": "high",
+      "message": "No improvement in last 2 sessions. Structural rewrite needed \u2014 incremental fixes exhausted."
+    }
+  ],
+  "fix_history": [
+    {
+      "timestamp": "2026-09-09T00:58:55",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T00:58:55",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T01:01:23",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T01:01:23",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    }
+  ],
+  "negative_examples": [],
+  "weakness_profile": {},
+  "recommendations": [
+    "RESTRUCTURE the prompt \u2014 tables instead of prose, shorter sentences, more imperative verbs. The current structure has reached its ceiling.",
+    "VERIFY target model prefers XML \u2014 if targeting GPT, switch to Markdown headers."
+  ],
+  "prompt_fingerprint": {
+    "words": 5270,
+    "lines": 205,
+    "sections": 41,
+    "has_examples": true,
+    "has_xml": true,
+    "has_markdown": false
+  },
+  "confidence_scores": {
+    "Clarity": 1.0
+  }
+}

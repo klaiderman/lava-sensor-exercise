@@ -2,7 +2,7 @@
 # Source this: `. tooling/loadenv.sh` — loads .env without word-splitting or backslash mangling.
 # Exports TARGET_HOST, TARGET_USER, SSH_KEY_PATH (raw) and SSH_KEY_PATH_UNIX (cygpath-converted).
 # Never prints values.
-_envfile="${LAVA_ENV_FILE:-/c/lava-sensor-exercise/.env}"
+_envfile="${LAVA_ENV_FILE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.env}"
 while IFS= read -r _line || [ -n "$_line" ]; do
   _line="${_line%$'\r'}"
   case "$_line" in ''|'#'*) continue;; esac

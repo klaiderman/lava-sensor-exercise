@@ -20,7 +20,7 @@ A read-only, bounded, unprivileged Linux posture sensor in Go (`sensor scan --ou
 
 ## Commands (current)
 - Load target env without printing values: `. tooling/loadenv.sh` (exports `TARGET_HOST`, `TARGET_USER`, `SSH_KEY_PATH`, `SSH_KEY_PATH_UNIX`)
-- Host recon (lead only): `python tooling/tci/tci.py --registry tooling/tci/probes.json --env-file /c/lava-sensor-exercise/.env --executor ssh --out-dir state/raw_host --snapshot state/HOST_SNAPSHOT.raw.json`
+- Host recon (lead only, run from the repo root): `python tooling/tci/tci.py --registry tooling/tci/probes.json --env-file .env --executor ssh --out-dir state/raw_host --snapshot state/HOST_SNAPSHOT.raw.json` then `python tooling/build_snapshot.py`
 - Validate probe registry: `python tooling/tci/check_registry.py tooling/tci/probes.json`
 - Build/test/run sensor: (filled in at the vertical slice)
 - Final run on the host: (filled in after implementation; exact documented command only)

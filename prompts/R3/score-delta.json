@@ -1,0 +1,22 @@
+{
+  "source_model": "claude-opus-5",
+  "target_model": "claude-opus-5",
+  "note_on_schema": "plugins/prompt-translate/agents/adapter.md specifies score-delta.json axes as clarity/specificity/structure/robustness/completeness, but the scorer actually invoked by every stage (shared/scripts/self-eval.py) implements a different 5-axis set: Clarity/Completeness/Efficiency/Model Fit/Failure Resilience. Reporting the real scorer's axes (honest-numbers contract) rather than the axis names in adapter.md's stale schema; this mismatch is also logged in LIFECYCLE_LOG.md.",
+  "translation_kind": "no format conversion (source and target are both claude-opus-5, Claude 5.x XML) -- this run applied opus-5-registry-specific tuning only: conciseness/anti-preamble instruction (registry key_constraint: 'tends to longer output + self-verification'), confirmation of 'think thoroughly' (not 'step by step') phrasing, and confirmation that no aggressive MUST/ALWAYS/NEVER-caps language triggers the Claude overtrigger pattern.",
+  "axes": {
+    "clarity":             { "before": 6.8, "after": 6.9 },
+    "completeness":        { "before": 9.5, "after": 9.5 },
+    "efficiency":          { "before": 8.5, "after": 8.5 },
+    "model_fit":           { "before": 10.0, "after": 10.0 },
+    "failure_resilience":  { "before": 10.0, "after": 10.0 }
+  },
+  "overall_before": 8.96,
+  "overall_after": 8.98,
+  "sigma_before": 1.211,
+  "sigma_after": 1.175,
+  "sigma_floor_dynamic": 0.75,
+  "assertions_before": "8/8",
+  "assertions_after": "8/8",
+  "verdict": "HOLD",
+  "verdict_reason": "Overall (9.0 >= 9.0), all 5 axes (>= 7.0), and 8/8 SAT assertions all clear the DEPLOY bar. Sigma (1.18) does not clear even the dynamic word-count-scaled floor (0.75) computed by self-eval.dynamic_sigma_floor for a >2000-word prompt. Convergence.py plateaued at this sigma after 2 independent sessions (see learnings.md) and its own auto-generated recommendation ('restructure with tables, shorter sentences, more imperative verbs') was evaluated and rejected: it would require either shortening/removing the verbatim host-context block (violates the task's explicit 'embed host context verbatim' requirement) or degrading the three axes already at ceiling (Completeness/Model Fit/Failure Resilience), which is not a legitimate fix. This is reported as a real, non-gamed HOLD per the honest-numbers contract, not a DEPLOY."
+}

@@ -1,0 +1,18 @@
+{
+  "source_model": "claude-opus-5",
+  "target_model": "claude-opus-5",
+  "note": "No cross-family translation was needed: the prompt was crafted directly in Claude 5.x XML format for claude-opus-5 from prompt.v1.md onward (per the intent file's explicit target-model promotion). This 'translation' step instead applies claude-opus-5-specific adaptation beyond generic Claude 4.x XML formatting: (1) confirmed 'think thoroughly' phrasing over 'think step by step', (2) added explicit conciseness/scope-discipline instructions to counter Opus 5's documented tendency toward longer output + self-verification, deleting redundant verification scaffolding rather than adding more, (3) added a third worked <example> to reach the registry's recommended 3-5 example range, (4) recommends effort=high in metadata.json's config given the task's multi-stream research depth.",
+  "axes": {
+    "clarity":       { "before": 7.0, "after": 9.0 },
+    "completeness":  { "before": 7.0, "after": 10.0 },
+    "efficiency":    { "before": 8.0, "after": 8.0 },
+    "model_fit":     { "before": 9.0, "after": 10.0 },
+    "failure_resilience": { "before": 10.0, "after": 10.0 }
+  },
+  "overall_before": 8.3,
+  "overall_after": 9.4,
+  "sigma_before": 1.21,
+  "sigma_after": 0.71,
+  "sigma_floor": 0.75,
+  "verdict": "DEPLOY"
+}

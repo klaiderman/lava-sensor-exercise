@@ -1,0 +1,122 @@
+URL: https://lavahq.io/research/bmc-exposure-alert
+STATUS: 200
+DEPTH: 2
+---
+A Baseboard Management Controller (BMC) is a highly privileged management processor that provides remote control over a server independently of its operating system. It allows administrators to manage and troubleshoot servers remotely, eliminating the need for physical access to the hardware.
+We identified 36,872 internet-exposed server-management interfaces running IPMI, a protocol introduced more than two decades ago for remote control over physical servers. Of the systems we tested, 24,650 disclosed password-derived authentication hashes before login because of CVE-2013-4786, a vulnerability in the IPMI 2.0 authentication protocol that enables offline password-cracking attempts. To visualize the scale of the exposure, we created BMCRadar, an interactive map of the internet-exposed BMC interfaces identified during this research.
+More than 30% of the returned hashes were associated with passwords that could be recovered using common wordlists and predictable factory chassis-sticker formats. We also found evidence that servers with internet-exposed BMC interfaces are already being targeted and exploited in the wild.
+The exposure also affected modern Supermicro and HPE servers operated by GPU providers, including systems that were still using factory-issued passwords.
+The risk extended well beyond a single server. In the environments we examined, BMC management networks lacked effective segmentation, access controls, and monitoring. A compromised BMC could therefore serve as a highly privileged foothold, allowing an attacker to reach additional management interfaces and put large portions of the data center infrastructure at risk.
+What Is a BMC and Why Is It So Powerful?
+A Baseboard Management Controller (BMC) is a dedicated service processor attached to most modern server platforms. It is designed to manage the server even when the operating system is down, broken, or completely unresponsive.
+A BMC can usually power-cycle the host, expose a remote console, mount virtual media, update firmware, read hardware sensors, and change low-level platform configuration. In practice, it is one of the most privileged control points in a data center.
+BMCs commonly expose several management surfaces:
+- IPMI, the older out-of-band management protocol
+- Redfish, the newer HTTPS-based management API
+- A browser-based administrative interface
+- Remote console and virtual media features, depending on the platform
+In many implementations, these interfaces share the same user database. A credential that works for IPMI may also work for the web interface or Redfish API. This matters because the IPMI authentication process can expose information that enables offline password recovery.
+BMC implementations differ across vendors. HPE calls its platform iLO, Dell calls it iDRAC, Lenovo uses XClarity Controller, and Supermicro provides its own BMC stack. OpenBMC is an open-source BMC firmware stack used across parts of the cloud, hyperscale, and hardware ecosystem.
+Figure 1: Example BMC web interface. BMCs often expose web, API, console, and IPMI management surfaces backed by the same privileged management plane.
+A compromised BMC puts defenders in a uniquely difficult position. Most security tools monitor the operating system, kernel, containers, and workloads. The BMC operates outside that trust boundary, giving an attacker control beneath the host while remaining largely invisible to the tools designed to protect it.
+The risk rarely stops at one server. BMCs typically sit on shared out-of-band management networks, where administrative credentials are often reused and traffic is monitored less closely than on production networks. This gives attackers a path to move laterally between management controllers, turning one compromised BMC into a foothold across the broader data center management plane.
+BMC access can also enable persistence below the operating system. Malicious changes to BMC or other platform firmware can survive operating system reinstalls, disk replacement, and standard incident response procedures. Recovering trust becomes a platform-level recovery problem, requiring verified firmware reflashing, integrity validation, vendor-assisted recovery, or hardware replacement when the affected components can no longer be trusted.
+Why BMC Compromise Is Especially Dangerous in AI Infrastructure
+AI infrastructure concentrates thousands of high-value GPU systems behind shared management networks. These environments also rely heavily on shared storage, high-speed interconnects, and multi-tenant operational tooling. A single compromised BMC can therefore become a path to additional servers, critical infrastructure, and customer workloads.
+The risk is especially pronounced in Neocloud and GPU cloud environments. Even when a customer rents dedicated bare-metal servers, those systems are often still connected to a shared provider-managed out-of-band network. The BMCs, provisioning systems, orchestration services, credential stores, and administrative tools used to manage them may span infrastructure belonging to multiple customers. This makes the provider’s management plane a central point of trust and a potential path across tenant boundaries.
+The impact can therefore extend beyond one machine or one customer. Compromising a server’s BMC, or the systems used to manage it, can provide access to additional hosts and shared infrastructure, increasing both the blast radius and the cost of recovery.
+The 20-Year-Old Vulnerability
+The issue at the center of this research is CVE-2013-4786, a long-known vulnerability in the IPMI 2.0 authentication protocol introduced in 2004.
+During authentication, the BMC can return an HMAC-SHA1 authentication code calculated using the account password and session values known to the requester.
+An unauthenticated remote party that can reach UDP port 623 can request this response and test password guesses offline. Unlike repeated online login attempts, this process does not require a new request to the BMC for every password candidate.
+Weak, reused, factory-set, or predictably formatted passwords may therefore be recovered without generating the usual pattern of repeated failed logins.
+Figure 2: Simplified IPMI 2.0 RAKP exchange. The BMC returns a password-derived HMAC-SHA1 value before client authentication is complete.
+Scanning the Internet
+We started with a simple question: how many BMCs are reachable from the public internet?
+We looked for IPMI services exposed on UDP port 623. On May 6, 2026, the query returned 36,872 unique hosts exposing IPMI to the public internet. Across repeated measurements between May and July, we observed an average of approximately 60 previously unseen IP addresses exposing IPMI each day.
+That number alone was not the finding. Publicly exposed IPMI has been known for years. The more important question was how many of those services exposed a usable security vulnerability before authentication.
+To test this at scale, we used a lightweight auditor to check publicly exposed IPMI services for known vulnerabilities and risky configurations, including:
+- Cipher suite 0 support, which can weaken IPMI authentication when enabled and improperly configured
+- Empty or null usernames accepted during the authentication exchange
+- Authentication modes advertised as NONE , which do not require standard password validation
+- RAKP responses associated with common vendor-default usernames
+- CVE-2013-4786, which can return password-derived authentication hashes before login completes
+The findings fell into two categories: risky configurations visible during the pre-authentication exchange, and a deeper vulnerability in the IPMI 2.0 authentication flow that exposes hashes for offline password guessing.
+Figure 3: Shodan results for the query IPMI port:623, showing publicly reachable IPMI services exposed on UDP port 623.
+Explore the Exposure
+To make the scale of the exposure easier to understand, we created BMCRadar24, an interactive map of the internet-exposed BMCs identified during this research.
+The map provides an aggregate view of where publicly reachable server management interfaces are distributed around the world.
+What We Found
+After testing the exposed endpoints, we observed a consistent pattern.
+| Finding | Result | 
+|---|---|
+| Internet-exposed IPMI hosts | 36,872 | 
+| Endpoints returning at least one RAKP response before client authentication | 24,650 (66.9%) | 
+| Endpoints accepting an empty username with a weak password | 6,240 (16.9%) | 
+| Endpoints with a named account using a common password | 2,340 (6.3%) | 
+Approximately two-thirds of the exposed BMCs we tested returned at least one password-derived authentication hash before client authentication was complete. Across those systems, two weaknesses stood out.
+Blank or Null Usernames
+A total of 6,240 BMCs returned authentication material for an empty username that matched a weak password candidate during offline analysis.
+Common Passwords Worked
+On 2,340 BMCs, the authentication material returned for a named account such as ADMIN or root matched a password from publicly available wordlists during offline analysis. This represented approximately 9.5% of the endpoints that returned a RAKP response.
+We tested each captured response independently against publicly available wordlists of common passwords. Many matches were identified during the first pass and within minutes.
+We did not submit the matching passwords to the affected BMCs or use them to authenticate.
+A complete brute-force search was not practical across the entire exposed population. Each IPMI authentication exchange contains unique random values and a new session ID, meaning every captured response must be processed separately.
+Common passwords were only part of the problem. Some passwords that did not appear in standard wordlists still followed constrained and predictable factory-issued formats.
+The Supermicro Pattern
+Many BMCs that did not match our initial wordlists appeared to be Supermicro systems. Supermicro hardware accounted for more than 50% of the responding BMCs in our dataset and is widely used across data centers, hosting environments, and GPU infrastructure.
+The legacy ADMIN:ADMIN factory credential produced only a few hundred matches. Most Supermicro endpoints did not match passwords in our initial wordlists.
+This was expected. Beginning in November 2019, Supermicro replaced the shared ADMIN password on affected products with a unique, preprogrammed password to support compliance with California's SB-327 requirements. The username remains ADMIN, while the password consists of exactly ten uppercase letters printed on a chassis label.
+Figure 4: Supermicro guidance describing the unique preprogrammed BMC password introduced for affected products.
+Figure 5: Supermicro's documented password format: exactly ten uppercase alphabetic characters.
+This format has a keyspace of 26^10, or approximately 141 trillion possible passwords. Although this is too large for a simple wordlist, its constrained format makes exhaustive recovery practical for a targeted attacker with modern GPU hardware. On a modern server with eight GPUs running Hashcat, the complete candidate space could be searched in approximately one hour.
+Testing the entire exposed population this way would have been expensive because each captured response had to be processed separately. For a targeted attacker focusing on a small number of selected systems, however, the search was practical.
+To determine whether Supermicro factory-format passwords could be recovered in practice, we tested two adjacent IP addresses belonging to a US-based bare-metal GPU provider. The provider's published security policy permitted testing of its internet-facing systems, and we limited the test to password material disclosed through the IPMI authentication flow.
+Both endpoints were modern Supermicro systems with X13DEM motherboards manufactured in 2023. In both cases, the recovered password matched Supermicro's ten-character chassis-sticker format. We did not submit the recovered credentials to the BMCs, attempt to authenticate, access any management interface, or change the state of either system.
+We reported the issue the same day, shared the affected IP addresses and remediation guidance, and stopped testing. The provider later fixed the exposure.
+Testing Our Own HPE iLO System
+The Supermicro result pointed to a broader issue: even unique factory passwords can become vulnerable to targeted offline recovery when their format is constrained and IPMI exposes password-derived authentication hashes before login.
+To determine whether the same pattern applied to another vendor, we tested a server in our office lab using its factory-issued HPE iLO password.
+Figure 6: Factory-issued HPE iLO credential label on a server in our lab.
+HPE iLO uses a different factory password format: eight characters made up of uppercase letters and digits, giving a keyspace of 36^8, or approximately 2.8 trillion combinations. This is roughly 50 times smaller than Supermicro's 26^10 keyspace.
+On an Apple M3 system, searching the full candidate space took approximately one day for each captured response. On our lab server with eight RTX 6000 PRO GPUs, the same search took approximately 32 seconds per response.
+A Ransom Note on an Exposed BMC Interface
+During our research, we found an exposed HPE iLO 4 login page displaying a ransom note in its Security Notice panel. The message claimed that the server's data had been encrypted and demanded 0.3 BTC.
+We could not confirm whether the server itself had been encrypted, but the modified page showed that someone had gained access to the management interface.
+Figure 7: An internet-exposed iLO 4 login page displaying an RSA-2048 ransom message, a 0.3 BTC demand, and a disposable email address in the Security Notice pane.
+This was not the first indication that attackers target iLO. Previous research has documented malicious activity involving HPE iLO, including iLOBleed, a persistent iLO 4 rootkit associated with destructive attacks against servers.
+The page we observed made the risk tangible: an exposed BMC is not simply a forgotten administrative interface. It is a privileged path to the server below the operating system. Although we could not confirm what happened on this particular system, prior incidents show that attackers have targeted this layer in real-world operations.
+How to Fix It
+The main fix is simple: IPMI should not be reachable from the public internet.
+Operators should:
+- Block UDP port 623 at the network edge
+- Replace factory-issued passwords during provisioning
+- Disable legacy or weak options such as IPMI 1.5, cipher suite 0, anonymous accounts, and NONE authentication
+- Restrict BMC access to a dedicated private management network, VPN, bastion host, or another controlled administrative path
+- Apply network access controls so only approved administrative systems can reach BMC interfaces
+- Monitor the management network separately from production workloads
+Where supported, prefer Redfish over TLS within an isolated management network. Neither Redfish nor IPMI should be exposed directly to the public internet.
+Responsible Disclosure
+As part of this research, we reported relevant findings to affected vendors and operators where we could identify direct ownership.
+In June 2026, we notified Supermicro that the factory-default BMC password format used on affected modern systems can be recovered within a practical time frame when IPMI is exposed to the internet and a password-derived response can be collected remotely.
+Supermicro acknowledged that this is a plausible scenario with modern multi-GPU cracking capabilities, reiterated that customers should rotate default BMC passwords during setup, and recommended keeping management networks off the public internet behind management VLANs and ACLs.
+Supermicro also stated that it will review possible improvements to the default password policy for future hardware revisions, including longer passwords or an expanded character set.
+We also reported our findings to HPE after demonstrating that factory-default HPE iLO credentials could be recovered offline in under 30 minutes using commodity GPU hardware.
+HPE's Product Security Response Team confirmed that it is evaluating stronger factory-default password requirements for future hardware revisions. HPE also noted that IPMI-over-LAN is disabled by default in newer iLO generations, reducing the risk of accidental exposure on newly deployed systems.
+However, for the large installed base of earlier iLO generations, including iLO 4, iLO 5, and iLO 6, hardening remains the customer's responsibility under guidance HPE originally published in 2013.
+This gap reflects the broader problem identified in our research: a security control that depends on every operator manually hardening every out-of-band management interface does not scale. Large numbers of BMCs remain reachable over IPMI on UDP port 623, often with weak, predictable, or unchanged factory credentials. As long as secure configuration remains optional rather than enforced by default, widespread exposure is likely to continue.
+We also notified operators where we could identify direct ownership of affected systems. These reports included systems exposing weak passwords or risky IPMI configurations.
+Conclusion
+This vulnerability exposes a broader security gap in the data center management plane. BMCs control critical infrastructure, yet they often receive far less monitoring and protection than the systems they manage.
+Combined with modern GPU cracking and predictable factory passwords, this vulnerability can turn a single exposed BMC into a privileged and difficult-to-detect foothold across the management network.
+Organizations must treat management layers as critical security boundaries: isolate them, remove public exposure, rotate factory credentials, and monitor them continuously.
+This research is part of Lava's broader work to secure the infrastructure powering the AI revolution. The FORGE framework provides a broader view of the risks facing data centers and AI infrastructure. If your organization operates data centers or AI, GPU, or bare-metal infrastructure, we’d be happy to speak with you about broader infrastructure management and security challenges.
+Prior Work and Further Reading
+This research builds on earlier work on IPMI, BMC security, and firmware resilience:
+- Dan Farmer, "IPMI: Freight Train to Hell" (2013). A foundational analysis of IPMI's design and security weaknesses, including remote hash disclosure and highly privileged BMC access.
+- HD Moore, "A Penetration Tester's Guide to IPMI and BMCs" (Rapid7, 2013). A practical guide to discovering and testing common IPMI and BMC weaknesses, including cipher suite 0, default credentials, and RAKP hash disclosure.
+- Eclypsium, "BMC&C: Supply Chain Vulnerabilities Put Server Ecosystem at Risk" (2022-2023). Research into vulnerabilities in AMI MegaRAC BMC software used by multiple server vendors.
+- Amnpardaz, "The iLOBleed Implant" (2021). Analysis of a persistent firmware rootkit discovered in HPE iLO 4.
+- HPE, IPMI 2.0 RAKP RMCP+ Authentication HMAC Password Hash Exposure. HPE's advisory covering the IPMI password-hash disclosure issue affecting earlier iLO generations.
+- Supermicro, "Server Management: BMC Firmware Security" (2022). Guidance for securing BMC deployments, including restricting UDP port 623, isolating BMCs on dedicated management networks, applying IP access controls, and replacing factory-assigned passwords.
+- Supermicro, BMC Unique Password Security Feature (November 2019). Details of Supermicro's unique factory BMC password implementation.

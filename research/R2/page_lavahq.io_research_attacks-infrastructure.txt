@@ -1,0 +1,124 @@
+URL: https://lavahq.io/research/attacks-infrastructure
+STATUS: 200
+DEPTH: 2
+---
+Runtime attack campaigns have evolved dramatically over the past few years and are accelerating even further at the edge of the AI era. In the past, attackers often focused on quickly achieving their objectives after gaining access to a system - whether financial theft, monetization, disruption, or data exfiltration. The primary goal was immediate impact.
+Today, however, the operational focus has shifted. Defense evasion and long-term persistence have become a central focus. Attackers increasingly invest significant time, effort, and resources into maintaining access and avoiding detection, and sometimes dedicating more attention to these capabilities than to the final impact itself. Maintaining a foothold and expanding across an environment can become more valuable than a quick win, as it allows attackers to gather intelligence, refine their techniques, and operate more strategically over time.
+The rise of AI is further accelerating this trend. The barrier to entry is lower than ever, enabling smaller or less experienced threat actors to rapidly improve their capabilities. With access to powerful tools, shared malware frameworks, and AI-assisted development, attackers can quickly adapt existing techniques, copy and modify code, and significantly enhance their campaigns.
+In this blog, we examine these evolving runtime attack campaigns, their operational patterns, and, most importantly, the expanding arsenal attackers use to remain persistent inside targeted infrastructure. From kernel rootkits to user-space implants and eBPF-based techniques, modern adversaries are increasingly investing in sophisticated runtime manipulation to maintain control over compromised environments.
+The Threat Landscape of Campaigns Against Runtime Environments
+Modern attackers increasingly target large shared computing infrastructures such as cloud platforms, ,ai data centers, and research computing environments, where a single compromise can provide access to substantial compute power and internal network connectivity. In these environments, runtime manipulation becomes a powerful tool for maintaining stealth, expanding access, and exploiting infrastructure resources.
+Traditionally, threat actor groups are divided into several categories:
+- State-sponsored threat actors: This is the most skillful and goal-motivated group, aimed at gaining access for various reasons aligned with governmental goals (for instance financial, espionage, damage, high value info theft etc).
+- Financially motivated cybercriminals: In recent years demonstrate very high skillsets and capabilities, and operate as a corporate environment. Mainly try to gain financial value from the malicious activity.
+- Hacktivists: Mainly operate for activism goals (such as OP-USA, OP-Europe etc).
+- Various (mainly script kiddies): A large group of low to non skilled hackers who try to gain access to environments, and sometimes for financial gain.
+In this blog we focus on the first two groups.
+Analyzing the configurations used by threat actors in their botnets and large-scale scanning tools shows that attackers frequently target the ASNs and CIDR ranges of major cloud service providers (such as AWS, Azure, GCP, and Oracle) as well as infrastructure associated with data centers, research facilities, and high-performance computing environments. This targeting behavior highlights what adversaries consider high-value infrastructure: environments that provide large compute capacity, distributed resources, and access to critical workloads.
+Once initial access is gained, these workloads provide scalable compute resources, shared-tenants for lateral movement, persistent infrastructure, and access to internal services and credentials. Attackers typically obtain this initial access through misconfigured cloud services, exposed management interfaces, vulnerable containers, or stolen credentials.
+They often deploy user-space and kernel-level rootkits designed to maintain persistence while moving laterally across the environment. In many incidents, adversaries install rootkits, backdoors, or runtime implants that allow them to remain hidden while exploiting cloud resources.
+Several threat groups and campaigns have demonstrated this pattern.
+TeamTNT
+TeamTNT is one of the most prolific threat groups targeting cloud-native environments. Active since around 2019, the group primarily targets misconfigured Docker APIs, Kubernetes clusters, and exposed cloud services.
+After gaining access, TeamTNT typically:
+- Deploys user-space and kernel-level rootkits
+- Installs persistence scripts
+- Runs internal network scanners to find additional vulnerable or misconfigured resources
+- Steals cloud credentials and tokens (AWS, GCP, Azure)
+- Deploys cryptominers
+WatchDog
+WatchDog is another threat actor targeting Docker hosts and Kubernetes nodes in cloud environments. Initial access often occurs through:
+- Exposed Docker APIs
+- Weak SSH credentials
+- Vulnerable container services
+Once inside, the attackers deploy:
+- Persistence mechanisms
+- Network scanning tools
+- Cryptomining malware
+WatchDog campaigns have been observed installing Diamorphine rootkits to hide processes associated with the mining operations and evade monitoring tools in cloud workloads.
+Kinsing
+Kinsing is a Linux malware family frequently observed in attacks against cloud workloads and containerized infrastructure. Attackers exploit vulnerabilities in web applications or container environments to gain access, after which the malware downloads additional payloads.
+The infection chain usually includes:
+- A backdoor for remote command execution
+- Cryptomining software
+- Tools for lateral movement and credential harvesting
+Kinsing infections often propagate within cloud environments by scanning for additional vulnerable services or containers.
+BPFDoor Campaigns
+The BPFDoor backdoor has been used in espionage operations targeting cloud-hosted Linux infrastructure, telecommunications providers, and government networks.
+The fact that BPFDoor uses BPF packet filters to monitor network traffic inside the kernel allows the attackers to remain hidden while performing internal reconnaissance and lateral movement.
+Across these campaigns and others, attackers tend to follow a similar operational pattern:
+Whether the attackers are financially motivated groups or sophisticated espionage actors, once access is gained they attempt to control the runtime environment itself by deploying persistence mechanisms such as user-space or kernel rootkits, stealing credentials, and moving laterally across shared infrastructure.
+In large distributed environments such as cloud platforms and data centers, this access can allow attackers not only to hijack significant computational resources but also to pivot into adjacent workloads or tenants, potentially exposing other organizations sharing the same infrastructure. This is what makes runtime integrity not only a technical security concern but also a strategic risk in modern multi-tenant computing environments, where a single compromised workload can become a foothold into a much larger ecosystem.
+Focusing on Runtime Rootkits
+As adversaries increasingly prioritize defense evasion and long-term persistence, defenders must closely track how these techniques evolve over time. This evolution directly affects how organizations monitor, investigate, and respond to runtime attacks, and ultimately shapes the design of modern defense strategies and trust models.
+Modern wide-spread runtime malware operates directly inside the execution environment - manipulating the kernel, intercepting system calls, or injecting logic into running processes.
+In practice, runtime compromises usually fall into two operational layers:
+- Kernel-level manipulation, where attackers modify the operating system itself
+- User-space manipulation, where attackers hide activity inside running applications
+Both approaches appear frequently in real-world campaigns and provide adversaries with powerful capabilities for persistence, stealth, and large-scale resource control.
+Kernel Runtime Integrity Attacks
+Kernel-level implants provide attackers with the highest possible control over a system. Because the kernel mediates all interaction between hardware, processes, memory, and the network stack, compromising it allows malicious actors to manipulate almost any observable behavior of the machine.
+Typical kernel-level capabilities include:
+- Hiding processes, files, and network connections
+- Intercepting or modifying system calls
+- Injecting network backdoors
+- Persisting across reboots
+- Manipulating monitoring tools
+Kernel rootkits have been used in both espionage and financially motivated campaigns.
+In addition, in recent years, attackers have begun exploiting eBPF, a powerful kernel instrumentation technology originally designed for observability, networking, and security monitoring. Because eBPF programs run inside the kernel but can be dynamically loaded without traditional kernel modules, they provide an attractive platform for stealthy implants. In our blog’s context, several real-world malware families now use this technique.
+Security researchers have also uncovered custom eBPF rootkits used in cyber-espionage campaigns targeting high-performance computation, critical infrastructure and government networks across dozens of countries. These implants allow attackers to maintain persistence while remaining largely invisible to traditional monitoring tools.
+Below we provide various examples to kernel space malware observed in the wild in the past few years:
+Diamorphine
+Diamorphine is a widely known Linux loadable kernel module (LKM) rootkit, whose source code has been publicly available for years, making it one of the most widely reused rootkits in both research and real-world malware. The project was published openly on GitHub by the developer “m0nad” around 2017, where the full source code remains accessible today.
+Diamorphine demonstrates how attackers can compromise kernel runtime integrity to obtain stealth and persistence. The rootkit is typically loaded as a malicious kernel module and modifies kernel structures to intercept system behavior.
+Once installed, Diamorphine hooks the sys_call_table, allowing it to intercept system calls such as kill, getdents, and getdents64. Through these hooks the rootkit can hide processes, conceal files or directories, and grant root privileges to selected processes, effectively allowing attackers to manipulate how the operating system reports system state to user-space tools. Because these changes occur inside the kernel (ring-0), standard utilities such as ps, top, or ls may display a clean system even while malicious activity is occurring.
+Diamorphine has been widely used in red-team tooling, proof-of-concept malware, and real intrusion campaigns, making it one of the most recognizable Linux kernel rootkits. Its design illustrates the classic LKM rootkit approach: Dynamically loading malicious code into the kernel to modify system call behavior without modifying the kernel binary on disk.
+Similar rootkits include Reptile, Syslogk, and Adore-Ng, which employ comparable techniques such as syscall hooking, kernel object manipulation, and hidden kernel modules to maintain stealth access. While many modern Linux distributions implement protections such as kernel module signing and kernel lockdown modes, these rootkits remain important examples of how attackers can compromise runtime integrity at the kernel layer, enabling persistent and covert control over Linux systems.
+Drovorub
+While Drovorub was first publicly disclosed in August 2020 it remains a significant kernel space threat. Drovorub is a modular Linux malware toolkit composed of four coordinated components:
+- A command-and-control (C2) server,
+- A client implant on the victim host,
+- An optional agent used on externally reachable systems,
+- A kernel module rootkit that provides stealth and persistence.
+The Drovorub-server runs on attacker infrastructure and manages compromised hosts using a database to track registered implants, authenticate them, and issue tasks.
+Infected machines run the Drovorub-client, which communicates with the server using JSON messages over WebSockets to receive commands, transfer files, execute privileged operations, and perform port forwarding inside the network.
+The kernel module operates inside the Linux kernel (ring-0) and hooks kernel functions or modifies kernel pointers to hide the client process, files, and network artifacts from user-space monitoring tools, effectively masking the implant’s activity. An additional Drovorub-agent can be deployed on internet-facing systems to relay files and network traffic between internal victims and the attacker infrastructure.
+Together these components form a client-server architecture where the kernel rootkit ensures stealth while the client maintains command execution and communication with the remote C2 infrastructure. This combination allows attackers to maintain long-term access to compromised systems while remaining extremely difficult to detect.
+LinkPro
+LinkPro is a kernel space Linux rootkit first discovered in October 2025 during an incident response investigation by Synacktiv. Attackers compromised cloud-hosted infrastructure and deployed the malware across Kubernetes nodes. The rootkit leverages eBPF to execute malicious programs directly inside the kernel, while being orchestrated from user space.
+LinkPro installs two eBPF modules:
+- A component that is responsible for concealing the malware by hiding processes, files, and network and artifacts.
+- A component that monitors network traffic and activates the backdoor when a specific “magic packet” is received, enabling covert remote control.
+The infection chain typically begins with exploitation of exposed infrastructure (for example a vulnerable Jenkins server), followed by deployment of a malicious container image that installs the backdoor and supporting components.
+Once active, the implant can operate in two modes:
+- A passive mode, which remains dormant until triggered by a specially crafted packet.
+- Alternatively, an active mode where it communicates with command-and-control servers over multiple protocols such as HTTP, TCP, DNS, or WebSockets.
+By leveraging the eBPF’s ability to hook kernel functions and intercept system calls, LinkPro achieves kernel-level stealth and persistence while blending into legitimate monitoring mechanisms, illustrating how modern attackers increasingly weaponize observability frameworks to build advanced runtime rootkits.
+BPFDoor
+BPFDoor is a stealthy Linux backdoor used in long-running cyber-espionage campaigns and attributed to the threat group Earth Bluecrow (also known as Red Menshen). First publicly documented around 2021–2022, the malware abuses the BPF subsystem of the Linux kernel to inspect incoming network traffic for specially crafted “magic packets”.
+Instead of opening a listening port like typical backdoors, BPFDoor injects BPF filters into the kernel networking stack, allowing it to silently monitor packets at a low level and activate only when the correct trigger sequence is received. This design allows the implant to remain dormant and largely invisible to standard detection techniques such as port scanning or firewall monitoring while maintaining covert access to compromised systems.
+In newer campaigns analyzed by Trend Micro, researchers identified a previously unseen controller component that interacts with infected machines. The controller sends password-protected trigger packets to the backdoor and can instruct the compromised host to open a reverse shell, redirect network connections, or confirm the presence of the implant, enabling operators to move laterally within the network and control additional systems. The malware supports multiple communication protocols such as TCP, UDP, and ICMP, giving attackers flexible command-and-control options while maintaining stealth.
+Notably, the BPFDoor source code leaked publicly in 2022, which increased the likelihood of new variants and broader adoption by other threat actors.
+User-Space Runtime Integrity Attacks
+Not all runtime attacks require kernel modification. Many modern campaigns compromise runtime integrity by injecting malicious logic directly into user-space processes.
+This approach often relies on techniques such as:
+- Shared library hijacking
+- Process injection
+- API interception
+One common mechanism is the LD_PRELOAD technique, which allows attackers to override standard system library functions.
+By intercepting functions such as readdir, open, netstat and others, attackers can hide malicious libraries, files, processes, and network connections from system utilities.
+Below we provide various examples to user space malware observed in the wild in the past few years:
+Manipulating System Utilities
+One classic technique is utility replacement (also called “utility swapping”), where attackers replace common diagnostic binaries such as ps, top, ls, netstat, or ss with trojanized versions that filter malicious artifacts from the output. These modified utilities behave normally for legitimate processes and files but suppress entries associated with the attacker’s malware, allowing the compromise to remain hidden during routine system checks. Because administrators often rely on these tools to verify system health, a compromised binary can effectively distort the view of the entire system while the underlying processes continue running.
+Azazel and Jynx
+Azazel is an open-source Linux user-space rootkit designed to demonstrate stealth techniques using the LD_PRELOAD dynamic linker hijacking mechanism. Instead of modifying the kernel, Azazel works by loading a malicious shared library into running processes before standard system libraries are initialized. By intercepting common libc functions , the rootkit can manipulate system output to hide processes, files, and network connections associated with malicious activity. Because these hooks occur at runtime inside user-space libraries, the system may appear normal to administrators even while the malware remains active.
+The project builds on earlier user-space rootkits such as Jynx but adds stronger anti-debugging and anti-detection capabilities. Azazel can intercept system calls, conceal artifacts of other malware, and provide backdoor functionality while running inside legitimate processes. Since the source code is publicly available on GitHub, it is frequently used in security research, adversary emulation, and malware analysis, and has influenced later Linux user-space rootkits that rely on dynamic linker hijacking techniques.
+Hybrid Approach - Both Kernel-Level and User-Space Runtime Integrity Attacks
+In recent years we observe a new trend as user-space rootkits evolve to adopt kernel-level modules or become fully kernel-level rootkits.
+Symbiote
+Symbiote is primarily a user-space library rootkit that infects processes via LD_PRELOAD, but newer variants also leverage BPF/eBPF packet filters to hide network traffic at the kernel networking layer, illustrating the growing convergence between user-space implants and kernel instrumentation techniques.
+First discovered in 2022. Instead of running as a standalone executable, it is deployed as a malicious shared object (.so) that is loaded into processes using the LD_PRELOAD environment variable, allowing it to inject itself into nearly all running applications on a system. Once loaded, the malware hooks common system functions such as read, readdir, and stat, enabling it to intercept system activity, steal credentials, hide files and processes, and provide a covert backdoor for attackers. Because the library loads before legitimate system libraries, it can hijack function calls across the entire system and operate invisibly inside legitimate processes.
+Symbiote also incorporates network-level stealth techniques by abusing BPF functionality to filter or hide malicious traffic from monitoring tools. By manipulating packet inspection and hooking networking libraries such as libpcap, the malware can prevent packet capture utilities from observing its command-and-control communications or exfiltration activity. These mechanisms allow the malware to hide network artifacts, intercept credentials, and maintain persistent remote access while remaining extremely difficult to detect during live forensic analysis.
+In this blog, we explored how modern attackers manage their campaigns within runtime environments and the tools they leverage to evade detection and maintain persistence, with a particular focus on rootkits. In the next blog, we will examine how organizations running AI infrastructure can adapt their security models and implement prevention and mitigation strategies to better protect runtime environments.
+Later research showed that newer Symbiote samples incorporate BPF or eBPF filters as an additional stealth mechanism, particularly to hide malicious network activity from packet capture tools. Analysis of samples observed in 2025 confirmed that the malware still relies on its original user-space injection architecture but now embeds BPF bytecode filters attached to network sockets to manipulate packet visibility and evade detection tools.
+This means Symbiote should be considered a hybrid runtime threat: its core implant operates in user space, while BPF/eBPF mechanisms provide kernel-level visibility manipulation for network traffic. The malware has therefore evolved from a pure user-space library rootkit into a more advanced implant that leverages kernel networking mechanisms for stealth, reflecting a broader trend where attackers combine user-space implants with kernel instrumentation technologies to evade modern monitoring systems.

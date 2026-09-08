@@ -1,0 +1,47 @@
+URL: https://lavahq.io/research/neocloud-security
+STATUS: 200
+DEPTH: 2
+---
+If you are renting GPUs from a neocloud, you probably know exactly what you are getting. H100s or H200s. B200s or GB200s. How many GPUs per node, how much memory, which interconnect, how much storage, and how fast the network is.
+But how much do you know about the infrastructure surrounding those GPUs?
+Can another neocloud customer reach your server? Is the backend fabric shared with other neocloud tenants? How is shared storage isolated? Who can access the BMC attached to your server? What happens to a bare-metal machine before it moves from one customer to another?
+For many customers, the answer is much less clear.
+For companies renting AI infrastructure, these security gaps are becoming one of the core questions about neocloud security.
+Recent research shows why this matters. In the article “Most Neoclouds Suck At Security”, published ahead of ClusterMAX 3.0, SemiAnalysis described extensive testing across 25 providers and 32 clusters. Security has long been a focus of SemiAnalysis, but for ClusterMAX 3.0 it is now listed first among the 10 dimensions used to evaluate GPU cloud providers, signaling how much more central security has become to the way these environments are assessed.
+Their testing uncovered issues involving management infrastructure, network isolation and InfiniBand, shared storage, monitoring systems, and tenant boundaries. Some findings resulted in cross-tenant data exposure and even cross-tenant code execution between tenants controlled by the researchers.
+Our own research at Lava keeps pointing to the same infrastructure layers. In our recent BMC research, we identified 36,000 internet-exposed IPMI interfaces, including modern servers operated by GPU providers. We also found an exposed neocloud environment with a default password, highlighting how a single overlooked credential can put neocloud users at risk.
+More recently, while renting GPU infrastructure from a neocloud provider, we identified a cross-tenant isolation failure where a customer-controlled server could reach the provider’s private out-of-band management network. That network exposed BMCs, routers, switches, and other infrastructure used to operate the environment. The issue was reported and remediated.
+The vulnerabilities are different, but they point to the same class of neocloud security risks. When renting neocloud capacity, you are trusting security boundaries you cannot see, test, or independently verify before putting valuable workloads behind them.
+GPU Scarcity Changes the Rules
+There is a reason companies are willing to make this trade.
+They need the GPUs.
+Building large AI clusters is expensive, slow, and operationally complex. Even companies with enormous infrastructure budgets increasingly rent capacity from specialized providers because it’s difficult to get thousands of modern GPUs in the right location, with the right networking, at the right time.
+The scale of these relationships is becoming extraordinary. In August 2026, Anthropic reportedly agreed to a $45 billion, six-year AI compute deal with Nscale, an AI infrastructure company that launched from stealth in 2024. The age of a company tells us nothing about whether its infrastructure is secure, and there is no reason to infer anything about Nscale’s security from the deal. What it shows is how quickly a relatively new infrastructure provider can become a critical supplier to one of the largest AI companies in the world.
+This has become a broader market phenomenon, with some of the world’s largest technology companies consuming huge amounts of infrastructure from providers that were startups only a few years ago.
+That changes the normal security buying process.
+If several providers can offer the same service, customers can heavily weigh security maturity, assurance, compliance, architecture, cost, and operational history. If only one provider can deliver thousands of the GPUs you need in the next few months, the decision looks very different.
+A security team may identify gaps in documentation, transparency, or technical assurance, and the company may still decide to move forward. When GPU capacity is scarce, waiting months for infrastructure can carry more business risk than accepting additional security risk today.
+The same pressure affects providers. Demand can push infrastructure to scale faster than security programs, processes, architecture, and customer assurance. Providers are building at extraordinary speed, often while introducing complex multi-tenant architectures that create new security boundaries.
+GPU scarcity can change which risks a company is willing to accept. It does not change the risks themselves.
+The Hidden Infrastructure Behind Neo Clouds
+GPU cloud security extends beyond the server a customer rents. Behind it is an environment of management infrastructure, networking, storage, firmware, provisioning, and operational systems that customers usually do not control.
+The BMC is a good example. It operates independently of the host OS and provides low-level control and critical firmware management over the server. If access to it is not properly restricted, an attacker could affect the customer’s server even if the operating system itself is fully hardened.
+The same applies to the backend network, or “east-west” fabric. AI clusters often use InfiniBand or RoCE to connect GPUs at high speed. If that fabric is shared across customers, weak isolation or misconfiguration can expose one tenant to traffic or systems belonging to another.
+Storage creates another dependency. A customer may receive a filesystem containing its datasets and checkpoints, while the actual storage platform underneath it is shared across a much larger environment. The security boundary depends on authorization being enforced correctly below the interface the customer sees.
+None of these technologies are inherently insecure. The problem is that customers depend on all of them being designed and configured correctly, usually without being able to inspect them.
+We explored this problem in more detail in our article on rethinking the Shared Responsibility Model for neocloud security. Customers do not need to operate every layer of the infrastructure, but they are still affected when security at those layers fails.
+SemiAnalysis’ monitoring example makes this very concrete. A Grafana dashboard appeared to separate customers, but the isolation did not extend to the backend. As they found, “our Grafana dashboard was using a Prometheus API key with god level privilege to read logs and metrics from every single tenant.” The underlying API exposed information across customers, including AI research organizations, banks, telecom companies, and a national intelligence agency.
+These are the kinds of AI infrastructure security risks we cover in FORGE, our practical security framework for AI infrastructure and data centers.
+Neocloud Security Assurance Isn’t Fully Mature
+Customers have long trusted major cloud providers with infrastructure they cannot directly inspect. Providers such as AWS, Azure, and GCP have earned that trust over years of operating at scale, public scrutiny, security investment, and independent assurance.
+To do that, they built extensive audit programs, security documentation, compliance scopes, and external testing processes that give customers evidence about how provider-operated controls are secured.
+With neoclouds, that level of maturity and evidence can and does vary significantly. SOC 2 and ISO 27001 are useful, but they do not necessarily tell you whether shared storage, monitoring systems, or high-speed fabrics are enforcing the tenant boundaries you expect.
+For customers placing proprietary datasets, model weights, training workloads, or other sensitive intellectual property into these environments, that gap matters.
+Customers do not need direct access to every system protecting their workloads. But they do need enough evidence to understand how those boundaries are secured and validated.
+Without that evidence, customers are not verifying the security boundary. They are simply being asked to trust it.
+What Neocloud Customers Should Know Before Renting GPUs
+Neoclouds solve a real problem and are becoming critical infrastructure for some of the world’s largest AI companies. But rapid growth does not automatically mean mature security. Capacity can scale faster than security programs, operational processes, and customer assurance.
+The important part is understanding what risk you are actually accepting.
+A familiar cloud interface and access to the latest GPUs do not tell you how mature the environment underneath them is or how well its security boundaries are enforced.
+GPU scarcity can make additional risk acceptable. It should not make that risk invisible.
+We’ve seen firsthand what neoclouds are building and where security risks lie. We also know what neocloud customers worry about. It’s time that neoclouds tackle these security challenges and better manage their customer offerings - they will benefit from better operations and more customer trust. And neocloud consumers need to learn to ask the right questions to ensure access to GPUs isn’t posing an unreasonable security risk.

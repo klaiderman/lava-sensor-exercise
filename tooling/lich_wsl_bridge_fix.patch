@@ -1,0 +1,70 @@
+diff --git a/plugins/lich-sandbox/scripts/bridge/wsl.py b/plugins/lich-sandbox/scripts/bridge/wsl.py
+index 763202c..9a951a5 100644
+--- a/plugins/lich-sandbox/scripts/bridge/wsl.py
++++ b/plugins/lich-sandbox/scripts/bridge/wsl.py
+@@ -80,19 +80,30 @@ def _detect_signal(stderr: str) -> str | None:
+ 
+ 
+ def run_in_wsl(
+-    target_file: str,
+-    function_name: str,
+-    witness_json: str,
++    script_path: str | None = None,
++    entrypoint: str | None = None,
++    witness_json: str = "",
+     timeout_s: int = 10,
++    *,
++    target_file: str | None = None,
++    function_name: str | None = None,
+ ) -> dict:
+     """Execute one sandboxed witness inside WSL.
+ 
+     Args:
+-        target_file: absolute Windows path to the .py file under test.
+-        function_name: symbol to call inside the target module.
++        script_path: absolute Windows path to the .py file under test.
++            (Agent 3's `sandbox.py` call-site name; positionally identical
++            to the original `target_file` parameter.)
++        entrypoint: symbol to call inside the target module. (Agent 3's
++            call-site name; positionally identical to `function_name`.)
+         witness_json: JSON-serialised witness `{"args": [...], "kwargs": {...}}`.
+         timeout_s: parent-side wall-clock fence (backstop; the child also
+             arms `signal.alarm(ALARM_S)`).
++        target_file: keyword-only alias for `script_path`, kept for
++            backward compatibility with `bridge/test_bridge.py`'s
++            pre-existing call-site naming.
++        function_name: keyword-only alias for `entrypoint`, kept for the
++            same reason.
+ 
+     Returns:
+         `{exit_code, stdout, stderr, duration_ms, signal}` with `signal`
+@@ -103,7 +114,19 @@ def run_in_wsl(
+     prefixed `WSL invocation failed:` — Agent 3's `outcome.classify`
+     routes this to `sandbox-error`, not `confirmed-bug`.
+     """
+-    wsl_target = _windows_to_wsl(target_file)
++    # Two call-sites disagree on kwarg names (sandbox.py: script_path/
++    # entrypoint; test_bridge.py: target_file/function_name). Positional
++    # order is unchanged from the original signature, so positional callers
++    # are unaffected; keyword callers on either name now both work.
++    resolved_target = script_path if script_path is not None else target_file
++    resolved_function = entrypoint if entrypoint is not None else function_name
++    if resolved_target is None or resolved_function is None:
++        raise TypeError(
++            "run_in_wsl requires script_path/target_file and "
++            "entrypoint/function_name"
++        )
++
++    wsl_target = _windows_to_wsl(resolved_target)
+ 
+     # Parse witness up front so a malformed JSON doesn't get laundered
+     # into the WSL child as a parse-error-inside-the-sandbox.
+@@ -120,7 +143,7 @@ def run_in_wsl(
+ 
+     stdin_payload = json.dumps({
+         "target_file": wsl_target,
+-        "function_name": function_name,
++        "function_name": resolved_function,
+         "witness": witness,
+     })
+ 

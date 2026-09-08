@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://lavahq.io/research/datacenter-security",
+  "url": "https://lavahq.io/research/datacenter-security",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-domain",
+      "state": 4,
+      "crawlDepth": 2
+    },
+    "depth": 2
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": "https://lavahq.io/research/datacenter-security",
+  "handled_at": "2026-09-08 22:38:52.651721+00:00"
+}

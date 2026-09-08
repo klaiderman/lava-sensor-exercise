@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /studio
+
+Host: https://lavahq.io
+Sitemap: https://lavahq.io/sitemap.xml

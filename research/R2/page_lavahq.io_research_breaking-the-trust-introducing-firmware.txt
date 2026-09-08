@@ -1,0 +1,63 @@
+URL: https://lavahq.io/research/breaking-the-trust-introducing-firmware
+STATUS: 200
+DEPTH: 2
+---
+Firmware is code that runs before the operating system, controls hardware directly, and often sits outside the reach of most security toolings. Therefore, when it comes to firmware, trust is decided even before your OS has had a chance to run.
+That makes firmware integrity foundational. Firmware integrity is the assurance that the low-level software controlling the hardware has not been tampered with and remains in a trusted state before and during system operation.
+This is especially important for GPU cloud providers and AI infrastructure operators. Their customers expect maximum performance with minimal overhead, pushing providers toward architectures that offer direct access to powerful compute resources and fewer layers of abstraction. While this delivers the efficiency required, it also reduces some of the natural security boundaries that abstraction provides.
+This creates a structural tension, customers are getting closer to the hardware, without a corresponding reduction in risk. Which makes the core question more urgent than ever:
+How can we ensure the firmware is still trustworthy under these conditions?
+The textbook answer is to rely on a hardware-rooted chain of trust.
+A chain of trust starts from a hardware root of trust and extends trust upward, step by step. Each layer measures or verifies the next layer before handing over execution. Firmware is measured, validated, and used to establish a known-good starting point before the operating system loads. From there, trust is extended upward into the OS and workloads.
+In theory, this provides a strong guarantee but in practice, that assumption is increasingly fragile.
+Historically, firmware received less attention from cloud security vendors because it was not considered directly reachable by external users or tenants. In traditional cloud architectures, customers interacted with the system above the hypervisor, while firmware remained below the virtualization boundary and under the control of the infrastructure operator.
+In a multi-tenant GPU cluster, that risk is amplified. A single compromised firmware layer can persist across reboots, survive disk reimaging, and silently impact every tenant that runs on the machine. It can observe or manipulate everything above it: memory, workloads, model execution, and even the integrity signals themselves. In the case of Firmware compromise it does not even need to rely on hiding mechanisms because it completely controls the execution environment from the start.
+In this three-part series, we explain what firmware integrity is, walk through real-world attack surfaces and techniques, and outline how to defend against them.
+The Limits of the Chain of Trust
+The chain of trust remains an important foundation for platform security, but it was designed to answer a narrower question: did the system start from an expected state at boot?
+That question matters, but it is not the only question infrastructure operators need to answer.
+In real-world environments, firmware trust depends on more than a successful boot-time measurement. It depends on what was measured, who performed the measurement, whether the result can be independently verified, whether all relevant firmware components are included, and whether the firmware remains trusted after the system is already running.
+This is where the limits of the traditional chain of trust become important.
+Why the Chain of Trust Is Not Enough
+The chain of trust is not broken. It just makes assumptions that do not always hold in deployed systems, and the gaps are worth being explicit about.
+Measurements
+For the chain to catch a compromised component, the thing doing the measuring has to be architecturally separate from the thing being measured. The BMC is a useful example because it is both highly privileged and often involved in reporting platform firmware state. If it is compromised deeply enough, it may be able to influence what the platform reports about its own health.
+An external Root of Trust, or eRoT, improves this model by using a separate chip on the board to independently verify the BMC before it is trusted. This creates a stronger foundation for server attestation, although it is not yet universal across all server platforms.
+Consistency
+Many device firmwares still sit outside the chain entirely. GPU, NIC, and storage-controller firmware have historically loaded through their own paths and were not always measured into the platform chain of trust.
+SPDM exists to help address this by allowing the host to challenge each device for a signed measurement of its firmware. But SPDM support is uneven across vendors, and it is often disabled by default in the BMC settings that gate it.
+Verification
+Verification depends on reference values that many operators do not have.
+A measurement is just a hash. To know whether that hash is good or bad, you need a vendor-published reference value for the exact firmware version expected on that platform.
+The ecosystem for distributing those reference values, with CoRIM as an emerging standard, is still early. In many environments today, “the chain of trust verified the firmware” really means “the firmware was signed by a key the platform trusts.”
+That catches an unsigned tampered image, but it may not catch a downgrade to an older signed-but-vulnerable version.
+Singularity
+Fleet inventory often trusts what firmware says about itself. Even when attestation works on a given server, fleet-level patch management usually depends on the BMC reporting its own firmware version to an inventory tool.
+Tampered firmware can lie.
+The patch dashboard goes green, the CVE compliance report says the fleet is clean, and nothing has actually been verified independently.
+The point is not that the chain of trust is useless. It is that the chain’s effectiveness depends on architectural details most operators do not see, and on a reference-value and protocol ecosystem that is still maturing.
+For organizations operating AI infrastructure, firmware integrity cannot be treated as a property the platform delivers for free.
+Self-Reported Inventory
+Fleet inventory often trusts what firmware says about itself. Even when attestation works on a given server, fleet-level patch management usually depends on the BMC reporting its own firmware version to an inventory tool.
+Tampered firmware can lie.
+The patch dashboard goes green, the CVE compliance report says you're clean, and nothing has actually been verified independently.
+The point is not that the chain of trust is broken. It's that the chain's effectiveness depends on architectural details most readers don't see, and on a reference-value and protocol ecosystem that is still maturing. For organizations operating AI infrastructure, that means firmware integrity cannot be treated as a property the platform delivers for free.
+Adding the adversarial factor to the equation
+Attackers have evolved from focusing only on operating systems and applications to increasingly investing in compromising firmware, hardware-adjacent components, and other low-level layers where defensive visibility and security controls remain comparatively weak.
+Over the past several years, attacker toolkits and techniques have evolved specifically to exploit this gap. Firmware state-sponsored-level malware is increasingly detected over the past few years, including firmware malware, UEFI rootkits, UEFI compromising ransomware and more (in our next blog we will broadly discuss it). When controlling the firmware layer, attackers don’t merely gain persistence, they gain preemptive control, immune to reboot while remaining completely invisible to traditional monitoring tools.
+Once attackers gain access to these areas they can manipulate the firmware and remain persistent, hidden, with significant control. They can control the server to access sensitive datasets, steal model weights, or even tamper with running models and inference pipelines or manipulating model behavior.
+For organizations operating these environments, this creates a difficult balance. Businesses depend on highly dynamic systems that prioritize scalability, performance, and operational continuity, while security teams must ensure the integrity of the underlying infrastructure. Firmware integrity is paramount to ensure the security posture of the entire business.
+Firmware Integrity in Practice
+Firmware integrity is not a single boot-time check. It is the assurance that the foundational software controlling hardware has not been tampered with, has not been downgraded to a vulnerable version, and remains in a trusted state before and during system operation.
+It focuses on validating and protecting the components that initialize hardware, establish system state, and enable the operating system to run.
+In simple terms, firmware integrity asks a critical question:
+Is the system starting from a truly trusted foundation, or has that foundation already been compromised?
+In the broader context, firmware integrity is a part of a well-defined chain of five integrity controls.
+In the case of firmware integrity, we are not talking about a single component. Firmware integrity spans multiple low-level platform components, each of which plays a role in establishing the system’s initial trusted state:
+- System firmware (BIOS/UEFI)
+- Device firmware (GPUs, NICs, storage controllers)
+- Baseboard Management Controllers (BMC)
+Firmware integrity is foundational to platform trust. If the firmware layer, or the root of trust that verifies it, is compromised, everything built on top of it inherits that risk.
+For this reason, organizations need to invest in secure firmware lifecycle operations. This includes continuous visibility, inventory, verification, update management, vulnerability tracking, configuration monitoring, and recovery planning.
+This is especially important in AI and GPU infrastructure, where infrastructure is dynamic, hardware is expensive and highly utilized, and tenants may run close to the underlying compute resources. In these environments, firmware integrity is not just about proving that a server booted correctly. It is about maintaining trust in the platform throughout its lifecycle.
+In this blog, we introduced firmware integrity and explained why the traditional chain of trust is necessary but not sufficient. In the next blog, we will look at real-world firmware vulnerabilities, malware, and compromise techniques.

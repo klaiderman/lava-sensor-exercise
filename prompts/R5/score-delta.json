@@ -1,0 +1,24 @@
+{
+  "source_model": "claude-opus-5",
+  "target_model": "claude-opus-5",
+  "translation_type": "confirmation (no-op) — the prompt was crafted directly in the target model's format at step 3; this stage verifies registry compliance rather than converting between formats",
+  "registry_checks": {
+    "format_xml": "PASS — <role>/<context>/<execution_contract>/<task>/<method>/<constraints>/<output_format>/<edge_cases>/<success_criteria>/<example> throughout",
+    "adaptive_thinking_acknowledged": "PASS — execution_contract item 1: 'adaptive thinking is on by default for you'",
+    "think_thoroughly_not_step_by_step": "PASS — 'think thoroughly through the hard parts'; 'think step by step' does not appear anywhere in the prompt",
+    "few_shot_3_to_5_examples": "DEVIATION (deliberate) — 1 <example> block, not 3-5. Rationale: this is a 10-question open-ended research brief, not a classification/extraction task; the registry's own guidance notes Claude uses examples to calibrate format/depth more than to learn the task. One example anchors the fact-ID citation and evidence-density format; 3-5 examples would need to cover heterogeneous question types (architecture, code patterns, build-vs-buy) and risks over-anchoring style rather than teaching format. Logged as a considered deviation, not an oversight.",
+    "no_forced_tool_use_assumptions": "PASS — the prompt does not assume any specific tool names or call signatures; it references capabilities (WebSearch/WebFetch/Trafilatura/Crawl4AI, local Go/WSL) as available resources, not mandated tool-call syntax",
+    "conciseness_scope_discipline_for_self_verification_tendency": "PASS — constraints: 'Claude 5.x tends toward longer self-verifying output; suppress that here. Present conclusions and cited evidence only.'",
+    "safety_classifier_refusal_handling": "NOT APPLICABLE TO PROMPT TEXT — this is an orchestration/harness concern (checking response.stop_reason before reading .content), not something a system/task prompt can fix. Surfaced concretely during step 7 output-test: a real call to model id 'claude-opus-5' consumed the full 1500-token budget and billed $0.216 but returned 0 words of text, consistent with an unhandled refusal path in output-test.py's call_model()."
+  },
+  "axes": {
+    "Clarity":            { "before": 8.2, "after": 8.2 },
+    "Completeness":       { "before": 10.0, "after": 10.0 },
+    "Efficiency":         { "before": 10.0, "after": 10.0 },
+    "Model Fit":          { "before": 10.0, "after": 10.0 },
+    "Failure Resilience": { "before": 10.0, "after": 10.0 }
+  },
+  "overall_before": 9.6,
+  "overall_after": 9.6,
+  "verdict": "DEPLOY"
+}

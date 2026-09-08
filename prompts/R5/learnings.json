@@ -1,0 +1,141 @@
+{
+  "sessions": [
+    {
+      "timestamp": "2026-09-09T00:56:40.013684",
+      "iterations": 3,
+      "start_score": 8.0,
+      "end_score": 9.0,
+      "improved": true,
+      "delta": 1.0,
+      "entries": [
+        {
+          "iteration": 1,
+          "axis": "Failure Resilience",
+          "hypothesis": "Fixing Failure Resilience (currently 5.0/10) will improve overall from 8.0",
+          "reasoning": "Targeted Failure Resilience (5.0/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "improved (8.0 \u2192 9.0)",
+          "delta": 1.0,
+          "start_score": 8.0,
+          "end_score": 9.0,
+          "axis_changes": {
+            "Failure Resilience": 5.0
+          },
+          "assertions_fixed": []
+        },
+        {
+          "iteration": 2,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        },
+        {
+          "iteration": 3,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        }
+      ]
+    }
+  ],
+  "strategy_stats": {
+    "Failure Resilience": {
+      "applied": 1,
+      "reverted": 0,
+      "total_delta": 1.0,
+      "best_delta": 1.0,
+      "worst_delta": 0.0,
+      "last_result": "applied",
+      "consecutive_failures": 0
+    },
+    "Clarity": {
+      "applied": 2,
+      "reverted": 0,
+      "total_delta": 0.0,
+      "best_delta": 0.0,
+      "worst_delta": 0.0,
+      "last_result": "applied",
+      "consecutive_failures": 0
+    }
+  },
+  "patterns": [
+    {
+      "type": "reliable",
+      "axis": "Clarity",
+      "confidence": "high",
+      "message": "Clarity: 2/2 succeeded, avg +0.0. Always try this first."
+    }
+  ],
+  "fix_history": [
+    {
+      "timestamp": "2026-09-09T00:56:40",
+      "axis": "Failure Resilience",
+      "hypothesis": "Fixing Failure Resilience (currently 5.0/10) will improve overall from 8.0",
+      "reasoning": "Targeted Failure Resilience (5.0/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 1.0,
+      "score_before": 8.0,
+      "score_after": 9.0,
+      "axis_changes": {
+        "Failure Resilience": 5.0
+      },
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T00:56:40",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T00:56:40",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 6.8/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (6.8/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    }
+  ],
+  "negative_examples": [],
+  "weakness_profile": {},
+  "recommendations": [
+    "PRIORITIZE Failure Resilience fixes \u2014 avg improvement of +1.0 per application.",
+    "VERIFY target model prefers XML \u2014 if targeting GPT, switch to Markdown headers."
+  ],
+  "prompt_fingerprint": {
+    "words": 4213,
+    "lines": 183,
+    "sections": 32,
+    "has_examples": true,
+    "has_xml": true,
+    "has_markdown": false
+  },
+  "confidence_scores": {
+    "Failure Resilience": 1.0,
+    "Clarity": 1.0
+  }
+}

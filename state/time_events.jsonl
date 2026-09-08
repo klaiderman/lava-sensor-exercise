@@ -2,3 +2,11 @@
 {"event":"PHASE","phase":"3-contract-ssh-plan","ts":"2026-09-08T21:11:48Z"}
 {"event":"PHASE","phase":"5-host-recon","ts":"2026-09-08T21:38:43Z","budget_min":15}
 {"event":"PHASE_END","phase":"5-host-recon","ts":"2026-09-08T21:49:56Z","actual_min":17,"note":"169 probes, 9 facts, 0 unresolved TCI facts; HOST_SNAPSHOT.json written"}
+{"event":"PHASE","phase":"9-10-model-choice-and-wixie-lifecycles","ts":"2026-09-08T21:51:26Z","budget_min":20,"models":{"R1":"claude-opus-5","R2":"claude-sonnet-5","R3":"claude-opus-5","R4":"claude-opus-5 (promoted)","R5":"claude-opus-5"}}
+{"event":"SESSION_FORK","ts":"2026-09-08T22:30:42Z","from_session":"573ece1e-5ae9-41c9-9d84-e625d280bc3a","to_session":"b64b46f1-8baf-4e2c-9e1a-4730b6251260","note":"native export must include both transcript files"}
+{"event":"APPROVAL","item":"prompts/R5/prompt.md","decision":"approved as-is","ts":"2026-09-08T22:31:54Z"}
+{"event":"APPROVAL","item":"prompts/R1/prompt.md","decision":"approved as-is","ts":"2026-09-08T22:36:43Z"}
+{"event":"APPROVAL","item":"prompts/R2/prompt.md","decision":"approved as-is","ts":"2026-09-08T22:36:43Z"}
+{"event":"APPROVAL","item":"prompts/R3/prompt.md","decision":"approved as-is","ts":"2026-09-08T22:36:43Z"}
+{"event":"APPROVAL","item":"prompts/R4/prompt.md","decision":"approved as-is","ts":"2026-09-08T22:36:43Z"}
+{"event":"PHASE","phase":"12-research-R1-R5","ts":"2026-09-08T22:36:43Z","budget_min":45,"note":"5 workers launched in parallel; 40-min box each"}

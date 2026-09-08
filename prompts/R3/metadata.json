@@ -1,0 +1,74 @@
+{
+  "track": "R3",
+  "role": "r3-sensor-evidence",
+  "target_model": "claude-opus-5",
+  "wixie_commit": "cb90bc4f7eb04e6479f13cec4f0cb2c46a8dafb9",
+  "created": "2026-09-09T00:57:00Z",
+  "task": "Primary-source research worker producing the FACT/DESIGN LAW/PROBE STRATEGY/ADVERSARIAL FIXTURE knowledge base for a read-only, unprivileged Linux posture sensor (Go implementation).",
+  "task_domain": "agent",
+  "format": "xml",
+  "versions": ["prompt.v1.md", "prompt.v2.md", "prompt.md (harden+translate patched, final)"],
+  "techniques": ["role-prompting", "xml-structured-sections", "few-shot-examples", "explicit-fallback-instructions", "adversarial-hardening-checklist (non-negotiables)"],
+  "techniques_avoided": ["chain-of-thought (\"step by step\") -- adaptive thinking model, uses \"think thoroughly\" instead"],
+  "tokens": {
+    "estimated": 7349,
+    "context_window": 1000000,
+    "usage_percent": 0.7
+  },
+  "scores": {
+    "axes": {
+      "clarity": 6.9,
+      "completeness": 9.5,
+      "efficiency": 8.5,
+      "model_fit": 10.0,
+      "failure_resilience": 10.0
+    },
+    "sigma": 1.175,
+    "sigma_dynamic_floor": 0.75,
+    "overall": 8.98
+  },
+  "sat": {
+    "has_role": true,
+    "has_task": true,
+    "has_format": true,
+    "has_constraints": true,
+    "has_edge_cases": true,
+    "no_hedges": true,
+    "no_filler": true,
+    "has_structure": true
+  },
+  "verdict": "HOLD",
+  "verdict_reason": "Overall (rounds to 9.0/10), all 5 axes >= 7.0, and 8/8 SAT assertions clear Wixie's DEPLOY bar. Sigma (1.175) fails even the dynamic word-count-scaled floor (0.75) that shared/scripts/self-eval.py and convergence.py actually implement for a >2000-word prompt (CLAUDE.md's simplified table states a flat 'sigma < 0.45', which is a stricter and, per the scorer's own code comment, 'mathematically unreachable' number for a prompt this size -- the real scoring code already accounts for this by using a size-scaled floor, and even that generous floor is not met here). Convergence plateaued at this sigma across 2 independent sessions (learnings.md); its own suggested fix ('restructure with tables/shorter sentences/more imperative verbs') was evaluated and rejected because it would require shortening the verbatim host-context block (violates the intent file's explicit 'embed host context verbatim' requirement) or artificially degrading the three axes already at/near ceiling (Completeness, Model Fit, Failure Resilience). Reported as an honest HOLD, not inflated to DEPLOY.",
+  "stages_completed": [
+    "direction_lock", "craft_v1", "refine_v2", "converge", "structural_test",
+    "output_test_real_call", "harden", "translate_adapt", "contract_check", "metadata_and_log"
+  ],
+  "output_test": {
+    "ran": true,
+    "dry_run_first": true,
+    "model_used": "claude-opus-5",
+    "max_tokens": 1500,
+    "output_tokens": 920,
+    "output_words": 186,
+    "cost_usd": 0.2109,
+    "note": "Real bounded call succeeded against the live API under this model id (no id-mismatch fallback needed). Response did not open in the mandated FACT/DESIGN LAW format within the token cap; instead it opened with a fabricated <invoke name=\"Bash\"> block and fabricated command output. This is a genuine, measured finding (not self-simulated) and was fed directly into the harden stage as a 13th, track-specific attack class."
+  },
+  "harden": {
+    "attacks_run": 12,
+    "resistant": 9,
+    "vulnerable_found_and_patched": 1,
+    "skipped": 2,
+    "extra_finding_from_measured_call": "fabricated-tool-output (see output_test.note)",
+    "patched": true,
+    "rescored_after_patch_regression": false
+  },
+  "translation": {
+    "from": "claude-opus-5",
+    "to": "claude-opus-5",
+    "kind": "no format conversion; opus-5-registry-specific tuning only (anti-preamble/conciseness instruction, confirmed 'think thoroughly' phrasing, confirmed no MUST/ALWAYS/NEVER-caps overtrigger pattern)",
+    "score_before": 8.96,
+    "score_after": 8.98
+  },
+  "contract_check": "PASS",
+  "generated_at": "2026-09-09T01:15:00Z"
+}

@@ -1,0 +1,27 @@
+{
+  "sequence_counter": 21,
+  "forefront_sequence_counter": 0,
+  "forefront_requests": {},
+  "regular_requests": {},
+  "in_progress_requests": [],
+  "handled_requests": [
+    "https://lavahq.io/research/neocloud-security-has-to-catch-up",
+    "https://lavahq.io/research/runtime-integrity",
+    "https://lavahq.io/research/rethinking-the-shared-responsibility-model",
+    "https://lavahq.io/research/breaking-the-trust-introducing-firmware",
+    "https://lavahq.io/research/neocloud-security",
+    "https://lavahq.io/research/breaking-the-trust-firmware-compromise",
+    "https://lavahq.io/research/breaking-the-trust-enforcing-firmware-integrity",
+    "https://lavahq.io/research/attacks-infrastructure",
+    "https://lavahq.io/research",
+    "https://lavahq.io/research?contact_us=true",
+    "https://lavahq.io/about-lava",
+    "https://lavahq.io/bmcradar",
+    "https://lavahq.io/research/bmc-exposure-alert",
+    "https://lavahq.io/research/enforcing-runtime-integrity",
+    "https://lavahq.io/bmc",
+    "https://lavahq.io",
+    "https://lavahq.io/research/datacenter-security",
+    "https://lavahq.io/research/securing-the-metal-beneath-the-model"
+  ]
+}

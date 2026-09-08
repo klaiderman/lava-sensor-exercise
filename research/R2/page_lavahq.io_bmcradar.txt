@@ -1,0 +1,10 @@
+URL: https://lavahq.io/bmcradar
+STATUS: 200
+DEPTH: 2
+---
+36,872+24 / 24h
+TotalBMCs exposed to the public internet
+24,650
+Vulnerable to CVE-2013-4786
+5,875
+Companies affected

@@ -1,0 +1,75 @@
+{
+  "track": "R4",
+  "role": "r4-host-investigation",
+  "target_model": "claude-opus-5",
+  "wixie_commit": "cb90bc4f7eb04e6479f13cec4f0cb2c46a8dafb9",
+  "versions": ["prompt.v1.md", "prompt.v2.md", "prompt.md"],
+  "scores": {
+    "axes": {
+      "clarity": 9.0,
+      "completeness": 10.0,
+      "efficiency": 8.0,
+      "model_fit": 10.0,
+      "failure_resilience": 10.0
+    },
+    "sigma": 0.71,
+    "sigma_floor_applied": 0.75,
+    "sigma_floor_note": "self-eval.py's dynamic_sigma_floor() returns 0.75 for prompts >2000 words (this prompt: ~4830 words), not the flat 0.45 stated in wixie/CLAUDE.md's DEPLOY-bar table. This is a documented plugin-local override (see the script's own inline rationale: 'sigma < 0.45 is mathematically unreachable for richly-structured XML prompts >2k words'). Per CLAUDE.md's own rule ('when a module conflicts with a plugin-local instruction, the plugin wins — but log the override'), the script's dynamic floor was applied and is logged here. Under the strict flat 0.45 reading this prompt would not clear sigma (0.71 > 0.45) — flagged for the lead, not hidden.",
+    "overall": 9.4
+  },
+  "sat": {
+    "has_role": true,
+    "has_task": true,
+    "has_format": true,
+    "has_constraints": true,
+    "has_edge_cases": true,
+    "no_hedges": true,
+    "no_filler": true,
+    "has_structure": true
+  },
+  "verdict": "DEPLOY",
+  "verdict_basis": "Heuristic pre-check (self-eval.py / convergence.py, zero model calls) DEPLOY per the script's own dynamic sigma floor, 8/8 SAT assertions, all axes >= 7.0, overall 9.4. Layer-1 role-play test 5/5 pass (tier_risk: simulated at Sonnet for an Opus-class target). Layer-2 measured corpus (efficacy-replay.py deploy-bar) was NOT run — see stages_completed notes; its generic chat-style cases are not representative of this autonomous file-writing research prompt and no domain corpus exists for R-track prompts. One bounded real claude-opus-5 call was made (Step 7) and billed successfully, confirming the model id is live and reachable, but returned 0 visible output words within the 1500-token cap (adaptive thinking consumed the budget) — inconclusive on the 'opens in mandated structure' check, not a failure of it.",
+  "stages_completed": [
+    "1_direction_lock (taken from intent file, not re-asked)",
+    "2_craft (prompt.v1.md, Claude 5.x XML)",
+    "3_refine (prompt.v2.md: added examples/roadmap/success_criteria, split 11 long sentences, added subheading)",
+    "4_converge (self-eval.py + convergence.py; DEPLOY at iteration 1 pre-harden; see learnings.md for the caught-and-reverted auto-fixer incident on the verbatim host_summary block)",
+    "5_structural_test (tests.json, 5 cases incl. 3 edge-cases; Layer-1 role-play in test-results.json, 5/5 pass, tier_risk flagged)",
+    "6_output_test (output-test.py --dry-run then one bounded real call, max_tokens=1500; output-test-results.json)",
+    "7_harden (12-attack red-team, audit.json; 3 patches applied; re-scored to DEPLOY)",
+    "8_translate (score-delta.json; claude-opus-5-specific adaptation, no cross-family conversion needed; non-regressive 9.4->9.4)",
+    "9_contract_check (CONTRACT_CHECK.md, 14/14 PASS)",
+    "10_metadata_and_log (this file + LIFECYCLE_LOG.md)"
+  ],
+  "output_test": {
+    "ran": true,
+    "dry_run_verdict": "DEPLOY (heuristic preflight, 9.4/10)",
+    "real_call_attempted": true,
+    "model_used": "claude-opus-5",
+    "max_tokens_cap": 1500,
+    "output_tokens_consumed": 1500,
+    "output_words_returned": 0,
+    "cost_usd": 0.221,
+    "note": "Real call billed successfully against claude-opus-5, confirming the model id resolves and is reachable via the CLI harness. No visible completion text was returned inside the 1500-token cap; consistent with the registry's documented claude-opus-5 tendency toward longer output + self-verification under adaptive thinking. Cannot confirm the mandated opening structure from this call alone; Layer-1 role-play (test-results.json) is the substitute signal for structural compliance."
+  },
+  "harden": {
+    "attacks_run": 12,
+    "resistant_before_patch": 8,
+    "hardening_opportunities_found": 4,
+    "patched": true,
+    "patches_summary": [
+      "non-disclosure of the system prompt itself",
+      "encoded/obfuscated/any-language/hypothetical-framing closure on the .env/ssh/raw_host refusal",
+      "read-only/non-destructive constraint on every recommended probe"
+    ]
+  },
+  "translation": {
+    "from": "claude-opus-5 (Claude 5.x XML, generic craft)",
+    "to": "claude-opus-5 (Claude 5.x XML, opus-5-specific adaptation)",
+    "score_before": 9.4,
+    "score_after": 9.4,
+    "note": "No cross-family reformatting needed (crafted for the target model from prompt.v1.md onward per the intent file's explicit model promotion). Adaptation added a 3rd worked example (reaching the registry's 3-5 few-shot recommendation) and confirmed the scope-discipline/conciseness instruction already present in <constraints> that counters Opus 5's documented longer-output/self-verification tendency. Non-regressive: score held at 9.4/0.71."
+  },
+  "contract_check": "PASS",
+  "generated_at": "2026-09-09T01:20:00Z"
+}

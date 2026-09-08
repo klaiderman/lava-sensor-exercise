@@ -1,0 +1,59 @@
+URL: https://lavahq.io/research/enforcing-runtime-integrity
+STATUS: 200
+DEPTH: 2
+---
+In our previous blog, we discussed runtime integrity and highlighted how modern attackers circumvent traditional security assumptions. In this blog, we focus on how organizations can adapt their security models and implement prevention and mitigation strategies to better protect runtime environments.
+Adjusting Your Trust Model
+Traditional infrastructure security models assume that once a system has booted successfully and passed its initial integrity checks, it can be trusted during normal operation. However, as we demonstrated in our previous blogs, modern attackers increasingly operate after the boot process, manipulating the runtime environment itself.
+Kernel modules, eBPF programs, injected libraries, and user-space rootkits allow attackers to alter system behavior dynamically while leaving disk artifacts untouched.
+This reality requires organizations to update their trust models to reflect the evolving threat landscape. As threat actors evolve, defense models must evolve with them. Instead of assuming that a running system remains trustworthy, defenders must continuously verify its integrity.
+Runtime environments are inherently dynamic: kernel structures change, processes start and stop, and instrumentation frameworks such as eBPF introduce additional code-execution paths inside the kernel. Sophisticated threat actors take advantage of this dynamism, introducing malicious changes after initial access has been gained.
+A modern trust model therefore shifts from static trust to continuous verification. Rather than trusting a system simply because it booted correctly, security architectures must continuously validate the integrity of runtime components such as:
+- Kernel memory structures
+- Loaded kernel modules
+- eBPF programs and hooks
+- Running processes and injected libraries
+- System utilities and monitoring tools
+This approach aligns with broader industry movements such as Zero Trust architecture, where trust is never assumed and must be continuously verified. In distributed environments such as cloud infrastructure, adopting this mindset is especially critical because attackers can leverage a single compromised workload to move laterally across shared infrastructure.
+Prevention and Mitigation
+Mitigating runtime integrity attacks is challenging because the compromise occurs inside the execution environment itself. Once a kernel rootkit or user-space rootkit is active, it may manipulate system behavior and hide its presence from standard monitoring tools.
+As a result, incident-response strategies often fall into two categories: soft purge and hard purge.
+Preventive Mitigations
+While incident response is critical, preventing runtime compromise in the first place is equally important. Organizations can reduce risk by implementing several defensive controls.
+Kernel Hardening
+- Enforce kernel module signing
+- Enable kernel lockdown modes
+- Restrict or audit eBPF program loading
+Runtime Monitoring
+- Monitor kernel memory structures and system call tables
+- Detect unauthorized kernel modules and eBPF programs
+- Track process injection and library hijacking activity
+Immutable Infrastructure
+- Use ephemeral workloads and rebuild systems frequently
+- Avoid long-lived hosts when possible
+- Deploy workloads from verified images
+Soft Purge
+A soft purge attempts to clean the system while it remains operational. This approach focuses on removing malicious artifacts without fully rebuilding the environment.
+Typical soft-purge techniques include:
+- Removing malicious kernel modules or injected libraries
+- Terminating malicious processes
+- Restoring replaced system utilities
+- Revoking compromised credentials
+- Updating vulnerable software components
+The advantage of a soft purge is minimal operational disruption, which can be important in production environments or large compute clusters where downtime is costly. From a business perspective, this is a popular approach because it minimizes interruptions to ongoing operations.
+However, soft-purge approaches have significant limitations. If attackers have modified kernel memory structures, installed hidden modules, or altered system call behavior, the malware may interfere with forensic tools or reinfect the system during cleanup.
+In highly stealthy rootkit infections, defenders may be unable to determine reliably whether every malicious component has been removed.
+Hard Purge
+A hard purge assumes that the system can no longer be trusted and focuses on rebuilding the environment from a known-good state.
+Typical hard-purge actions include:
+- Rebooting the system from trusted media
+- Reinstalling the operating system
+- Rebuilding workloads from clean images
+- Rotating all credentials and keys
+- Revalidating the integrity of firmware and boot components
+This approach helps ensure that hidden runtime implants are removed because the compromised system state is completely replaced. Hard-purge strategies are commonly recommended when kernel-level rootkits or sophisticated persistence mechanisms are suspected.
+The drawback is that hard-purge procedures may introduce significant operational disruption, especially in large-scale environments where many systems must be rebuilt simultaneously.
+Conclusion
+In this post, we walked through runtime integrity end to end: the threats, the mitigations, and the trade-offs.
+The conclusion remains consistent across the series: runtime trust is a precondition for trustworthy infrastructure, not a property that can simply be assumed.
+The chain of trust does not end at boot. It only begins there.

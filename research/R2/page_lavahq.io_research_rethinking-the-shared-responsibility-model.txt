@@ -1,0 +1,59 @@
+URL: https://lavahq.io/research/rethinking-the-shared-responsibility-model
+STATUS: 200
+DEPTH: 2
+---
+AI has created a new infrastructure reality. As demand for high-end GPUs has grown, organizations are increasingly turning to neoclouds. These AI-native cloud providers are built around large GPU clusters, high-performance networking, and flexible compute models. These platforms can provide access to scarce accelerator capacity and give customers more options for how they run demanding training and inference workloads.
+But moving AI workloads to a neocloud is not only a compute decision. It also changes the security boundary. Traditional Shared Responsibility Models were designed for cloud environments where the provider-customer boundary is relatively mature and well understood. AI infrastructure introduces additional layers that customers may not own, may not see, and may not directly manage, but that can still affect workload isolation, audits, liability, incident response, and trust.
+The key principle is simple: provider-owned does not mean customer-irrelevant. Customers do not need to control every layer of AI infrastructure, but they do need to understand which provider-operated layers can affect their security and what assurances exist around them.
+Where the Traditional Shared Responsibility Model Stops
+The Shared Responsibility Model is a foundational cloud-security concept. At its core, the model separates two ideas:
+- 
+Security of the cloud: the provider secures the underlying cloud infrastructure.
+- 
+Security in the cloud: the customer secures what they deploy, configure, and operate inside the cloud.
+The exact boundary changes by service. In infrastructure-as-a-service, providers manage the underlying infrastructure while customers manage more of the operating system, applications, and data. In more managed services, the provider takes on additional platform and runtime responsibilities while the customer remains responsible for areas such as application logic, identity, access control, and data security.
+That model works well when the relevant infrastructure layers are either clearly provider-operated or clearly exposed to the customer. AI infrastructure makes the boundary less straightforward because security-relevant components can sit below the customer’s control while still directly affecting the customer’s workloads.
+Why AI Infrastructure Changes the Boundary
+Traditional hyperscale cloud platforms abstract much of the underlying infrastructure from customers. Neocloud services can expose a different operating model, including bare-metal access or greater customer control over servers, hosts, drivers, and runtimes. That flexibility creates real value, but it also makes questions about host security, tenant isolation, and cleanup between workloads more important.
+AI workloads also depend on infrastructure layers that conventional Shared Responsibility Models do not always describe in detail. GPUs may be shared or partitioned through technologies such as vGPU, MIG, time-slicing, or MPS. Training and inference workloads can depend on specialized accelerator drivers, firmware, infrastructure monitoring, and high-speed GPU interconnects such as InfiniBand or RoCE.
+These layers can influence workload isolation, visibility, performance, and incident response even when the customer does not directly manage them. A responsibility model therefore needs to do more than identify who operates a component. It should also make visible where a customer’s security depends on provider-operated infrastructure.
+How NeoCloud Shared Responsibility Models Surface AI Infrastructure Today
+We reviewed Shared Responsibility Models and trust documentation from several neocloud providers to compare each model’s scope, level of detail, and ability to surface infrastructure layers that matter for modern AI workloads. The purpose is not to rank vendors.
+Scope note: This comparison reflects only the public responsibility and trust documentation reviewed for this draft. It evaluates what the documentation surfaces, not a provider’s overall security maturity or the effectiveness of controls that may exist outside the published model.
+| Neocloud | SRM style | AI-infrastructure layers surfaced | Documentation takeaway | 
+|---|---|---|---|
+|  | Platform-wide SRM | Customer, application, access, data, platform, compute, network, and physical layers | Deeper layers such as firmware trust, GPU cleanup, and backend fabric isolation are less explicit. | 
+|  | Kubernetes-specific SRM | Infrastructure, control plane, worker nodes, networking, storage, add-ons, GPU operators, RBAC, observability, and workloads | The detail is focused mainly on Crusoe Managed Kubernetes rather than the full AI infrastructure stack. | 
+|  | Trust center and shared responsibility matrix | Encryption, isolation, IAM, audit logs, monitoring, privacy, data residency, underlay network security, hardware security, and data center security | There is less detail on operational ownership of drivers, node images, GPU operators, and low-level infrastructure. | 
+|  | Cloud-style SRM | Bare metal, IaaS, PaaS, SaaS, and model endpoints | The model is high level and provides limited detail on AI-specific infrastructure layers. | 
+|  | AI-infrastructure-aware SRM | Equipment, platform, underlay network, hardware drivers, firmware, node lifecycle, workload isolation, high-performance fabric isolation, and storage media sanitization | The model surfaces a broad set of AI-infrastructure layers. | 
+Taken together, these examples show the different ways neocloud providers describe shared responsibility. The purpose is not to compare security maturity, but to highlight the additional infrastructure layers that AI workloads bring into the trust boundary and the kinds of provider-owned dependencies that customers may need to understand.
+Provider-Owned Does Not Mean Customer-Irrelevant
+The goal is not to replace the Shared Responsibility Model or move more responsibility onto customers. It is to extend the model so that it better reflects the infrastructure customers are actually using, while also creating a shared language for describing the security dependencies within it. When providers, customers, auditors, and the broader security community use a common language for these layers and responsibilities, the model can evolve more clearly as AI infrastructure and its security challenges evolve. A useful starting point is to make those infrastructure layers explicit and clarify how responsibility is typically distributed across them.
+Many AI-infrastructure layers will remain provider-owned. Customers generally cannot directly manage the data center, hardware lifecycle, firmware, management network, or backend interconnect fabric. But if a provider-operated layer can affect customer workloads, audits, liability, or trust, that dependency should be visible in the responsibility model. The table below illustrates the layers that a broader model could make visible and how responsibility may typically be assigned.
+| Layer | What it includes | Typical responsibility | 
+|---|---|---|
+| Data center physical security | Facility access, hardware tracking, physical controls, environmental protections, and physical monitoring | Provider-owned | 
+| Hardware and device lifecycle | Hardware supply chain, GPU servers, storage devices, network devices, provisioning, maintenance, replacement, reuse, decommissioning, and disposal | Provider-owned | 
+| Firmware and hardware trust | BIOS, BMC firmware, GPU firmware, NIC firmware, update processes, secure boot, and hardware trust mechanisms | Provider-owned | 
+| Out-of-band management network | BMC access, switch management, provisioning systems, remote console, power control, and firmware update paths | Provider-owned | 
+| GPU interconnect fabric | High-speed networking between GPUs and GPU servers such as InfiniBand and RoCE | Provider-owned | 
+| GPU isolation and cleanup | GPU sharing and partitioning methods such as MIG, vGPU, time-slicing, and MPS, plus GPU state cleanup between workloads | Provider-owned | 
+| Infrastructure observability | Host metrics, infrastructure logs, accelerator monitoring, health telemetry, and alerts | Provider-owned or shared | 
+| OS and container runtime | Host OS, kernel, drivers, container runtime, Kubernetes nodes, images, patching, and runtime hardening | Provider-managed or customer-owned, depending on service | 
+| Tenant network | VPCs, firewall rules, ingress, egress, load balancers, segmentation, and customer-facing network controls | Shared | 
+| Identity and access management | Console access, API access, authentication, authorization, roles, secrets, service accounts, and privileged access | Shared | 
+| Encryption and key management | Encryption at rest and in transit, key ownership, key rotation, and customer-managed keys | Shared, service-dependent | 
+| AI model artifacts and serving layer | Model weights, checkpoints, datasets, registries, serving endpoints, inference logs, and model access controls | Shared or customer-owned, service-dependent | 
+| Customer application and data | Application logic, prompts, outputs, training data, fine-tuning data, user data, and application-level controls | Customer-owned | 
+From Responsibility to Assurance
+A more useful Shared Responsibility Model should answer two questions for every security-relevant layer:
+- 
+Who operates it? Is the layer provider-owned, customer-owned, or shared?
+- 
+What assurance does the customer receive? What documentation, audit evidence, isolation or sanitization procedures or telemetry let the customer verify the dependency rather than take it on trust?
+This is the important shift. Operational ownership and customer security dependency are not the same thing. A provider may fully operate a layer while the customer still depends on that layer for isolation, auditability, or trust. Making that dependency explicit gives customers a better basis for asking questions and gives providers a clearer way to explain the controls they already operate.
+A Shared Responsibility Model for Modern AI Infrastructure
+AI infrastructure is forcing the industry to revisit long-standing cloud assumptions. Neoclouds solve a real infrastructure problem by giving customers access to the compute and operating flexibility they need, but AI workloads introduce trust boundaries that are not always visible in traditional Shared Responsibility Models.
+Customers do not need to control every layer of the stack. They do need to know where their security depends on provider-operated infrastructure. A modern SRM should make those boundaries clear and it should show what the provider operates, what the customer controls, and where customers depend on provider-owned infrastructure for security.
+For AI infrastructure, ownership alone is no longer enough to describe the trust boundary.

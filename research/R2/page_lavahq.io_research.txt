@@ -1,0 +1,12 @@
+URL: https://lavahq.io/research
+STATUS: 200
+DEPTH: 1
+---
+Featured
+The Next AI Attack May Happen Inside the Data Center
+AI is moving faster than the infrastructure beneath it. As neoclouds and data centers race to support increasingly powerful AI workloads and autonomous agents, the security models protecting that infrastructure are struggling to keep up with the pace of change.
+Stay in the loop
+Be the first to know about product updates, security research, and new blog posts from Lava.
+Want to Talk?
+We'd love to hear what brought you here.
+Whether you're tackling these challenges or simply exploring, let's talk.

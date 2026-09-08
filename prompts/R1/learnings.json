@@ -1,0 +1,116 @@
+{
+  "sessions": [
+    {
+      "timestamp": "2026-09-09T00:59:14.205999",
+      "iterations": 2,
+      "start_score": 9.0,
+      "end_score": 9.0,
+      "improved": false,
+      "delta": 0.0,
+      "entries": [
+        {
+          "iteration": 1,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 7.5/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (7.5/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        },
+        {
+          "iteration": 2,
+          "axis": "Clarity",
+          "hypothesis": "Fixing Clarity (currently 7.5/10) will improve overall from 9.0",
+          "reasoning": "Targeted Clarity (7.5/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (9.0 \u2192 9.0)",
+          "delta": 0.0,
+          "start_score": 9.0,
+          "end_score": 9.0,
+          "axis_changes": {},
+          "assertions_fixed": []
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-09-09T01:00:16.208075",
+      "iterations": 0,
+      "start_score": 0,
+      "end_score": 0,
+      "improved": false,
+      "delta": 0,
+      "entries": []
+    }
+  ],
+  "strategy_stats": {
+    "Clarity": {
+      "applied": 2,
+      "reverted": 0,
+      "total_delta": 0.0,
+      "best_delta": 0.0,
+      "worst_delta": 0.0,
+      "last_result": "applied",
+      "consecutive_failures": 0
+    }
+  },
+  "patterns": [
+    {
+      "type": "reliable",
+      "axis": "Clarity",
+      "confidence": "high",
+      "message": "Clarity: 2/2 succeeded, avg +0.0. Always try this first."
+    },
+    {
+      "type": "persistent_plateau",
+      "confidence": "high",
+      "message": "No improvement in last 2 sessions. Structural rewrite needed \u2014 incremental fixes exhausted."
+    }
+  ],
+  "fix_history": [
+    {
+      "timestamp": "2026-09-09T00:59:14",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 7.5/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (7.5/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T00:59:14",
+      "axis": "Clarity",
+      "hypothesis": "Fixing Clarity (currently 7.5/10) will improve overall from 9.0",
+      "reasoning": "Targeted Clarity (7.5/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 9.0,
+      "score_after": 9.0,
+      "axis_changes": {},
+      "assertions_fixed": []
+    }
+  ],
+  "negative_examples": [],
+  "weakness_profile": {},
+  "recommendations": [
+    "RESTRUCTURE the prompt \u2014 tables instead of prose, shorter sentences, more imperative verbs. The current structure has reached its ceiling.",
+    "ADD examples \u2014 prompts over 1500 words without examples score lower on Completeness and Model Fit."
+  ],
+  "prompt_fingerprint": {
+    "words": 3691,
+    "lines": 195,
+    "sections": 34,
+    "has_examples": false,
+    "has_xml": true,
+    "has_markdown": true
+  },
+  "confidence_scores": {
+    "Clarity": 0.9
+  }
+}

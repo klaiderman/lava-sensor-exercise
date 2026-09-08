@@ -1,0 +1,19 @@
+{
+  "unique_key": "https://lavahq.io/research/enforcing-runtime-integrity",
+  "url": "https://lavahq.io/research/enforcing-runtime-integrity",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "enqueueStrategy": "same-domain",
+      "state": 4,
+      "crawlDepth": 2
+    },
+    "depth": 2
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": "https://lavahq.io/research/enforcing-runtime-integrity",
+  "handled_at": "2026-09-08 22:39:12.124335+00:00"
+}

@@ -1,0 +1,48 @@
+URL: https://lavahq.io/research/datacenter-security
+STATUS: 200
+DEPTH: 2
+---
+The Next AI Attack May Happen Inside the Data Center
+Last week, Ilya Sutskever posted on X about the limited cybersecurity neoclouds have, with the forecast that rogue agents will use neoclouds to proliferate.
+Since we've been working on AI data center security for a long time, and renting capacity at neoclouds to better understand their security profiles and needs, I couldn't agree more.
+This post will dig into the problems that are making neocloud security weak. It's worth a read since neocloud security isn't just a neocloud problem. It extends into enterprise data centers too.
+Introduction: Agents Go Rogue
+The Hugging Face incident is a telling one. Agents did not set out with a simple instruction to attack Hugging Face. They were pursuing another objective, and when they concluded that Hugging Face might contain information or infrastructure that could help them achieve it, its infra became part of their path. And what Sutskever was perhaps telling us is that the next useful piece of infrastructure may be the infrastructure running the AI itself, such as a neocloud.
+Let's think of an agent running as a tenant workload inside a large AI cloud. It starts with access to a VM or a Kubernetes environment, trying to complete a task. It then discovers something it was not supposed to see. For instance, a control plane that exposes information about the underlying hosts.
+For a human attacker, turning those findings into a meaningful attack path might require hours or days of work. An autonomous system can continue testing paths, inspecting services, and combining small mistakes without stopping. One configuration issue leads to another until what looked like a minor exposure becomes privileged infrastructure access.
+Data center security always had these gaps. What is different today is the speed at which they can be exploited.
+Neoclouds are Vulnerable
+Neoclouds are an important resource. GPU compute is scarce, and they offer it packaged inside a data center, that's either bare metal or set up in a way that makes life easy: just plug and play.
+A single neocloud environment can contain thousands of interconnected servers managed through Kubernetes, schedulers, virtualization platforms, network controllers, BMCs, DPUs, and vendor-specific control planes. This infrastructure was not originally designed around the security assumptions that apply to a neocloud, nor for multi-tenancy.
+Modern AI infrastructure isn't that far from traditional data center architecture. Those environments were often built for trusted operators, internal research teams, and relatively controlled workloads. Neoclouds are now taking many of the same technologies and operating them as large-scale commercial clouds.
+This means that physical machines are often reassigned between tenants. GPU fabrics connect large portions of the cluster. Management systems can control entire fleets. Hardware contains programmable state below the operating system. What was once an internal infrastructure boundary is now part of a multi-tenant security boundary.
+Add the fact that the workloads running on top are capable of actively exploring (and exploiting) their environment, and the gap between the rapid infra buildout and the security protecting it becomes even more worrying.
+The Real Risk Is Between the Layers
+A neocloud compromise is likely to start with something that doesn't seem that big: an exposed credential or a reachable management interface.
+From an architectural point of view, modern data centers are highly connected, but the security tools is fragmented. Endpoint products, network security or OEM platforms each "see" their own silo. But the security risk lies in the path across these different layers, and AI has the resources to explore thousands of these paths until it finds the right one.
+Multi-Tenancy Raises the Stakes
+Neoclouds make these problems more dangerous because the infrastructure is shared. A physical server can be re-assigned between tenants, just like storage infrastructure serves multiple customers and management systems control machines belonging to different tenants.
+Isn't isolation enough? It isn't. To work, it has to hold across compute, storage, orchestration, networking, management interfaces, and the physical hardware underneath them. Our research shows that there are demonstrated failures across several of these boundaries, including tenant isolation, management networks, Kubernetes environments, and accelerator fabrics.
+Combining autonomous agentic workloads with imperfect multi-tenant isolation is what makes neocloud security vulnerable.
+GPU Networking Is Becoming a Security Boundary
+The networking underneath AI clusters creates another security gap. InfiniBand, RoCE, and RDMA were designed to move enormous amounts of data between machines with extremely low latency.
+In a neocloud, they have an additional use as tenant-isolation boundaries, although they were not built for that.
+A mistake in segmentation or fabric configuration can potentially expose infrastructure far beyond the tenant as we detailed in our research. Yet these are technologies that relatively few people deeply understand, and most traditional security platforms have limited context about how GPU fabrics relate to workloads, hosts, tenants, and management systems.
+The network connecting the GPUs is therefore becoming one of the most important security boundaries in modern AI infrastructure at the same time that it remains one of the least visible.
+The Risk Continues Below the Operating System
+The security boundary does not end at the host OS.
+Modern GPU servers contain programmable components across BMCs, NICs, DPUs, GPUs, storage controllers, BIOS, and other firmware. Some of these components operate independently of the host operating system and can retain state even after the server itself has been rebuilt. To understand the risk, see what our BMC research exposed.
+This matters enormously in neoclouds, where scarce capacity is reused. Reimaging a VM does not necessarily mean the host is clean. Reinstalling the host operating system does not necessarily reset every programmable component underneath it.
+For a neocloud, this is not simply a firmware-management problem. It is part of tenant isolation.
+The server used by one customer today may be provisioned to another customer tomorrow. If security teams cannot establish the state of the hardware beneath the OS, they cannot confidently establish where one tenant's trust boundary ends and the next tenant's begins.
+Traditional Data Centers Have the Same Security Gap
+Neoclouds may be the most immediate pressure point, but they are not alone.
+Traditional enterprise data centers have accumulated decades of infrastructure across compute, networking, virtualization, storage, identity, BMCs, firmware, and management platforms. There is rarely one control plane or security system with context across all of those layers.
+Now enterprises are adding AI infrastructure and autonomous agents on top of that environment.
+An agent used for troubleshooting, operations, or remediation may eventually have access to shell environments, Kubernetes, virtualization systems, cloud APIs, network devices, or infrastructure-management platforms. The more capable these systems become, the more the fragmented infrastructure around them becomes part of their operating environment.
+That changes what defenders need to secure.
+For twenty years, complexity made data centers difficult for humans to understand and protect. In the agent era, that same complexity can become an attack surface that autonomous software can explore at machine speed.
+It's Time to Take Data Center Security Seriously
+Neocloud security matters because agents can leverage their enormous compute resources and stay undetectable since their security is lagging and siloed, across layers, vendors and with some hardware elements (such as BMCs and DPUs) poorly protected or understood.
+And inside a neocloud, the path can lead much further.
+The AI industry is spending enormous effort securing models, prompts, agents, and applications. Those layers matter, but they sit on top of data center infrastructure with security assumptions inherited from a very different era. It's time to change that.

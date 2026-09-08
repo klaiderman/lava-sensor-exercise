@@ -1,0 +1,64 @@
+URL: https://lavahq.io/research/breaking-the-trust-firmware-compromise
+STATUS: 200
+DEPTH: 2
+---
+In our previous blog, we introduced the concept of firmware integrity and why it matters for modern AI infrastructure. In this blog, we take the next step and examine real-world firmware compromise, which components are targeted by attackers and the expanding arsenal attackers use to maintain persistent, undetectable access.
+Firmware security is one of those areas where the impact is huge but the visibility is almost zero. It’s a code that runs before the operating system, controls hardware directly, and often sits outside the reach of most security toolings. That combination is exactly what makes it so attractive to attackers.
+The volume of publicly known firmware compromises remains significantly lower than other types of attacks (for instance runtime-focused campaigns). This reality stems from several critical preconditions that should be emphasized:
+- 
+The security industry has historically focused far more on the hypervisor and layers above it. As a result, both academic and industry research have concentrated heavily on runtime attacks, cloud workloads, containers, identities, and operating systems, while firmware security has received comparatively limited attention.
+- 
+Visibility into firmware compromise remains extremely limited. Few organizations deploy solutions capable of continuously monitoring firmware integrity across components such as UEFI. Consequently, many firmware compromises likely remain undetected, resulting in fewer public findings rather than fewer attacks.
+- 
+Firmware compromise is heavily aligned with nation-state and highly sophisticated threat actor operations. These attackers invest substantial resources into stealth, persistence, and anti-forensics techniques. As a result, firmware-level implants and exploitation chains are often significantly more advanced than conventional runtime malware.
+- 
+Today, however, the industry is beginning to shift its focus. Defenders, particularly those securing AI infrastructure and high-performance cloud environments, increasingly recognize the importance of maintaining integrity across the entire trust chain, from hardware and firmware to workloads and runtime environments. This shift is driving demand for solutions capable of providing visibility, detection, attestation, and prevention at layers previously considered outside traditional security boundaries.
+In this blog, we examine the evolving landscape of firmware compromise and below-the-OS attack campaigns, including operational patterns, exploitation techniques, and the rapidly expanding offensive arsenal. From vulnerabilities in firmware components and management controllers to advanced firmware rootkits and state-sponsored implants, modern adversaries are increasingly investing in sophisticated firmware manipulation to establish deep, persistent control over entire environments.
+The Threat Landscape of Firmware Compromise
+Firmware compromise is significantly dominated by state-sponsored threat actors, which is a very skillful and goal-motivated group, aimed at gaining access for various reasons aligned with governmental goals (for instance financial, espionage, damage, high value info theft etc).
+Our analysis identified references to such attacks and detections of these tools in real-world operations, including associations with state-sponsored threat actors. As illustrated in the table below, many of the most prominent firmware malware families and rootkits have been linked to nation-state or state-aligned operations.
+| Year | Threat Actor | Firmware Malware | 
+|---|---|---|
+| 2022–2026 | APT41 | MoonBounce firmware implant | 
+| 2022–2025 | Chinese-speaking operators | CosmicStrand UEFI malware | 
+| 2020 | Linked to state-sponsored | MosaicRegressor firmware framework | 
+| 2018 | APT28 | LoJax UEFI rootkit | 
+| 2014–2017 | FinSpy operators | UEFI spyware persistence | 
+| 2015 | Equation Group | HDD firmware implants | 
+In this blog we focus on vulnerabilities and exploits as well as malware that target firmware components.
+Firmware Vulnerabilities
+BMC Firmware Vulnerabilities (2025)
+Baseboard Management Controller (BMC) is a dedicated microcontroller built into servers that allows administrators to remotely monitor, manage, and troubleshoot systems, even when the operating system is powered off or unresponsive. A BMC firmware is the software that runs on the BMC and defines how it operates, communicates, authenticates users, and manages the server.
+NVIDIA's Offensive Security Research team identified 18 vulnerabilities affecting BMCs, spanning authentication weaknesses, insecure credential handling, memory corruption flaws, and privilege escalation conditions. Successful exploitation could allow attackers to obtain persistent and stealthy access to servers, execute code on the BMC itself, manipulate hardware operations, interfere with firmware updates, access sensitive management functions, and potentially survive operating system reinstallation or replacement. This research is important because it highlights how these areas remain largely underexplored and often receive insufficient attention from the security research community.
+LogoFAIL (2024)
+LogoFAIL introduced a new class of high-severity firmware vulnerabilities affecting the image parsing libraries used by UEFI firmware to process boot logos during system startup. The vulnerabilities allow an attacker with administrative privileges to flash firmware containing a maliciously crafted logo image and trigger arbitrary code execution during the boot process, before the operating system loads. During startup, firmware parses and converts logo images into an intermediate format for display, and vulnerable implementations can be exploited through malformed image data that diverts execution flow inside the firmware itself.
+Importantly, these attacks are not prevented by many modern firmware security mechanisms, including Secure Boot, Boot Guard, or BIOS Guard. Researchers identified dozens of affected Intel firmware products, including systems using firmware developed by American Megatrends, highlighting the systemic and industry-wide nature of the issue that became known as LogoFAIL.
+UEFI and BIOS Firmware Malware
+HybridPetya RANSOMWARE with UEFI Capabilities (2025)
+HybridPetya is a ransomware strain that combines characteristics of the original Petya and NotPetya while also infecting UEFI systems and run before the operating system loads. On older or unpatched systems, it can exploit a known Secure Boot vulnerability (CVE-2024-7344) to bypass security protections and maintain persistent access to the device.
+HybridPetya demonstrates how widespread malware is looking to improve their persistence and stealth by targeting the system's boot process and firmware.
+BlackLotus UEFI Malware (2023)
+BlackLotus was a major breakthrough in malicious software because it could sneak past the 'Secure Boot' protections on fully updated Windows 11 computers. It worked by exploiting an unpatched vulnerability, allowing attackers to run malicious code before the operating system even started. Once inside, it could turn off key security features like Windows Defender and BitLocker, hiding itself deep within the system where it was hard to remove. This attack proved that even the strongest modern defenses could be bypassed if the underlying trust chain has weaknesses.
+MoonBounce (2022)
+Kaspersky researchers discovered MoonBounce, a UEFI firmware bootkit, observed in the wild and one of the most sophisticated firmware implants publicly documented to date.
+Attributed to APT41, the malware resides inside the motherboard’s SPI flash memory within the UEFI firmware itself, allowing it to survive operating system reinstalls and remain largely invisible to traditional security tools.
+Unlike conventional malware, MoonBounce operates almost entirely in memory and injects malicious code into the operating system during the early boot process without leaving artifacts on the hard drive. Researchers highlighted that the implant demonstrated a major evolution in firmware-rootkit sophistication compared to previous threats such as LoJax and MosaicRegressor, reinforcing concerns that advanced threat actors are increasingly investing in highly stealthy, below-the-OS persistence mechanisms.
+MegaRAC Vulnerabilities (2020-2024)
+Between 2020 and 2024, researchers disclosed multiple critical vulnerabilities affecting AMI MegaRAC BMC firmware implementations.
+Because MegaRAC technology is embedded across numerous server vendors, the vulnerabilities exposed a broad segment of enterprise and cloud infrastructure simultaneously.
+These flaws demonstrated how centralized firmware supply chains can amplify risk across entire infrastructure ecosystems.
+iLOBleed (2021)
+iLOBleed showed that destructive firmware malware targeting BMCs was no longer hypothetical.
+The malware targeted HP iLO firmware, corrupting management controller functionality and effectively bricking servers. iLOBleed highlighted how firmware malware can shift from persistence-oriented operations toward destructive infrastructure sabotage.
+GPU Firmware Malware
+Publicly confirmed GPU firmware malware remains relatively rare compared to UEFI-focused threats, but researchers from the academia and industry are increasingly uncovering GPU firmware exploitation techniques, malicious firmware injection methods, GPU rootkit concepts, and attacks targeting GPU trust boundaries.
+This growing concern is driven by the expanding role of GPUs in AI infrastructure, where they process sensitive workloads, manage high-value memory, and operate through complex firmware and embedded microcontroller layers that often sit outside traditional operating system visibility.
+MOLE: A GPU Firmware Injection Attack (2025)
+Mole is an academic attack against some versions of GPU Trusted Execution Environment (TEE) designs on Arm Mali GPUs. These TEEs are meant to protect GPU workloads even if the operating system is compromised.
+The key problem is that if the system was compromised it is allowed to load firmware into a small microcontroller inside the GPU. Once a malicious firmware is running there, it can access protected GPU memory from inside the GPU and bypass the TEE’s protections.
+The researchers showed that Mole could steal sensitive data, such as an AES encryption key, and change AI results, such as object detection outputs. The main lesson is that GPU security must also protect hidden firmware-controlled components inside the GPU, not just the OS, driver, and memory.
+GPUBreach: Privilege Escalation Attacks on GPUs using Rowhammer (2025)
+The academic paper GPUBreach demonstrated one of the first practical GPU privilege-escalation attacks using Rowhammer-induced bit flips against NVIDIA GPUs with GDDR6 memory.
+Researchers showed that an unprivileged CUDA process could manipulate GPU page tables through carefully targeted memory corruption, ultimately gaining arbitrary read and write access to GPU memory, leaking cryptographic keys and sensitive AI workloads, tampering with machine-learning computations, and even escalating privileges from the GPU into the host CPU despite protections such as IOMMU.
+The research highlighted a major shift in the threat landscape by proving that GPUs are no longer just accelerators but highly privileged computing environments whose firmware, memory-management mechanisms, and embedded processors can become viable targets for stealthy privilege escalation and infrastructure compromise, particularly in AI and multi-tenant cloud environments.
+In this blog, we explored what is known about firmware components vulnerabilities, exploitation and malware, used by modern attackers. In our next blog, we will examine how organizations running AI infrastructure can adapt their security models and implement prevention and mitigation strategies to better maintain their firmware integrity.
