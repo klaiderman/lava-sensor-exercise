@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Lava Sensor Exercise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Lava GTM design system (MARKETING-DESIGN.md): light only, single accent,
+     Swiss grid + soft cards, hairlines never shadows. Print scale scaled ~1.25x
+     for screen reading. */
+  :root {
+    --bg:        #F9FAFB;
+    --surface:   #FFFFFF;
+    --muted:     #F5F6F8;
+    --text:      #2F3438;
+    --text-2:    #6B7280;
+    --text-3:    #9CA3AF;
+    --line:      #E5E7EB;
+    --brand:     #FF5C00;
+    --brand-tint:rgba(255, 92, 0, 0.07);
+
+    --chip-risk-t:#C23E49; --chip-risk-b:rgba(194, 62, 73, 0.20);
+    --chip-info-t:#3C7FE7; --chip-info-b:rgba(60, 127, 231, 0.20);
+    --chip-pos-t: #3C9567; --chip-pos-b: rgba(60, 149, 103, 0.20);
+    --chip-gray-t:#646464; --chip-gray-b:rgba(100, 100, 100, 0.20);
+
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    --measure: 860px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- bands ---- */
+  .band { border-bottom: 1px solid var(--line); padding: 44px 32px; }
+  .band--surface { background: var(--surface); }
+  .band--bg      { background: var(--bg); }
+  .band--muted   { background: var(--muted); }
+  .band__inner   { max-width: var(--measure); margin: 0 auto; }
+
+  /* ---- chrome ---- */
+  .chrome {
+    background: var(--surface);
+    padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; min-height: 64px;
+  }
+  .chrome--head { border-bottom: 1px solid var(--line); }
+  .chrome--foot { border-top: 1px solid var(--line); border-bottom: 0; }
+  .chrome__inner {
+    max-width: var(--measure); margin: 0 auto; width: 100%;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .wordmark { font-family: var(--mono); font-size: 15px; color: var(--text); }
+  .meta { font-family: var(--mono); font-size: 12px; color: var(--text-3); }
+  .foot-url { font-size: 14px; font-weight: 600; color: var(--brand); text-decoration: none; }
+  .foot-url:hover { text-decoration: underline; }
+
+  /* ---- type ---- */
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; color: var(--brand);
+    margin: 0 0 4px;
+  }
+  h1 {
+    font-size: 44px; font-weight: 600; letter-spacing: -0.02em;
+    line-height: 1.1; margin: 0; text-wrap: balance;
+  }
+  h2 {
+    font-size: 24px; font-weight: 600; letter-spacing: -0.01em;
+    margin: 0; text-wrap: balance; white-space: nowrap;
+  }
+  h3 { font-size: 16px; font-weight: 600; margin: 0; }
+  p  { margin: 0; }
+  .lead { font-size: 17px; color: var(--text-2); line-height: 1.6; max-width: 62ch; }
+  .note { font-size: 13.5px; color: var(--text-2); }
+  strong { font-weight: 600; color: var(--text); }
+
+  /* section header: title + hairline filling the remaining width */
+  .sec-head { display: flex; align-items: center; gap: 16px; }
+  .sec-head::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* vertical rhythm: heading 12 to its content, 24 between sub-blocks, 40 between sections */
+  .stack      { display: flex; flex-direction: column; gap: 12px; }
+  .stack--sub { display: flex; flex-direction: column; gap: 24px; }
+  .sub        { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ---- chips ---- */
+  .chip {
+    display: inline-block; border-radius: 4px; padding: 2px 8px;
+    font-family: var(--mono); font-size: 12px; line-height: 1.5;
+    white-space: nowrap;
+  }
+  .chip--value { color: var(--brand);      background: var(--brand-tint); }
+  .chip--risk  { color: var(--chip-risk-t); background: var(--chip-risk-b); }
+  .chip--info  { color: var(--chip-info-t); background: var(--chip-info-b); }
+  .chip--pos   { color: var(--chip-pos-t);  background: var(--chip-pos-b); }
+  .chip--gray  { color: var(--chip-gray-t); background: var(--chip-gray-b); }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--brand);
+         background: var(--brand-tint); border-radius: 4px; padding: 1px 6px; }
+
+  .chiprow { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* ---- cards ---- */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 17px 19px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .card__num { font-family: var(--mono); font-size: 12px; color: var(--brand); }
+  .card__title { font-size: 15px; font-weight: 600; }
+  .card__body { font-size: 13.5px; color: var(--text-2); line-height: 1.55; }
+
+  /* ---- bullets ---- */
+  ul.bullets { list-style: none; margin: 0; padding: 0;
+               display: flex; flex-direction: column; gap: 9px; }
+  /* the marker is absolutely positioned rather than a flex sibling: as a flex
+     item, a leading <strong> and the text after it become SEPARATE items and
+     the lead-in collapses into its own narrow column. */
+  ul.bullets li { position: relative; padding-left: 18px; font-size: 15px; }
+  ul.bullets li::before {
+    content: ""; position: absolute; left: 0; top: 9px;
+    width: 6px; height: 6px; border-radius: 1px; background: var(--brand);
+  }
+  ul.bullets.bullets--quiet li::before { background: var(--text-3); }
+
+  /* ---- tables ---- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line);
+               border-radius: 8px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: 12px 16px; vertical-align: top;
+           border-bottom: 1px solid var(--line); }
+  tr:last-child td { border-bottom: 0; }
+  th { font-size: 11.5px; font-family: var(--mono); font-weight: 500;
+       color: var(--text-3); background: var(--muted); white-space: nowrap; }
+  td.when { font-family: var(--mono); font-size: 13px; color: var(--text-2);
+            white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  /* ---- code block ---- */
+  pre {
+    margin: 0; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 16px 19px; overflow-x: auto;
+    font-family: var(--mono); font-size: 12.5px; line-height: 1.65; color: var(--text);
+  }
+  pre .k { color: var(--brand); }
+  pre .c { color: var(--text-3); }
+
+  /* ---- statement band ---- */
+  .statement { text-align: center; display: flex; flex-direction: column;
+               gap: 12px; align-items: center; }
+  .statement p { max-width: 60ch; font-size: 16px; color: var(--text-2); }
+
+  /* ---- deliverables ---- */
+  .deliv { display: flex; flex-direction: column; gap: 12px; }
+  .deliv__row {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 15px 19px; display: flex; gap: 16px; align-items: flex-start;
+  }
+  .deliv__num { font-family: var(--mono); font-size: 12px; color: var(--brand);
+                flex: none; padding-top: 3px; }
+  .deliv__body { display: flex; flex-direction: column; gap: 4px; }
+  .deliv__name { font-size: 15px; font-weight: 600; }
+  .deliv__desc { font-size: 13.5px; color: var(--text-2); line-height: 1.55; }
+
+  a { color: var(--brand); }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 3px; }
+
+  @media (max-width: 720px) {
+    .cards { grid-template-columns: 1fr; }
+    h1 { font-size: 34px; }
+    h2 { font-size: 21px; white-space: normal; }
+    .band { padding: 36px 20px; }
+    .chrome { padding: 0 20px; }
+  }
+
+  /* ---- cheatsheet ---- */
+  .cheat { display: flex; flex-direction: column; gap: 19px; }
+  .cheat__item { display: flex; flex-direction: column; gap: 8px; }
+  .cheat__label { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+  pre .p { color: var(--text-3); }
+</style>
+
+<style>
+  /* ---- print / PDF: A4 portrait ---- */
+  /* vertical margins only, so bands stay full-bleed horizontally while content
+     broken across a page boundary is not flush against the sheet edge. */
+  @page { size: A4; margin: 12mm 0; }
+  @media print {
+    html, body { background: #FFFFFF; }
+    body { font-size: 10.5pt; }
+    .band { padding: 9mm 14mm; }
+    .chrome { padding: 0 14mm; min-height: 15mm; }
+    .band__inner, .chrome__inner { max-width: none; }
+    h1 { font-size: 30pt; }
+    h2 { font-size: 17pt; }
+    h3 { font-size: 12pt; }
+    .lead { font-size: 12pt; max-width: none; }
+    .note, .deliv__desc { font-size: 9.5pt; }
+    .card__body { font-size: 8.5pt; }
+    ul.bullets li { font-size: 10.5pt; }
+    table { font-size: 9.5pt; }
+    pre { font-size: 8.5pt; }
+    .statement p { font-size: 11pt; }
+
+    /* never split a self-contained block across a page boundary */
+    .card, .deliv__row, .tablewrap, pre, .cheat__item, .statement,
+    .cards, .chiprow, ul.bullets li { break-inside: avoid; }
+    .sub { break-inside: avoid-page; }
+    h1, h2, h3, .sec-head, .cheat__label { break-after: avoid; }
+
+    a { text-decoration: none; }
+  }
+</style>
+
+<style>
+  /* head reset the Artifact host normally supplies */
+  html { color-scheme: light; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="chrome chrome--head">
+  <div class="chrome__inner">
+    <span class="wordmark">LAVA</span>
+    <span class="meta">Engineering exercise / Sensor</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="band band--surface">
+  <div class="band__inner stack">
+    <p class="eyebrow">Engineering exercise</p>
+    <h1>Build a posture sensor</h1>
+    <p class="lead">We give you a real bare metal server for 10 hours. Write something that inspects
+      it and reports what it finds, in a shape we can read.</p>
+    <div class="chiprow" style="margin-top:12px">
+      <span class="chip chip--gray">About 4 hours of work</span>
+      <span class="chip chip--gray">Any language, Go preferred</span>
+      <span class="chip chip--gray">Real bare metal, not a VM</span>
+      <span class="chip chip--pos">Claude required</span>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE LOOK AT -->
+<section class="band band--bg">
+  <div class="band__inner stack">
+    <div class="sec-head"><h2>What we are looking at</h2></div>
+    <div class="cards" style="margin-top:12px">
+      <div class="card">
+        <span class="card__num">01</span>
+        <span class="card__title">Judgment</span>
+        <span class="card__body">No sensor can answer every question about every machine, and that
+          is by design. We care less about covering every edge case, and more about how gracefully
+          your sensor handles unanswerable checks while maintaining a clean, generic
+          architecture.</span>
+      </div>
+      <div class="card">
+        <span class="card__num">02</span>
+        <span class="card__title">How you work with Claude</span>
+        <span class="card__body">We use it every day and you should too. What we read is how you
+          direct it: what you specified before generating, what you rejected, and what you verified
+          before believing it.</span>
+      </div>
+      <div class="card">
+        <span class="card__num">03</span>
+        <span class="card__title">Safe on someone's machine</span>
+        <span class="card__body">This kind of tool runs on hardware other people depend on. Read
+          only, bounded in time and output, and it does not fall over on something it did not
+          expect to see.</span>
+      </div>
+    </div>
+    <div class="sub" style="margin-top:24px">
+      <h3>What We Are Not Testing</h3>
+      <ul class="bullets bullets--quiet">
+        <li><strong>Prior knowledge of server hardware:</strong> BMCs, IPMI, firmware. If these are
+          unfamiliar, that is completely fine. Everything you need is in this brief or a quick search
+          away, and AI tools (like Claude) know this domain well.</li>
+        <li><strong>Go fluency:</strong> Write in whatever language makes you fastest. We ship in Go,
+          but your language choice will not affect your score.</li>
+        <li><strong>Volume:</strong> A handful of checks done thoughtfully beats twenty done
+          thinly.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="band band--surface">
+  <div class="band__inner stack">
+    <div class="sec-head"><h2>What you get from us</h2></div>
+    <div class="cards" style="margin-top:12px">
+      <div class="card">
+        <span class="card__num">01</span>
+        <span class="card__title">A bare metal server</span>
+        <span class="card__body">An SSH key and an address, yours for a 10 hour window you pick.
+          Real hardware in a real data center, not a container or a VM pretending to be one, so what
+          you read off it is true.</span>
+      </div>
+      <div class="card">
+        <span class="card__num">02</span>
+        <span class="card__title">An Anthropic API key</span>
+        <span class="card__body">On our account rather than yours, so you are not spending your own
+          credit. It is live for your window and we retire it afterwards.</span>
+      </div>
+      <div class="card">
+        <span class="card__num">03</span>
+        <span class="card__title">The output shape</span>
+        <span class="card__body">This brief, plus <code>finding.schema.json</code>, which your
+          output has to validate against.</span>
+      </div>
+    </div>
+    <p class="note" style="margin-top:24px"><strong>Work wherever you prefer.</strong> Write the
+      code on your own laptop and run it against the server over SSH, or work directly on the server
+      itself with Claude installed there. Both are completely fine and neither is scored. The
+      cheatsheet below has the commands for either route.</p>
+  </div>
+</section>
+
+<!-- CHEATSHEET -->
+<section class="band band--bg">
+  <div class="band__inner stack--sub">
+    <div class="sub">
+      <div class="sec-head"><h2>Cheatsheet</h2></div>
+      <p>So you do not lose twenty minutes to plumbing. Replace <code>KEY</code> with the path to
+        the key we sent you, and <code>USER</code> and <code>HOST</code> with the username and
+        address from the same email.</p>
+    </div>
+
+    <div class="cheat">
+      <div class="cheat__item">
+        <span class="cheat__label">Connect</span>
+        <pre>ssh -i <span class="p">KEY</span> <span class="p">USER</span>@<span class="p">HOST</span></pre>
+      </div>
+
+      <div class="cheat__item">
+        <span class="cheat__label">Copy your code up to the server</span>
+        <pre><span class="c"># a whole directory, repeatable, skips unchanged files</span>
+rsync -avz -e "ssh -i <span class="p">KEY</span>" ./sensor/ <span class="p">USER</span>@<span class="p">HOST</span>:~/sensor/
+
+<span class="c"># or a one off file</span>
+scp -i <span class="p">KEY</span> ./sensor.py <span class="p">USER</span>@<span class="p">HOST</span>:~/</pre>
+      </div>
+
+      <div class="cheat__item">
+        <span class="cheat__label">Copy results back down to your laptop</span>
+        <pre>scp -i <span class="p">KEY</span> <span class="p">USER</span>@<span class="p">HOST</span>:~/findings.json .
+
+<span class="c"># or a whole directory</span>
+rsync -avz -e "ssh -i <span class="p">KEY</span>" <span class="p">USER</span>@<span class="p">HOST</span>:~/sensor/ ./sensor/</pre>
+      </div>
+
+      <div class="cheat__item">
+        <span class="cheat__label">Run one command without logging in</span>
+        <pre>ssh -i <span class="p">KEY</span> <span class="p">USER</span>@<span class="p">HOST</span> 'cat /proc/cmdline'</pre>
+      </div>
+
+      <div class="cheat__item">
+        <span class="cheat__label">Install and configure Claude Code on the server</span>
+        <pre>curl -fsSL https://claude.ai/install.sh | bash &amp;&amp; \
+  echo 'export PATH="$HOME/.local/bin:$PATH"' &gt;&gt; ~/.bashrc &amp;&amp; \
+  echo 'export ANTHROPIC_API_KEY=<span class="p">"sk-ant-REPLACE_ME"</span>' &gt;&gt; ~/.bashrc &amp;&amp; \
+  source ~/.bashrc &amp;&amp; claude --version</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE TASK -->
+<section class="band band--surface">
+  <div class="band__inner stack--sub">
+    <div class="sub">
+      <div class="sec-head"><h2>The task</h2></div>
+      <p>Write a command line tool that inspects the server and writes what it found to a file.</p>
+      <pre>sensor scan --out findings.json</pre>
+    </div>
+
+    <div class="sub">
+      <h3>Part one: describe the machine</h3>
+      <p>Before any of the security work, the output has to say what this machine actually is. It is
+        the least glamorous part and it matters more than it looks: a finding with no machine
+        attached to it is not worth much once you have more than one server.</p>
+      <p>Report at least these, and add whatever else you think belongs:</p>
+      <ul class="bullets">
+        <li><strong>Identity.</strong> A host identifier that stays the same across runs, and the
+          hostname.</li>
+        <li><strong>Owner.</strong> Who this machine belongs to, as far as the machine itself can
+          tell.</li>
+        <li><strong>Hardware.</strong> Vendor and model, CPU model and core count, memory.</li>
+        <li><strong>Operating system.</strong> Distribution, version, kernel release.</li>
+        <li><strong>Storage.</strong> The block devices attached, their models and sizes.</li>
+      </ul>
+      <p class="note">If you cannot determine one of these, say so in the output. An empty string or
+        a plausible guess is worse than a field that admits it does not know.</p>
+    </div>
+
+    <div class="sub">
+      <h3>Part two: check its posture</h3>
+      <p>Organize your checks within the provided <strong>categories</strong>. Each category
+        represents a logical domain and should contain at least two relevant checks (or as many as
+        needed), with each check yielding its own distinct result.</p>
+      <p class="note">So a category with four checks in it produces four findings, each with its own
+        status and severity. Severity <code>info</code> is a real answer, not a cop out. Plenty of
+        things are worth reporting because an operator should know them, not because they are
+        broken.</p>
+    </div>
+
+    <div class="sub">
+      <h3>Three categories we ask for</h3>
+      <p class="note">We describe each one by what it should answer. Working out what that means on
+        this particular machine, and how to establish it rather than assume it, is the exercise.</p>
+      <div class="tablewrap">
+        <table>
+          <tr>
+            <th>Category</th>
+            <th>What it should answer</th>
+          </tr>
+          <tr>
+            <td><span class="chip chip--value">REMOTE_ACCESS</span></td>
+            <td>How this machine can be logged into from elsewhere, and what that permits. Who may
+              connect, by what means of authentication, and as whom. The interesting part is what is
+              actually in force on the running system, which is not always what any single
+              configuration file says.</td>
+          </tr>
+          <tr>
+            <td><span class="chip chip--value">SECRETS_ON_DISK</span></td>
+            <td>What credential material is sitting on this machine, and who can read it. Keys,
+              tokens, passwords, certificates, provisioning data, anything someone could pick up and
+              reuse somewhere else. Both what is there and how well it is protected.</td>
+          </tr>
+          <tr>
+            <td><span class="chip chip--value">BMC_INBAND_ACCESS</span></td>
+            <td>Whether this machine can talk to its own baseboard management controller from inside
+              the operating system, through which interface, and who is permitted to do it.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>And at least one category of your own</h3>
+      <p>Look around the machine and pick another subject worth reporting on for a server sitting in
+        someone's data center. One line in <code>NOTES.md</code> on why you chose it. More than one
+        is welcome.</p>
+      <p class="note">As a benchmark, <strong>Kernel Flags</strong> makes a solid category. A single
+        audit here can cover whether hardware security features are active, if unsigned code is
+        permitted, or if the boot chain was verified, each requiring its own check.</p>
+      <p class="note">Treat this as a baseline. There is no predefined solution set here, so be
+        creative. Think about a typical, forgotten production server and the hidden drift it
+        accumulates. What impresses us most is discovering a category we did not anticipate,
+        supported by clear engineering intent.</p>
+    </div>
+
+    <div class="sub">
+      <h3>Some context on the BMC, since it is the least familiar one</h3>
+      <p class="note">Every server has a baseboard management controller: a small independent computer
+        on the motherboard that stays powered while the host is off. It can power cycle the machine,
+        mount virtual media, and reflash firmware, which makes it the most privileged thing in the
+        chassis. It normally answers on its own dedicated network port, which you do not have access
+        to here.</p>
+      <p class="note">A host may also be able to reach it from the inside, over an interface called
+        KCS, without touching the network at all. That path is not always present and not always
+        permitted, which varies from machine to machine. Where it exists, Linux exposes it through
+        the <code>ipmi_si</code> and <code>ipmi_devintf</code> drivers and a device node, and
+        <code>ipmitool</code> is the usual client for it. Whether it exists on this machine, and who
+        is allowed to walk it, is the question.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OUTPUT CONTRACT -->
+<section class="band band--bg">
+  <div class="band__inner stack--sub">
+    <div class="sub">
+      <div class="sec-head"><h2>The output shape</h2></div>
+      <p>Your <code>findings.json</code> has to validate against this. We fix the shape because a
+        stable one is what makes a finding usable by anything other than a person reading a terminal,
+        and because it lets us compare submissions fairly.</p>
+    </div>
+    <div class="sub">
+      <pre>{
+  <span class="k">"schema_version"</span>: "1",
+  <span class="k">"collected_at"</span>:   "&lt;RFC 3339 timestamp&gt;",
+  <span class="k">"sensor_version"</span>: "&lt;optional&gt;",
+
+  <span class="k">"machine"</span>: {
+    <span class="k">"host_id"</span>:      "&lt;stable across runs&gt;",
+    <span class="k">"hostname"</span>:     "...",
+    <span class="k">"owner"</span>:        "&lt;or an explicit unknown&gt;",
+    <span class="k">"vendor"</span>:       "...",
+    <span class="k">"model"</span>:        "...",
+    <span class="k">"os"</span>:           { <span class="k">"name"</span>: "...", <span class="k">"version"</span>: "...", <span class="k">"kernel"</span>: "..." },
+    <span class="k">"cpu"</span>:          { <span class="k">"model"</span>: "...", <span class="k">"cores"</span>: 0 },
+    <span class="k">"memory_bytes"</span>: 0,
+    <span class="k">"storage"</span>:      [ { <span class="k">"device"</span>: "...", <span class="k">"model"</span>: "...", <span class="k">"size_bytes"</span>: 0 } ]
+  },
+
+  <span class="k">"findings"</span>: [
+    {
+      <span class="k">"category"</span>:     "REMOTE_ACCESS",          <span class="c">// UPPER_SNAKE_CASE</span>
+      <span class="k">"check_id"</span>:     "ROOT_LOGIN_PERMITTED",   <span class="c">// unique per check</span>
+      <span class="k">"status"</span>:       "pass" | "fail" | "unknown",
+      <span class="k">"severity"</span>:     "critical" | "high" | "medium" | "low" | "info",
+      <span class="k">"title"</span>:        "&lt;one line a person can read&gt;",
+      <span class="k">"reason"</span>:       "&lt;required when status is fail or unknown&gt;",
+      <span class="k">"evidence"</span>:     { <span class="c">/* what someone needs to act on it */</span> },
+      <span class="k">"collected_at"</span>: "&lt;RFC 3339 timestamp&gt;"
+    }
+  ]
+}</pre>
+      <p class="note">Extra fields are welcome anywhere, so put real evidence in there rather than a
+        restatement of the title. A good <code>evidence</code> block means the reader does not have to
+        run your tool again to believe you: the path you read, the value you found, the command you
+        ran, the errno you got back.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GROUND RULES -->
+<section class="band band--surface">
+  <div class="band__inner stack--sub">
+    <div class="sub">
+      <div class="sec-head"><h2>Rules</h2></div>
+      <h3 style="margin-top:12px">Required</h3>
+      <ul class="bullets">
+        <li><strong>Read only.</strong> The sensor observes the machine, it never changes it.</li>
+        <li><strong>Bounded.</strong> Every subprocess gets a timeout, output stays a sane size, and
+          nothing hangs forever on a device that does not answer.</li>
+        <li><strong>It does not crash.</strong> One check hitting something unexpected should not
+          take the other checks down with it.</li>
+        <li><strong>Unprivileged.</strong> It runs as the user we give you, with no escalation.</li>
+        <li><strong>Use Claude</strong>, and send us the session.</li>
+      </ul>
+    </div>
+    <div class="sub">
+      <h3>Explicitly out of scope</h3>
+      <p class="note">None of this is graded, and reaching for it is the most common way a four hour
+        exercise becomes a ten hour one.</p>
+      <div class="chiprow">
+        <span class="chip chip--gray">No daemon or scheduler</span>
+        <span class="chip chip--gray">No database</span>
+        <span class="chip chip--gray">No UI</span>
+        <span class="chip chip--gray">No API server</span>
+        <span class="chip chip--gray">No packaging</span>
+        <span class="chip chip--gray">No CI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATEMENT -->
+<section class="band band--muted">
+  <div class="band__inner statement">
+    <p class="eyebrow">The part people get wrong</p>
+    <p>A sensor cannot always assess every state of a machine. When a check is unexecutable or out
+      of reach, <strong>state that explicitly</strong>. A report that silently omits unreached
+      checks, pretending a scan was thorough, destroys trust in monitoring tools. Returning no issues
+      is a valid outcome; claiming to have checked when you could not is a critical failure.</p>
+  </div>
+</section>
+
+<!-- THE CONVERSATION -->
+<section class="band band--surface">
+  <div class="band__inner stack--sub">
+    <div class="sub">
+      <div class="sec-head"><h2>The Follow-Up Conversation</h2></div>
+      <p>Once we have read your submission, we will sit down together. There is nothing to prepare
+        and nothing extra to submit for this, but it is only fair that you know what it covers.</p>
+    </div>
+
+    <div class="sub">
+      <p><strong>Your Sensor and Findings:</strong> We will take a high-level look at your code and
+        findings to discuss your approach, key design choices, and what you would tweak after seeing
+        it run live.</p>
+      <p><strong>How This Becomes a Product:</strong> Yours runs on a single reachable machine; ours
+        runs on tens of thousands in isolated customer data centers, reporting to a central plane.</p>
+    </div>
+
+    <div class="sub">
+      <p class="note">A few topics we will dive into, just so you know what to expect:</p>
+      <ul class="bullets">
+        <li><strong>No way in, only a way out:</strong> The sensor sits in a data center you cannot
+          reach. It can open connections outward, nothing can open one towards it. How does
+          configuration get to it, and how do you ship it a new version?</li>
+        <li><strong>Which customer is this?</strong> A sensor starts up for the very first time and
+          says hello. How do you recognize which customer it belongs to, before anyone trusts a
+          single finding from it?</li>
+        <li><strong>Volume:</strong> Ten thousand machines, five hundred findings each, every scan.
+          What crosses the network and how often, and what do you keep once it lands? Every scan, or
+          only what changed?</li>
+        <li><strong>Isolation:</strong> Where is the boundary between two customers' data, and what
+          makes a cross-customer read impossible rather than unlikely?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="band band--bg">
+  <div class="band__inner stack--sub">
+    <div class="sub">
+      <div class="sec-head"><h2>What to send us</h2></div>
+      <p>One tarball, by email. No repository to create and no accounts to link.</p>
+    </div>
+    <div class="deliv">
+      <div class="deliv__row">
+        <span class="deliv__num">01</span>
+        <span class="deliv__body">
+          <span class="deliv__name">The source</span>
+          <span class="deliv__desc">Plus the one command that runs it. If we cannot run it, we cannot
+            give you credit for it.</span>
+        </span>
+      </div>
+      <div class="deliv__row">
+        <span class="deliv__num">02</span>
+        <span class="deliv__body">
+          <span class="deliv__name">findings.json</span>
+          <span class="deliv__desc">From a real run against the server we gave you, not a
+            hand-written example.</span>
+        </span>
+      </div>
+      <div class="deliv__row">
+        <span class="deliv__num">03</span>
+        <span class="deliv__body">
+          <span class="deliv__name">NOTES.md, one page at most</span>
+          <span class="deliv__desc">What you assumed, what turned out to be ambiguous and how you
+            settled it. The category you added and why. What you would do with another day. And one
+            thing Claude got wrong that you rejected, with the reason.</span>
+        </span>
+      </div>
+      <div class="deliv__row">
+        <span class="deliv__num">04</span>
+        <span class="deliv__body">
+          <span class="deliv__name">Your Claude session</span>
+          <span class="deliv__desc">The transcript, as exported. We read these, and a messy real one
+            is far better received than a tidied one.</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRACTICALITIES -->
+<section class="band band--surface">
+  <div class="band__inner stack">
+    <div class="sec-head"><h2>Practicalities</h2></div>
+    <div class="tablewrap" style="margin-top:12px">
+      <table>
+        <tr>
+          <th>The four hours</th>
+          <td>A guide, not a stopwatch. We are not timing you and nobody is comparing timestamps.</td>
+        </tr>
+        <tr>
+          <th>Questions</th>
+          <td>Ask us, at any point. Working out loud is not cheating here, and needing no
+            clarification at all is not a score. If something in this brief is unclear, that is
+            usually our bug rather than yours.</td>
+        </tr>
+        <tr>
+          <th>If the server breaks</th>
+          <td>Tell us and we will fix it. It will not count against you and it will not eat your
+            window.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer class="chrome chrome--foot">
+  <div class="chrome__inner">
+    <a class="foot-url" href="https://lavahq.io">lavahq.io</a>
+    <span class="meta">Sensor exercise</span>
+  </div>
+</footer>
+</body>
+</html>

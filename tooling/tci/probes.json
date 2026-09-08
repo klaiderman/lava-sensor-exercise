@@ -1,0 +1,2064 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "identity.id",
+      "group": "identity",
+      "cmd": "id",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 95,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.hostname",
+      "group": "identity",
+      "cmd": "hostname; hostname -f 2>&1; hostname -d 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 95,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.hostname_files",
+      "group": "identity",
+      "cmd": "cat /etc/hostname /etc/machine-id 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 90,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.os_release",
+      "group": "identity",
+      "cmd": "cat /etc/os-release",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 98,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": [
+        {
+          "name": "distro_family",
+          "when": "OK",
+          "regex": "^ID_LIKE=\"?([a-z ]+)",
+          "value_from_group": 1
+        },
+        {
+          "name": "distro_id",
+          "when": "OK",
+          "regex": "^ID=\"?([a-z0-9._-]+)",
+          "value_from_group": 1
+        }
+      ]
+    },
+    {
+      "id": "identity.uname",
+      "group": "identity",
+      "cmd": "uname -a",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 95,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.cmdline",
+      "group": "identity",
+      "cmd": "cat /proc/cmdline",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.proc_version",
+      "group": "identity",
+      "cmd": "cat /proc/version",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.uptime",
+      "group": "identity",
+      "cmd": "uptime; uptime -s 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.virt",
+      "group": "identity",
+      "cmd": "systemd-detect-virt 2>&1; echo rc=$?",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 85,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": [
+        {
+          "name": "is_virtual",
+          "when": "OK",
+          "regex": "^none$",
+          "value_if_match": false,
+          "value_if_nomatch": true
+        }
+      ]
+    },
+    {
+      "id": "identity.hostnamectl",
+      "group": "identity",
+      "cmd": "hostnamectl 2>&1 | head -40",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.machine_info",
+      "group": "identity",
+      "cmd": "cat /etc/machine-info 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.dmi",
+      "group": "identity",
+      "cmd": "for f in sys_vendor product_name product_version product_serial product_uuid product_sku product_family board_vendor board_name board_version board_serial board_asset_tag chassis_vendor chassis_type chassis_serial chassis_asset_tag bios_vendor bios_version bios_date bios_release; do echo \"$f=$(cat /sys/class/dmi/id/$f 2>&1)\"; done",
+      "timeout_s": 10,
+      "cap_bytes": 8192,
+      "priority": 90,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "identity.dmi_ls",
+      "group": "identity",
+      "cmd": "ls -la /sys/class/dmi/id/",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.motd",
+      "group": "identity",
+      "cmd": "cat /etc/motd /etc/issue /etc/issue.net /run/motd.dynamic 2>&1 | head -60",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.update_motd_d",
+      "group": "identity",
+      "cmd": "ls -la /etc/update-motd.d/ 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.cloud_init_dirs",
+      "group": "identity",
+      "cmd": "ls -la /var/lib/cloud/ /var/lib/cloud/instance/ /run/cloud-init/ /etc/cloud/ 2>&1 | head -60",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.cloud_init_instance_data",
+      "group": "identity",
+      "cmd": "cat /run/cloud-init/instance-data.json 2>&1 | head -80",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "maybe_secret_adjacent",
+      "facts": []
+    },
+    {
+      "id": "identity.hosts",
+      "group": "identity",
+      "cmd": "cat /etc/hosts",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "identity.resolv",
+      "group": "identity",
+      "cmd": "cat /etc/resolv.conf 2>&1; resolvectl status 2>&1 | head -40",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "cpu.lscpu",
+      "group": "cpu",
+      "cmd": "lscpu 2>&1 | head -60",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "cpu.cpuinfo_summary",
+      "group": "cpu",
+      "cmd": "grep -c ^processor /proc/cpuinfo; grep -m1 'model name' /proc/cpuinfo; grep -m1 flags /proc/cpuinfo | tr ' ' '\\n' | wc -l",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "cpu.meminfo",
+      "group": "cpu",
+      "cmd": "head -20 /proc/meminfo",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "cpu.nproc_smt",
+      "group": "cpu",
+      "cmd": "nproc; cat /sys/devices/system/cpu/smt/active 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "cpu.vulnerabilities",
+      "group": "cpu",
+      "cmd": "for f in /sys/devices/system/cpu/vulnerabilities/*; do echo \"$(basename $f): $(cat $f 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 16384,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.passwd_list",
+      "group": "users",
+      "cmd": "getent passwd | cut -d: -f1,3,4,6,7",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.priv_groups",
+      "group": "users",
+      "cmd": "getent group | grep -E '^(sudo|wheel|adm|root|disk|ipmi|docker|lxd|kvm|shadow|ssh|systemd-journal|video|input|dialout|tty)\\b'",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.sudoers_ls",
+      "group": "users",
+      "cmd": "ls -la /etc/sudoers /etc/sudoers.d/ 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.shadow_ls",
+      "group": "users",
+      "cmd": "ls -la /etc/shadow /etc/gshadow /etc/passwd /etc/group",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.home_dirs_ls",
+      "group": "users",
+      "cmd": "ls -ld /home/* /root 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.root_home_ls",
+      "group": "users",
+      "cmd": "ls -la /root 2>&1 | head -5",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.login_defs",
+      "group": "users",
+      "cmd": "cat /etc/login.defs | grep -Ev '^\\s*(#|$)'",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.passwd_status",
+      "group": "users",
+      "cmd": "passwd -S 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.nsswitch",
+      "group": "users",
+      "cmd": "cat /etc/nsswitch.conf | grep -Ev '^\\s*(#|$)'",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.sssd_krb5_ls",
+      "group": "users",
+      "cmd": "ls -la /etc/sssd /etc/krb5.conf /etc/krb5.keytab 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.login_shells",
+      "group": "users",
+      "cmd": "getent passwd | awk -F: '$7 !~ /(nologin|false|sync|halt|shutdown)$/ {print $1\":\"$3\":\"$7}'",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.last",
+      "group": "users",
+      "cmd": "last -n 25 2>&1 | head -30",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.lastlog",
+      "group": "users",
+      "cmd": "lastlog 2>&1 | grep -v 'Never logged' | head -30",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.who",
+      "group": "users",
+      "cmd": "who -a 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.env_names",
+      "group": "users",
+      "cmd": "env | cut -d= -f1 | sort",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.kernel_hardening",
+      "group": "users",
+      "cmd": "for f in /proc/sys/kernel/yama/ptrace_scope /proc/sys/kernel/kptr_restrict /proc/sys/kernel/dmesg_restrict /proc/sys/kernel/unprivileged_bpf_disabled /proc/sys/kernel/modules_disabled /proc/sys/kernel/randomize_va_space /proc/sys/kernel/unprivileged_userns_clone /proc/sys/user/max_user_namespaces /proc/sys/fs/protected_symlinks /proc/sys/fs/protected_hardlinks /proc/sys/fs/protected_fifos /proc/sys/fs/protected_regular /proc/sys/fs/suid_dumpable /proc/sys/kernel/tainted /proc/sys/kernel/perf_event_paranoid; do echo \"$f: $(cat $f 2>&1)\"; done",
+      "timeout_s": 10,
+      "cap_bytes": 8192,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.lsm",
+      "group": "kernel",
+      "cmd": "ls /sys/kernel/security/ 2>&1; cat /sys/kernel/security/lockdown /sys/kernel/security/lsm 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.selinux_apparmor",
+      "group": "kernel",
+      "cmd": "getenforce 2>&1; cat /sys/fs/selinux/enforce 2>&1; cat /sys/module/apparmor/parameters/enabled 2>&1; aa-status 2>&1 | head -5",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.secureboot",
+      "group": "kernel",
+      "cmd": "ls /sys/firmware/efi 2>&1; ls /sys/firmware/efi/efivars 2>&1 | grep -i secureboot; for f in /sys/firmware/efi/efivars/SecureBoot-* /sys/firmware/efi/efivars/SetupMode-*; do echo \"$f: $(od -An -t u1 $f 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.mokutil_sbstate",
+      "group": "kernel",
+      "cmd": "mokutil --sb-state 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.tpm",
+      "group": "kernel",
+      "cmd": "ls -la /dev/tpm* /sys/class/tpm/ 2>&1; cat /sys/class/tpm/tpm0/tpm_version_major 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.lsmod",
+      "group": "kernel",
+      "cmd": "lsmod 2>&1 | head -120",
+      "timeout_s": 8,
+      "cap_bytes": 262144,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.module_counts",
+      "group": "kernel",
+      "cmd": "cat /proc/modules | wc -l; ls /sys/module | wc -l",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.dmesg_head",
+      "group": "kernel",
+      "cmd": "dmesg 2>&1 | head -5",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.iommu_thp",
+      "group": "kernel",
+      "cmd": "ls /sys/kernel/iommu_groups 2>&1 | wc -l; cat /sys/kernel/mm/transparent_hugepage/enabled 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.boot_ls",
+      "group": "kernel",
+      "cmd": "ls -la /boot 2>&1 | head -40",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.osrelease_modules",
+      "group": "kernel",
+      "cmd": "cat /proc/sys/kernel/osrelease; ls /boot/vmlinuz-* /lib/modules 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.sysctl_count",
+      "group": "kernel",
+      "cmd": "sysctl -a 2>/dev/null | wc -l",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 35,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.entropy",
+      "group": "kernel",
+      "cmd": "cat /proc/sys/kernel/random/entropy_avail 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.lsblk_json",
+      "group": "storage",
+      "cmd": "lsblk -J -O 2>&1 | head -c 200000",
+      "timeout_s": 8,
+      "cap_bytes": 262144,
+      "priority": 95,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.lsblk_wide",
+      "group": "storage",
+      "cmd": "lsblk -a -o NAME,KNAME,PATH,MAJ:MIN,TYPE,SIZE,MODEL,SERIAL,WWN,VENDOR,TRAN,ROTA,RO,RM,FSTYPE,MOUNTPOINT,PKNAME,HCTL,STATE,SCHED,PHY-SEC,LOG-SEC 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 262144,
+      "priority": 90,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "storage.partitions",
+      "group": "storage",
+      "cmd": "cat /proc/partitions",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 85,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.sysblock_loop",
+      "group": "storage",
+      "cmd": "ls /sys/block; for d in /sys/block/*; do echo \"== $d size=$(cat $d/size 2>&1) ro=$(cat $d/ro 2>&1) rm=$(cat $d/removable 2>&1) rot=$(cat $d/queue/rotational 2>&1) model=$(cat $d/device/model 2>&1 | tr -d '\\n') vendor=$(cat $d/device/vendor 2>&1 | tr -d '\\n') sched=$(cat $d/queue/scheduler 2>&1) holders=$(ls $d/holders 2>&1 | tr '\\n' ' ') slaves=$(ls $d/slaves 2>&1 | tr '\\n' ' ')\"; done",
+      "timeout_s": 15,
+      "cap_bytes": 65536,
+      "priority": 92,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": [
+        {
+          "name": "dm_present",
+          "when": "OK",
+          "regex": "^== /sys/block/dm-",
+          "value_if_match": true,
+          "value_if_nomatch": false
+        },
+        {
+          "name": "md_present",
+          "when": "OK",
+          "regex": "^== /sys/block/md",
+          "value_if_match": true,
+          "value_if_nomatch": false
+        },
+        {
+          "name": "nvme_present",
+          "when": "OK",
+          "regex": "nvme",
+          "value_if_match": true,
+          "value_if_nomatch": false
+        },
+        {
+          "name": "loop_present",
+          "when": "OK",
+          "regex": "^== /sys/block/loop",
+          "value_if_match": true,
+          "value_if_nomatch": false
+        }
+      ]
+    },
+    {
+      "id": "storage.mdstat",
+      "group": "storage",
+      "cmd": "cat /proc/mdstat 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.dev_mapper_ls",
+      "group": "storage",
+      "cmd": "ls -la /dev/mapper/ 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.dm_names",
+      "group": "storage",
+      "cmd": "for d in /sys/block/dm-*; do echo \"$d name=$(cat $d/dm/name 2>&1) uuid=$(cat $d/dm/uuid 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [
+        {
+          "fact": "dm_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.dm_tools",
+      "group": "storage",
+      "cmd": "dmsetup ls 2>&1; dmsetup info -c 2>&1 | head -30",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [
+        {
+          "fact": "dm_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.lvm_tools",
+      "group": "storage",
+      "cmd": "lvs 2>&1 | head; vgs 2>&1 | head; pvs 2>&1 | head",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [
+        {
+          "fact": "dm_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.nvme_class",
+      "group": "storage",
+      "cmd": "ls /sys/class/nvme /sys/class/nvme-subsystem 2>&1; for c in /sys/class/nvme/*; do echo \"== $c model=$(cat $c/model 2>&1) serial=$(cat $c/serial 2>&1) fw=$(cat $c/firmware_rev 2>&1) transport=$(cat $c/transport 2>&1) state=$(cat $c/state 2>&1) subsysnqn=$(cat $c/subsysnqn 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [
+        {
+          "fact": "nvme_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "storage.nvme_cli",
+      "group": "storage",
+      "cmd": "nvme list 2>&1; nvme version 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [
+        {
+          "fact": "nvme_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.mdadm_detail",
+      "group": "storage",
+      "cmd": "mdadm --version 2>&1; for m in /dev/md*; do mdadm --detail $m 2>&1 | head -40; done",
+      "timeout_s": 10,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [
+        {
+          "fact": "md_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.mdadm_conf",
+      "group": "storage",
+      "cmd": "cat /etc/mdadm/mdadm.conf /etc/mdadm.conf 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.md_sysfs",
+      "group": "storage",
+      "cmd": "for d in /sys/block/md*; do echo \"== $d level=$(cat $d/md/level 2>&1) raid_disks=$(cat $d/md/raid_disks 2>&1) degraded=$(cat $d/md/degraded 2>&1) sync=$(cat $d/md/sync_action 2>&1) array_state=$(cat $d/md/array_state 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [
+        {
+          "fact": "md_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.multipath",
+      "group": "storage",
+      "cmd": "multipath -ll 2>&1 | head -40; ls /etc/multipath.conf /etc/multipath/ 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.scsi_hosts",
+      "group": "storage",
+      "cmd": "ls /sys/class/iscsi_session /sys/class/iscsi_host /sys/class/fc_host /sys/class/sas_host /sys/class/scsi_host 2>&1; for h in /sys/class/scsi_host/host*; do echo \"$h proc_name=$(cat $h/proc_name 2>&1) state=$(cat $h/state 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.iscsi",
+      "group": "storage",
+      "cmd": "iscsiadm -m session 2>&1; cat /etc/iscsi/initiatorname.iscsi 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.mounts",
+      "group": "storage",
+      "cmd": "cat /proc/mounts",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 85,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.findmnt",
+      "group": "storage",
+      "cmd": "findmnt -rno TARGET,SOURCE,FSTYPE,OPTIONS 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.fstab",
+      "group": "storage",
+      "cmd": "cat /etc/fstab 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.df",
+      "group": "storage",
+      "cmd": "df -hTP 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.swap",
+      "group": "storage",
+      "cmd": "cat /proc/swaps; swapon --show 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.disk_by_id",
+      "group": "storage",
+      "cmd": "ls -la /dev/disk/by-id/ 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "storage.disk_by_path",
+      "group": "storage",
+      "cmd": "ls -la /dev/disk/by-path/ /dev/disk/by-uuid/ /dev/disk/by-label/ 2>&1 | head -80",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.lspci_nn",
+      "group": "storage",
+      "cmd": "lspci -nn 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 131072,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.lspci_storage",
+      "group": "storage",
+      "cmd": "lspci -nnk 2>&1 | grep -iA3 -E 'storage|SATA|SAS|RAID|NVM|SCSI|Non-Volatile|Fibre' | head -60",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.pci_drivers",
+      "group": "storage",
+      "cmd": "ls /sys/bus/pci/drivers 2>&1 | tr '\\n' ' '",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.proc_scsi",
+      "group": "storage",
+      "cmd": "cat /proc/scsi/scsi 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.net_fs_mounts",
+      "group": "storage",
+      "cmd": "grep -E 'nfs|cifs|smb|ceph|fuse|gluster|9p|iscsi|drbd|zfs|btrfs|bcache|overlay' /proc/mounts 2>&1; cat /proc/fs/nfsfs/servers /proc/fs/nfsfs/volumes 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.storage_modules",
+      "group": "storage",
+      "cmd": "ls /sys/module | grep -iE 'nvme|dm_|md_|raid|multipath|iscsi|nfs|zfs|btrfs|bcache|drbd|megaraid|mpt|smartpqi|hpsa|aacraid|ahci|virtio|xfs|ext4' | tr '\\n' ' '",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.smartctl_scan",
+      "group": "storage",
+      "cmd": "smartctl --scan 2>&1; smartctl --version 2>&1 | head -2",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.zpool",
+      "group": "storage",
+      "cmd": "zpool status 2>&1 | head -30; zpool list 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.dev_ls",
+      "group": "storage",
+      "cmd": "ls -la /dev/sd* /dev/nvme* /dev/md* /dev/dm-* /dev/vd* /dev/xvd* 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.block_device_links",
+      "group": "storage",
+      "cmd": "for d in /sys/block/*; do [ -e $d/device ] && echo \"$d device_link=$(readlink -f $d/device 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.udevadm_sda",
+      "group": "storage",
+      "cmd": "udevadm info --query=property --name=/dev/sda 2>&1 | grep -E 'ID_(MODEL|SERIAL|BUS|TYPE|WWN|PATH|FS_TYPE|VENDOR)|DEVTYPE' | head -30",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "storage.storage_services",
+      "group": "storage",
+      "cmd": "systemctl is-active iscsid multipathd mdmonitor lvm2-monitor nfs-server nfs-client.target smartd zfs.target open-iscsi 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.lvm_conf_ls",
+      "group": "storage",
+      "cmd": "ls -la /etc/lvm/lvm.conf /etc/lvm/backup /etc/lvm/archive 2>&1 | head",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.dm_mod_params",
+      "group": "storage",
+      "cmd": "cat /sys/module/dm_mod/parameters/* 2>&1 | head",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [
+        {
+          "fact": "dm_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.configfs_bcache_btrfs",
+      "group": "storage",
+      "cmd": "ls /sys/kernel/config/target 2>&1; ls /sys/fs/bcache /sys/fs/btrfs 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 35,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.ip_addr",
+      "group": "network",
+      "cmd": "ip -br link 2>&1; ip -br addr 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 90,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "network.ip_route",
+      "group": "network",
+      "cmd": "ip route 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "network.ss_listen",
+      "group": "network",
+      "cmd": "ss -tulnp 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 90,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "network.ss_unix",
+      "group": "network",
+      "cmd": "ss -xlp 2>&1 | head -40",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.ssh_dir_ls",
+      "group": "network",
+      "cmd": "ls -la /etc/ssh/ 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 75,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.sshd_config",
+      "group": "network",
+      "cmd": "cat /etc/ssh/sshd_config 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 85,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.sshd_config_d",
+      "group": "network",
+      "cmd": "ls -la /etc/ssh/sshd_config.d/ 2>&1; for f in /etc/ssh/sshd_config.d/*; do echo \"== $f\"; cat \"$f\" 2>&1; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.sshd_test_config",
+      "group": "network",
+      "cmd": "sshd -T 2>&1 | head -20; echo rc=$?",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 80,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.sshd_version",
+      "group": "network",
+      "cmd": "sshd -V 2>&1 | head -2; ssh -V 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.host_key_fingerprints",
+      "group": "network",
+      "cmd": "for k in /etc/ssh/ssh_host_*_key.pub; do ssh-keygen -lf $k 2>&1; done; ls -la /etc/ssh/ssh_host_* 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "network.authorized_keys",
+      "group": "network",
+      "cmd": "ls -la ~/.ssh/ 2>&1; awk '{print $1, NF>=3 ? $NF : \"(no comment)\"}' ~/.ssh/authorized_keys 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.other_home_ssh_ls",
+      "group": "network",
+      "cmd": "ls -la /home/*/.ssh /root/.ssh 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.sshd_service_status",
+      "group": "network",
+      "cmd": "systemctl status ssh sshd --no-pager 2>&1 | head -15; systemctl cat ssh sshd 2>&1 | head -40; systemctl list-sockets --no-pager 2>&1 | grep -i ssh",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.remote_access_procs",
+      "group": "network",
+      "cmd": "ps -eo pid,user,comm,args 2>&1 | grep -E 'sshd|telnetd|vnc|xrdp|teleport|tailscale|zerotier|wireguard|openvpn|cockpit|webmin|dropbear|mosh|tmate|ngrok|frp|cloudflared|ttyd|shellinabox|rsh|rlogin' | grep -v grep",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.pam_config",
+      "group": "network",
+      "cmd": "cat /etc/pam.d/sshd /etc/pam.d/common-auth /etc/pam.d/system-auth 2>&1 | grep -Ev '^\\s*(#|$)'",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.access_hosts_rules",
+      "group": "network",
+      "cmd": "cat /etc/security/access.conf 2>&1 | grep -Ev '^\\s*(#|$)'; cat /etc/hosts.allow /etc/hosts.deny 2>&1 | grep -Ev '^\\s*(#|$)'",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.firewall_active",
+      "group": "network",
+      "cmd": "systemctl is-active ufw firewalld nftables iptables fail2ban 2>&1; ls /etc/nftables.conf /etc/ufw /etc/firewalld /etc/fail2ban 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.firewall_rules",
+      "group": "network",
+      "cmd": "nft list ruleset 2>&1 | head -5; iptables -S 2>&1 | head -5; ufw status 2>&1 | head -3",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.ip_forward",
+      "group": "network",
+      "cmd": "cat /proc/sys/net/ipv4/ip_forward /proc/sys/net/ipv6/conf/all/forwarding 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.vpn_dirs_ls",
+      "group": "network",
+      "cmd": "ls -la /etc/wireguard /etc/openvpn /etc/tailscale /var/lib/tailscale 2>&1 | head",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.nic_info",
+      "group": "network",
+      "cmd": "for n in /sys/class/net/*; do echo \"$n driver=$(readlink $n/device/driver 2>&1 | xargs -r basename) mac=$(cat $n/address 2>&1) state=$(cat $n/operstate 2>&1) speed=$(cat $n/speed 2>&1) dev=$(readlink -f $n/device 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "network.ethtool_first",
+      "group": "network",
+      "cmd": "ethtool -i $(ls /sys/class/net | grep -v lo | head -1) 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.netconfig_files",
+      "group": "network",
+      "cmd": "cat /etc/NetworkManager/system-connections/* 2>&1 | head -3; ls -la /etc/NetworkManager/system-connections/ /etc/netplan/ /etc/network/interfaces /etc/sysconfig/network-scripts/ 2>&1 | head -30",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.tls_private_ls",
+      "group": "secrets",
+      "cmd": "ls -la /etc/ssl/private /etc/pki/tls/private /etc/letsencrypt/live /etc/letsencrypt/archive 2>&1 | head -40",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "paths",
+      "facts": []
+    },
+    {
+      "id": "secrets.sensitive_file_find",
+      "group": "secrets",
+      "cmd": "timeout 20 find / -xdev \\( -path /proc -o -path /sys -o -path /dev -o -path /run \\) -prune -o -type f \\( -name 'id_rsa' -o -name 'id_dsa' -o -name 'id_ecdsa' -o -name 'id_ed25519' -o -name '*.pem' -o -name '*.p12' -o -name '*.pfx' -o -name '*.key' -o -name '*.kdbx' -o -name '.netrc' -o -name '.pgpass' -o -name '.my.cnf' -o -name 'credentials' -o -name 'credentials.json' -o -name '.npmrc' -o -name '.pypirc' -o -name '.git-credentials' -o -name 'kubeconfig' -o -name '.env' -o -name '*.tfstate' -o -name '*.keytab' -o -name 'secrets.y*ml' -o -name 'shadow' -o -name 'htpasswd' -o -name '*.jks' -o -name 'token' -o -name '*.token' -o -name 'authorized_keys' -o -name 'known_hosts' \\) -printf '%m %u:%g %s %p\\n' 2>/dev/null | head -300",
+      "timeout_s": 30,
+      "cap_bytes": 65536,
+      "priority": 70,
+      "requires": [],
+      "sensitivity": "paths",
+      "facts": []
+    },
+    {
+      "id": "secrets.cloud_cred_dirs_ls",
+      "group": "secrets",
+      "cmd": "ls -la /home/*/.aws /home/*/.docker /home/*/.kube /home/*/.gnupg /home/*/.config/gcloud /home/*/.azure /root/.aws /root/.docker /root/.kube 2>&1 | head -60",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "paths",
+      "facts": []
+    },
+    {
+      "id": "secrets.home_history_ls",
+      "group": "secrets",
+      "cmd": "ls -la ~ 2>&1; ls -la ~/.bash_history ~/.python_history ~/.mysql_history ~/.psql_history 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "paths",
+      "facts": []
+    },
+    {
+      "id": "secrets.config_mgmt_dirs_ls",
+      "group": "secrets",
+      "cmd": "ls -la /etc/salt /etc/puppet /etc/puppetlabs /etc/chef /etc/ansible /var/lib/waagent /etc/kubernetes /var/lib/kubelet /etc/rancher 2>&1 | head -40",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.world_writable_find",
+      "group": "secrets",
+      "cmd": "timeout 20 find / -xdev \\( -path /proc -o -path /sys -o -path /dev \\) -prune -o -type f -perm -o+w -printf '%m %u:%g %p\\n' 2>/dev/null | head -100",
+      "timeout_s": 30,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "paths",
+      "facts": []
+    },
+    {
+      "id": "secrets.suid_find",
+      "group": "secrets",
+      "cmd": "timeout 20 find / -xdev \\( -path /proc -o -path /sys -o -path /dev \\) -prune -o -type f -perm -4000 -printf '%m %u:%g %p\\n' 2>/dev/null | head -100",
+      "timeout_s": 30,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.getcap_scan",
+      "group": "secrets",
+      "cmd": "getcap -r / 2>/dev/null | head -50",
+      "timeout_s": 20,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.sockets_ls",
+      "group": "secrets",
+      "cmd": "ls -la /var/run/docker.sock /run/containerd/containerd.sock /var/run/libvirt/libvirt-sock 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.varlog_ls",
+      "group": "secrets",
+      "cmd": "ls -la /var/log/ 2>&1 | head -50",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.cron_ls",
+      "group": "secrets",
+      "cmd": "ls -la /etc/cron.d /etc/cron.daily /var/spool/cron /var/spool/cron/crontabs 2>&1 | head -40; crontab -l 2>&1 | head -20",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.boot_artifacts_ls",
+      "group": "secrets",
+      "cmd": "ls -la /boot/initrd* /boot/initramfs* /boot/grub/grub.cfg /boot/grub2/grub.cfg /boot/efi 2>&1 | head -20",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 35,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "secrets.cloud_userdata_ls",
+      "group": "secrets",
+      "cmd": "ls -la /var/lib/cloud/instance/user-data.txt /var/lib/cloud/instances/*/user-data.txt* /var/lib/cloud/seed 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ipmi_dev_ls",
+      "group": "bmc",
+      "cmd": "ls -la /dev/ipmi0 2>&1; echo ---; ls -la /dev/ipmidev/ 2>&1; echo ---; ls -la /dev/ipmi* 2>&1; echo ---; ls /dev | grep -c ipmi",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": [
+        {
+          "name": "ipmi_dev_present",
+          "when": "OK",
+          "regex": "^c.* /dev/ipmi0$",
+          "value_if_match": true,
+          "value_if_nomatch": false
+        }
+      ]
+    },
+    {
+      "id": "bmc.ipmi_modules",
+      "group": "bmc",
+      "cmd": "lsmod 2>&1 | grep -iE 'ipmi|acpi_ipmi|ssif'; ls /sys/module/ | grep -i ipmi",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": [
+        {
+          "name": "ipmi_module_present",
+          "when": "OK",
+          "nonempty": true
+        }
+      ]
+    },
+    {
+      "id": "bmc.ipmi_class_ls",
+      "group": "bmc",
+      "cmd": "ls /sys/class/ipmi/ 2>&1; for d in /sys/class/ipmi/*; do echo \"== $d\"; ls $d 2>&1; cat $d/device/modalias 2>&1; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ipmi_si_params",
+      "group": "bmc",
+      "cmd": "for p in /sys/module/ipmi_si/parameters/*; do echo \"$(basename $p)=$(cat $p 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [
+        {
+          "fact": "ipmi_module_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ipmi_acpi_devices",
+      "group": "bmc",
+      "cmd": "ls /sys/bus/platform/devices/ 2>&1 | grep -i ipmi; ls /sys/bus/acpi/devices/ 2>&1 | grep -iE 'IPI0001|IPMI'; cat /sys/bus/acpi/devices/IPI0001:00/status /sys/bus/acpi/devices/IPI0001:00/path 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ipmitool_which",
+      "group": "bmc",
+      "cmd": "which ipmitool ipmi-sensors ipmi-chassis ipmiutil freeipmi-config 2>&1; ipmitool -V 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ipmitool_mc_info",
+      "group": "bmc",
+      "cmd": "ipmitool mc info 2>&1; echo rc=$?",
+      "timeout_s": 15,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [
+        {
+          "fact": "ipmi_dev_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ipmi_dev_perms",
+      "group": "bmc",
+      "cmd": "stat -c '%A %a %U:%G %n' /dev/ipmi0 2>&1; getfacl /dev/ipmi0 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [
+        {
+          "fact": "ipmi_dev_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.udev_rules_ipmi",
+      "group": "bmc",
+      "cmd": "grep -rli ipmi /etc/udev/rules.d /lib/udev/rules.d /usr/lib/udev/rules.d 2>/dev/null | head; grep -rhi ipmi /etc/udev/rules.d /lib/udev/rules.d /usr/lib/udev/rules.d 2>/dev/null | head -20",
+      "timeout_s": 10,
+      "cap_bytes": 32768,
+      "priority": 35,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.modprobe_ipmi",
+      "group": "bmc",
+      "cmd": "grep -rHi ipmi /etc/modprobe.d /etc/modules-load.d /etc/modules 2>&1 | head -20",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 35,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ipmi_services",
+      "group": "bmc",
+      "cmd": "systemctl is-active ipmievd openipmi ipmi 2>&1; systemctl list-unit-files --no-pager 2>&1 | grep -i ipmi",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.dmi_smbios_entries",
+      "group": "bmc",
+      "cmd": "ls -la /sys/firmware/dmi/entries/ 2>&1 | grep -E ' (38|42)-' ; ls -la /sys/firmware/dmi/tables/ 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.dmi_entry_38_raw",
+      "group": "bmc",
+      "cmd": "cat /sys/firmware/dmi/entries/38-0/raw 2>&1 | od -An -t x1 | head -3",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 35,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.usb_cdc_net",
+      "group": "bmc",
+      "cmd": "ls /sys/class/net/ 2>&1; for n in /sys/class/net/*; do echo \"$n $(readlink -f $n/device 2>&1)\"; done | grep -iE 'usb|cdc'",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 30,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.ioports_iomem",
+      "group": "bmc",
+      "cmd": "cat /proc/ioports 2>&1 | head -5; cat /proc/iomem 2>&1 | head -3",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 30,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.mem_port_kmsg_ls",
+      "group": "bmc",
+      "cmd": "ls -la /dev/mem /dev/port /dev/kmsg 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 30,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.i2c_devices",
+      "group": "bmc",
+      "cmd": "ls /sys/bus/i2c/devices 2>&1 | head; ls /dev/i2c-* 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 30,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.running_units",
+      "group": "services",
+      "cmd": "systemctl list-units --type=service --state=running --no-pager --no-legend 2>&1 | head -80",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.timers",
+      "group": "services",
+      "cmd": "systemctl list-timers --all --no-pager --no-legend 2>&1 | head -40",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.ps_all",
+      "group": "services",
+      "cmd": "ps -eo pid,ppid,user,etimes,comm 2>&1 | head -80",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 65,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.pkg_counts",
+      "group": "services",
+      "cmd": "dpkg -l 2>/dev/null | wc -l; rpm -qa 2>/dev/null | wc -l",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.apt_upgradable",
+      "group": "services",
+      "cmd": "apt list --upgradable 2>/dev/null | head -30",
+      "timeout_s": 15,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.apt_state_ls",
+      "group": "services",
+      "cmd": "ls -la /var/lib/apt/lists 2>&1 | head -3; cat /var/lib/apt/periodic/update-success-stamp 2>&1; ls -la /var/run/reboot-required* 2>&1; cat /var/run/reboot-required.pkgs 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.time_sync",
+      "group": "services",
+      "cmd": "timedatectl 2>&1 | head -12; chronyc tracking 2>&1 | head -5",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 55,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.rsyslog_remote",
+      "group": "services",
+      "cmd": "cat /etc/rsyslog.conf /etc/rsyslog.d/* 2>&1 | grep -E '^\\s*[^#].*@' | head",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.journal_usage",
+      "group": "services",
+      "cmd": "journalctl --disk-usage 2>&1; ls -la /var/log/journal 2>&1 | head -5",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.docker_status",
+      "group": "services",
+      "cmd": "docker version 2>&1 | head -5; docker ps 2>&1 | head -5",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 45,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.pid1_cgroup",
+      "group": "services",
+      "cmd": "cat /proc/1/cgroup 2>&1; cat /proc/1/comm",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.repo_sources_ls",
+      "group": "services",
+      "cmd": "ls -la /etc/apt/sources.list /etc/apt/sources.list.d /etc/yum.repos.d 2>&1 | head -20",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.timezone",
+      "group": "services",
+      "cmd": "cat /etc/timezone 2>&1; cat /etc/adjtime 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.hwmon_thermal",
+      "group": "services",
+      "cmd": "for h in /sys/class/hwmon/*; do echo \"$h $(cat $h/name 2>&1)\"; done; ls /sys/class/thermal 2>&1 | head",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 35,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.watchdog",
+      "group": "services",
+      "cmd": "ls /sys/class/watchdog 2>&1; cat /sys/class/watchdog/watchdog0/identity 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 32768,
+      "priority": 30,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.utility_inventory",
+      "group": "services",
+      "cmd": "which nvme smartctl mdadm lvs dmsetup multipath iscsiadm ipmitool dmidecode lshw hwinfo lsblk findmnt lspci lsusb ss netstat ip sshd nft iptables ufw firewall-cmd getcap getfacl jq python3 perl docker kubectl curl wget 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 16384,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.bmc_sysfs_attrs",
+      "group": "bmc",
+      "cmd": "for f in /sys/devices/platform/ipmi_bmc.0/* /sys/class/ipmi/ipmi0/dev /sys/class/ipmi/ipmi0/device/modalias; do if [ -f \"$f\" ]; then echo \"$f=$(head -c 200 $f 2>&1)\"; fi; done",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "bmc.usb_nic_identity",
+      "group": "bmc",
+      "cmd": "for d in /sys/class/net/*/device; do if readlink -f $d/.. | grep -q usb; then echo \"$d -> $(readlink -f $d/..)\"; for a in manufacturer product idVendor idProduct bDeviceClass speed; do echo \"  $a=$(cat $(readlink -f $d/..)/$a 2>&1)\"; done; fi; done",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "bmc.platform_ipmi_devices",
+      "group": "bmc",
+      "cmd": "ls -la /sys/bus/platform/devices/ 2>&1 | grep -iE 'ipmi|bmc'; for d in /sys/bus/platform/devices/dmi-ipmi-si.0 /sys/bus/platform/devices/ipmi_bmc.0; do echo \"== $d\"; ls $d 2>&1 | tr '\n' ' '; echo; done",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "services.build_tools",
+      "group": "services",
+      "cmd": "which go gcc cc make tar gzip xz curl wget git rsync 2>&1; ls -la /usr/local/go/bin/go /snap/bin/go 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.ssh_socket_cat",
+      "group": "network",
+      "cmd": "systemctl cat ssh.socket 2>&1 | grep -Ev '^\\s*#' | head -30; systemctl is-active ssh.socket ssh.service 2>&1; systemctl show ssh.socket -p Listen 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.sshd_effective_lines",
+      "group": "network",
+      "cmd": "grep -Ev '^\\s*(#|$)' /etc/ssh/sshd_config 2>&1; for f in /etc/ssh/sshd_config.d/*.conf; do echo \"== $f\"; grep -Ev '^\\s*(#|$)' \"$f\" 2>&1; done",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.sudo_group",
+      "group": "users",
+      "cmd": "getent group sudo adm wheel 2>&1; ls -la /etc/sudoers.d 2>&1; stat -c '%A %U:%G %n' /etc/sudoers /etc/sudoers.d 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.nvme_sysfs_detail",
+      "group": "storage",
+      "cmd": "for c in /sys/class/nvme/*; do echo \"== $c\"; for a in model firmware_rev state transport address cntlid numa_node queue_count sqsize; do echo \"  $a=$(cat $c/$a 2>&1)\"; done; done; for s in /sys/class/nvme-subsystem/*; do echo \"== $s iopolicy=$(cat $s/iopolicy 2>&1) model=$(cat $s/model 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [
+        {
+          "fact": "nvme_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "storage.blk_queue_detail",
+      "group": "storage",
+      "cmd": "for d in /sys/block/nvme*; do echo \"== $d\"; for a in queue/rotational queue/logical_block_size queue/physical_block_size queue/discard_granularity queue/write_cache queue/scheduler queue/nr_requests size ro removable; do echo \"  $a=$(cat $d/$a 2>&1)\"; done; echo \"  holders=$(ls $d/holders 2>&1 | tr '\n' ' ') parts=$(ls -d $d/nvme* 2>/dev/null | wc -l)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [
+        {
+          "fact": "nvme_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.lsblk_fs",
+      "group": "storage",
+      "cmd": "lsblk -f -P -o NAME,FSTYPE,FSVER,LABEL,UUID,FSAVAIL,FSUSE%,MOUNTPOINTS 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 131072,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.nvme_smart_try",
+      "group": "storage",
+      "cmd": "nvme smart-log /dev/nvme0n1 2>&1 | head -12; nvme id-ctrl /dev/nvme0 2>&1 | head -8",
+      "timeout_s": 10,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [
+        {
+          "fact": "nvme_present",
+          "eq": true
+        }
+      ],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.ext4_sysfs",
+      "group": "storage",
+      "cmd": "ls /sys/fs/ext4/ 2>&1; for d in /sys/fs/ext4/*; do echo \"== $d errors_count=$(cat $d/errors_count 2>&1) first_error_time=$(cat $d/first_error_time 2>&1) lifetime_write_kbytes=$(cat $d/lifetime_write_kbytes 2>&1)\"; done",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "identity.machine_id_files",
+      "group": "identity",
+      "cmd": "ls -la /etc/machine-id /var/lib/dbus/machine-id 2>&1; cat /var/lib/dbus/machine-id 2>&1; cat /sys/class/dmi/id/product_uuid 2>&1 | head -c 80",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 50,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.module_taint",
+      "group": "kernel",
+      "cmd": "cat /proc/sys/kernel/tainted; grep -H . /sys/module/*/taint 2>/dev/null; grep -c . /sys/module/*/taint 2>/dev/null | grep -v ':0$' | head -20",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 60,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    }
+  ]
+}

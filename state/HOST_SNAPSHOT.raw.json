@@ -1,0 +1,1063 @@
+{
+  "generated_at": "2026-09-08T21:43:06.662719+00:00",
+  "tool": "tci",
+  "registry_version": 1,
+  "probe_count": 175,
+  "statuses_summary": {
+    "OK": 137,
+    "EXECUTION_ERROR": 5,
+    "UTILITY_MISSING": 12,
+    "ENOENT": 13,
+    "EACCES": 2
+  },
+  "established_facts": {
+    "ipmi_dev_present": true,
+    "ipmi_module_present": true,
+    "distro_family": "debian",
+    "distro_id": "ubuntu",
+    "is_virtual": false,
+    "dm_present": false,
+    "md_present": false,
+    "nvme_present": true,
+    "loop_present": true
+  },
+  "contested": {},
+  "unresolved": {},
+  "not_attempted_budget": [],
+  "not_eligible": {
+    "storage.dm_names": [
+      "dm_present"
+    ],
+    "storage.dm_tools": [
+      "dm_present"
+    ],
+    "storage.lvm_tools": [
+      "dm_present"
+    ],
+    "storage.mdadm_detail": [
+      "md_present"
+    ],
+    "storage.md_sysfs": [
+      "md_present"
+    ],
+    "storage.dm_mod_params": [
+      "dm_present"
+    ]
+  },
+  "evidence": {
+    "bmc.bmc_sysfs_attrs": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/sys/devices/platform/ipmi_bmc.0/additional_device_support=0xbf\n/sys/devices/platform/ipmi_bmc.0/aux_firmware_revision=0x00 0x00 0x03 0x03\n/sys/devices/platform/ipmi_bmc.0/device_id=32\n/sys/devices/platform/ipmi_bmc.0/driver_override=(null)\n/sys/devices/platform/ipmi_bmc.0/firmware_revision=1.5\n/sys/devices/platform/ipmi_bmc.0/guid=08186271-905a-0000-0000-000000000000\n/sys/devices/platform/ipmi_bmc.0/ipmi_version=2.0\n/sys/devices/platform/ipmi_bmc.0/manufacturer_id=0x002a7c\n/sys/devices/platform/ipmi_bmc.0/modalias=platform:ipmi_bmc\n/sys/devices/platform/ipmi_bmc.0/product_id=0x1d6e\n/sys/devices/platform/ipmi_bmc.0/provides_device_sdrs=0\n/sys/devices/platform/ipmi_bmc.0/revision=1\n/sys/devices/platform/ipmi_bmc.0/uevent=DRIVER=ipmi\nMODALIAS=platform:ipmi_bmc\n/sys/class/ipmi/ipmi0/dev=238:0\n/sys/class/ipmi/ipmi0/device/modalias=acpi:IPI0001:\n"
+    },
+    "bmc.dmi_entry_38_raw": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": " 63 61 74 3a 20 2f 73 79 73 2f 66 69 72 6d 77 61\n 72 65 2f 64 6d 69 2f 65 6e 74 72 69 65 73 2f 33\n 38 2d 30 2f 72 61 77 3a 20 50 65 72 6d 69 73 73\n"
+    },
+    "bmc.dmi_smbios_entries": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "drwxr-xr-x  2 root root 0 Sep  8 21:38 38-0\ndrwxr-xr-x  2 root root 0 Sep  8 21:38 42-0\ntotal 0\ndrwxr-xr-x 2 root root    0 Sep  8 21:38 .\ndrwxr-xr-x 4 root root    0 Sep  8 21:38 ..\n-r-------- 1 root root 3962 Sep  8 21:38 DMI\n-r-------- 1 root root   24 Sep  8 21:38 smbios_entry_point\n"
+    },
+    "bmc.i2c_devices": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "i2c-0\ni2c-1\ni2c-2\n/dev/i2c-0\n/dev/i2c-1\n/dev/i2c-2\n"
+    },
+    "bmc.ioports_iomem": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "0000-0000 : PCI Bus 0000:00\n  0000-0000 : dma1\n  0000-0000 : pic1\n  0000-0000 : timer0\n  0000-0000 : timer1\n00000000-00000000 : Reserved\n00000000-00000000 : System RAM\n00000000-00000000 : Reserved\n"
+    },
+    "bmc.ipmi_acpi_devices": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "dmi-ipmi-si.0\nipmi_bmc.0\nIPI0001:00\n15\n\\_SB_.PCI0.SBRG.SIKC\n"
+    },
+    "bmc.ipmi_class_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ipmi0\n== /sys/class/ipmi/ipmi0\ndev\ndevice\npower\nsubsystem\nuevent\nacpi:IPI0001:\n"
+    },
+    "bmc.ipmi_dev_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "crw------- 1 root root 238, 0 Sep  7 19:29 /dev/ipmi0\n---\nls: cannot access '/dev/ipmidev/': No such file or directory\n---\ncrw------- 1 root root 238, 0 Sep  7 19:29 /dev/ipmi0\n---\n1\n"
+    },
+    "bmc.ipmi_modules": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ipmi_ssif              45056  0\nacpi_ipmi              24576  0\nipmi_si                86016  1\nipmi_devintf           16384  0\nipmi_msghandler        94208  4 ipmi_devintf,ipmi_si,acpi_ipmi,ipmi_ssif\nacpi_ipmi\nipmi_devintf\nipmi_msghandler\nipmi_si\nipmi_ssif\n"
+    },
+    "bmc.ipmi_services": {
+      "status": "EXECUTION_ERROR",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "inactive\ninactive\ninactive\n"
+    },
+    "bmc.ipmitool_which": {
+      "status": "UTILITY_MISSING",
+      "rc": 127,
+      "truncated": false,
+      "stdout": "bash: line 1: ipmitool: command not found\n"
+    },
+    "bmc.mem_port_kmsg_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "crw-r--r-- 1 root root 1, 11 Sep  7 19:29 /dev/kmsg\ncrw-r----- 1 root kmem 1,  1 Sep  7 19:29 /dev/mem\ncrw-r----- 1 root kmem 1,  4 Sep  7 19:29 /dev/port\n"
+    },
+    "bmc.modprobe_ipmi": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": ""
+    },
+    "bmc.platform_ipmi_devices": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "lrwxrwxrwx 1 root root 0 Sep  7 19:29 dmi-ipmi-si.0 -> ../../../devices/platform/dmi-ipmi-si.0\nlrwxrwxrwx 1 root root 0 Sep  8 21:38 ipmi_bmc.0 -> ../../../devices/platform/ipmi_bmc.0\n== /sys/bus/platform/devices/dmi-ipmi-si.0\ndriver driver_override modalias power software_node subsystem uevent \n== /sys/bus/platform/devices/ipmi_bmc.0\nadditional_device_support aux_firmware_revision device_id driver driver_override firmware_revision guid ipmi0 ipmi_version manufacturer_id modalias power product_id provides_device_sdrs revision subsystem uevent \n"
+    },
+    "bmc.udev_rules_ipmi": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": ""
+    },
+    "bmc.usb_cdc_net": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "eno1\neno2\nenxbe3af2b6059f\nlo\n/sys/class/net/enxbe3af2b6059f /sys/devices/pci0000:00/0000:00:08.1/0000:07:00.3/usb1/1-1/1-1.2/1-1.2:2.0\n"
+    },
+    "bmc.usb_nic_identity": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/sys/class/net/enxbe3af2b6059f/device -> /sys/devices/pci0000:00/<ip>.1/<ip>.3/usb1/1-1/1-1.2\n  manufacturer=Linux 5.4.62 with aspeed_vhub\n  product=RNDIS/Ethernet Gadget\n  idVendor=0b1f\n  idProduct=03ee\n  bDeviceClass=ef\n  speed=480\n"
+    },
+    "cpu.cpuinfo_summary": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "24\nmodel name\t: AMD EPYC 4484PX 12-Core Processor\n159\n"
+    },
+    "cpu.lscpu": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  24\nOn-line CPU(s) list:                     0-23\nVendor ID:                               AuthenticAMD\nModel name:                              AMD EPYC 4484PX 12-Core Processor\nCPU family:                              25\nModel:                                   97\nThread(s) per core:                      2\nCore(s) per socket:                      12\nSocket(s):                               1\nStepping:                                2\nCPU(s) scaling MHz:                      45%\nCPU max MHz:                             5660.0000\nCPU min MHz:                             545.0000\nBogoMIPS:                                8784.09\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good amd_lbr_v2 nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local user_shstk avx512_bf16 clzero irperf xsaveerptr rdpru wbnoinvd cppc amd_ibpb_ret arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic vgif x2avic v_spec_ctrl vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid overflow_recov succor smca fsrm flush_l1d ibpb_exit_to_user\nVirtualization:                          AMD-V\nL1d cache:                               384 KiB (12 instances)\nL1i cache:                               384 KiB (12 instances)\nL2 cache:                                12 MiB (12 instances)\nL3 cache:                                128 MiB (2 instances)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-23\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Mitigation; Safe RET\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP always-on; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Mitigation; Clear CPU buffers\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Mitigation; IBPB before exit to userspace\n"
+    },
+    "cpu.meminfo": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "MemTotal:       97938032 kB\nMemFree:        96960740 kB\nMemAvailable:   96589128 kB\nBuffers:          141328 kB\nCached:           190328 kB\nSwapCached:            0 kB\nActive:           119204 kB\nInactive:         231132 kB\nActive(anon):      22896 kB\nInactive(anon):        0 kB\nActive(file):      96308 kB\nInactive(file):   231132 kB\nUnevictable:        3072 kB\nMlocked:               0 kB\nSwapTotal:             0 kB\nSwapFree:              0 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:               236 kB\nWriteback:             0 kB\n"
+    },
+    "cpu.nproc_smt": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "24\n1\n"
+    },
+    "cpu.vulnerabilities": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "gather_data_sampling: Not affected\nindirect_target_selection: Not affected\nitlb_multihit: Not affected\nl1tf: Not affected\nmds: Not affected\nmeltdown: Not affected\nmmio_stale_data: Not affected\nreg_file_data_sampling: Not affected\nretbleed: Not affected\nspec_rstack_overflow: Mitigation: Safe RET\nspec_store_bypass: Mitigation: Speculative Store Bypass disabled via prctl\nspectre_v1: Mitigation: usercopy/swapgs barriers and __user pointer sanitization\nspectre_v2: Mitigation: Enhanced / Automatic IBRS; IBPB: conditional; STIBP: always-on; PBRSB-eIBRS: Not affected; BHI: Not affected\nsrbds: Not affected\ntsa: Mitigation: Clear CPU buffers\ntsx_async_abort: Not affected\nvmscape: Mitigation: IBPB before exit to userspace\n"
+    },
+    "identity.cloud_init_dirs": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/etc/cloud/:\ntotal 28\ndrwxr-xr-x  5 root root 4096 Sep  7 19:26 .\ndrwxr-xr-x 66 root root 4096 Sep  8 17:37 ..\ndrwxr-xr-x  2 root root 4096 Mar 30 18:55 clean.d\n-rw-r--r--  1 root root 3718 Mar 30 18:55 cloud.cfg\ndrwxr-xr-x  2 root root 4096 Sep  7 19:27 cloud.cfg.d\n-rw-------  1 root root   16 Sep  7 19:26 ds-identify.cfg\ndrwxr-xr-x  2 root root 4096 Sep  7 19:26 templates\n\n/run/cloud-init/:\ntotal 52\ndrwxr-xr-x  4 root root   340 Sep  7 19:31 .\ndrwxr-xr-x 20 root root   540 Sep  8 21:42 ..\n-rw-r--r--  1 root root     2 Sep  7 19:29 .ds-identify.result\n-rw-r--r--  1 root root    18 Sep  7 19:31 .instance-id\nlrwxrwxrwx  1 root root    28 Sep  7 19:31 cloud-id -> /run/cloud-init/cloud-id-ec2\n-rw-r--r--  1 root root     4 Sep  7 19:31 cloud-id-ec2\n-rw-r--r--  1 root root   319 Sep  7 19:29 cloud-init-generator.log\n-rw-r--r--  1 root root    31 Sep  7 19:29 cloud.cfg\n-rw-------  1 root root  6475 Sep  7 19:31 combined-cloud-config.json\n-rw-r--r--  1 root root   931 Sep  7 19:29 ds-identify.log\n-rw-r--r--  1 root root     0 Sep  7 19:29 enabled\n-rw-------  1 root root 12463 Sep  7 19:31 instance-data-sensitive.json\n-rw-r--r--  1 root root  1911 Sep  7 19:31 instance-data.json\nlrwxrwxrwx  1 root root    36 Sep  7 19:31 result.json -> ../../var/lib/cloud/data/result.json\ndrwxr-xr-x  2 root root    40 Sep  7 19:29 sem\ndrwxr-xr-x  2 root root    60 Sep  7 19:31 share\nlrwxrwxrwx  1 root root    36 Sep  7 19:31 status.json -> ../../var/lib/cloud/data/status.json\n\n/var/lib/cloud/:\ntotal 32\ndrwxr-xr-x  8 root root 4096 Sep  7 19:31 .\ndrwxr-xr-x 19 root root 4096 Sep  7 19:29 ..\ndrwxr-xr-x  2 root root 4096 Sep  7 19:31 data\ndrwxr-xr-x  2 root root 4096 Sep  7 19:29 handlers\nlrwxrwxrwx  1 root root   42 Sep  7 19:31 instance -> /var/lib/cloud/instances/90:5a:08:31:9a:63\ndrwxr-xr-x  3 root root 4096 Sep  7 19:31 instances\ndrwxr-xr-x  6 root root 4096 Sep  7 19:29 scripts\ndrwxr-xr-x  2 root root 4096 Sep  7 19:29 seed\ndrwxr-xr-x  2 root root 4096 Sep  7 19:31 sem\n\n/var/lib/cloud/instance/:\ntotal 52\ndrwxr-xr-x 5 root root 4096 Sep  7 19:31 .\ndrwxr-xr-x 3 root root 4096 Sep  7 19:31 ..\n-rw-r--r-- 1 root root   68 Sep  7 19:31 boot-finished\n-rw------- 1 root root    0 Sep  7 19:31 cloud-config.txt\n-rw-r--r-- 1 root root   29 Sep  7 19:31 datasource\ndrwxr-xr-x 2 root root 4096 Sep  7 19:31 handlers\n-r-------- 1 root root 9310 Sep  7 19:31 obj.pkl\ndrwxr-xr-x 2 root root 4096 Sep  7 19:31 scripts\ndrwxr-xr-x 2 root root 4096 Sep  7 19:31 sem\n-rw------- 1 root root    0 Sep  7 19:31 user-data.txt\n-rw------- 1 root root  308 Sep  7 19:31 user-data.txt.i\n-rw------- 1 root root    0 Sep  7 19:31 vendor-data.txt\n-rw------- 1 root root  308 Sep  7 19:31 vendor-data.txt.i\n-rw------- 1 root root    0 Sep  7 19:31 vendor-data2.txt\n-rw------- 1 root root  308 Sep  7 19:31 vendor-data2.txt.i\n"
+    },
+    "identity.cloud_init_instance_data": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "{\n \"base64_encoded_keys\": [],\n \"ds\": {\n  \"_doc\": \"EXPERIMENTAL: The structure and format of content scoped under the 'ds' key may change in subsequent releases of cloud-init.\",\n  \"_metadata_api_version\": \"2009-04-04\",\n  \"meta-data\": {\n   \"facility\": \"CHI\",\n   \"hostname\": \"\",\n   \"instance-id\": \"90:5a:08:31:9a:63\",\n   \"iqn\": \"\",\n   \"local-hostname\": \"\",\n   \"local-ipv4\": \"\",\n   \"operating-system\": {\n    \"distro\": \"\",\n    \"image_tag\": \"\",\n    \"license_activation\": {\n     \"state\": \"\"\n    },\n    \"slug\": \"\",\n    \"version\": \"\"\n   },\n   \"plan\": \"\",\n   \"public-ipv4\": \"\",\n   \"public-ipv6\": \"\",\n   \"public-keys\": \"\",\n   \"tags\": \"\"\n  }\n },\n \"merged_cfg\": \"redacted for non-root user\",\n \"merged_system_cfg\": \"redacted for non-root user\",\n \"sensitive_keys\": [\n  \"merged_cfg\",\n  \"merged_system_cfg\"\n ],\n \"sys_info\": {\n  \"dist\": [\n   \"ubuntu\",\n   \"24.04\",\n   \"noble\"\n  ],"
+    },
+    "identity.cmdline": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "BOOT_IMAGE=/boot/vmlinuz-6.8.0-139-generic root=UUID=c547dc8b-eb9a-47ee-bb9d-d0156ae49217 ro console=tty1 console=ttyS1,115200n8 nomodeset module_blacklist=af_alg,algif_hash,algif_skcipher,algif_rng,algif_aead,sctp,sctp_diag\n"
+    },
+    "identity.dmi": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "sys_vendor=Supermicro\nproduct_name=AS -3015MR-H10TNR\nproduct_version=0123456789\nproduct_serial=cat: <serial> Permission denied\nproduct_uuid=cat: /sys/class/dmi/id/product_uuid: Permission denied\nproduct_sku=To be filled by O.E.M.\nproduct_family=Family\nboard_vendor=Supermicro\nboard_name=H13SRE-F\nboard_version=1.01\nboard_serial=cat: <serial> Permission denied\nboard_asset_tag=To be filled by O.E.M.\nchassis_vendor=Supermicro\nchassis_type=1\nchassis_serial=cat: <serial> Permission denied\nchassis_asset_tag=Chassis Asset Tag\nbios_vendor=American Megatrends International, LLC.\nbios_version=2.4a\nbios_date=08/29/2025\nbios_release=5.35\n"
+    },
+    "identity.dmi_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 0\ndrwxr-xr-x 3 root root    0 Sep  8 21:38 .\ndrwxr-xr-x 3 root root    0 Sep  8 21:38 ..\n-r--r--r-- 1 root root 4096 Sep  8 21:38 bios_date\n-r--r--r-- 1 root root 4096 Sep  8 21:38 bios_release\n-r--r--r-- 1 root root 4096 Sep  8 21:38 bios_vendor\n-r--r--r-- 1 root root 4096 Sep  8 21:38 bios_version\n-r--r--r-- 1 root root 4096 Sep  8 21:38 board_asset_tag\n-r--r--r-- 1 root root 4096 Sep  8 21:38 board_name\n-r-------- 1 root root 4096 Sep  8 21:38 board_serial\n-r--r--r-- 1 root root 4096 Sep  8 21:38 board_vendor\n-r--r--r-- 1 root root 4096 Sep  8 21:38 board_version\n-r--r--r-- 1 root root 4096 Sep  8 21:38 chassis_asset_tag\n-r-------- 1 root root 4096 Sep  8 21:38 chassis_serial\n-r--r--r-- 1 root root 4096 Sep  8 21:38 chassis_type\n-r--r--r-- 1 root root 4096 Sep  8 21:38 chassis_vendor\n-r--r--r-- 1 root root 4096 Sep  8 21:38 chassis_version\n-r--r--r-- 1 root root 4096 Sep  8 21:38 modalias\ndrwxr-xr-x 2 root root    0 Sep  8 21:38 power\n-r--r--r-- 1 root root 4096 Sep  8 21:38 product_family\n-r--r--r-- 1 root root 4096 Sep  8 21:38 product_name\n-r-------- 1 root root 4096 Sep  8 21:38 product_serial\n-r--r--r-- 1 root root 4096 Sep  8 21:38 product_sku\n-r-------- 1 root root 4096 Sep  8 21:38 product_uuid\n-r--r--r-- 1 root root 4096 Sep  8 21:38 product_version\nlrwxrwxrwx 1 root root    0 Sep  7 19:29 subsystem -> ../../../../class/dmi\n-r--r--r-- 1 root root 4096 Sep  8 21:38 sys_vendor\n-rw-r--r-- 1 root root 4096 Sep  8 21:38 uevent\n"
+    },
+    "identity.hostname": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "f4-metal-small-chi-1\nf4-metal-small-chi-1\n"
+    },
+    "identity.hostname_files": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "f4-metal-small-chi-1\n3576a11dbd9e4ae694de54a1a5575337\n"
+    },
+    "identity.hostnamectl": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": " Static hostname: f4-metal-small-chi-1\n       Icon name: computer-desktop\n         Chassis: desktop \ud83d\udda5\ufe0f\n      Machine ID: 3576a11dbd9e4ae694de54a1a5575337\n         Boot ID: a4a1fc1fbeb646a08e1f2b0065357f73\nOperating System: Ubuntu 24.04.4 LTS\n          Kernel: Linux 6.8.0-139-generic\n    Architecture: x86-64\n Hardware Vendor: Supermicro\n  Hardware Model: AS -3015MR-H10TNR\nFirmware Version: 2.4a\n   Firmware Date: Fri 2025-08-29\n    Firmware Age: 1y 1w 3d\n"
+    },
+    "identity.hosts": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "<ip>\tlocalhost\n\n<ip> f4-metal-small-chi-1 f4-metal-small-chi-1\n"
+    },
+    "identity.id": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "uid=1000(ubuntu) gid=1000(ubuntu) groups=1000(ubuntu),27(sudo)\n"
+    },
+    "identity.machine_id_files": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "-r--r--r-- 1 root root 33 Sep  7 19:29 /etc/machine-id\nlrwxrwxrwx 1 root root 15 Sep  7 19:27 /var/lib/dbus/machine-id -> /etc/machine-id\n3576a11dbd9e4ae694de54a1a5575337\ncat: /sys/class/dmi/id/product_uuid: Permission denied\n"
+    },
+    "identity.machine_info": {
+      "status": "ENOENT",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "cat: /etc/machine-info: No such file or directory\n"
+    },
+    "identity.motd": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "cat: /etc/motd: No such file or directory\nUbuntu 24.04.4 LTS \\n \\l\n\nUbuntu 24.04.4 LTS\nWelcome to Ubuntu 24.04.4 LTS (GNU/Linux 6.8.0-139-generic x86_64)\n\n * Documentation:  https://help.ubuntu.com\n * Management:     https://landscape.canonical.com\n * Support:        https://ubuntu.com/pro\n"
+    },
+    "identity.os_release": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "PRETTY_NAME=\"Ubuntu 24.04.4 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.4 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n"
+    },
+    "identity.proc_version": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Linux version 6.8.0-139-generic (buildd@lcy02-amd64-036) (x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #139-Ubuntu SMP PREEMPT_DYNAMIC Sat Aug  1 03:52:05 UTC 2026\n"
+    },
+    "identity.resolv": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "nameserver <ip>\nnameserver <ip>\nGlobal\n         Protocols: -LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n  resolv.conf mode: foreign\nCurrent DNS Server: <ip>\n       DNS Servers: <ip> <ip>\n\nLink 2 (eno2)\n    Current Scopes: none\n         Protocols: -DefaultRoute -LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n\nLink 3 (eno1)\n    Current Scopes: DNS\n         Protocols: +DefaultRoute -LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n       DNS Servers: <ip> <ip> <ip>::8888 <ip>::1111\n\nLink 4 (enxbe3af2b6059f)\n    Current Scopes: none\n         Protocols: -DefaultRoute -LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n"
+    },
+    "identity.uname": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Linux f4-metal-small-chi-1 6.8.0-139-generic #139-Ubuntu SMP PREEMPT_DYNAMIC Sat Aug  1 03:52:05 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux\n"
+    },
+    "identity.update_motd_d": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 24\ndrwxr-xr-x  2 root root 4096 Sep  7 19:26 .\ndrwxr-xr-x 66 root root 4096 Sep  8 17:37 ..\n-rwxr-xr-x  1 root root 1220 Apr 22  2024 00-header\n-rwxr-xr-x  1 root root 1151 Apr 22  2024 10-help-text\n-rwxr-xr-x  1 root root 5023 Apr 22  2024 50-motd-news\n"
+    },
+    "identity.uptime": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": " 21:43:00 up 1 day,  2:13,  0 user,  load average: 0.00, 0.00, 0.00\n2026-09-07 19:29:43\n"
+    },
+    "identity.virt": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "none\nrc=1\n"
+    },
+    "kernel.boot_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 186296\ndrwxr-xr-x  4 root root     4096 Sep  7 19:27 .\ndrwxr-xr-x 21 root root     4096 Sep  7 19:31 ..\n-rw-------  1 root root  9135527 Aug  1 02:25 System.map-6.8.0-139-generic\n-rw-------  1 root root 10651714 Aug 10 08:07 System.map-7.0.0-31-generic\n-rw-r--r--  1 root root   287560 Aug  1 02:25 config-6.8.0-139-generic\n-rw-r--r--  1 root root   308083 Aug 10 08:07 config-7.0.0-31-generic\ndrwxr-xr-x  3 root root     4096 Jan  1  1970 efi\ndrwxr-xr-x  5 root root     4096 Sep  7 19:27 grub\nlrwxrwxrwx  1 root root       27 Sep  7 19:26 initrd.img -> initrd.img-7.0.0-31-generic\n-rw-r--r--  1 root root 67310556 Sep  4 06:20 initrd.img-6.8.0-139-generic\n-rw-r--r--  1 root root 70984980 Sep  7 19:27 initrd.img-7.0.0-31-generic\nlrwxrwxrwx  1 root root       28 Sep  7 19:26 initrd.img.old -> initrd.img-6.8.0-139-generic\nlrwxrwxrwx  1 root root       24 Sep  7 19:26 vmlinuz -> vmlinuz-7.0.0-31-generic\n-rw-------  1 root root 15059336 Aug  1 02:26 vmlinuz-6.8.0-139-generic\n-rw-------  1 root root 16992648 Aug 10 08:08 vmlinuz-7.0.0-31-generic\nlrwxrwxrwx  1 root root       25 Sep  7 19:26 vmlinuz.old -> vmlinuz-6.8.0-139-generic\n"
+    },
+    "kernel.dmesg_head": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "dmesg: read kernel buffer failed: Operation not permitted\n"
+    },
+    "kernel.entropy": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "256\n"
+    },
+    "kernel.iommu_thp": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "25\nalways [madvise] never\n"
+    },
+    "kernel.lsm": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "apparmor\nevm\nima\nintegrity\nlockdown\nlsm\ntpm0\n[none] integrity confidentiality\nlockdown,capability,landlock,yama,apparmor"
+    },
+    "kernel.lsmod": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Module                  Size  Used by\nunix_diag              12288  0\ntcp_diag               12288  0\nudp_diag               12288  0\ninet_diag              28672  2 tcp_diag,udp_diag\nbnxt_en              4120576  0\ntls                   155648  1 bnxt_en\ncfg80211             1368064  0\nnft_chain_nat          12288  4\nxt_nat                 12288  1\nnf_nat                 61440  2 xt_nat,nft_chain_nat\nnf_conntrack          200704  2 nf_nat,xt_nat\nnf_defrag_ipv6         24576  1 nf_conntrack\nnf_defrag_ipv4         12288  1 nf_conntrack\nxt_tcpudp              16384  0\nnft_compat             20480  1\nbinfmt_misc            24576  1\nnf_tables             380928  9 nft_compat,nft_chain_nat\nintel_rapl_msr         20480  0\nintel_rapl_common      40960  1 intel_rapl_msr\nipmi_ssif              45056  0\nnls_iso8859_1          12288  1\nedac_mce_amd           28672  0\nkvm_amd               212992  0\namdxcp                 12288  0\nkvm                  1404928  1 kvm_amd\ndrm_exec               12288  0\ngpu_sched              61440  0\nirqbypass              12288  1 kvm\ndrm_buddy              20480  0\ncrct10dif_pclmul       12288  1\ndrm_suballoc_helper    16384  0\npolyval_clmulni        12288  0\ndrm_ttm_helper         12288  0\npolyval_generic        12288  1 polyval_clmulni\nghash_clmulni_intel    16384  0\nttm                   110592  1 drm_ttm_helper\nsha256_ssse3           32768  0\nsha1_ssse3             32768  0\ndrm_display_helper    237568  0\naesni_intel           356352  0\ncrypto_simd            16384  1 aesni_intel\ncec                    94208  1 drm_display_helper\ncryptd                 24576  2 crypto_simd,ghash_clmulni_intel\nrapl                   20480  0\nacpi_ipmi              24576  0\nipmi_si                86016  1\nrc_core                73728  1 cec\nipmi_devintf           16384  0\ni2c_algo_bit           16384  0\nk10temp                16384  0\nccp                   147456  1 kvm_amd\ni2c_piix4              32768  0\njoydev                 32768  0\nipmi_msghandler        94208  4 ipmi_devintf,ipmi_si,acpi_ipmi,ipmi_ssif\ninput_leds             12288  0\nmac_hid                12288  0\nsch_fq_codel           24576  49\nnvme_fabrics           36864  0\nnvme_keyring           20480  1 nvme_fabrics\nefi_pstore             12288  0\nnfnetlink              20480  4 nft_compat,nf_tables\ndmi_sysfs              24576  0\nip_tables              32768  0\nx_tables               65536  4 nft_compat,xt_tcpudp,xt_nat,ip_tables\nautofs4                57344  2\nraid10                 77824  0\nraid456               196608  0\nasync_raid6_recov      20480  1 raid456\nasync_memcpy           16384  2 raid456,async_raid6_recov\nasync_pq               20480  2 raid456,async_raid6_recov\nasync_xor              16384  3 async_pq,raid456,async_raid6_recov\nasync_tx               16384  5 async_pq,async_memcpy,async_xor,raid456,async_raid6_recov\nxor                    20480  1 async_xor\nraid6_pq              126976  3 async_pq,raid456,async_raid6_recov\nlibcrc32c              12288  4 nf_conntrack,nf_nat,nf_tables,raid456\nraid1                  61440  0\nraid0                  24576  0\nhid_generic            12288  0\nrndis_host             24576  0\nusbhid                 77824  0\ncdc_ether              24576  1 rndis_host\nusbnet                 61440  2 rndis_host,cdc_ether\nhid                   180224  2 usbhid,hid_generic\nmii                    20480  1 usbnet\nnvme                   61440  2\nixgbe                 524288  0\nahci                   49152  0\nxfrm_algo              16384  1 ixgbe\nxhci_pci               24576  0\nnvme_core             212992  4 nvme,nvme_fabrics\nlibahci                53248  1 ahci\ndca                    16384  1 ixgbe\ncrc32_pclmul           12288  0\nxhci_pci_renesas       20480  1 xhci_pci\nnvme_auth              28672  1 nvme_core\nvideo                  77824  0\nmdio                   12288  1 ixgbe\nwmi                    28672  1 video\n"
+    },
+    "kernel.module_counts": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "98\n221\n"
+    },
+    "kernel.module_taint": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "12288\n/sys/module/bnxt_en/taint:OE\n/sys/module/bnxt_en/taint:1\n"
+    },
+    "kernel.mokutil_sbstate": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "SecureBoot disabled\nPlatform is in Setup Mode\n"
+    },
+    "kernel.osrelease_modules": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "6.8.0-139-generic\n/boot/vmlinuz-6.8.0-139-generic\n/boot/vmlinuz-7.0.0-31-generic\n\n/lib/modules:\n6.8.0-139-generic\n7.0.0-31-generic\n"
+    },
+    "kernel.secureboot": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "config_table\nefivars\nesrt\nfw_platform_size\nfw_vendor\nmok-variables\nruntime\nruntime-map\nsystab\nSecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c\n/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c:    6   0   0   0   0\n/sys/firmware/efi/efivars/SetupMode-8be4df61-93ca-11d2-aa0d-00e098032b8c:    6   0   0   0   1\n"
+    },
+    "kernel.selinux_apparmor": {
+      "status": "UTILITY_MISSING",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "bash: line 1: getenforce: command not found\ncat: /sys/fs/selinux/enforce: No such file or directory\nY\nbash: line 1: aa-status: command not found\n"
+    },
+    "kernel.sysctl_count": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "1297\n"
+    },
+    "kernel.tpm": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "crw------- 1 root root  10,   224 Sep  7 19:29 /dev/tpm0\ncrw------- 1 root root 253, 65536 Sep  7 19:29 /dev/tpmrm0\n\n/sys/class/tpm/:\ntotal 0\ndrwxr-xr-x  2 root root 0 Sep  8 21:38 .\ndrwxr-xr-x 80 root root 0 Sep  8 21:38 ..\nlrwxrwxrwx  1 root root 0 Sep  7 19:29 tpm0 -> ../../devices/platform/MSFT0101:00/tpm/tpm0\n2\n"
+    },
+    "network.access_hosts_rules": {
+      "status": "EXECUTION_ERROR",
+      "rc": 1,
+      "truncated": false,
+      "stdout": ""
+    },
+    "network.authorized_keys": {
+      "status": "EXECUTION_ERROR",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "total 12\ndrwx------ 2 ubuntu ubuntu 4096 Sep  7 19:27 .\ndrwxr-x--- 4 ubuntu ubuntu 4096 Sep  8 17:37 ..\n-rw------- 1 ubuntu ubuntu   98 Sep  8 17:37 authorized_keys\nawk: line 1: syntax error at or near =\n"
+    },
+    "network.ethtool_first": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "driver: ixgbe\nversion: 6.8.0-139-generic\nfirmware-version: 0x80001743, 1.3082.0\nexpansion-rom-version: \nbus-info: 0000:01:00.1\nsupports-statistics: yes\nsupports-test: yes\nsupports-eeprom-access: yes\nsupports-register-dump: yes\nsupports-priv-flags: yes\n"
+    },
+    "network.firewall_active": {
+      "status": "ENOENT",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "active\ninactive\ninactive\ninactive\ninactive\nls: cannot access '/etc/nftables.conf': No such file or directory\nls: cannot access '/etc/firewalld': No such file or directory\nls: cannot access '/etc/fail2ban': No such file or directory\n/etc/ufw:\nafter.init\nafter.rules\nafter6.rules\napplications.d\nbefore.init\nbefore.rules\nbefore6.rules\nsysctl.conf\nufw.conf\nuser.rules\nuser6.rules\n"
+    },
+    "network.firewall_rules": {
+      "status": "UTILITY_MISSING",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "bash: line 1: nft: command not found\niptables v1.8.10 (nf_tables): Could not fetch rule set generation id: Permission denied (you must be root)\nERROR: You need to be root to run this script\n"
+    },
+    "network.host_key_fingerprints": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "256 SHA256:0uOPbnm7/RjU2oBjvd5dLgGcLqynot2YY/pB93SpDbw root@259S052315 (ECDSA)\n256 SHA256:qvIugmbBODixC8kKuWELSAvL/6f6dkh6eJj/T6b1xrA root@259S052315 (ED25519)\n3072 SHA256:CG3e4PkrYxvsQBRvcMgmOJYoSbaljc2qMvxnhwBOfOc root@259S052315 (RSA)\n-rw------- 1 root root  505 Sep  7 19:31 /etc/ssh/ssh_host_ecdsa_key\n-rw-r--r-- 1 root root  177 Sep  7 19:31 /etc/ssh/ssh_host_ecdsa_key.pub\n-rw------- 1 root root  411 Sep  7 19:31 /etc/ssh/ssh_host_ed25519_key\n-rw-r--r-- 1 root root   97 Sep  7 19:31 /etc/ssh/ssh_host_ed25519_key.pub\n-rw------- 1 root root 2602 Sep  7 19:31 /etc/ssh/ssh_host_rsa_key\n-rw-r--r-- 1 root root  569 Sep  7 19:31 /etc/ssh/ssh_host_rsa_key.pub\n"
+    },
+    "network.ip_addr": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "lo               UNKNOWN        <mac> <LOOPBACK,UP,LOWER_UP> \neno2             UP             <mac> <BROADCAST,MULTICAST,UP,LOWER_UP> \neno1             UP             <mac> <BROADCAST,MULTICAST,UP,LOWER_UP> \nenxbe3af2b6059f  DOWN           <mac> <BROADCAST,MULTICAST> \nlo               UNKNOWN        <ip>/8 ::1/128 \neno2             UP             fe80::<ip>/64 \neno1             UP             <ip>/31 <ip>/64 <ip>::2/64 fe80::<ip>/64 \nenxbe3af2b6059f  DOWN           \n"
+    },
+    "network.ip_forward": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "0\n0\n"
+    },
+    "network.ip_route": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "default via <ip> dev eno1 proto static \n<ip>/31 dev eno1 proto kernel scope link src <ip> \n"
+    },
+    "network.netconfig_files": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "cat: '/etc/NetworkManager/system-connections/*': No such file or directory\nls: cannot access '/etc/NetworkManager/system-connections/': No such file or directory\nls: cannot access '/etc/network/interfaces': No such file or directory\nls: cannot access '/etc/sysconfig/network-scripts/': No such file or directory\n/etc/netplan/:\ntotal 12\ndrwxr-xr-x  2 root root 4096 Sep  7 19:27 .\ndrwxr-xr-x 66 root root 4096 Sep  8 17:37 ..\n-rw-r--r--  1 root root    0 Sep  4 06:21 00-cloud-init.yaml\n-rw-r--r--  1 root root  573 Sep  7 19:27 50-cloud-init.yaml\n"
+    },
+    "network.nic_info": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/sys/class/net/eno1 driver=ixgbe mac=<mac> state=up speed=10000 dev=/sys/devices/pci0000:00/<ip>.1/<ip>.1\n/sys/class/net/eno2 driver=ixgbe mac=<mac> state=up speed=10000 dev=/sys/devices/pci0000:00/<ip>.1/<ip>.0\n/sys/class/net/enxbe3af2b6059f driver=rndis_host mac=<mac> state=down speed=cat: /sys/class/net/enxbe3af2b6059f/speed: Invalid argument dev=/sys/devices/pci0000:00/<ip>.1/<ip>.3/usb1/1-1/1-1.2/1-1.2:2.0\n/sys/class/net/lo driver= mac=<mac> state=unknown speed=cat: /sys/class/net/lo/speed: Invalid argument dev=/sys/devices/virtual/net/lo/device\n"
+    },
+    "network.other_home_ssh_ls": {
+      "status": "EACCES",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "ls: cannot access '/root/.ssh': Permission denied\n/home/ubuntu/.ssh:\ntotal 12\ndrwx------ 2 ubuntu ubuntu 4096 Sep  7 19:27 .\ndrwxr-x--- 4 ubuntu ubuntu 4096 Sep  8 17:37 ..\n-rw------- 1 ubuntu ubuntu   98 Sep  8 17:37 authorized_keys\n"
+    },
+    "network.pam_config": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "@include common-auth\naccount    required     pam_nologin.so\n@include common-account\nsession [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_selinux.so close\nsession    required     pam_loginuid.so\nsession    optional     pam_keyinit.so force revoke\n@include common-session\nsession    optional     pam_motd.so  motd=/run/motd.dynamic\nsession    optional     pam_motd.so noupdate\nsession    optional     pam_mail.so standard noenv # [1]\nsession    required     pam_limits.so\nsession    required     pam_env.so # [1]\nsession    required     pam_env.so user_readenv=1 envfile=/etc/default/locale\nsession [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_selinux.so open\n@include common-password\nauth\t[success=1 default=ignore]\tpam_unix.so nullok\nauth\trequisite\t\t\tpam_deny.so\nauth\trequired\t\t\tpam_permit.so\ncat: /etc/pam.d/system-auth: No such file or directory\n"
+    },
+    "network.remote_access_procs": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "   5721 root     sshd            sshd: /usr/sbin/sshd -D [listener] 4 of 10-100 startups\n   7533 root     sshd            sshd: [accepted]\n   7534 root     sshd            sshd: [accepted]\n   7535 root     sshd            sshd: [accepted]\n   7536 root     sshd            sshd: [accepted]\n   7539 root     sshd            sshd: ubuntu [priv]\n   7549 ubuntu   sshd            sshd: ubuntu@notty\n"
+    },
+    "network.ss_listen": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Netid State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nudp   UNCONN 0      0         <ip>:53        <ip>:*          \nudp   UNCONN 0      0      <ip>%lo:53        <ip>:*          \ntcp   LISTEN 0      4096   <ip>%lo:53        <ip>:*          \ntcp   LISTEN 0      4096      <ip>:53        <ip>:*          \ntcp   LISTEN 0      4096         <ip>:22        <ip>:*          \ntcp   LISTEN 0      4096            [::]:22           [::]:*          \n"
+    },
+    "network.ss_unix": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Netid State  Recv-Q Send-Q                                   Local Address:Port  Peer Address:PortProcess\nu_str LISTEN 0      4096                              /run/systemd/private 7870             * 0          \nu_str LISTEN 0      4096        /run/systemd/userdb/io.systemd.DynamicUser 7872             * 0          \nu_str LISTEN 0      4096                /run/systemd/io.systemd.ManagedOOM 7873             * 0          \nu_str LISTEN 0      4096                        /run/systemd/fsck.progress 16421            * 0          \nu_str LISTEN 0      4096                       /run/systemd/journal/stdout 7884             * 0          \nu_str LISTEN 0      4096                       /run/dbus/system_bus_socket 21626            * 0          \nu_seq LISTEN 0      4096                                 /run/udev/control 6220             * 0          \nu_str LISTEN 0      4096                                /run/uuidd/request 6559             * 0          \nu_str LISTEN 0      4096           /run/systemd/journal/io.systemd.journal 17889            * 0          \nu_str LISTEN 0      4096                    /run/systemd/io.systemd.sysext 12424            * 0          \nu_str LISTEN 0      4096           /run/systemd/resolve/io.systemd.Resolve 6431             * 0          \nu_str LISTEN 0      4096   /run/systemd/resolve/io.systemd.Resolve.Monitor 6432             * 0          \n"
+    },
+    "network.ssh_dir_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 656\ndrwxr-xr-x  4 root root   4096 Sep  7 19:31 .\ndrwxr-xr-x 66 root root   4096 Sep  8 17:37 ..\n-rw-r--r--  1 root root 620042 Aug 31 18:38 moduli\n-rw-r--r--  1 root root   1649 Aug 31 18:38 ssh_config\ndrwxr-xr-x  2 root root   4096 Aug 31 18:38 ssh_config.d\n-rw-------  1 root root    505 Sep  7 19:31 ssh_host_ecdsa_key\n-rw-r--r--  1 root root    177 Sep  7 19:31 ssh_host_ecdsa_key.pub\n-rw-------  1 root root    411 Sep  7 19:31 ssh_host_ed25519_key\n-rw-r--r--  1 root root     97 Sep  7 19:31 ssh_host_ed25519_key.pub\n-rw-------  1 root root   2602 Sep  7 19:31 ssh_host_rsa_key\n-rw-r--r--  1 root root    569 Sep  7 19:31 ssh_host_rsa_key.pub\n-rw-r--r--  1 root root   3514 Sep  4 06:21 sshd_config\ndrwxr-xr-x  2 root root   4096 Sep  8 17:37 sshd_config.d\n"
+    },
+    "network.ssh_socket_cat": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "[Unit]\nDescription=OpenBSD Secure Shell server socket\nBefore=sockets.target ssh.service\nConditionPathExists=!/etc/ssh/sshd_not_to_be_run\n\n[Socket]\nListenStream=0.0.0.0:22\nListenStream=[::]:22\nBindIPv6Only=ipv6-only\nAccept=no\nFreeBind=yes\n\n[Install]\nWantedBy=sockets.target\nRequiredBy=ssh.service\nactive\nactive\nListen=0.0.0.0:22 (Stream)\nListen=[::]:22 (Stream)\n"
+    },
+    "network.sshd_config": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "\n# This is the sshd server system-wide configuration file.  See\n# sshd_config(5) for more information.\n\n# This sshd was compiled with PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games\n\n# The strategy used for options in the default sshd_config shipped with\n# OpenSSH is to specify options with their default value where\n# possible, but leave them commented.  Uncommented options override the\n# default value.\n\nInclude /etc/ssh/sshd_config.d/*.conf\n\n# When systemd socket activation is used (the default), the socket\n# configuration must be re-generated after changing Port, AddressFamily, or\n# ListenAddress.\n#\n# For changes to take effect, run:\n#\n#   systemctl daemon-reload\n#   systemctl restart ssh.socket\n#\n#Port 22\n#AddressFamily any\n#ListenAddress 0.0.0.0\n#ListenAddress ::\n\n#HostKey /etc/ssh/ssh_host_rsa_key\n#HostKey /etc/ssh/ssh_host_ecdsa_key\n#HostKey /etc/ssh/ssh_host_ed25519_key\n\n# Ciphers and keying\n#RekeyLimit default none\n\n# Logging\n#SyslogFacility AUTH\n#LogLevel INFO\n\n# Authentication:\n\n#LoginGraceTime 2m\nPermitRootLogin prohibit-password\n#StrictModes yes\n#MaxAuthTries 6\n#MaxSessions 10\n\n#PubkeyAuthentication yes\n\n# Expect .ssh/authorized_keys2 to be disregarded by default in future.\n#AuthorizedKeysFile\t.ssh/authorized_keys .ssh/authorized_keys2\n\n#AuthorizedPrincipalsFile none\n\n#AuthorizedKeysCommand none\n#AuthorizedKeysCommandUser nobody\n\n# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts\n#HostbasedAuthentication no\n# Change to yes if you don't trust ~/.ssh/known_hosts for\n# HostbasedAuthentication\n#IgnoreUserKnownHosts no\n# Don't read the user's ~/.rhosts and ~/.shosts files\n#IgnoreRhosts yes\n\n# To disable tunneled clear text passwords, change to no here!\nPasswordAuthentication no\n#PermitEmptyPasswords no\n\n# Change to yes to enable challenge-response passwords (beware issues with\n# some PAM modules and threads)\nKbdInteractiveAuthentication no\n\n# Kerberos options\n#KerberosAuthentication no\n#KerberosOrLocalPasswd yes\n#KerberosTicketCleanup yes\n#KerberosGetAFSToken no\n\n# GSSAPI options\n#GSSAPIAuthentication no\n#GSSAPICleanupCredentials yes\n#GSSAPIStrictAcceptorCheck yes\n#GSSAPIKeyExchange no\n\n# Set this to 'yes' to enable PAM authentication, account processing,\n# and session processing. If this is enabled, PAM authentication will\n# be allowed through the KbdInteractiveAuthentication and\n# PasswordAuthentication.  Depending on your PAM configuration,\n# PAM authentication via KbdInteractiveAuthentication may bypass\n# the setting of \"PermitRootLogin prohibit-password\".\n# If you just want the PAM account and session checks to run without\n# PAM authentication, then enable this but set PasswordAuthentication\n# and KbdInteractiveAuthentication to 'no'.\nUsePAM yes\n\n#AllowAgentForwarding yes\n#AllowTcpForwarding yes\n#GatewayPorts no\nX11Forwarding yes\n#X11DisplayOffset 10\n#X11UseLocalhost yes\n#PermitTTY yes\nPrintMotd no\n#PrintLastLog yes\n#TCPKeepAlive yes\n#PermitUserEnvironment no\n#Compression delayed\n#ClientAliveInterval 0\n#ClientAliveCountMax 3\n#UseDNS no\n#PidFile /run/sshd.pid\n#MaxStartups 10:30:100\n#PermitTunnel no\n#ChrootDirectory none\n#VersionAddendum none\n\n# no default banner path\n#Banner none\n\n# Allow client to pass locale environment variables\nAcceptEnv LANG LC_*\n\n# override default of no subsystems\nSubsystem\tsftp\t/usr/lib/openssh/sftp-server\n\n# Example of overriding settings on a per-user basis\n#Match User anoncvs\n#\tX11Forwarding no\n#\tAllowTcpForwarding no\n#\tPermitTTY no\n#\tForceCommand cvs server\n"
+    },
+    "network.sshd_config_d": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 12\ndrwxr-xr-x 2 root root 4096 Sep  8 17:37 .\ndrwxr-xr-x 4 root root 4096 Sep  7 19:31 ..\n-rw-r--r-- 1 root root   58 Sep  8 17:37 00-latitude-instant-deploy.conf\n== /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf\nPasswordAuthentication no\nKbdInteractiveAuthentication no\n"
+    },
+    "network.sshd_effective_lines": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Include /etc/ssh/sshd_config.d/*.conf\nPermitRootLogin prohibit-password\nPasswordAuthentication no\nKbdInteractiveAuthentication no\nUsePAM yes\nX11Forwarding yes\nPrintMotd no\nAcceptEnv LANG LC_*\nSubsystem\tsftp\t/usr/lib/openssh/sftp-server\n== /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf\nPasswordAuthentication no\nKbdInteractiveAuthentication no\n"
+    },
+    "network.sshd_service_status": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "* ssh.service - OpenBSD Secure Shell server\n     Loaded: loaded (/usr/lib/systemd/system/ssh.service; enabled; preset: enabled)\n     Active: active (running) since Tue 2026-09-08 17:37:29 UTC; 4h 5min ago\nTriggeredBy: * ssh.socket\n       Docs: man:sshd(8)\n             man:sshd_config(5)\n    Process: 5719 ExecStartPre=/usr/sbin/sshd -t (code=exited, status=0/SUCCESS)\n   Main PID: 5721 (sshd)\n      Tasks: 14 (limit: 114459)\n     Memory: 294.0M (peak: 296.9M)\n        CPU: 5.768s\n     CGroup: /system.slice/ssh.service\n             |-5721 \"sshd: /usr/sbin/sshd -D [listener] 4 of 10-100 startups\"\n             |-7533 \"sshd: [accepted]\"\n             |-7534 \"sshd: [accepted]\"\n# /usr/lib/systemd/system/ssh.service\n[Unit]\nDescription=OpenBSD Secure Shell server\nDocumentation=man:sshd(8) man:sshd_config(5)\nAfter=network.target auditd.service\nConditionPathExists=!/etc/ssh/sshd_not_to_be_run\n\n[Service]\nEnvironmentFile=-/etc/default/ssh\nExecStartPre=/usr/sbin/sshd -t\nExecStart=/usr/sbin/sshd -D $SSHD_OPTS\nExecReload=/usr/sbin/sshd -t\nExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\nRestartPreventExitStatus=255\nType=notify\nRuntimeDirectory=sshd\nRuntimeDirectoryMode=0755\n\n[Install]\nWantedBy=multi-user.target\nAlias=sshd.service\n\n# /usr/lib/systemd/system/ssh.service\n[Unit]\nDescription=OpenBSD Secure Shell server\nDocumentation=man:sshd(8) man:sshd_config(5)\nAfter=network.target auditd.service\nConditionPathExists=!/etc/ssh/sshd_not_to_be_run\n\n[Service]\nEnvironmentFile=-/etc/default/ssh\nExecStartPre=/usr/sbin/sshd -t\nExecStart=/usr/sbin/sshd -D $SSHD_OPTS\nExecReload=/usr/sbin/sshd -t\nExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\nRestartPreventExitStatus=255\n0.0.0.0:22                             ssh.socket                      ssh.service\n[::]:22                                ssh.socket                      ssh.service\n"
+    },
+    "network.sshd_test_config": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "sshd: no hostkeys available -- exiting.\r\nrc=0\n"
+    },
+    "network.sshd_version": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "OpenSSH_9.6p1 Ubuntu-3ubuntu13.19, OpenSSL 3.0.13 30 Jan 2024\nOpenSSH_9.6p1 Ubuntu-3ubuntu13.19, OpenSSL 3.0.13 30 Jan 2024\n"
+    },
+    "network.vpn_dirs_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/etc/wireguard': No such file or directory\nls: cannot access '/etc/openvpn': No such file or directory\nls: cannot access '/etc/tailscale': No such file or directory\nls: cannot access '/var/lib/tailscale': No such file or directory\n"
+    },
+    "secrets.boot_artifacts_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/boot/initramfs*': No such file or directory\nls: cannot access '/boot/grub2/grub.cfg': No such file or directory\n-rw------- 1 root root     8153 Sep  7 19:27 /boot/grub/grub.cfg\nlrwxrwxrwx 1 root root       27 Sep  7 19:26 /boot/initrd.img -> initrd.img-7.0.0-31-generic\n-rw-r--r-- 1 root root 67310556 Sep  4 06:20 /boot/initrd.img-6.8.0-139-generic\n-rw-r--r-- 1 root root 70984980 Sep  7 19:27 /boot/initrd.img-7.0.0-31-generic\nlrwxrwxrwx 1 root root       28 Sep  7 19:26 /boot/initrd.img.old -> initrd.img-6.8.0-139-generic\n\n/boot/efi:\ntotal 12\ndrwxr-xr-x 3 root root 4096 Jan  1  1970 .\ndrwxr-xr-x 4 root root 4096 Sep  7 19:27 ..\ndrwxr-xr-x 4 root root 4096 Sep  7 19:26 EFI\n"
+    },
+    "secrets.cloud_cred_dirs_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/home/*/.aws': No such file or directory\nls: cannot access '/home/*/.docker': No such file or directory\nls: cannot access '/home/*/.kube': No such file or directory\nls: cannot access '/home/*/.gnupg': No such file or directory\nls: cannot access '/home/*/.config/gcloud': No such file or directory\nls: cannot access '/home/*/.azure': No such file or directory\nls: cannot access '/root/.aws': Permission denied\nls: cannot access '/root/.docker': Permission denied\nls: cannot access '/root/.kube': Permission denied\n"
+    },
+    "secrets.cloud_userdata_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "-rw------- 1 root root    0 Sep  7 19:31 /var/lib/cloud/instance/user-data.txt\n-rw------- 1 root root    0 Sep  7 19:31 /var/lib/cloud/instances/90:5a:08:31:9a:63/user-data.txt\n-rw------- 1 root root  308 Sep  7 19:31 /var/lib/cloud/instances/90:5a:08:31:9a:63/user-data.txt.i\n\n/var/lib/cloud/seed:\ntotal 8\ndrwxr-xr-x 2 root root 4096 Sep  7 19:29 .\ndrwxr-xr-x 8 root root 4096 Sep  7 19:31 ..\n"
+    },
+    "secrets.config_mgmt_dirs_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/etc/salt': No such file or directory\nls: cannot access '/etc/puppet': No such file or directory\nls: cannot access '/etc/puppetlabs': No such file or directory\nls: cannot access '/etc/chef': No such file or directory\nls: cannot access '/etc/ansible': No such file or directory\nls: cannot access '/var/lib/waagent': No such file or directory\nls: cannot access '/etc/kubernetes': No such file or directory\nls: cannot access '/var/lib/kubelet': No such file or directory\nls: cannot access '/etc/rancher': No such file or directory\n"
+    },
+    "secrets.cron_ls": {
+      "status": "UTILITY_MISSING",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/var/spool/cron': No such file or directory\nls: cannot access '/var/spool/cron/crontabs': No such file or directory\n/etc/cron.d:\ntotal 12\ndrwxr-xr-x  2 root root 4096 Sep  7 19:26 .\ndrwxr-xr-x 66 root root 4096 Sep  8 17:37 ..\n-rw-r--r--  1 root root  201 Apr  8  2024 e2scrub_all\n\n/etc/cron.daily:\ntotal 16\ndrwxr-xr-x  2 root root 4096 Sep  7 19:26 .\ndrwxr-xr-x 66 root root 4096 Sep  8 17:37 ..\n-rwxr-xr-x  1 root root 1478 Mar 22  2024 apt-compat\n-rwxr-xr-x  1 root root  123 Feb  5  2024 dpkg\nbash: line 1: crontab: command not found\n"
+    },
+    "secrets.getcap_scan": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/usr/bin/ping cap_net_raw=ep\n"
+    },
+    "secrets.home_history_ls": {
+      "status": "ENOENT",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "total 28\ndrwxr-x--- 4 ubuntu ubuntu 4096 Sep  8 17:37 .\ndrwxr-xr-x 3 root   root   4096 Sep  7 19:27 ..\n-rw-r--r-- 1 ubuntu ubuntu  220 Mar 31  2024 .bash_logout\n-rw-r--r-- 1 ubuntu ubuntu 3771 Mar 31  2024 .bashrc\ndrwx------ 2 ubuntu ubuntu 4096 Sep  8 17:37 .cache\n-rw-r--r-- 1 ubuntu ubuntu  807 Mar 31  2024 .profile\ndrwx------ 2 ubuntu ubuntu 4096 Sep  7 19:27 .ssh\n-rw-r--r-- 1 ubuntu ubuntu    0 Sep  8 17:37 .sudo_as_admin_successful\nls: cannot access '/home/ubuntu/.bash_history': No such file or directory\nls: cannot access '/home/ubuntu/.python_history': No such file or directory\nls: cannot access '/home/ubuntu/.mysql_history': No such file or directory\nls: cannot access '/home/ubuntu/.psql_history': No such file or directory\n"
+    },
+    "secrets.sensitive_file_find": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "644 root:root 1984 /usr/share/gnupg/sks-keyservers.netCA.pem\n644 root:root 290282 /usr/lib/python3/dist-packages/certifi/cacert.pem\n640 root:shadow 681 /etc/shadow\n600 ubuntu:ubuntu 98 /home/ubuntu/.ssh/authorized_keys\n"
+    },
+    "secrets.sockets_ls": {
+      "status": "ENOENT",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "ls: cannot access '/var/run/docker.sock': No such file or directory\nls: cannot access '/run/containerd/containerd.sock': No such file or directory\nls: cannot access '/var/run/libvirt/libvirt-sock': No such file or directory\n"
+    },
+    "secrets.suid_find": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "4755 root:root /usr/lib/openssh/ssh-keysign\n4754 root:messagebus /usr/lib/dbus-1.0/dbus-daemon-launch-helper\n4755 root:root /usr/bin/passwd\n4755 root:root /usr/bin/gpasswd\n4755 root:root /usr/bin/umount\n4755 root:root /usr/bin/newgrp\n4755 root:root /usr/bin/su\n4755 root:root /usr/bin/chsh\n4755 root:root /usr/bin/sudo\n4755 root:root /usr/bin/mount\n4755 root:root /usr/bin/chfn\n"
+    },
+    "secrets.tls_private_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/etc/pki/tls/private': No such file or directory\nls: cannot access '/etc/letsencrypt/live': No such file or directory\nls: cannot access '/etc/letsencrypt/archive': No such file or directory\nls: cannot open directory '/etc/ssl/private': Permission denied\n"
+    },
+    "secrets.varlog_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 572\ndrwxr-xr-x   5 root root              4096 Sep  7 19:29 .\ndrwxr-xr-x  11 root root              4096 Sep  7 19:29 ..\nlrwxrwxrwx   1 root root                39 Sep  7 19:26 README -> ../../usr/share/doc/systemd/README.logs\n-rw-r--r--   1 root root                 0 Sep  4 06:21 alternatives.log\ndrwxr-xr-x   2 root root              4096 Sep  7 19:26 apt\n-rw-r--r--   1 root root                 0 Sep  4 06:21 bootstrap.log\n-rw-rw----   1 root utmp            455040 Sep  8 21:35 btmp\n-rw-r-----   1 root adm               6122 Sep  7 19:31 cloud-init-output.log\n-rw-r-----   1 root adm              87169 Sep  7 19:31 cloud-init.log\n-rw-r--r--   1 root root                 0 Sep  4 06:21 dpkg.log\n-rw-r--r--   1 root root                 0 Sep  4 06:21 faillog\ndrwxr-sr-x+  3 root systemd-journal   4096 Sep  7 19:29 journal\n-rw-rw-r--   1 root utmp                 0 Sep  4 06:21 lastlog\ndrwx------   2 root root              4096 Sep  4 06:20 private\n-rw-rw-r--   1 root utmp              2304 Sep  7 19:31 wtmp\n"
+    },
+    "secrets.world_writable_find": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": ""
+    },
+    "services.apt_state_ls": {
+      "status": "ENOENT",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "total 8\ndrwxr-xr-x 2 root root 4096 Sep  4 06:21 .\ndrwxr-xr-x 5 root root 4096 Sep  8 06:42 ..\ncat: /var/lib/apt/periodic/update-success-stamp: No such file or directory\nls: cannot access '/var/run/reboot-required*': No such file or directory\ncat: /var/run/reboot-required.pkgs: No such file or directory\n"
+    },
+    "services.apt_upgradable": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Listing...\n"
+    },
+    "services.build_tools": {
+      "status": "ENOENT",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "/usr/bin/gcc\n/usr/bin/cc\n/usr/bin/make\n/usr/bin/tar\n/usr/bin/gzip\n/usr/bin/xz\n/usr/bin/curl\n/usr/bin/wget\n/usr/bin/rsync\nls: cannot access '/usr/local/go/bin/go': No such file or directory\nls: cannot access '/snap/bin/go': No such file or directory\n"
+    },
+    "services.docker_status": {
+      "status": "UTILITY_MISSING",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "bash: line 1: docker: command not found\nbash: line 1: docker: command not found\n"
+    },
+    "services.hwmon_thermal": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/sys/class/hwmon/hwmon0 nvme\n/sys/class/hwmon/hwmon1 nvme\n/sys/class/hwmon/hwmon2 k10temp\ncooling_device0\ncooling_device1\ncooling_device10\ncooling_device11\ncooling_device12\ncooling_device13\ncooling_device14\ncooling_device15\ncooling_device16\ncooling_device17\n"
+    },
+    "services.journal_usage": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Hint: You are currently not seeing messages from other users and the system.\n      Users in groups 'adm', 'systemd-journal' can see all messages.\n      Pass -q to turn off this notice.\nArchived and active journals take up 8.0M in the file system.\ntotal 12\ndrwxr-sr-x+ 3 root systemd-journal 4096 Sep  7 19:29 .\ndrwxr-xr-x  5 root root            4096 Sep  7 19:29 ..\ndrwxr-sr-x+ 2 root systemd-journal 4096 Sep  8 17:37 3576a11dbd9e4ae694de54a1a5575337\n"
+    },
+    "services.pid1_cgroup": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "0::/init.scope\nsystemd\n"
+    },
+    "services.pkg_counts": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "355\n0\n"
+    },
+    "services.ps_all": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "    PID    PPID USER     ELAPSED COMMAND\n      1       0 root       94396 systemd\n      2       0 root       94396 kthreadd\n      3       2 root       94396 pool_workqueue_release\n      4       2 root       94396 kworker/R-rcu_g\n      5       2 root       94396 kworker/R-rcu_p\n      6       2 root       94396 kworker/R-slub_\n      7       2 root       94396 kworker/R-netns\n      9       2 root       94396 kworker/0:1-cgroup_free\n     10       2 root       94396 kworker/0:0H-events_highpri\n     11       2 root       94396 kworker/u48:0-ixgbe\n     12       2 root       94396 kworker/R-mm_pe\n     13       2 root       94396 rcu_tasks_kthread\n     14       2 root       94396 rcu_tasks_rude_kthread\n     15       2 root       94396 rcu_tasks_trace_kthread\n     16       2 root       94396 ksoftirqd/0\n     17       2 root       94396 rcu_preempt\n     18       2 root       94396 migration/0\n     19       2 root       94396 idle_inject/0\n     20       2 root       94396 cpuhp/0\n     21       2 root       94396 cpuhp/1\n     22       2 root       94396 idle_inject/1\n     23       2 root       94396 migration/1\n     24       2 root       94396 ksoftirqd/1\n     26       2 root       94396 kworker/1:0H-events_highpri\n     27       2 root       94396 cpuhp/2\n     28       2 root       94396 idle_inject/2\n     29       2 root       94396 migration/2\n     30       2 root       94396 ksoftirqd/2\n     31       2 root       94396 kworker/2:0-events\n     32       2 root       94396 kworker/2:0H-events_highpri\n     33       2 root       94396 cpuhp/3\n     34       2 root       94396 idle_inject/3\n     35       2 root       94396 migration/3\n     36       2 root       94396 ksoftirqd/3\n     37       2 root       94396 kworker/3:0-events\n     38       2 root       94396 kworker/3:0H-events_highpri\n     39       2 root       94396 cpuhp/4\n     40       2 root       94396 idle_inject/4\n     41       2 root       94396 migration/4\n     42       2 root       94396 ksoftirqd/4\n     44       2 root       94396 kworker/4:0H-events_highpri\n     45       2 root       94396 cpuhp/5\n     46       2 root       94396 idle_inject/5\n     47       2 root       94396 migration/5\n     48       2 root       94396 ksoftirqd/5\n     49       2 root       94396 kworker/5:0-events\n     50       2 root       94396 kworker/5:0H-events_highpri\n     51       2 root       94396 cpuhp/6\n     52       2 root       94396 idle_inject/6\n     53       2 root       94396 migration/6\n     54       2 root       94396 ksoftirqd/6\n     56       2 root       94396 kworker/6:0H-events_highpri\n     57       2 root       94396 cpuhp/7\n     58       2 root       94396 idle_inject/7\n     59       2 root       94396 migration/7\n     60       2 root       94396 ksoftirqd/7\n     62       2 root       94396 kworker/7:0H-events_highpri\n     63       2 root       94396 cpuhp/8\n     64       2 root       94396 idle_inject/8\n     65       2 root       94396 migration/8\n     66       2 root       94396 ksoftirqd/8\n     68       2 root       94396 kworker/8:0H-events_highpri\n     69       2 root       94396 cpuhp/9\n     70       2 root       94396 idle_inject/9\n     71       2 root       94396 migration/9\n     72       2 root       94396 ksoftirqd/9\n     74       2 root       94396 kworker/9:0H-events_highpri\n     75       2 root       94396 cpuhp/10\n     76       2 root       94396 idle_inject/10\n     77       2 root       94396 migration/10\n     78       2 root       94396 ksoftirqd/10\n     79       2 root       94396 kworker/10:0-events\n     80       2 root       94396 kworker/10:0H-events_highpri\n     81       2 root       94396 cpuhp/11\n     82       2 root       94396 idle_inject/11\n     83       2 root       94396 migration/11\n     84       2 root       94396 ksoftirqd/11\n     86       2 root       94396 kworker/11:0H-events_highpri\n     87       2 root       94396 cpuhp/12\n"
+    },
+    "services.repo_sources_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/etc/yum.repos.d': No such file or directory\n-rw-r--r-- 1 root root  335 Sep  7 19:31 /etc/apt/sources.list\n\n/etc/apt/sources.list.d:\ntotal 12\ndrwxr-xr-x 2 root root 4096 Sep  7 19:26 .\ndrwxr-xr-x 8 root root 4096 Sep  7 19:26 ..\n-rw-r--r-- 1 root root  380 Sep  4 06:18 ubuntu.sources\n"
+    },
+    "services.rsyslog_remote": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": ""
+    },
+    "services.running_units": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "  dbus.service               loaded active running D-Bus System Message Bus\n  getty@tty1.service         loaded active running Getty on tty1\n  serial-getty@ttyS1.service loaded active running Serial Getty on ttyS1\n  ssh.service                loaded active running OpenBSD Secure Shell server\n  systemd-hostnamed.service  loaded active running Hostname Service\n  systemd-journald.service   loaded active running Journal Service\n  systemd-logind.service     loaded active running User Login Management\n  systemd-networkd.service   loaded active running Network Configuration\n  systemd-resolved.service   loaded active running Network Name Resolution\n  systemd-timesyncd.service  loaded active running Network Time Synchronization\n  systemd-udevd.service      loaded active running Rule-based Manager for Device Events and Files\n"
+    },
+    "services.time_sync": {
+      "status": "UTILITY_MISSING",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "               Local time: Tue 2026-09-08 21:43:01 UTC\n           Universal time: Tue 2026-09-08 21:43:01 UTC\n                 RTC time: Tue 2026-09-08 21:43:01\n                Time zone: UTC (UTC, +0000)\nSystem clock synchronized: yes\n              NTP service: active\n          RTC in local TZ: no\nbash: line 1: chronyc: command not found\n"
+    },
+    "services.timers": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Wed 2026-09-09 00:00:00 UTC 2h 16min Tue 2026-09-08 00:00:04 UTC      21h ago dpkg-db-backup.timer         dpkg-db-backup.service\nWed 2026-09-09 06:53:12 UTC       9h Tue 2026-09-08 06:42:10 UTC      15h ago apt-daily-upgrade.timer      apt-daily-upgrade.service\nWed 2026-09-09 08:49:45 UTC      11h Tue 2026-09-08 14:57:49 UTC       6h ago motd-news.timer              motd-news.service\nWed 2026-09-09 09:00:14 UTC      11h Tue 2026-09-08 19:57:54 UTC 1h 45min ago apt-daily.timer              apt-daily.service\nWed 2026-09-09 19:45:34 UTC      22h Tue 2026-09-08 19:45:34 UTC 1h 57min ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service\nSun 2026-09-13 03:10:23 UTC   4 days -                                      - e2scrub_all.timer            e2scrub_all.service\nMon 2026-09-14 01:35:39 UTC   5 days -                                      - fstrim.timer                 fstrim.service\n"
+    },
+    "services.timezone": {
+      "status": "ENOENT",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "Etc/UTC\ncat: /etc/adjtime: No such file or directory\n"
+    },
+    "services.utility_inventory": {
+      "status": "EXECUTION_ERROR",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "/usr/sbin/nvme\n/usr/sbin/mdadm\n/usr/bin/lsblk\n/usr/bin/findmnt\n/usr/bin/lspci\n/usr/bin/ss\n/usr/bin/netstat\n/usr/sbin/ip\n/usr/sbin/sshd\n/usr/sbin/iptables\n/usr/sbin/ufw\n/usr/sbin/getcap\n/usr/bin/python3\n/usr/bin/perl\n/usr/bin/curl\n/usr/bin/wget\n"
+    },
+    "services.watchdog": {
+      "status": "ENOENT",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "cat: /sys/class/watchdog/watchdog0/identity: No such file or directory\n"
+    },
+    "storage.block_device_links": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/sys/block/nvme0n1 device_link=/sys/devices/pci0000:00/0000:00:02.1/0000:02:00.0/nvme/nvme0\n/sys/block/nvme1n1 device_link=/sys/devices/pci0000:00/0000:00:02.2/0000:03:00.0/nvme/nvme1\n"
+    },
+    "storage.configfs_bcache_btrfs": {
+      "status": "ENOENT",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "ls: cannot access '/sys/kernel/config/target': No such file or directory\nls: cannot access '/sys/fs/bcache': No such file or directory\nls: cannot access '/sys/fs/btrfs': No such file or directory\n"
+    },
+    "storage.dev_ls": {
+      "status": "ENOENT",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "ls: cannot access '/dev/sd*': No such file or directory\nls: cannot access '/dev/md*': No such file or directory\nls: cannot access '/dev/dm-*': No such file or directory\nls: cannot access '/dev/vd*': No such file or directory\nls: cannot access '/dev/xvd*': No such file or directory\ncrw------- 1 root root  10, 261 Sep  7 19:29 /dev/nvme-fabrics\ncrw------- 1 root root 241,   0 Sep  7 19:29 /dev/nvme0\nbrw-rw---- 1 root disk 259,   0 Sep  7 19:29 /dev/nvme0n1\nbrw-rw---- 1 root disk 259,   1 Sep  7 19:29 /dev/nvme0n1p1\nbrw-rw---- 1 root disk 259,   2 Sep  7 19:31 /dev/nvme0n1p2\ncrw------- 1 root root 241,   1 Sep  7 19:29 /dev/nvme1\nbrw-rw---- 1 root disk 259,   3 Sep  7 19:29 /dev/nvme1n1\n"
+    },
+    "storage.dev_mapper_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 0\ndrwxr-xr-x  2 root root      60 Sep  7 19:29 .\ndrwxr-xr-x 17 root root    4280 Sep  7 19:31 ..\ncrw-------  1 root root 10, 236 Sep  7 19:29 control\n"
+    },
+    "storage.df": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Filesystem     Type      Size  Used Avail Use% Mounted on\ntmpfs          tmpfs     9.4G  1.1M  9.4G   1% /run\nefivarfs       efivarfs  256K   34K  218K  14% /sys/firmware/efi/efivars\n/dev/nvme0n1p2 ext4      879G  1.9G  833G   1% /\ntmpfs          tmpfs      47G     0   47G   0% /dev/shm\ntmpfs          tmpfs     5.0M     0  5.0M   0% /run/lock\n/dev/nvme0n1p1 vfat      511M  8.7M  503M   2% /boot/efi\n"
+    },
+    "storage.disk_by_id": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "total 0\ndrwxr-xr-x 2 root root 280 Sep  7 19:29 .\ndrwxr-xr-x 9 root root 180 Sep  7 19:29 ..\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671F8C6 -> ../../nvme0n1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671F8C6-part1 -> ../../nvme0n1p1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671F8C6-part2 -> ../../nvme0n1p2\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671F8C6_1 -> ../../nvme0n1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671F8C6_1-part1 -> ../../nvme0n1p1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671F8C6_1-part2 -> ../../nvme0n1p2\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671FB2E -> ../../nvme1n1\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 nvme-Micron_7450_MTFDKCC960TFR_24034671FB2E_1 -> ../../nvme1n1\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 nvme-eui.000000000000000100a075244671f8c6 -> ../../nvme0n1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 nvme-eui.000000000000000100a075244671f8c6-part1 -> ../../nvme0n1p1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 nvme-eui.000000000000000100a075244671f8c6-part2 -> ../../nvme0n1p2\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 nvme-eui.000000000000000100a075244671fb2e -> ../../nvme1n1\n"
+    },
+    "storage.disk_by_path": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/dev/disk/by-label/:\ntotal 0\ndrwxr-xr-x 2 root root  80 Sep  7 19:29 .\ndrwxr-xr-x 9 root root 180 Sep  7 19:29 ..\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 EFI -> ../../nvme0n1p1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 ROOT -> ../../nvme0n1p2\n\n/dev/disk/by-path/:\ntotal 0\ndrwxr-xr-x 2 root root 120 Sep  7 19:29 .\ndrwxr-xr-x 9 root root 180 Sep  7 19:29 ..\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 pci-0000:02:00.0-nvme-1 -> ../../nvme0n1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 pci-0000:02:00.0-nvme-1-part1 -> ../../nvme0n1p1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 pci-0000:02:00.0-nvme-1-part2 -> ../../nvme0n1p2\nlrwxrwxrwx 1 root root  13 Sep  7 19:29 pci-0000:03:00.0-nvme-1 -> ../../nvme1n1\n\n/dev/disk/by-uuid/:\ntotal 0\ndrwxr-xr-x 2 root root  80 Sep  7 19:29 .\ndrwxr-xr-x 9 root root 180 Sep  7 19:29 ..\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 6A9F-0FAA -> ../../nvme0n1p1\nlrwxrwxrwx 1 root root  15 Sep  7 19:29 c547dc8b-eb9a-47ee-bb9d-d0156ae49217 -> ../../nvme0n1p2\n"
+    },
+    "storage.ext4_sysfs": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "features\nnvme0n1p2\n== /sys/fs/ext4/features errors_count=cat: /sys/fs/ext4/features/errors_count: No such file or directory first_error_time=cat: /sys/fs/ext4/features/first_error_time: No such file or directory lifetime_write_kbytes=cat: /sys/fs/ext4/features/lifetime_write_kbytes: No such file or directory\n== /sys/fs/ext4/nvme0n1p2 errors_count=0 first_error_time=0 lifetime_write_kbytes=2799165\n"
+    },
+    "storage.findmnt": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/sys sysfs sysfs rw,nosuid,nodev,noexec,relatime\n/proc proc proc rw,nosuid,nodev,noexec,relatime\n/dev udev devtmpfs rw,nosuid,relatime,size=48836220k,nr_inodes=12209055,mode=755,inode64\n/dev/pts devpts devpts rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000\n/run tmpfs tmpfs rw,nosuid,nodev,noexec,relatime,size=9793804k,mode=755,inode64\n/sys/firmware/efi/efivars efivarfs efivarfs rw,nosuid,nodev,noexec,relatime\n/ /dev/nvme0n1p2 ext4 rw,relatime,errors=remount-ro\n/sys/kernel/security securityfs securityfs rw,nosuid,nodev,noexec,relatime\n/dev/shm tmpfs tmpfs rw,nosuid,nodev,inode64\n/run/lock tmpfs tmpfs rw,nosuid,nodev,noexec,relatime,size=5120k,inode64\n/sys/fs/cgroup cgroup2 cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot\n/sys/fs/pstore pstore pstore rw,nosuid,nodev,noexec,relatime\n/sys/fs/bpf bpf bpf rw,nosuid,nodev,noexec,relatime,mode=700\n/proc/sys/fs/binfmt_misc systemd-1 autofs rw,relatime,fd=33,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=6214\n/dev/hugepages hugetlbfs hugetlbfs rw,nosuid,nodev,relatime,pagesize=2M\n/dev/mqueue mqueue mqueue rw,nosuid,nodev,noexec,relatime\n/sys/kernel/debug debugfs debugfs rw,nosuid,nodev,noexec,relatime\n/sys/kernel/tracing tracefs tracefs rw,nosuid,nodev,noexec,relatime\n/sys/fs/fuse/connections fusectl fusectl rw,nosuid,nodev,noexec,relatime\n/sys/kernel/config configfs configfs rw,nosuid,nodev,noexec,relatime\n/boot/efi /dev/nvme0n1p1 vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro\n/proc/sys/fs/binfmt_misc binfmt_misc binfmt_misc rw,nosuid,nodev,noexec,relatime\n"
+    },
+    "storage.fstab": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "UUID=6A9F-0FAA\t/boot/efi\tvfat\terrors=remount-ro\t0\t2\nUUID=c547dc8b-eb9a-47ee-bb9d-d0156ae49217\t/\text4\terrors=remount-ro\t0\t1\n"
+    },
+    "storage.iscsi": {
+      "status": "UTILITY_MISSING",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "bash: line 1: iscsiadm: command not found\ncat: /etc/iscsi/initiatorname.iscsi: No such file or directory\n"
+    },
+    "storage.lsblk_fs": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "NAME=\"nvme0n1\" FSTYPE=\"\" FSVER=\"\" LABEL=\"\" UUID=\"\" FSAVAIL=\"\" FSUSE%=\"\" MOUNTPOINTS=\"\"\nNAME=\"nvme0n1p1\" FSTYPE=\"vfat\" FSVER=\"FAT32\" LABEL=\"EFI\" UUID=\"6A9F-0FAA\" FSAVAIL=\"502.3M\" FSUSE%=\"2%\" MOUNTPOINTS=\"/boot/efi\"\nNAME=\"nvme0n1p2\" FSTYPE=\"ext4\" FSVER=\"1.0\" LABEL=\"ROOT\" UUID=\"c547dc8b-eb9a-47ee-bb9d-d0156ae49217\" FSAVAIL=\"832.1G\" FSUSE%=\"0%\" MOUNTPOINTS=\"/\"\nNAME=\"nvme1n1\" FSTYPE=\"\" FSVER=\"\" LABEL=\"\" UUID=\"\" FSAVAIL=\"\" FSUSE%=\"\" MOUNTPOINTS=\"\"\n"
+    },
+    "storage.lsblk_json": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "{\n   \"blockdevices\": [\n      {\n         \"alignment\": 0,\n         \"id-link\": \"nvme-eui.000000000000000100a075244671f8c6\",\n         \"id\": \"eui.000000000000000100a075244671f8c6\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": \"512B\",\n         \"disk-seq\": 9,\n         \"disc-max\": \"2T\",\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme0n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:0\",\n         \"min-io\": 4096,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Micron_7450_MTFDKCC960TFR\",\n         \"mq\": \" 24\",\n         \"name\": \"nvme0n1\",\n         \"opt-io\": 4096,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme0n1\",\n         \"phy-sec\": 4096,\n         \"pkname\": null,\n         \"pttype\": \"gpt\",\n         \"ptuuid\": \"71aac769-5f97-4730-8716-a642dc968dba\",\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"E2MU200\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 1023,\n         \"sched\": \"none\",\n         \"serial\": \"24034671F8C6\",\n         \"size\": \"894.3G\",\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": \"0B\",\n         \"wwn\": \"eui.000000000000000100a075244671f8c6\",\n         \"zoned\": \"none\",\n         \"zone-sz\": \"0B\",\n         \"zone-wgran\": \"0B\",\n         \"zone-app\": \"0B\",\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0,\n         \"children\": [\n            {\n               \"alignment\": 0,\n               \"id-link\": \"nvme-eui.000000000000000100a075244671f8c6-part1\",\n               \"id\": \"eui.000000000000000100a075244671f8c6-part1\",\n               \"disc-aln\": 0,\n               \"dax\": false,\n               \"disc-gran\": \"512B\",\n               \"disk-seq\": 9,\n               \"disc-max\": \"2T\",\n               \"disc-zero\": false,\n               \"fsavail\": \"502.3M\",\n               \"fsroots\": [\n                   \"/\"\n               ],\n               \"fssize\": \"511M\",\n               \"fstype\": \"vfat\",\n               \"fsused\": \"8.7M\",\n               \"fsuse%\": \"2%\",\n               \"fsver\": \"FAT32\",\n               \"group\": \"disk\",\n               \"hctl\": null,\n               \"hotplug\": false,\n               \"kname\": \"nvme0n1p1\",\n               \"label\": \"EFI\",\n               \"log-sec\": 512,\n               \"maj:min\": \"259:1\",\n               \"min-io\": 4096,\n               \"mode\": \"brw-rw----\",\n               \"model\": null,\n               \"mq\": \" 24\",\n               \"name\": \"nvme0n1p1\",\n               \"opt-io\": 4096,\n               \"owner\": \"root\",\n               \"partflags\": null,\n               \"partlabel\": \"BIOS\",\n               \"partn\": 1,\n               \"parttype\": \"c12a7328-f81f-11d2-ba4b-00a0c93ec93b\",\n               \"parttypename\": \"EFI System\",\n               \"partuuid\": \"b73fc62e-e79a-485e-993c-d3eb589b171e\",\n               \"path\": \"/dev/nvme0n1p1\",\n               \"phy-sec\": 4096,\n               \"pkname\": \"nvme0n1\",\n               \"pttype\": \"gpt\",\n               \"ptuuid\": \"71aac769-5f97-4730-8716-a642dc968dba\",\n               \"ra\": 128,\n               \"rand\": false,\n               \"rev\": null,\n               \"rm\": false,\n               \"ro\": false,\n               \"rota\": false,\n               \"rq-size\": 1023,\n               \"sched\": \"none\",\n               \"serial\": null,\n               \"size\": \"512M\",\n               \"start\": 2048,\n               \"state\": null,\n               \"subsystems\": \"block:nvme:pci\",\n               \"mountpoint\": \"/boot/efi\",\n               \"mountpoints\": [\n                   \"/boot/efi\"\n               ],\n               \"tran\": \"nvme\",\n               \"type\": \"part\",\n               \"uuid\": \"6A9F-0FAA\",\n               \"vendor\": null,\n               \"wsame\": \"0B\",\n               \"wwn\": \"eui.000000000000000100a075244671f8c6\",\n               \"zoned\": \"none\",\n               \"zone-sz\": \"0B\",\n               \"zone-wgran\": \"0B\",\n               \"zone-app\": \"0B\",\n               \"zone-nr\": 0,\n               \"zone-omax\": 0,\n               \"zone-amax\": 0\n            },{\n               \"alignment\": 0,\n               \"id-link\": \"nvme-eui.000000000000000100a075244671f8c6-part2\",\n               \"id\": \"eui.000000000000000100a075244671f8c6-part2\",\n               \"disc-aln\": 0,\n               \"dax\": false,\n               \"disc-gran\": \"512B\",\n               \"disk-seq\": 9,\n               \"disc-max\": \"2T\",\n               \"disc-zero\": false,\n               \"fsavail\": \"832.1G\",\n               \"fsroots\": [\n                   \"/\"\n               ],\n               \"fssize\": \"878.6G\",\n               \"fstype\": \"ext4\",\n               \"fsused\": \"1.9G\",\n               \"fsuse%\": \"0%\",\n               \"fsver\": \"1.0\",\n               \"group\": \"disk\",\n               \"hctl\": null,\n               \"hotplug\": false,\n               \"kname\": \"nvme0n1p2\",\n               \"label\": \"ROOT\",\n               \"log-sec\": 512,\n               \"maj:min\": \"259:2\",\n               \"min-io\": 4096,\n               \"mode\": \"brw-rw----\",\n               \"model\": null,\n               \"mq\": \" 24\",\n               \"name\": \"nvme0n1p2\",\n               \"opt-io\": 4096,\n               \"owner\": \"root\",\n               \"partflags\": null,\n               \"partlabel\": \"ROOT\",\n               \"partn\": 2,\n               \"parttype\": \"0fc63daf-8483-4772-8e79-3d69d8477de4\",\n               \"parttypename\": \"Linux filesystem\",\n               \"partuuid\": \"d0c70737-5407-4c00-9f51-8df302131947\",\n               \"path\": \"/dev/nvme0n1p2\",\n               \"phy-sec\": 4096,\n               \"pkname\": \"nvme0n1\",\n               \"pttype\": \"gpt\",\n               \"ptuuid\": \"71aac769-5f97-4730-8716-a642dc968dba\",\n               \"ra\": 128,\n               \"rand\": false,\n               \"rev\": null,\n               \"rm\": false,\n               \"ro\": false,\n               \"rota\": false,\n               \"rq-size\": 1023,\n               \"sched\": \"none\",\n               \"serial\": null,\n               \"size\": \"893.8G\",\n               \"start\": 1050624,\n               \"state\": null,\n               \"subsystems\": \"block:nvme:pci\",\n               \"mountpoint\": \"/\",\n               \"mountpoints\": [\n                   \"/\"\n               ],\n               \"tran\": \"nvme\",\n               \"type\": \"part\",\n               \"uuid\": \"c547dc8b-eb9a-47ee-bb9d-d0156ae49217\",\n               \"vendor\": null,\n               \"wsame\": \"0B\",\n               \"wwn\": \"eui.000000000000000100a075244671f8c6\",\n               \"zoned\": \"none\",\n               \"zone-sz\": \"0B\",\n               \"zone-wgran\": \"0B\",\n               \"zone-app\": \"0B\",\n               \"zone-nr\": 0,\n               \"zone-omax\": 0,\n               \"zone-amax\": 0\n            }\n         ]\n      },{\n         \"alignment\": 0,\n         \"id-link\": \"nvme-eui.000000000000000100a075244671fb2e\",\n         \"id\": \"eui.000000000000000100a075244671fb2e\",\n         \"disc-aln\": 0,\n         \"dax\": false,\n         \"disc-gran\": \"512B\",\n         \"disk-seq\": 10,\n         \"disc-max\": \"2T\",\n         \"disc-zero\": false,\n         \"fsavail\": null,\n         \"fsroots\": [\n             null\n         ],\n         \"fssize\": null,\n         \"fstype\": null,\n         \"fsused\": null,\n         \"fsuse%\": null,\n         \"fsver\": null,\n         \"group\": \"disk\",\n         \"hctl\": null,\n         \"hotplug\": false,\n         \"kname\": \"nvme1n1\",\n         \"label\": null,\n         \"log-sec\": 512,\n         \"maj:min\": \"259:3\",\n         \"min-io\": 4096,\n         \"mode\": \"brw-rw----\",\n         \"model\": \"Micron_7450_MTFDKCC960TFR\",\n         \"mq\": \" 24\",\n         \"name\": \"nvme1n1\",\n         \"opt-io\": 4096,\n         \"owner\": \"root\",\n         \"partflags\": null,\n         \"partlabel\": null,\n         \"partn\": null,\n         \"parttype\": null,\n         \"parttypename\": null,\n         \"partuuid\": null,\n         \"path\": \"/dev/nvme1n1\",\n         \"phy-sec\": 4096,\n         \"pkname\": null,\n         \"pttype\": null,\n         \"ptuuid\": null,\n         \"ra\": 128,\n         \"rand\": false,\n         \"rev\": \"E2MU200\",\n         \"rm\": false,\n         \"ro\": false,\n         \"rota\": false,\n         \"rq-size\": 1023,\n         \"sched\": \"none\",\n         \"serial\": \"24034671FB2E\",\n         \"size\": \"894.3G\",\n         \"start\": null,\n         \"state\": \"live\",\n         \"subsystems\": \"block:nvme:pci\",\n         \"mountpoint\": null,\n         \"mountpoints\": [\n             null\n         ],\n         \"tran\": \"nvme\",\n         \"type\": \"disk\",\n         \"uuid\": null,\n         \"vendor\": null,\n         \"wsame\": \"0B\",\n         \"wwn\": \"eui.000000000000000100a075244671fb2e\",\n         \"zoned\": \"none\",\n         \"zone-sz\": \"0B\",\n         \"zone-wgran\": \"0B\",\n         \"zone-app\": \"0B\",\n         \"zone-nr\": 0,\n         \"zone-omax\": 0,\n         \"zone-amax\": 0\n      }\n   ]\n}\n"
+    },
+    "storage.lsblk_wide": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "NAME        KNAME     PATH           MAJ:MIN TYPE   SIZE MODEL                     SERIAL       <serial>                                  VENDOR TRAN   ROTA RO RM FSTYPE MOUNTPOINT PKNAME  HCTL STATE SCHED PHY-SEC LOG-SEC\nloop0       loop0     /dev/loop0       7:0   loop     0B                                                                                              1  0  0                                      none      512     512\nloop1       loop1     /dev/loop1       7:1   loop     0B                                                                                              1  0  0                                      none      512     512\nloop2       loop2     /dev/loop2       7:2   loop     0B                                                                                              1  0  0                                      none      512     512\nloop3       loop3     /dev/loop3       7:3   loop     0B                                                                                              1  0  0                                      none      512     512\nloop4       loop4     /dev/loop4       7:4   loop     0B                                                                                              1  0  0                                      none      512     512\nloop5       loop5     /dev/loop5       7:5   loop     0B                                                                                              1  0  0                                      none      512     512\nloop6       loop6     /dev/loop6       7:6   loop     0B                                                                                              1  0  0                                      none      512     512\nloop7       loop7     /dev/loop7       7:7   loop     0B                                                                                              1  0  0                                      none      512     512\nnvme0n1     nvme0n1   /dev/nvme0n1   259:0   disk 894.3G Micron_7450_MTFDKCC960TFR 24034671F8C6 eui.000000000000000100a075244671f8c6        nvme      0  0  0                                live  none     4096     512\n|-nvme0n1p1 nvme0n1p1 /dev/nvme0n1p1 259:1   part   512M                                        eui.000000000000000100a075244671f8c6        nvme      0  0  0 vfat   /boot/efi  nvme0n1            none     4096     512\n`-nvme0n1p2 nvme0n1p2 /dev/nvme0n1p2 259:2   part 893.8G                                        eui.000000000000000100a075244671f8c6        nvme      0  0  0 ext4   /          nvme0n1            none     4096     512\nnvme1n1     nvme1n1   /dev/nvme1n1   259:3   disk 894.3G Micron_7450_MTFDKCC960TFR 24034671FB2E eui.000000000000000100a075244671fb2e        nvme      0  0  0                                live  none     4096     512\n"
+    },
+    "storage.lspci_nn": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "00:00.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14d8]\n00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] Device [1022:14d9]\n00:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14da]\n00:01.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14db]\n00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14da]\n00:02.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14db]\n00:02.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14db]\n00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14da]\n00:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14db]\n00:03.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14db]\n00:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14da]\n00:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14da]\n00:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14dd]\n00:08.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14dd]\n00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller [1022:790b] (rev 71)\n00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge [1022:790e] (rev 51)\n00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e0]\n00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e1]\n00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e2]\n00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e3]\n00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e4]\n00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e5]\n00:18.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e6]\n00:18.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e7]\n01:00.0 Ethernet controller [0200]: Intel Corporation Ethernet Controller X550 [8086:1563] (rev 01)\n01:00.1 Ethernet controller [0200]: Intel Corporation Ethernet Controller X550 [8086:1563] (rev 01)\n02:00.0 Non-Volatile memory controller [0108]: Micron Technology Inc 7450 PRO NVMe SSD [1344:51c3] (rev 01)\n03:00.0 Non-Volatile memory controller [0108]: Micron Technology Inc 7450 PRO NVMe SSD [1344:51c3] (rev 01)\n04:00.0 PCI bridge [0604]: ASPEED Technology, Inc. AST1150 PCI-to-PCI Bridge [1a03:1150] (rev 06)\n05:00.0 VGA compatible controller [0300]: ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 52)\n06:00.0 SATA controller [0106]: ASMedia Technology Inc. ASM106x Serial ATA AHCI Controller [1b21:0622] (rev 01)\n07:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Raphael [1002:164e] (rev ca)\n07:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Family 19h PSP/CCP [1022:1649]\n07:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device [1022:15b6]\n07:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device [1022:15b7]\n08:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Phoenix PCIe Dummy Function [1022:14de]\n"
+    },
+    "storage.lspci_storage": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "02:00.0 Non-Volatile memory controller [0108]: Micron Technology Inc 7450 PRO NVMe SSD [1344:51c3] (rev 01)\n\tSubsystem: Micron Technology Inc 7450 PRO NVMe SSD [1344:2000]\n\tKernel driver in use: nvme\n\tKernel modules: nvme\n03:00.0 Non-Volatile memory controller [0108]: Micron Technology Inc 7450 PRO NVMe SSD [1344:51c3] (rev 01)\n\tSubsystem: Micron Technology Inc 7450 PRO NVMe SSD [1344:2000]\n\tKernel driver in use: nvme\n\tKernel modules: nvme\n04:00.0 PCI bridge [0604]: ASPEED Technology, Inc. AST1150 PCI-to-PCI Bridge [1a03:1150] (rev 06)\n\tSubsystem: Super Micro Computer Inc AST1150 PCI-to-PCI Bridge [15d9:1d6e]\n05:00.0 VGA compatible controller [0300]: ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 52)\n--\n06:00.0 SATA controller [0106]: ASMedia Technology Inc. ASM106x Serial ATA AHCI Controller [1b21:0622] (rev 01)\n\tDeviceName:  Asmedia SATA6G ASM1061R\n\tSubsystem: ASMedia Technology Inc. Device [1b21:1060]\n\tKernel driver in use: ahci\n\tKernel modules: ahci\n"
+    },
+    "storage.lvm_conf_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/etc/lvm/lvm.conf': No such file or directory\nls: cannot access '/etc/lvm/backup': No such file or directory\nls: cannot access '/etc/lvm/archive': No such file or directory\n"
+    },
+    "storage.mdadm_conf": {
+      "status": "ENOENT",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "HOMEHOST <ignore>\ncat: /etc/mdadm.conf: No such file or directory\n"
+    },
+    "storage.mdstat": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10] \nunused devices: <none>\n"
+    },
+    "storage.mounts": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "sysfs /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0\nproc /proc proc rw,nosuid,nodev,noexec,relatime 0 0\nudev /dev devtmpfs rw,nosuid,relatime,size=48836220k,nr_inodes=12209055,mode=755,inode64 0 0\ndevpts /dev/pts devpts rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000 0 0\ntmpfs /run tmpfs rw,nosuid,nodev,noexec,relatime,size=9793804k,mode=755,inode64 0 0\nefivarfs /sys/firmware/efi/efivars efivarfs rw,nosuid,nodev,noexec,relatime 0 0\n/dev/nvme0n1p2 / ext4 rw,relatime,errors=remount-ro 0 0\nsecurityfs /sys/kernel/security securityfs rw,nosuid,nodev,noexec,relatime 0 0\ntmpfs /dev/shm tmpfs rw,nosuid,nodev,inode64 0 0\ntmpfs /run/lock tmpfs rw,nosuid,nodev,noexec,relatime,size=5120k,inode64 0 0\ncgroup2 /sys/fs/cgroup cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot 0 0\npstore /sys/fs/pstore pstore rw,nosuid,nodev,noexec,relatime 0 0\nbpf /sys/fs/bpf bpf rw,nosuid,nodev,noexec,relatime,mode=700 0 0\nsystemd-1 /proc/sys/fs/binfmt_misc autofs rw,relatime,fd=33,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=6214 0 0\nhugetlbfs /dev/hugepages hugetlbfs rw,nosuid,nodev,relatime,pagesize=2M 0 0\nmqueue /dev/mqueue mqueue rw,nosuid,nodev,noexec,relatime 0 0\ndebugfs /sys/kernel/debug debugfs rw,nosuid,nodev,noexec,relatime 0 0\ntracefs /sys/kernel/tracing tracefs rw,nosuid,nodev,noexec,relatime 0 0\nfusectl /sys/fs/fuse/connections fusectl rw,nosuid,nodev,noexec,relatime 0 0\nconfigfs /sys/kernel/config configfs rw,nosuid,nodev,noexec,relatime 0 0\n/dev/nvme0n1p1 /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 0\nbinfmt_misc /proc/sys/fs/binfmt_misc binfmt_misc rw,nosuid,nodev,noexec,relatime 0 0\n"
+    },
+    "storage.multipath": {
+      "status": "UTILITY_MISSING",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "bash: line 1: multipath: command not found\nls: cannot access '/etc/multipath.conf': No such file or directory\nls: cannot access '/etc/multipath/': No such file or directory\n"
+    },
+    "storage.net_fs_mounts": {
+      "status": "ENOENT",
+      "rc": 1,
+      "truncated": false,
+      "stdout": "fusectl /sys/fs/fuse/connections fusectl rw,nosuid,nodev,noexec,relatime 0 0\ncat: /proc/fs/nfsfs/servers: No such file or directory\ncat: /proc/fs/nfsfs/volumes: No such file or directory\n"
+    },
+    "storage.partitions": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "major minor  #blocks  name\n\n 259        0  937692504 nvme0n1\n 259        1     524288 nvme0n1p1\n 259        2  937167175 nvme0n1p2\n 259        3  937692504 nvme1n1\n"
+    },
+    "storage.pci_drivers": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "8250_mid agpgart-intel agpgart-via ahci ata_generic ata_piix bnxt_en ccp ehci-pci intel_scu iosf_mbi_pci ipmi_si ixgbe k10temp nvme ohci-pci pata_sis pcieport piix4_smbus pwm-lpss serial shpchp uhci_hcd virtio-pci xen-platform-pci xhci_hcd "
+    },
+    "storage.proc_scsi": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Attached devices:\n"
+    },
+    "storage.scsi_hosts": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot access '/sys/class/iscsi_session': No such file or directory\nls: cannot access '/sys/class/iscsi_host': No such file or directory\nls: cannot access '/sys/class/fc_host': No such file or directory\nls: cannot access '/sys/class/sas_host': No such file or directory\n/sys/class/scsi_host:\nhost0\nhost1\nhost10\nhost11\nhost2\nhost3\nhost4\nhost5\nhost6\nhost7\nhost8\nhost9\n/sys/class/scsi_host/host0 proc_name=ahci state=running\n/sys/class/scsi_host/host1 proc_name=ahci state=running\n/sys/class/scsi_host/host10 proc_name=ahci state=running\n/sys/class/scsi_host/host11 proc_name=ahci state=running\n/sys/class/scsi_host/host2 proc_name=ahci state=running\n/sys/class/scsi_host/host3 proc_name=ahci state=running\n/sys/class/scsi_host/host4 proc_name=ahci state=running\n/sys/class/scsi_host/host5 proc_name=ahci state=running\n/sys/class/scsi_host/host6 proc_name=ahci state=running\n/sys/class/scsi_host/host7 proc_name=ahci state=running\n/sys/class/scsi_host/host8 proc_name=ahci state=running\n/sys/class/scsi_host/host9 proc_name=ahci state=running\n"
+    },
+    "storage.smartctl_scan": {
+      "status": "UTILITY_MISSING",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "bash: line 1: smartctl: command not found\nbash: line 1: smartctl: command not found\n"
+    },
+    "storage.storage_modules": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ahci async_raid6_recov dm_mod libahci md_mod nvme nvme_auth nvme_core nvme_fabrics nvme_keyring raid0 raid1 raid10 raid456 raid6_pq virtio_blk virtio_mmio virtio_net virtio_pci virtio_pci_legacy_dev virtio_pci_modern_dev virtio_scsi "
+    },
+    "storage.storage_services": {
+      "status": "EXECUTION_ERROR",
+      "rc": 3,
+      "truncated": false,
+      "stdout": "inactive\ninactive\ninactive\ninactive\ninactive\ninactive\ninactive\ninactive\ninactive\n"
+    },
+    "storage.swap": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n"
+    },
+    "storage.sysblock_loop": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "loop0\nloop1\nloop2\nloop3\nloop4\nloop5\nloop6\nloop7\nnvme0n1\nnvme1n1\n== /sys/block/loop0 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop0/device/model: No such file or directory vendor=cat: /sys/block/loop0/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/loop1 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop1/device/model: No such file or directory vendor=cat: /sys/block/loop1/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/loop2 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop2/device/model: No such file or directory vendor=cat: /sys/block/loop2/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/loop3 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop3/device/model: No such file or directory vendor=cat: /sys/block/loop3/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/loop4 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop4/device/model: No such file or directory vendor=cat: /sys/block/loop4/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/loop5 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop5/device/model: No such file or directory vendor=cat: /sys/block/loop5/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/loop6 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop6/device/model: No such file or directory vendor=cat: /sys/block/loop6/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/loop7 size=0 ro=0 rm=0 rot=1 model=cat: /sys/block/loop7/device/model: No such file or directory vendor=cat: /sys/block/loop7/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/nvme0n1 size=1875385008 ro=0 rm=0 rot=0 model=Micron_7450_MTFDKCC960TFR                vendor=cat: /sys/block/nvme0n1/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n== /sys/block/nvme1n1 size=1875385008 ro=0 rm=0 rot=0 model=Micron_7450_MTFDKCC960TFR                vendor=cat: /sys/block/nvme1n1/device/vendor: No such file or directory sched=[none] mq-deadline  holders= slaves=\n"
+    },
+    "storage.udevadm_sda": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": ""
+    },
+    "storage.zpool": {
+      "status": "UTILITY_MISSING",
+      "rc": 127,
+      "truncated": false,
+      "stdout": "bash: line 1: zpool: command not found\nbash: line 1: zpool: command not found\n"
+    },
+    "users.env_names": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "HOME\nLANG\nLC_ALL\nLOGNAME\nPATH\nPWD\nSHELL\nSHLVL\nSSH_CLIENT\nSSH_CONNECTION\nTERM\nUSER\n_\n"
+    },
+    "users.home_dirs_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "drwxr-x--- 4 ubuntu ubuntu 4096 Sep  8 17:37 /home/ubuntu\ndrwx------ 3 root   root   4096 Sep  7 19:26 /root\n"
+    },
+    "users.kernel_hardening": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/proc/sys/kernel/yama/ptrace_scope: 1\n/proc/sys/kernel/kptr_restrict: 1\n/proc/sys/kernel/dmesg_restrict: 1\n/proc/sys/kernel/unprivileged_bpf_disabled: 2\n/proc/sys/kernel/modules_disabled: 0\n/proc/sys/kernel/randomize_va_space: 2\n/proc/sys/kernel/unprivileged_userns_clone: 1\n/proc/sys/user/max_user_namespaces: 381532\n/proc/sys/fs/protected_symlinks: 1\n/proc/sys/fs/protected_hardlinks: 1\n/proc/sys/fs/protected_fifos: 1\n/proc/sys/fs/protected_regular: 2\n/proc/sys/fs/suid_dumpable: 0\n/proc/sys/kernel/tainted: 12288\n/proc/sys/kernel/perf_event_paranoid: 4\n"
+    },
+    "users.last": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "reboot   system boot  6.8.0-139-generi Mon Sep  7 19:29   still running\n\nwtmp begins Mon Sep  7 19:29:50 2026\n"
+    },
+    "users.lastlog": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Username         Port     From                                       Latest\n"
+    },
+    "users.login_defs": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "MAIL_DIR        /var/mail\nFAILLOG_ENAB\t\tyes\nLOG_UNKFAIL_ENAB\tno\nLOG_OK_LOGINS\t\tno\nSYSLOG_SU_ENAB\t\tyes\nSYSLOG_SG_ENAB\t\tyes\nFTMP_FILE\t/var/log/btmp\nSU_NAME\t\tsu\nHUSHLOGIN_FILE\t.hushlogin\nENV_SUPATH\tPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nENV_PATH\tPATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games\nTTYGROUP\ttty\nTTYPERM\t\t0600\nERASECHAR\t0177\nKILLCHAR\t025\nUMASK\t\t022\nHOME_MODE\t0750\nPASS_MAX_DAYS\t99999\nPASS_MIN_DAYS\t0\nPASS_WARN_AGE\t7\nUID_MIN\t\t\t 1000\nUID_MAX\t\t\t60000\nSUB_UID_MIN\t\t   100000\nSUB_UID_MAX\t\t600100000\nSUB_UID_COUNT\t\t    65536\nGID_MIN\t\t\t 1000\nGID_MAX\t\t\t60000\nSUB_GID_MIN\t\t   100000\nSUB_GID_MAX\t\t600100000\nSUB_GID_COUNT\t\t    65536\nLOGIN_RETRIES\t\t5\nLOGIN_TIMEOUT\t\t60\nCHFN_RESTRICT\t\trwh\nDEFAULT_HOME\tyes\nUSERGROUPS_ENAB yes\nENCRYPT_METHOD SHA512\nNONEXISTENT\t/nonexistent\n"
+    },
+    "users.login_shells": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "root:0:/bin/bash\nubuntu:1000:/bin/bash\n"
+    },
+    "users.nsswitch": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "passwd:         files\ngroup:          files\nshadow:         files\ngshadow:        files\nhosts:          files dns\nnetworks:       files\nprotocols:      db files\nservices:       db files\nethers:         db files\nrpc:            db files\nnetgroup:       nis\n"
+    },
+    "users.passwd_list": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "root:0:0:/root:/bin/bash\ndaemon:1:1:/usr/sbin:/usr/sbin/nologin\nbin:2:2:/bin:/usr/sbin/nologin\nsys:3:3:/dev:/usr/sbin/nologin\nsync:4:65534:/bin:/bin/sync\ngames:5:60:/usr/games:/usr/sbin/nologin\nman:6:12:/var/cache/man:/usr/sbin/nologin\nlp:7:7:/var/spool/lpd:/usr/sbin/nologin\nmail:8:8:/var/mail:/usr/sbin/nologin\nnews:9:9:/var/spool/news:/usr/sbin/nologin\nuucp:10:10:/var/spool/uucp:/usr/sbin/nologin\nproxy:13:13:/bin:/usr/sbin/nologin\nwww-data:33:33:/var/www:/usr/sbin/nologin\nbackup:34:34:/var/backups:/usr/sbin/nologin\nlist:38:38:/var/list:/usr/sbin/nologin\nirc:39:39:/run/ircd:/usr/sbin/nologin\n_apt:42:65534:/nonexistent:/usr/sbin/nologin\nnobody:65534:65534:/nonexistent:/usr/sbin/nologin\nsystemd-network:998:998:/:/usr/sbin/nologin\nsystemd-timesync:997:997:/:/usr/sbin/nologin\ndhcpcd:100:65534:/usr/lib/dhcpcd:/bin/false\nuuidd:101:101:/run/uuidd:/usr/sbin/nologin\nmessagebus:102:102:/nonexistent:/usr/sbin/nologin\nsystemd-resolve:992:992:/:/usr/sbin/nologin\nsshd:103:65534:/run/sshd:/usr/sbin/nologin\nubuntu:1000:1000:/home/ubuntu:/bin/bash\n"
+    },
+    "users.passwd_status": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ubuntu L 2026-09-07 0 99999 7 -1\n"
+    },
+    "users.priv_groups": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "root:x:0:\nadm:x:4:\ntty:x:5:\ndisk:x:6:\ndialout:x:20:\nsudo:x:27:ubuntu\nshadow:x:42:\nvideo:x:44:\nsystemd-journal:x:999:\ninput:x:996:\nkvm:x:994:\n"
+    },
+    "users.root_home_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "ls: cannot open directory '/root': Permission denied\n"
+    },
+    "users.shadow_ls": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "-rw-r--r-- 1 root root    640 Sep  7 19:27 /etc/group\n-rw-r----- 1 root shadow  541 Sep  7 19:27 /etc/gshadow\n-rw-r--r-- 1 root root   1307 Sep  7 19:27 /etc/passwd\n-rw-r----- 1 root shadow  681 Sep  8 17:37 /etc/shadow\n"
+    },
+    "users.sssd_krb5_ls": {
+      "status": "ENOENT",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "ls: cannot access '/etc/sssd': No such file or directory\nls: cannot access '/etc/krb5.conf': No such file or directory\nls: cannot access '/etc/krb5.keytab': No such file or directory\n"
+    },
+    "users.sudo_group": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "sudo:x:27:ubuntu\nadm:x:4:\nls: cannot open directory '/etc/sudoers.d': Permission denied\n-r--r----- root:root /etc/sudoers\ndrwxr-x--- root:root /etc/sudoers.d\n"
+    },
+    "users.sudoers_ls": {
+      "status": "EACCES",
+      "rc": 2,
+      "truncated": false,
+      "stdout": "-r--r----- 1 root root 1800 Jan 29  2024 /etc/sudoers\n\nls: cannot open directory '/etc/sudoers.d/': Permission denied\n"
+    },
+    "users.who": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "           system boot  Sep  7 19:29\n           run-level 5  Sep  7 19:31\nLOGIN      ttyS1        Sep  7 19:31               828 id=tyS1\nLOGIN      tty1         Sep  7 19:31               826 id=tty1\n"
+    },
+    "bmc.ipmi_dev_perms": {
+      "status": "UTILITY_MISSING",
+      "rc": 127,
+      "truncated": false,
+      "stdout": "crw------- 600 root:root /dev/ipmi0\nbash: line 1: getfacl: command not found\n"
+    },
+    "bmc.ipmi_si_params": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "bt_debug=0\nhotmod=cat: /sys/module/ipmi_si/parameters/hotmod: Permission denied\nkcs_debug=0\nkipmid_max_busy_us=\nsmic_debug=1\n"
+    },
+    "bmc.ipmitool_mc_info": {
+      "status": "UTILITY_MISSING",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "bash: line 1: ipmitool: command not found\nrc=127\n"
+    },
+    "storage.blk_queue_detail": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "== /sys/block/nvme0n1\n  queue/rotational=0\n  queue/logical_block_size=512\n  queue/physical_block_size=4096\n  queue/discard_granularity=512\n  queue/write_cache=write through\n  queue/scheduler=[none] mq-deadline \n  queue/nr_requests=1023\n  size=1875385008\n  ro=0\n  removable=0\n  holders= parts=2\n== /sys/block/nvme1n1\n  queue/rotational=0\n  queue/logical_block_size=512\n  queue/physical_block_size=4096\n  queue/discard_granularity=512\n  queue/write_cache=write through\n  queue/scheduler=[none] mq-deadline \n  queue/nr_requests=1023\n  size=1875385008\n  ro=0\n  removable=0\n  holders= parts=0\n"
+    },
+    "storage.nvme_class": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/sys/class/nvme:\nnvme0\nnvme1\n\n/sys/class/nvme-subsystem:\nnvme-subsys0\nnvme-subsys1\n== /sys/class/nvme/nvme0 model=Micron_7450_MTFDKCC960TFR                serial=24034671F8C6         <serial>  transport=pcie state=live subsysnqn=nqn.2016-08.com.micron:nvme:nvm-subsystem-sn-24034671F8C6        \n== /sys/class/nvme/nvme1 model=Micron_7450_MTFDKCC960TFR                serial=24034671FB2E         <serial>  transport=pcie state=live subsysnqn=nqn.2016-08.com.micron:nvme:nvm-subsystem-sn-24034671FB2E        \n"
+    },
+    "storage.nvme_cli": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "Node                  Generic               SN                   Model                                    Namespace  Usage                      Format           FW Rev  \n--------------------- --------------------- -------------------- ---------------------------------------- ---------- -------------------------- ---------------- --------\n/dev/nvme0n1          /dev/ng0n1            24034671F8C6         Micron_7450_MTFDKCC960TFR                0x1         18.30  GB / 960.20  GB    512   B +  0 B   E2MU200 \n/dev/nvme1n1          /dev/ng1n1            24034671FB2E         Micron_7450_MTFDKCC960TFR                0x1          0.00   B / 960.20  GB    512   B +  0 B   E2MU200 \nnvme version 2.8 (git 2.8)\nlibnvme version 1.8 (git 1.8)\n"
+    },
+    "storage.nvme_smart_try": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "/dev/nvme0n1: Permission denied\n\u001b[1mUsage: nvme smart-log <device> [OPTIONS]\u001b[0m\n\nRetrieve SMART log for the given device (or optionally a namespace) in either\ndecoded format (default) or binary.\n\n\u001b[1mOptions:\u001b[0m\n  [  --verbose, -v ]                    --- Increase output verbosity\n  [  --output-format=<FMT>, -o <FMT> ]  --- Output format: normal|json|binary\n  [  --namespace-id=<NUM>, -n <NUM> ]   --- (optional) desired namespace\n  [  --raw-binary, -b ]                 --- output in binary format\n  [  --human-readable, -H ]             --- show info in readable format\n/dev/nvme0: Permission denied\n\u001b[1mUsage: nvme id-ctrl <device> [OPTIONS]\u001b[0m\n\nSend an Identify Controller command to the given device and report\ninformation about the specified controller in human-readable or binary\nformat. May also return vendor-specific controller attributes in hex-dump if\nrequested.\n\n"
+    },
+    "storage.nvme_sysfs_detail": {
+      "status": "OK",
+      "rc": 0,
+      "truncated": false,
+      "stdout": "== /sys/class/nvme/nvme0\n  model=Micron_7450_MTFDKCC960TFR               \n  firmware_rev=E2MU200 \n  state=live\n  transport=pcie\n  address=<ip>.0\n  cntlid=0\n  numa_node=-1\n  queue_count=25\n  sqsize=1023\n== /sys/class/nvme/nvme1\n  model=Micron_7450_MTFDKCC960TFR               \n  firmware_rev=E2MU200 \n  state=live\n  transport=pcie\n  address=<ip>.0\n  cntlid=0\n  numa_node=-1\n  queue_count=25\n  sqsize=1023\n== /sys/class/nvme-subsystem/nvme-subsys0 iopolicy=numa model=Micron_7450_MTFDKCC960TFR               \n== /sys/class/nvme-subsystem/nvme-subsys1 iopolicy=numa model=Micron_7450_MTFDKCC960TFR               \n"
+    }
+  }
+}

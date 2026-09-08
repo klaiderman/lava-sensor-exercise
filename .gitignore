@@ -1,0 +1,26 @@
+# secrets / credentials — never commit
+.env
+.env.*
+*.pem
+*.key
+id_*
+!id_*.pub
+*.ppk
+known_hosts.lava
+
+# raw session transcripts / raw host artifacts stay local by default
+ai/transcripts/raw/
+state/raw_host/
+
+# build outputs
+sensor/bin/
+sensor/dist/
+submission/*.tar.gz
+submission/*.tgz
+
+# workbench never lives here
+.lava-workbench/
+node_modules/
+__pycache__/
+.venv/
+venv/

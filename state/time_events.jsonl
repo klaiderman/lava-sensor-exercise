@@ -1,0 +1,4 @@
+{"event":"START","ts":"2026-09-08T21:00:43Z","note":"exercise clock started; active work window begins","session_id":"573ece1e-5ae9-41c9-9d84-e625d280bc3a"}
+{"event":"PHASE","phase":"3-contract-ssh-plan","ts":"2026-09-08T21:11:48Z"}
+{"event":"PHASE","phase":"5-host-recon","ts":"2026-09-08T21:38:43Z","budget_min":15}
+{"event":"PHASE_END","phase":"5-host-recon","ts":"2026-09-08T21:49:56Z","actual_min":17,"note":"169 probes, 9 facts, 0 unresolved TCI facts; HOST_SNAPSHOT.json written"}
