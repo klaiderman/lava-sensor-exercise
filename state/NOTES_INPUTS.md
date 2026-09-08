@@ -5,8 +5,8 @@
 - A2: We build in Go (Lava's preference; not scored).
 
 ## Ambiguities and resolutions
-- AM1: `finding.schema.json` is referenced by the brief as supplied, but was not present locally at start. Resolution: obtain the real file; do NOT reconstruct from the brief's JSON example. (pending)
-- AM2: "Owner ... as far as the machine itself can tell" — no defined source. Resolution: (pending research) define candidate sources with provenance and allow explicit unknown.
+- AM1: `finding.schema.json` is referenced by the brief as supplied, but was not present locally at start. RESOLVED 2026-09-09 by user decision: the contract embedded in the PDF/HTML was cross-checked (identical) and transcribed into `task/derived/finding.schema.json` (derived artifact, provenance in SCHEMA_PROVENANCE.md, validated against the 2020-12 metaschema); it is the validation source. NOTES.md must disclose this.
+- AM2: "Owner ... as far as the machine itself can tell" — no defined source. Resolution: define candidate sources with provenance and allow explicit unknown. Host evidence: DMI asset tags are OEM placeholders, no /etc/machine-info, cloud-init metadata carries provider (Latitude.sh) + facility only -> owner will be an explicit unknown with the provider recorded as a candidate, not as the owner.
 
 ## Custom-category candidates
 - Kernel Flags (Lava's benchmark example) — strong baseline; risk: it is the expected answer.
@@ -52,3 +52,6 @@
 - Push policy: make the repo private now; push full engineering history (prompts, Wixie artifacts, research, decisions, CLAUDE.md, agents, tests, implementation); never secrets, raw host data, SSH material, credential-bearing transcripts or sensitive target-host artifacts; dedicated public-release audit at the end, then public only after explicit approval; never squash/rewrite history.
 - API-key value in a sub-agent transcript: redact that single value in the exported copy and disclose the redaction in NOTES.md.
 - Claude-error candidate for NOTES (rejected by the lead, evidence-backed): TCI round-1 `is_virtual=true` from a nonempty-output rule (see Recon lessons). Second candidate: Wixie convergence.py automated clarity fixer rewrote mandated-verbatim host blocks in R2/R4/R5; three agents detected and reverted it.
+
+## Harness caveat discovered by R2 (2026-09-09 02:00Z)
+- The Claude Code harness blocks sub-agents from writing a file literally named REPORT.md ("Subagents should return findings as text, not write report files"). R2 wrote R2_ANSWERS.md instead; the lead renamed it to research/R2/REPORT.md. Other tracks may do the same; the synthesizer must accept either name. Not a research defect.
