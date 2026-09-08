@@ -1,20 +1,27 @@
 # Emu Checkpoint
-> Saved at: 2026-09-08T22:54:29Z
+> Saved at: 2026-09-08T23:14:01Z
 > Session: 408b8879
 
 ## Branch
 main
 
 ## Modified Files
-research/R1/streams/S4.md
-research/R4/facts.jsonl
-research/R4/raw/facts_batch2.jsonl
-tooling/emu_checkpoint.sh
+agents.jsonl
+research/R1/PROVENANCE.md
+research/R1/REPORT.md
+research/R3/REPORT.md
+state/HOST_SNAPSHOT.evidence.json
+state/HOST_SNAPSHOT.json
+state/HOST_SNAPSHOT.raw.json
+state/time_events.jsonl
+tooling/tci/check_registry.py
+tooling/tci/probes.json
 
 ## Staged Files
 None
 
 ## Recent Commits
+67de14c checkpoint 4: research R2/R4/R5 complete (R1/R3 in progress), TCI follow-up probes for R4/R5 observation requests, OBSERVATION_ANSWERS, snapshot mdadm.conf correction, Emu checkpoint smoke, agent definitions
 4ef3b59 tooling: Emu checkpoint script (real PreCompact hook + manual checkpoint, mirrored to state/emu), research-synthesizer agent definition, Grill-Me intent; R2 research complete
 d0d863d schema: drop invalid fragment $id from derived finding.schema.json; provenance note on format assertion; validated (metaschema + 8 behavioural checks)
 a86407d checkpoint 3: derived finding.schema.json + provenance (AM-1 settled by user), contract/CLAUDE.md schema updates, gitignore research scratch, execution state
@@ -76,3 +83,4 @@ A read-only, bounded, unprivileged Linux posture sensor in Go (`sensor scan --ou
 ## User-Flagged Context
 2026-09-08T22:52:03Z TEST RUN (pre-synthesis smoke of Emu machinery): R1-R5 research launched 01:45Z; derived schema settled by user; repo private + pushed; awaiting R1/R3/R4/R5 reports.
 2026-09-08T22:53:56Z SMOKE 2: Emu PreCompact hook with POSIX paths; research R1/R3/R4/R5 still running, R2 done; schema derived and validated; repo private, checkpoints 1-3 pushed.
+2026-09-08T22:54:27Z SMOKE 3 (POSIX paths): Emu PreCompact hook digest test; R2 done, R1/R3/R4/R5 running; GRILL prompt lifecycle running.

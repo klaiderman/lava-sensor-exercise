@@ -10,3 +10,5 @@
 {"event":"APPROVAL","item":"prompts/R3/prompt.md","decision":"approved as-is","ts":"2026-09-08T22:36:43Z"}
 {"event":"APPROVAL","item":"prompts/R4/prompt.md","decision":"approved as-is","ts":"2026-09-08T22:36:43Z"}
 {"event":"PHASE","phase":"12-research-R1-R5","ts":"2026-09-08T22:36:43Z","budget_min":45,"note":"5 workers launched in parallel; 40-min box each"}
+{"event":"PHASE_END","phase":"12-research-R1-R5","ts":"2026-09-08T23:14:00Z","note":"all five tracks complete: R1 57 facts, R2 19, R3 66 (+39 laws, 51 fixtures), R4 60, R5 58; R3 ran ~65 min; concurrency cap forced some streams sequential"}
+{"event":"PHASE","phase":"13-synthesis-propagation","ts":"2026-09-08T23:14:00Z","budget_min":25}

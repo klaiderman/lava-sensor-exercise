@@ -24,9 +24,9 @@ Window: **2026-09-08 22:35Z → 22:58Z** wall clock for the lead context; parall
 | Stream | Sources | Source-level code reads | Local repro | Rating |
 |---|---|---|---|---|
 | S1 inventory/DMI | ~30 | kernel `dmi-id.c`, `dmi_scan.c`, ghw, gopsutil, procfs, osquery | yes (uid 1000) | **STRONG** |
-| S2 remote-access/SSH | pending at write time | — | — | **see Degradations** |
+| S2 remote-access/SSH | 32 | OpenSSH `sshd.c`/`servconf.c` @V_9_6_P1, Wazuh SCA policy, Lynis `include/functions`, `proc_pid_fd(5)` | yes (uid 1000, `ss`/`/proc/net/tcp` degradation) | **STRONG** — and it produced the track's only verdict reversal (`sshd -G`) |
 | S3 secrets-on-disk | 26 | gitleaks, trufflehog, kernel UAPI `posix_acl_xattr.h`, OpenSSH `PROTOCOL.key`, osquery | yes, incl. byte-level ACL decode and a FIFO hang test | **STRONG** |
-| S4 BMC/IPMI | pending at write time | — | — | **see Degradations** |
+| S4 BMC/IPMI | ~25 | kernel `ipmi_devintf.c`/`ipmi_msghandler.c`/`devtmpfs.c`/`dmi-sysfs.c`/`ipmi_kcs_sm.c` @v6.8, ipmitool `open.c` | yes (absence-evidence paths) | **STRONG** |
 | S5 kernel-hardening | 6 | osquery `secureboot.cpp` @5.15.0, kernel Documentation ×2 | yes (uid 1000) | **MODERATE** — lead-run, time-boxed; Lynis and kernel LSM source unread (G5-1, G5-5) |
 | S6 Go framework/schema | 10 | jsonschema `draft.go` @v6.0.3, os/exec docs, 4 LICENSE files | yes — measured dependency graphs with the real Go 1.26.2 toolchain | **STRONG** on dependencies, **WEAK** on evidence-model standards (XCCDF/SARIF unfetched, G6-1/G6-2) |
 
@@ -44,7 +44,7 @@ Window: **2026-09-08 22:35Z → 22:58Z** wall clock for the lead context; parall
 
 1. **Phase 1 was only partially parallel.** Streams S5 and S6 could not be launched as sub-workers — the harness returned "Concurrent subagent limit reached. You can run 20 subagents at once." (the cap is shared across all concurrently running R-tracks). Both were run **sequentially by the lead**, with a correspondingly smaller source count and explicit GAPS sections. S5 is rated MODERATE and S6 WEAK-on-standards for exactly this reason.
 2. **Phase 2 was merged into Phase 1** rather than run as a separate adaptive round (see the table). No cross-stream follow-up queries were issued.
-3. **Streams S2 (remote access) and S4 (BMC/IPMI) had not returned when the first draft of this file was written.** Their status is recorded in `REPORT.md` and `PROPAGATION_NOTES.md` as of the final write. Anything still outstanding at submission is marked **OPEN**, never inferred.
+3. **Streams S2 and S4 returned after the first draft of this file was written**, so the Signal Map above and the S2 row of `BVB_MATRIX.md` were revised rather than composed in one pass. Both are now fully folded in; the provisional REMOTE_ACCESS verdicts were **replaced**, not appended to — `sshd -G` moved from an assumed REJECT to a REUSE, which is the track's only verdict reversal.
 4. The deep-research agent definitions and `skills/research/SKILL.md` were not read (see above).
 
 ## Failures and blocked fetches — **a blocked fetch is NOT evidence of absence**
@@ -73,3 +73,14 @@ What each Vis conduct module actually **changed**, not merely that it was consul
 - **`core/conduct/verification.md`** — Enforced the two-independent-sources-or-primary-plus-local-repro bar. Concretely, it is why F11 (TPM sysfs modes) is LIKELY rather than VERIFIED: WSL2 has no TPM, so the local reproduction could not corroborate the host snapshot and the kernel source was not read. Under a weaker rule that would have been asserted.
 - **`core/conduct/prior-art-discovery.md`** — Drove the "read the source, not the docs" instruction that found the three highest-value results in the whole track: osquery choosing `efivars` over `vars` *specifically* because it works without root; osquery's Secure Boot table silently emitting no row on read failure; and ghw converting EACCES into the untyped string `"unknown"`.
 - **`core/conduct/capability-fidelity.md`** — Prevented the most likely overclaim. It forced the distinction between "the library compiles and runs unprivileged" and "the library returns the *answer* unprivileged", which is the entire ghw / u-root-smbios / go-smbios verdict: correct code pointed at data that uid 1000 cannot reach. It also forced the S6 conclusion that a schema validator is a **test-only** capability, not a runtime one — a reframing that removed the dependency question from the shipped artifact entirely.
+
+
+## Final counts (close of track)
+
+- **Facts:** 57 total — 53 VERIFIED, 2 CONTESTED (R1-F4 ghw's self-contradiction, R1-F51 sshd man page vs code), 2 LIKELY (R1-F54 socket activation, R1-F57 XCCDF enumeration). No SPECULATIVE facts survived to the final write: the one placeholder (the original R1-F47) was replaced by real S2 evidence.
+- **Sources:** 22 rows in `sources.jsonl`, all typed primary — six stream aggregates (each carrying its own full per-source list with credibility scores) plus sixteen directly-fetched primaries, including one recorded **failure** row (NIST IR 7275, blocked). Underlying unique sources across the six streams: roughly 100.
+- **Artifacts:** 8 contract deliverables plus 6 stream evidence files, 3,069 lines of stream evidence.
+- **SUSPECTED_INJECTION:** none found, independently reported by all six streams.
+- **Observation requests:** 10 (R1-OR1 through R1-OR10), exactly one marked blocking (R1-OR9).
+
+**Two of this track's findings contradicted our own inputs.** The R1 brief's claim that gitleaks had been relicensed away from MIT is false (S3), and the S5 briefing assumption that securityfs is root-only is false (LOCAL_REPRO). Both were resolved in favour of the evidence and are recorded in `PROPAGATION_NOTES.md` as CR-1 and CR-2 rather than quietly corrected.

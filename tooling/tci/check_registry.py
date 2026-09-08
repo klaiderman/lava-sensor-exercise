@@ -86,7 +86,7 @@ COMMAND_ALLOWED_ARG_PREFIXES = {
     "docker": ["version", "ps", "info"],
     "crontab": ["-l"],
     "journalctl": ["--disk-usage", "-n", "--no-pager"],
-    "sshd": ["-T", "-V", "-t"],
+    "sshd": ["-T", "-V", "-t", "-G"],
     "nft": ["list"],
     "iptables": ["-S"],
     "ufw": ["status"],

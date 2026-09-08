@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-08T23:07:24Z",
+ "generated_at": "2026-09-08T23:13:53Z",
  "source": "tooling/tci Tiny Custom Investigator, registry v1 (175 probes), rounds 1-2 on 2026-09-08 21:52-22:08Z; 169 probes executed; per-probe evidence in state/HOST_SNAPSHOT.evidence.json (sanitized); raw lead-only in state/raw_host/",
  "recon_window": {
   "budget_min": 15,
@@ -7,7 +7,7 @@
   "over_budget_reason": "two registry fixes (is_virtual rule, ipmi dev probe) + follow-up round"
  },
  "statuses_summary": {
-  "OK": 149,
+  "OK": 154,
   "EXECUTION_ERROR": 5,
   "UTILITY_MISSING": 12,
   "ENOENT": 13,
@@ -173,7 +173,7 @@
     }
    ],
    "device_mapper": "absent (only /dev/mapper/control) => no LVM, no LUKS/dm-crypt",
-   "md_raid": "modules loaded, no arrays (/proc/mdstat unused, no /dev/md*)",
+   "md_raid": "modules loaded, no arrays (/proc/mdstat unused, no /dev/md*); /etc/mdadm/mdadm.conf EXISTS (content: HOMEHOST <ignore>) \u2014 an earlier snapshot version wrongly listed it as absent (R4-F02 correction; the probe combined two paths and only /etc/mdadm.conf was ENOENT)",
    "multipath": "absent (utility + config missing)",
    "iscsi_fc_sas": "absent (no /sys/class/iscsi_*/fc_host/sas_host; iscsiadm missing)",
    "network_fs": "none mounted; /proc/fs/nfsfs absent",

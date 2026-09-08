@@ -2202,6 +2202,61 @@
       "requires": [],
       "sensitivity": "low",
       "facts": []
+    },
+    {
+      "id": "network.sshd_g_effective",
+      "group": "network",
+      "cmd": "sshd -G 2>&1 | head -80; echo ---; sshd -G 2>&1 | wc -l; sshd -G 2>/dev/null | head -0; echo rc_G=${PIPESTATUS[0]}; sshd -T 2>&1; echo rc_T=$?",
+      "timeout_s": 10,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.bmc_read_timing",
+      "group": "bmc",
+      "cmd": "date +%s%N; cat /sys/devices/platform/ipmi_bmc.0/device_id 2>&1; date +%s%N; cat /sys/devices/platform/ipmi_bmc.0/firmware_revision 2>&1; date +%s%N; cat /sys/devices/platform/ipmi_bmc.0/device_id 2>&1; date +%s%N",
+      "timeout_s": 30,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.securityfs_modes",
+      "group": "kernel",
+      "cmd": "ls -la /sys/kernel/security/ 2>&1; stat -c \"%A %U:%G %n\" /sys/kernel/security/lockdown /sys/kernel/security/lsm 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.ssh_service_cat",
+      "group": "network",
+      "cmd": "systemctl cat ssh.service 2>&1 | grep -Ev \"^\\s*#\" | head -40; systemctl show ssh.service -p ExecStart -p ExecStartPre -p ActiveEnterTimestamp 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.stat_sizes",
+      "group": "kernel",
+      "cmd": "stat -c \"%s %n\" /proc/cpuinfo /proc/meminfo /proc/self/mountinfo /proc/cmdline /sys/class/dmi/id/sys_vendor /sys/block/nvme0n1/size /sys/devices/system/cpu/vulnerabilities/meltdown /etc/os-release /etc/machine-id 2>&1",
+      "timeout_s": 8,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
     }
   ]
 }

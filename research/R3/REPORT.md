@@ -659,7 +659,9 @@ NVMe sysfs and getfacl vs the ACL xattr.
 
 ## Contradiction-hunting pass (Phase 4) — what was found
 
-Four genuine CONTESTED items, each with both sides recorded in `facts.jsonl`:
+Four genuine contradictions were found. Two are carried as `status:CONTESTED` in `facts.jsonl`
+with both sides cited (items 1 and 2); two are corrections where one side is simply wrong and
+the fact is recorded VERIFIED with the corrected reading (items 3 and 4):
 
 1. **R3-F25 UsePAM** — upstream OpenSSH default "no" [S1] vs Ubuntu noble's packaged "yes" [S5].
    The law follows the distro default when ID/ID_LIKE identifies the family, because that is what the
