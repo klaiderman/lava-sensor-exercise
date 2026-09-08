@@ -30,9 +30,11 @@ renders `--out` as `/-out`): **agreement = True**. Extraction and comparison are
 | `"evidence": { /* what someone needs to act on it */ }` | `type: object` | Free-form. |
 | "Extra fields are welcome anywhere" | `additionalProperties` left at the JSON Schema default (allowed) everywhere | No `additionalProperties: false` anywhere. |
 
+Note on `format: date-time`: under JSON Schema 2020-12 `format` is an annotation unless the validator enables format assertion. Our validation therefore (a) enables format checking in the validator used by tests and the final gate, and (b) the sensor test-suite additionally parses every `collected_at` as RFC 3339 explicitly. RFC 3339 allows fractional seconds and any numeric offset; we emit UTC `Z`.
+
 Nothing else was added: no minItems, no minimum-checks-per-category (a semantic requirement, tested separately), no string
 formats beyond date-time, no length limits.
 
 ## Output
-- `task/derived/finding.schema.json` sha256 `a41d64df2eae9432d11f220037ad0f478f7742e3a3c7d74e84d9f6d2d584af9c` (JSON Schema draft 2020-12).
+- `task/derived/finding.schema.json` sha256 `1e06d312b58ac16eec628c8be4ade1575219606e2f556e80654d3a28646ccb33` (JSON Schema draft 2020-12).
 - Replaces the earlier PENDING-SCHEMA status of TASK_CONTRACT items B6, B7, D1, D5, AM-1, AM-5, AM-7.

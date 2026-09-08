@@ -74,7 +74,6 @@ if not agree:
 
 schema = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://lavahq.io/sensor-exercise/finding.schema.json#derived",
     "title": "Lava sensor findings.json (derived from the supplied brief)",
     "description": ("DERIVED ARTIFACT, not an original Lava file: machine-readable transcription of the output contract "
                     "embedded in task/original/Lava-Sensor-Exercise.html and .pdf (section 'The output shape' plus its "
@@ -169,6 +168,8 @@ renders `--out` as `/-out`): **agreement = {agree}**. Extraction and comparison 
 | `"reason": "<required when status is fail or unknown>"` | `if status in [fail, unknown] then required [reason]` | |
 | `"evidence": {{ /* what someone needs to act on it */ }}` | `type: object` | Free-form. |
 | "Extra fields are welcome anywhere" | `additionalProperties` left at the JSON Schema default (allowed) everywhere | No `additionalProperties: false` anywhere. |
+
+Note on `format: date-time`: under JSON Schema 2020-12 `format` is an annotation unless the validator enables format assertion. Our validation therefore (a) enables format checking in the validator used by tests and the final gate, and (b) the sensor test-suite additionally parses every `collected_at` as RFC 3339 explicitly. RFC 3339 allows fractional seconds and any numeric offset; we emit UTC `Z`.
 
 Nothing else was added: no minItems, no minimum-checks-per-category (a semantic requirement, tested separately), no string
 formats beyond date-time, no length limits.

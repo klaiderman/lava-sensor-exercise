@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lavahq.io/sensor-exercise/finding.schema.json#derived",
   "title": "Lava sensor findings.json (derived from the supplied brief)",
   "description": "DERIVED ARTIFACT, not an original Lava file: machine-readable transcription of the output contract embedded in task/original/Lava-Sensor-Exercise.html and .pdf (section 'The output shape' plus its accompanying prose). No constraints beyond the brief were added; where the brief states a rule in prose (required-when, enums, UPPER_SNAKE_CASE, extra fields welcome) it is encoded here. See task/derived/SCHEMA_PROVENANCE.md.",
   "type": "object",
