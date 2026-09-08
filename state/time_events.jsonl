@@ -12,3 +12,4 @@
 {"event":"PHASE","phase":"12-research-R1-R5","ts":"2026-09-08T22:36:43Z","budget_min":45,"note":"5 workers launched in parallel; 40-min box each"}
 {"event":"PHASE_END","phase":"12-research-R1-R5","ts":"2026-09-08T23:14:00Z","note":"all five tracks complete: R1 57 facts, R2 19, R3 66 (+39 laws, 51 fixtures), R4 60, R5 58; R3 ran ~65 min; concurrency cap forced some streams sequential"}
 {"event":"PHASE","phase":"13-synthesis-propagation","ts":"2026-09-08T23:14:00Z","budget_min":25}
+{"event":"DECISION","ts":"2026-09-08T23:46:41Z","ids":["LD-1 custom categories STORAGE_POSTURE + BOOT_CHAIN","LD-2 severity rule","LD-3 no IPMI commands","LD-4 host_id keyed hash + owner unknown","LD-5 sshd -G primary","LD-6 zero runtime deps","LD-7 bounded primitives","LD-8 implementation model opus-5"],"file":"research/DECISIONS.md"}

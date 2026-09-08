@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-08T23:13:53Z",
+ "generated_at": "2026-09-08T23:46:41Z",
  "source": "tooling/tci Tiny Custom Investigator, registry v1 (175 probes), rounds 1-2 on 2026-09-08 21:52-22:08Z; 169 probes executed; per-probe evidence in state/HOST_SNAPSHOT.evidence.json (sanitized); raw lead-only in state/raw_host/",
  "recon_window": {
   "budget_min": 15,
@@ -453,8 +453,8 @@
   },
   {
    "fact": "/dev/i2c-* permissions",
-   "status": "not probed",
-   "alternatives": "follow-up probe"
+   "status": "ANSWERED 23:08Z: crw------- root:root (0600) x3 (bmc.i2c_dev_modes)",
+   "alternatives": "n/a"
   },
   {
    "fact": "dmesg / kernel log",
@@ -511,11 +511,6 @@
   "R2: Latitude.sh as a bare-metal provider; does owner/tenant information ever exist on such hosts?"
  ],
  "follow_up_observations": [
-  "ls -la /dev/i2c-*",
-  "cat /sys/class/net/enx*/operstate + carrier",
-  "stat /sys/firmware/dmi/entries/42-0/raw (mode)",
-  "ls -la /etc/ssh/sshd_config.d/ mtime vs boot (drift)",
-  "getent group disk kmem tss (membership)",
-  "ls -la /var/lib/cloud/instance/ (readable metadata files)"
+  "ALL EXECUTED in recon round 3 (23:04-23:13Z): i2c modes, USB NIC operstate, dmi 42-0 attribute modes, sshd_config.d mtime vs boot, group membership, udev data, mountinfo, sysfs symlink shape, sshd -G, BMC read timing, securityfs modes, st_size pattern \u2014 answers in research/OBSERVATION_ANSWERS.md"
  ]
 }

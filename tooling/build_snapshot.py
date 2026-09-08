@@ -207,7 +207,7 @@ snap = {
          "alternatives": "BMC identity via sysfs only"},
         {"fact": "SMBIOS type 38/42 contents", "status": "raw root-only",
          "alternatives": "ACPI IPI0001 + platform devices prove KCS; USB gadget proves a Redfish-style host interface"},
-        {"fact": "/dev/i2c-* permissions", "status": "not probed", "alternatives": "follow-up probe"},
+        {"fact": "/dev/i2c-* permissions", "status": "ANSWERED 23:08Z: crw------- root:root (0600) x3 (bmc.i2c_dev_modes)", "alternatives": "n/a"},
         {"fact": "dmesg / kernel log", "status": "EPERM (dmesg_restrict=1)", "alternatives": "none"},
     ],
     "technologies": {
@@ -231,11 +231,7 @@ snap = {
         "R1/R5: JSON schema validation and bounded exec patterns in Go; cross-compiled static binary since the host lacks Go.",
         "R2: Latitude.sh as a bare-metal provider; does owner/tenant information ever exist on such hosts?",
     ],
-    "follow_up_observations": ["ls -la /dev/i2c-*", "cat /sys/class/net/enx*/operstate + carrier",
-                               "stat /sys/firmware/dmi/entries/42-0/raw (mode)",
-                               "ls -la /etc/ssh/sshd_config.d/ mtime vs boot (drift)",
-                               "getent group disk kmem tss (membership)",
-                               "ls -la /var/lib/cloud/instance/ (readable metadata files)"],
+    "follow_up_observations": ["ALL EXECUTED in recon round 3 (23:04-23:13Z): i2c modes, USB NIC operstate, dmi 42-0 attribute modes, sshd_config.d mtime vs boot, group membership, udev data, mountinfo, sysfs symlink shape, sshd -G, BMC read timing, securityfs modes, st_size pattern — answers in research/OBSERVATION_ANSWERS.md"],
 }
 json.dump(snap, open(OUT, "w", encoding="utf-8"), indent=1)
 print("HOST_SNAPSHOT.json written:", len(json.dumps(snap)), "bytes; evidence file:", len(json.dumps(raw)), "bytes")

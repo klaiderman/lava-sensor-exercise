@@ -8,9 +8,26 @@
 - AM1: `finding.schema.json` is referenced by the brief as supplied, but was not present locally at start. RESOLVED 2026-09-09 by user decision: the contract embedded in the PDF/HTML was cross-checked (identical) and transcribed into `task/derived/finding.schema.json` (derived artifact, provenance in SCHEMA_PROVENANCE.md, validated against the 2020-12 metaschema); it is the validation source. NOTES.md must disclose this.
 - AM2: "Owner ... as far as the machine itself can tell" — no defined source. Resolution: define candidate sources with provenance and allow explicit unknown. Host evidence: DMI asset tags are OEM placeholders, no /etc/machine-info, cloud-init metadata carries provider (Latitude.sh) + facility only -> owner will be an explicit unknown with the provider recorded as a candidate, not as the owner.
 
-## Custom-category candidates
+## Custom-category candidates → DECIDED (LD-1, 2026-09-08 23:50Z)
 - Kernel Flags (Lava's benchmark example) — strong baseline; risk: it is the expected answer.
 - Storage/infrastructure posture — interviewer hinted at storage; depends on the real host stack (pending recon).
+- DECISION: two custom categories. `STORAGE_POSTURE` = data-at-rest and decommissioning hygiene on rented hardware (no dm-crypt/LUKS anywhere; root on a single NVMe with an identical unused 960 GB drive attached; drive health UNKNOWN by proof because SMART needs CAP_SYS_ADMIN; ext4 error counters readable). Why: the storage hint, Lava's own public text on media sanitization / bare-metal hand-back (R2-F9/F80), and definite unprivileged evidence on this host; the unanticipated angle is that anything written here survives hand-back in cleartext and the sensor must refuse to look at the unused drive. `BOOT_CHAIN` = Secure Boot disabled + platform in Setup Mode + lockdown none + unsigned out-of-tree module (bnxt_en) + TPM present + world-readable initramfs: the brief's own example, kept because Setup Mode is the most severe fact on this host and would otherwise be homeless. Rejected alternatives: kernel-sysctl hardening as its own category (mostly PASS, overlaps Kernel Flags); BMC posture (largely covered by the required BMC_INBAND_ACCESS); patch velocity (apt lists empty → mostly UNKNOWN).
+
+## Other lead decisions (2026-09-08 23:50Z)
+- Severity rule confirmed: severity = declared impact for fail AND unknown; info for pass; observational checks always info (LD-2).
+- No IPMI commands ever; BMC identity via sysfs under an out-of-band deadline (LD-3) — supersedes contract AM-6.
+- host_id = keyed hash (HMAC-SHA256, fixed label) of /etc/machine-id, never raw; owner = explicit unknown + candidates (LD-4).
+- sshd -G is the primary effective-config oracle with an Include-aware parser fallback (LD-5) — a research-time correction: R3/R4 had assumed parse-only because sshd -T fails; R1 found -G works before host-key loading and the host confirmed it.
+- Zero runtime third-party dependencies; jsonschema/v6 test-only + release gate (LD-6). R1 recommended x/sys; R5 showed stdlib syscall suffices on linux/amd64 (verified locally) → x/sys rejected.
+- Implementation author model: claude-opus-5 (LD-8).
+
+## "Another day" items (updated 2026-09-08 23:50Z)
+- Latitude.sh provider policy research (BMC access policy, sudoers.d image defaults, module_blacklist provenance) — R4 stream S4 never ran (concurrency cap).
+- Micron 7450 PRO SED/Opal SKU distinction — datasheet fetch timed out; SED state stays UNKNOWN regardless.
+- XCCDF result-enumeration primary source (NIST pages 403/404) — SARIF/XCCDF status-vocabulary comparison stays LIKELY.
+- ACL xattr readability on files the caller cannot read — settle at the sensor's first real-host run.
+- `sshd -G -C` Match-conditional evaluation (untested on host).
+- A host-shaped Docker profile with the exact Ubuntu 24.04 package set; a second real machine (RHEL-family) to prove generic behaviour beyond fixtures.
 
 ## "Another day" items
 - (none yet)
