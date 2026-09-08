@@ -34,7 +34,7 @@ def html_text(path):
 
 def contract_block(text):
     """Return the text from the "The output shape" heading through the closing brace of the JSON example."""
-    i = text.index("The output shape")
+    i = text.rindex("The output shape")  # the section heading is the LAST occurrence (an earlier mention sits in the "What you get" list)
     j = text.index("Extra fields are welcome anywhere", i)
     return text[i:j]
 
@@ -50,7 +50,7 @@ pdf_block = contract_block(open(PDFTXT, encoding="utf-8").read().replace("\n====
 h_norm = norm_tokens(html_block)
 p_norm = norm_tokens(pdf_block)
 # The PDF text layer renders "--out" as "/-out" and drops some spacing; compare on a canonical form
-canon = lambda s: re.sub(r"[^A-Za-z0-9_\"{}\[\]:,|<>./]", "", s).replace("/-", "--")
+canon = lambda s: re.sub(r"[^A-Za-z0-9_\"{}\[\]:,|<>./]", "", s).replace("/-", "--").replace("\"//.\"", "\"...\"").replace("//}", "/}")
 agree = canon(h_norm) == canon(p_norm)
 print("HTML block chars:", len(html_block), "| PDF block chars:", len(pdf_block), "| canonical agreement:", agree)
 if not agree:

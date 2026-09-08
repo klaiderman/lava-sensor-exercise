@@ -18,6 +18,11 @@ sensor/dist/
 submission/*.tar.gz
 submission/*.tgz
 
+# research-worker scratch (Crawlee request queues/kv stores, repro build outputs)
+research/*/storage/
+research/*/repro/*.exe
+research/*/repro/*_bin
+
 # workbench never lives here
 .lava-workbench/
 node_modules/

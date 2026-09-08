@@ -5,7 +5,7 @@ A read-only, bounded, unprivileged Linux posture sensor in Go (`sensor scan --ou
 
 ## Authoritative inputs (immutable)
 - `task/original/Lava-Sensor-Exercise.html` (primary brief), `task/original/Lava-Sensor-Exercise.pdf` (same content)
-- `task/original/finding.schema.json` — the ONLY schema source of truth. NOT present yet (asked for). Never reconstruct it from the brief's example; never maintain a second hand-written schema.
+- Schema: no separate `finding.schema.json` was supplied. By user decision (2026-09-09) the contract embedded in the brief was transcribed into `task/derived/finding.schema.json` (DERIVED artifact, draft 2020-12; provenance in `task/derived/SCHEMA_PROVENANCE.md`). That file is the single validation source for tests and the final output; never fork a second hand-written schema; regenerate it only via `python tooling/extract_schema.py`.
 
 ## Where things live
 - Task understanding: `task/derived/TASK_OVERVIEW.md`, `task/derived/TASK_CONTRACT.md` (requirement IDs A1…F5, ambiguities AM-1…AM-8), `task/derived/task_contract.json`, `task/derived/TASK_INDEX.md`

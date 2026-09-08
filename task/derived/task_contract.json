@@ -2,7 +2,7 @@
   "source_files": [
     "task/original/Lava-Sensor-Exercise.html",
     "task/original/Lava-Sensor-Exercise.pdf",
-    "task/original/finding.schema.json (NOT SUPPLIED at start)"
+    "task/derived/finding.schema.json (DERIVED from the brief on 2026-09-09; no separate original was supplied)"
   ],
   "generated_from": "task/derived/TASK_CONTRACT.md",
   "requirements": [
@@ -21,7 +21,7 @@
       "section": "A. Deliverable and interface",
       "tag": "EXPLICIT",
       "text": "Deliver the source plus \"the one command that runs it. If we cannot run it, we cannot give you credit for it.\"",
-      "source": "What to send us §01",
+      "source": "What to send us \u00a701",
       "acceptance": "One documented command works from a clean unpack (clean-room gate). Build step, if any, is part of documented workflow.",
       "status": "open",
       "pending_schema": false
@@ -31,7 +31,7 @@
       "section": "A. Deliverable and interface",
       "tag": "EXPLICIT",
       "text": "`findings.json` \"from a real run against the server we gave you, not a hand-written example\".",
-      "source": "§02",
+      "source": "\u00a702",
       "acceptance": "Final findings.json produced by the exact submitted artifact on the Lava host; hash + timestamp recorded.",
       "status": "open",
       "pending_schema": false
@@ -41,8 +41,8 @@
       "section": "A. Deliverable and interface",
       "tag": "EXPLICIT",
       "text": "`NOTES.md`, one page at most: what we assumed; what was ambiguous and how we settled it; the category we added and why; what we'd do with another day; one thing Claude got wrong that we rejected, with the reason.",
-      "source": "§03 + \"at least one category of your own\"",
-      "acceptance": "All five items present; ≤ 1 page (we cap at ~60 lines / ~600 words).",
+      "source": "\u00a703 + \"at least one category of your own\"",
+      "acceptance": "All five items present; \u2264 1 page (we cap at ~60 lines / ~600 words).",
       "status": "open",
       "pending_schema": false
     },
@@ -51,7 +51,7 @@
       "section": "A. Deliverable and interface",
       "tag": "EXPLICIT",
       "text": "Our Claude session, \"the transcript, as exported\"; \"a messy real one is far better received than a tidied one\".",
-      "source": "§04",
+      "source": "\u00a704",
       "acceptance": "Native export included unchanged. Any HTML viewer is additional, never a replacement.",
       "status": "open",
       "pending_schema": false
@@ -72,7 +72,7 @@
       "tag": "EXPLICIT",
       "text": "Any language; Go preferred; language does not affect score.",
       "source": "Chips + \"What we are not testing\"",
-      "acceptance": "—",
+      "acceptance": "\u2014",
       "status": "open",
       "pending_schema": false
     },
@@ -82,7 +82,7 @@
       "tag": "ASSUMPTION",
       "text": "We implement in Go (stdlib-first).",
       "source": "ours",
-      "acceptance": "—",
+      "acceptance": "\u2014",
       "status": "open",
       "pending_schema": false
     },
@@ -91,7 +91,7 @@
       "section": "A. Deliverable and interface",
       "tag": "EXPLICIT",
       "text": "\"Use Claude, and send us the session.\"",
-      "source": "Rules → Required",
+      "source": "Rules \u2192 Required",
       "acceptance": "Session export in tarball.",
       "status": "open",
       "pending_schema": false
@@ -108,7 +108,7 @@
     },
     {
       "id": "B1",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "EXPLICIT",
       "text": "**Identity**: a host identifier \"that stays the same across runs\", and the hostname.",
       "source": null,
@@ -118,9 +118,9 @@
     },
     {
       "id": "B1a",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "INTERPRETATION",
-      "text": "Stable = identical across runs and reboots on the same machine, independent of time, network state and our own process; derived from machine-resident identity with explicit provenance (`host_id_source`). Candidate chain (to be fixed by R3/R5 research): DMI product UUID (root-only on most kernels) → `/etc/machine-id` → hashed stable hardware identifiers (board serial / primary disk WWN / primary NIC MAC) → explicit unknown. Never a random or time-based value.",
+      "text": "Stable = identical across runs and reboots on the same machine, independent of time, network state and our own process; derived from machine-resident identity with explicit provenance (`host_id_source`). Candidate chain (to be fixed by R3/R5 research): DMI product UUID (root-only on most kernels) \u2192 `/etc/machine-id` \u2192 hashed stable hardware identifiers (board serial / primary disk WWN / primary NIC MAC) \u2192 explicit unknown. Never a random or time-based value.",
       "source": null,
       "acceptance": "Provenance field present; test: run twice, compare.",
       "status": "open",
@@ -128,7 +128,7 @@
     },
     {
       "id": "B2",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "EXPLICIT",
       "text": "**Owner**: \"Who this machine belongs to, as far as the machine itself can tell.\" Schema example: `\"owner\": \"<or an explicit unknown>\"`.",
       "source": null,
@@ -138,8 +138,8 @@
     },
     {
       "id": "B2a",
-      "section": "B. Part one — describe the machine",
-      "tag": "AMBIGUITY→INTERPRETATION",
+      "section": "B. Part one \u2014 describe the machine",
+      "tag": "AMBIGUITY\u2192INTERPRETATION",
       "text": "No canonical Linux \"owner\" exists. We define owner evidence sources resident on the machine, in precedence order (to be validated by research): DMI chassis/board asset tags and product SKU/family; `/etc/machine-info` (DEPLOYMENT/LOCATION); provisioning/cloud-init metadata visible to us (`/run/cloud-init/instance-data.json`, `/var/lib/cloud/...`); login banners (`/etc/motd`, `/etc/issue`); hostname domain / naming scheme; organization fields in host TLS certs. Report `owner` as the best-supported value with `owner_source`; otherwise the explicit unknown marker plus `owner_candidates` for weaker hints.",
       "source": null,
       "acceptance": "Unknown is a legal, expected answer.",
@@ -148,7 +148,7 @@
     },
     {
       "id": "B3",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "EXPLICIT",
       "text": "**Hardware**: vendor and model; CPU model and core count; memory.",
       "source": null,
@@ -158,7 +158,7 @@
     },
     {
       "id": "B3a",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "INTERPRETATION",
       "text": "Vendor/model from `/sys/class/dmi/id/{sys_vendor,product_name}` (world-readable), with `board_*` as fallback; `dmidecode` is root-only and not relied upon.",
       "source": null,
@@ -168,7 +168,7 @@
     },
     {
       "id": "B3b",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "AMBIGUITY",
       "text": "\"core count\": physical cores vs logical CPUs. Example shows `\"cores\": 0` only. **Settled (provisional):** `cpu.cores` = physical cores when derivable from `/proc/cpuinfo` (`physical id`/`core id`) or `/sys/devices/system/cpu/*/topology`; else online logical CPUs with `cores_basis` stating which. Extra fields: `logical_cpus`, `sockets`, `threads_per_core`.",
       "source": null,
@@ -178,17 +178,17 @@
     },
     {
       "id": "B3c",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "INTERPRETATION",
-      "text": "`memory_bytes` = kernel-visible `MemTotal` from `/proc/meminfo` in bytes, with `memory_source: \"/proc/meminfo:MemTotal\"`. DMI-installed capacity needs root → reported as unknown/extra only if readable.",
+      "text": "`memory_bytes` = kernel-visible `MemTotal` from `/proc/meminfo` in bytes, with `memory_source: \"/proc/meminfo:MemTotal\"`. DMI-installed capacity needs root \u2192 reported as unknown/extra only if readable.",
       "source": null,
-      "acceptance": "—",
+      "acceptance": "\u2014",
       "status": "open",
       "pending_schema": false
     },
     {
       "id": "B4",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "EXPLICIT",
       "text": "**Operating system**: distribution, version, kernel release.",
       "source": null,
@@ -198,7 +198,7 @@
     },
     {
       "id": "B5",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "EXPLICIT",
       "text": "**Storage**: \"The block devices attached, their models and sizes.\"",
       "source": null,
@@ -208,47 +208,49 @@
     },
     {
       "id": "B5a",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "INTERPRETATION",
-      "text": "\"Block devices attached\" = whole physical/virtual disks (`/sys/block/*` excluding loop/ram/zram/dm/md unless nothing else exists), `size_bytes` = `/sys/block/<d>/size × logical block size 512`, `model` from `/sys/block/<d>/device/model` or NVMe `/sys/class/nvme/*/model`; extra fields welcome: `transport`, `rotational`, `serial` (if readable), `wwn`, partitions, dm/md/LVM/multipath layering, filesystems/mounts. Storage stack depth is a project priority (interviewer context), not a brief requirement.",
+      "text": "\"Block devices attached\" = whole physical/virtual disks (`/sys/block/*` excluding loop/ram/zram/dm/md unless nothing else exists), `size_bytes` = `/sys/block/<d>/size \u00d7 logical block size 512`, `model` from `/sys/block/<d>/device/model` or NVMe `/sys/class/nvme/*/model`; extra fields welcome: `transport`, `rotational`, `serial` (if readable), `wwn`, partitions, dm/md/LVM/multipath layering, filesystems/mounts. Storage stack depth is a project priority (interviewer context), not a brief requirement.",
       "source": null,
-      "acceptance": "Unreadable model → explicit unknown for that device, device still listed.",
+      "acceptance": "Unreadable model \u2192 explicit unknown for that device, device still listed.",
       "status": "open",
       "pending_schema": false
     },
     {
       "id": "B6",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "EXPLICIT",
       "text": "Unknown must be explicit: no empty strings, no plausible guesses.",
       "source": null,
       "acceptance": "No `\"\"` anywhere in `machine`; unknown marker + reason. Exact marker representation depends on the real schema (PENDING-SCHEMA, see AM-1).",
       "status": "open",
-      "pending_schema": true
+      "pending_schema": false,
+      "schema_resolution": "settled 2026-09-09 against task/derived/finding.schema.json (derived from the brief; see SCHEMA_PROVENANCE.md)"
     },
     {
       "id": "B7",
-      "section": "B. Part one — describe the machine",
+      "section": "B. Part one \u2014 describe the machine",
       "tag": "EXPLICIT",
       "text": "\"Add whatever else you think belongs.\" Extra fields welcome anywhere.",
       "source": null,
       "acceptance": "Additional machine fields allowed if the schema permits additionalProperties (PENDING-SCHEMA).",
       "status": "open",
-      "pending_schema": true
+      "pending_schema": false,
+      "schema_resolution": "settled 2026-09-09 against task/derived/finding.schema.json (derived from the brief; see SCHEMA_PROVENANCE.md)"
     },
     {
       "id": "C1",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
       "text": "Organize checks within categories; each category \"should contain at least two relevant checks (or as many as needed), with each check yielding its own distinct result\". \"A category with four checks produces four findings, each with its own status and severity.\"",
       "source": null,
-      "acceptance": "Every category ≥ 2 findings; one finding per check per run.",
+      "acceptance": "Every category \u2265 2 findings; one finding per check per run.",
       "status": "open",
       "pending_schema": false
     },
     {
       "id": "C2",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
       "text": "Required categories (UPPER_SNAKE_CASE): `REMOTE_ACCESS`, `SECRETS_ON_DISK`, `BMC_INBAND_ACCESS`.",
       "source": null,
@@ -258,17 +260,17 @@
     },
     {
       "id": "C3",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
-      "text": "At least one category of our own, for \"a server sitting in someone's data center\"; one line in NOTES.md on why; more than one welcome. Kernel Flags is their benchmark (\"hardware security features active, unsigned code permitted, boot chain verified — each its own check\"). \"What impresses us most is discovering a category we did not anticipate, supported by clear engineering intent.\"",
+      "text": "At least one category of our own, for \"a server sitting in someone's data center\"; one line in NOTES.md on why; more than one welcome. Kernel Flags is their benchmark (\"hardware security features active, unsigned code permitted, boot chain verified \u2014 each its own check\"). \"What impresses us most is discovering a category we did not anticipate, supported by clear engineering intent.\"",
       "source": null,
-      "acceptance": "≥ 1 custom category with ≥ 2 checks; NOTES line.",
+      "acceptance": "\u2265 1 custom category with \u2265 2 checks; NOTES line.",
       "status": "open",
       "pending_schema": false
     },
     {
       "id": "C4",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
       "text": "`REMOTE_ACCESS` answers: how this machine can be logged into from elsewhere and what that permits; who may connect, by what means of authentication, and as whom; \"what is actually in force on the running system, which is not always what any single configuration file says\".",
       "source": null,
@@ -278,9 +280,9 @@
     },
     {
       "id": "C4a",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "INTERPRETATION",
-      "text": "\"Actually in force\" without root: `sshd -T` is root-only → we derive effective config by parsing the running daemon's config path (from process args/systemd unit), applying Include/drop-in/first-match-wins semantics and OpenSSH defaults for the detected version, and cross-checking runtime evidence (listening sockets, process presence, PAM, our own session's auth method). Where derivation is not possible we say unknown, not \"default\".",
+      "text": "\"Actually in force\" without root: `sshd -T` is root-only \u2192 we derive effective config by parsing the running daemon's config path (from process args/systemd unit), applying Include/drop-in/first-match-wins semantics and OpenSSH defaults for the detected version, and cross-checking runtime evidence (listening sockets, process presence, PAM, our own session's auth method). Where derivation is not possible we say unknown, not \"default\".",
       "source": null,
       "acceptance": "Evidence names the files read, directives found, and defaults applied.",
       "status": "open",
@@ -288,9 +290,9 @@
     },
     {
       "id": "C5",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
-      "text": "`SECRETS_ON_DISK` answers: what credential material is sitting on the machine and who can read it — \"keys, tokens, passwords, certificates, provisioning data, anything someone could pick up and reuse somewhere else. Both what is there and how well it is protected.\"",
+      "text": "`SECRETS_ON_DISK` answers: what credential material is sitting on the machine and who can read it \u2014 \"keys, tokens, passwords, certificates, provisioning data, anything someone could pick up and reuse somewhere else. Both what is there and how well it is protected.\"",
       "source": null,
       "acceptance": "Checks cover presence + protection (mode/owner/group/world-readability) of key material, credentials files, provisioning data, and our own user's exposure.",
       "status": "open",
@@ -298,9 +300,9 @@
     },
     {
       "id": "C5a",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "INTERPRETATION + SAFETY",
-      "text": "Evidence contains metadata only (path, type detected from headers/names, mode, owner, size, mtime) — never secret content, never partial key bytes. Unreadable directories are reported as observation boundaries (EACCES), not as \"no secrets\".",
+      "text": "Evidence contains metadata only (path, type detected from headers/names, mode, owner, size, mtime) \u2014 never secret content, never partial key bytes. Unreadable directories are reported as observation boundaries (EACCES), not as \"no secrets\".",
       "source": null,
       "acceptance": "Secret scan of findings.json passes.",
       "status": "open",
@@ -308,7 +310,7 @@
     },
     {
       "id": "C6",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
       "text": "`BMC_INBAND_ACCESS` answers: whether this machine can talk to its own BMC from inside the OS, through which interface (KCS / `ipmi_si`, `ipmi_devintf`, device node, `ipmitool`), and who is permitted to do it. \"That path is not always present and not always permitted.\"",
       "source": null,
@@ -318,17 +320,17 @@
     },
     {
       "id": "C6a",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "INTERPRETATION",
       "text": "\"Who is permitted\" = device-node mode/owner/group + POSIX ACLs + udev rules + group membership of login users + presence of privilege paths (sudo group). Running `ipmitool mc info` is a read-only BMC query and acceptable only with a hard timeout and only when the device is openable by us; failure/EACCES/timeout is evidence, never \"absent\".",
       "source": null,
-      "acceptance": "—",
+      "acceptance": "\u2014",
       "status": "open",
       "pending_schema": false
     },
     {
       "id": "C7",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
       "text": "Severity `info` \"is a real answer, not a cop out. Plenty of things are worth reporting because an operator should know them, not because they are broken.\"",
       "source": null,
@@ -338,7 +340,7 @@
     },
     {
       "id": "C8",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
       "text": "\"Working out what that means on this particular machine, and how to establish it rather than assume it, is the exercise.\"",
       "source": null,
@@ -348,11 +350,11 @@
     },
     {
       "id": "C9",
-      "section": "C. Part two — posture checks and categories",
+      "section": "C. Part two \u2014 posture checks and categories",
       "tag": "EXPLICIT",
       "text": "Volume is not tested: \"A handful of checks done thoughtfully beats twenty done thinly.\"",
       "source": null,
-      "acceptance": "Prefer depth: ~3–6 checks per category.",
+      "acceptance": "Prefer depth: ~3\u20136 checks per category.",
       "status": "open",
       "pending_schema": false
     },
@@ -360,11 +362,12 @@
       "id": "D1",
       "section": "D. Finding and document semantics",
       "tag": "EXPLICIT",
-      "text": "Finding fields: `category` (UPPER_SNAKE_CASE), `check_id` (unique per check), `status` ∈ {pass, fail, unknown}, `severity` ∈ {critical, high, medium, low, info}, `title` (one readable line), `reason` (required when status is fail or unknown), `evidence` (object: \"what someone needs to act on it\"), `collected_at` (RFC 3339).",
+      "text": "Finding fields: `category` (UPPER_SNAKE_CASE), `check_id` (unique per check), `status` \u2208 {pass, fail, unknown}, `severity` \u2208 {critical, high, medium, low, info}, `title` (one readable line), `reason` (required when status is fail or unknown), `evidence` (object: \"what someone needs to act on it\"), `collected_at` (RFC 3339).",
       "source": null,
       "acceptance": "Schema validation (PENDING-SCHEMA) + our own tests.",
       "status": "open",
-      "pending_schema": true
+      "pending_schema": false,
+      "schema_resolution": "settled 2026-09-09 against task/derived/finding.schema.json (derived from the brief; see SCHEMA_PROVENANCE.md)"
     },
     {
       "id": "D1a",
@@ -380,7 +383,7 @@
       "id": "D2",
       "section": "D. Finding and document semantics",
       "tag": "EXPLICIT",
-      "text": "Evidence must be real: \"the path you read, the value you found, the command you ran, the errno you got back\" — \"rather than a restatement of the title\". \"A good evidence block means the reader does not have to run your tool again to believe you.\"",
+      "text": "Evidence must be real: \"the path you read, the value you found, the command you ran, the errno you got back\" \u2014 \"rather than a restatement of the title\". \"A good evidence block means the reader does not have to run your tool again to believe you.\"",
       "source": null,
       "acceptance": "Evidence objects carry sources (paths/commands), observed values, and errors (errno/exit codes/timeouts) as applicable.",
       "status": "open",
@@ -392,7 +395,7 @@
       "tag": "EXPLICIT",
       "text": "\"When a check is unexecutable or out of reach, state that explicitly. A report that silently omits unreached checks ... destroys trust. Returning no issues is a valid outcome; claiming to have checked when you could not is a critical failure.\"",
       "source": null,
-      "acceptance": "Every registered check emits exactly one finding per run; `unknown` carries `reason` + evidence of why (errno, missing utility, timeout, budget). Test: injected EACCES/timeout/missing-tool ⇒ unknown, never pass/fail, never omitted.",
+      "acceptance": "Every registered check emits exactly one finding per run; `unknown` carries `reason` + evidence of why (errno, missing utility, timeout, budget). Test: injected EACCES/timeout/missing-tool \u21d2 unknown, never pass/fail, never omitted.",
       "status": "open",
       "pending_schema": false
     },
@@ -430,9 +433,9 @@
       "id": "D7",
       "section": "D. Finding and document semantics",
       "tag": "INTERPRETATION",
-      "text": "`collected_at` per finding = time the check completed, UTC RFC 3339 with fractional seconds allowed; document `collected_at` = scan start or end (schema may not care) — choose scan end.",
+      "text": "`collected_at` per finding = time the check completed, UTC RFC 3339 with fractional seconds allowed; document `collected_at` = scan start or end (schema may not care) \u2014 choose scan end.",
       "source": null,
-      "acceptance": "—",
+      "acceptance": "\u2014",
       "status": "open",
       "pending_schema": false
     },
@@ -448,7 +451,7 @@
     },
     {
       "id": "E1",
-      "section": "E. Rules — required safety properties",
+      "section": "E. Rules \u2014 required safety properties",
       "tag": "EXPLICIT",
       "text": "**Read only.** \"The sensor observes the machine, it never changes it.\"",
       "source": null,
@@ -458,9 +461,9 @@
     },
     {
       "id": "E1a",
-      "section": "E. Rules — required safety properties",
+      "section": "E. Rules \u2014 required safety properties",
       "tag": "ASSUMPTION",
-      "text": "No outbound network calls at all (no DNS, no metadata endpoints) — keeps \"read only\" and \"bounded\" trivially true and avoids leaking that a scan happened.",
+      "text": "No outbound network calls at all (no DNS, no metadata endpoints) \u2014 keeps \"read only\" and \"bounded\" trivially true and avoids leaking that a scan happened.",
       "source": null,
       "acceptance": "Code review + test.",
       "status": "open",
@@ -468,7 +471,7 @@
     },
     {
       "id": "E2",
-      "section": "E. Rules — required safety properties",
+      "section": "E. Rules \u2014 required safety properties",
       "tag": "EXPLICIT",
       "text": "**Bounded.** \"Every subprocess gets a timeout, output stays a sane size, and nothing hangs forever on a device that does not answer.\"",
       "source": null,
@@ -478,27 +481,27 @@
     },
     {
       "id": "E3",
-      "section": "E. Rules — required safety properties",
+      "section": "E. Rules \u2014 required safety properties",
       "tag": "EXPLICIT",
       "text": "**Does not crash.** \"One check hitting something unexpected should not take the other checks down with it.\"",
       "source": null,
-      "acceptance": "Per-check panic recovery → `unknown` with reason; malformed/huge/missing inputs tested.",
+      "acceptance": "Per-check panic recovery \u2192 `unknown` with reason; malformed/huge/missing inputs tested.",
       "status": "open",
       "pending_schema": false
     },
     {
       "id": "E4",
-      "section": "E. Rules — required safety properties",
+      "section": "E. Rules \u2014 required safety properties",
       "tag": "EXPLICIT",
       "text": "**Unprivileged.** \"It runs as the user we give you, with no escalation.\"",
       "source": null,
-      "acceptance": "No sudo/su/setuid/capabilities; never invokes `sudo`. Host fact: our user is in group `sudo` — irrelevant, unused, reported as evidence. Must also remain safe if someone runs it as root.",
+      "acceptance": "No sudo/su/setuid/capabilities; never invokes `sudo`. Host fact: our user is in group `sudo` \u2014 irrelevant, unused, reported as evidence. Must also remain safe if someone runs it as root.",
       "status": "open",
       "pending_schema": false
     },
     {
       "id": "E5",
-      "section": "E. Rules — required safety properties",
+      "section": "E. Rules \u2014 required safety properties",
       "tag": "EXPLICIT",
       "text": "Out of scope, ungraded, \"the most common way a four hour exercise becomes a ten hour one\": daemon/scheduler, database, UI, API server, packaging, CI.",
       "source": null,
@@ -508,11 +511,11 @@
     },
     {
       "id": "E6",
-      "section": "E. Rules — required safety properties",
+      "section": "E. Rules \u2014 required safety properties",
       "tag": "EXPLICIT",
       "text": "\"Safe on someone's machine. This kind of tool runs on hardware other people depend on.\"",
       "source": null,
-      "acceptance": "Same as E1–E4; also: no heavy I/O (bounded `find` depth/time, no full-disk hashing), no SMART/self-tests, no BMC commands beyond read-only identification.",
+      "acceptance": "Same as E1\u2013E4; also: no heavy I/O (bounded `find` depth/time, no full-disk hashing), no SMART/self-tests, no BMC commands beyond read-only identification.",
       "status": "open",
       "pending_schema": false
     },
@@ -532,7 +535,7 @@
       "tag": "EXPLICIT",
       "text": "How we work with Claude: \"what you specified before generating, what you rejected, and what you verified before believing.\"",
       "source": null,
-      "acceptance": "Wixie-engineered prompts, approval gates, author≠reviewer, NOTES \"one thing Claude got wrong\".",
+      "acceptance": "Wixie-engineered prompts, approval gates, author\u2260reviewer, NOTES \"one thing Claude got wrong\".",
       "status": "open",
       "pending_schema": false
     },
@@ -560,7 +563,7 @@
       "id": "F5",
       "section": "F. Evaluation signals and process",
       "tag": "EXPLICIT",
-      "text": "Follow-up conversation topics (outbound-only sensors, customer identity on first hello, volume/deltas, cross-customer isolation) — \"nothing to prepare and nothing extra to submit\".",
+      "text": "Follow-up conversation topics (outbound-only sensors, customer identity on first hello, volume/deltas, cross-customer isolation) \u2014 \"nothing to prepare and nothing extra to submit\".",
       "source": null,
       "acceptance": "Discussion material only; NOT implementation scope.",
       "status": "open",
@@ -571,8 +574,8 @@
     {
       "id": "AM-1",
       "text": "`finding.schema.json` is described as supplied (\"This brief, plus finding.schema.json, which your output has to validate against\") but is not on this machine.",
-      "settlement": "OPEN — blocking for validation only. Ask the user/Lava for the real file. We will NOT reconstruct it from the brief's example; until it arrives, the example shape is the interim contract and all schema-dependent items are marked PENDING-SCHEMA.",
-      "state": "OPEN"
+      "settlement": "User decision 2026-09-09: no separate schema file was supplied; the contract embedded in the PDF/HTML was cross-checked and transcribed into task/derived/finding.schema.json (derived artifact, provenance in SCHEMA_PROVENANCE.md); it is the validation source from now on.",
+      "state": "SETTLED"
     },
     {
       "id": "AM-2",
@@ -594,9 +597,9 @@
     },
     {
       "id": "AM-5",
-      "text": "Representation of \"explicit unknown\" for typed fields (`memory_bytes: 0`? `cores: 0`? `size_bytes`?) — depends on schema types.",
-      "settlement": "PENDING-SCHEMA. Preference: never emit a fake 0 without an adjacent `*_status: \"unknown\"` + reason; if the schema forces a number, use 0 only with the explicit unknown marker beside it.",
-      "state": "PENDING_SCHEMA"
+      "text": "Representation of \"explicit unknown\" for typed fields (`memory_bytes: 0`? `cores: 0`? `size_bytes`?) \u2014 depends on schema types.",
+      "settlement": "PENDING-SCHEMA. Preference: never emit a fake 0 without an adjacent `*_status: \"unknown\"` + reason; if the schema forces a number, use 0 only with the explicit unknown marker beside it. [2026-09-09: derived schema keeps integers for cores/memory_bytes/size_bytes and leaves additionalProperties open, so unknown numerics are reported as 0 plus an adjacent explicit unknown marker with reason; extra fields are allowed anywhere.]",
+      "state": "SETTLED_PROVISIONAL"
     },
     {
       "id": "AM-6",
@@ -607,8 +610,8 @@
     {
       "id": "AM-7",
       "text": "\"Extra fields welcome anywhere\" vs schema strictness.",
-      "settlement": "PENDING-SCHEMA. If `additionalProperties: false` anywhere, extras move under `evidence`.",
-      "state": "PENDING_SCHEMA"
+      "settlement": "PENDING-SCHEMA. If `additionalProperties: false` anywhere, extras move under `evidence`. [2026-09-09: derived schema keeps integers for cores/memory_bytes/size_bytes and leaves additionalProperties open, so unknown numerics are reported as 0 plus an adjacent explicit unknown marker with reason; extra fields are allowed anywhere.]",
+      "state": "SETTLED_PROVISIONAL"
     },
     {
       "id": "AM-8",
@@ -620,80 +623,154 @@
   "coverage_checklist": [
     {
       "item": "required machine-description fields",
-      "covered_by": ["B1", "B2", "B3", "B4", "B5", "B6", "B7"]
+      "covered_by": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7"
+      ]
     },
     {
       "item": "stable host identity requirements",
-      "covered_by": ["B1", "B1a"]
+      "covered_by": [
+        "B1",
+        "B1a"
+      ]
     },
     {
       "item": "owner semantics incl. explicit unknown",
-      "covered_by": ["B2", "B2a", "AM-2"]
+      "covered_by": [
+        "B2",
+        "B2a",
+        "AM-2"
+      ]
     },
     {
       "item": "hardware/OS/CPU/memory/storage requirements",
-      "covered_by": ["B3", "B3a", "B3b", "B3c", "B4", "B5", "B5a"]
+      "covered_by": [
+        "B3",
+        "B3a",
+        "B3b",
+        "B3c",
+        "B4",
+        "B5",
+        "B5a"
+      ]
     },
     {
       "item": "REMOTE_ACCESS",
-      "covered_by": ["C4", "C4a"]
+      "covered_by": [
+        "C4",
+        "C4a"
+      ]
     },
     {
       "item": "SECRETS_ON_DISK",
-      "covered_by": ["C5", "C5a"]
+      "covered_by": [
+        "C5",
+        "C5a"
+      ]
     },
     {
       "item": "BMC_INBAND_ACCESS",
-      "covered_by": ["C6", "C6a", "AM-6"]
+      "covered_by": [
+        "C6",
+        "C6a",
+        "AM-6"
+      ]
     },
     {
       "item": "at least one custom category",
-      "covered_by": ["C3"]
+      "covered_by": [
+        "C3"
+      ]
     },
     {
       "item": "minimum relevant checks per category",
-      "covered_by": ["C1", "C9"]
+      "covered_by": [
+        "C1",
+        "C9"
+      ]
     },
     {
       "item": "status/severity/reason/evidence semantics",
-      "covered_by": ["D1", "D2", "D6", "D7", "C7"]
+      "covered_by": [
+        "D1",
+        "D2",
+        "D6",
+        "D7",
+        "C7"
+      ]
     },
     {
       "item": "no silent omission of unexecutable checks",
-      "covered_by": ["D3"]
+      "covered_by": [
+        "D3"
+      ]
     },
     {
       "item": "actual findings.json schema requirements",
-      "covered_by": ["D4", "D5", "AM-1", "AM-5", "AM-7"]
+      "covered_by": [
+        "D4",
+        "D5",
+        "AM-1",
+        "AM-5",
+        "AM-7"
+      ]
     },
     {
       "item": "required source + one-command execution",
-      "covered_by": ["A1", "A2"]
+      "covered_by": [
+        "A1",
+        "A2"
+      ]
     },
     {
       "item": "real-host findings.json",
-      "covered_by": ["A3"]
+      "covered_by": [
+        "A3"
+      ]
     },
     {
       "item": "NOTES requirements",
-      "covered_by": ["A4", "C3"]
+      "covered_by": [
+        "A4",
+        "C3"
+      ]
     },
     {
       "item": "native Claude session/export requirement",
-      "covered_by": ["A5", "A8"]
+      "covered_by": [
+        "A5",
+        "A8"
+      ]
     },
     {
       "item": "safety invariants (read-only, bounded, no crash, unprivileged)",
-      "covered_by": ["E1", "E1a", "E2", "E3", "E4", "E5", "E6"]
+      "covered_by": [
+        "E1",
+        "E1a",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6"
+      ]
     },
     {
       "item": "out-of-scope guard",
-      "covered_by": ["E5", "F5"]
+      "covered_by": [
+        "E5",
+        "F5"
+      ]
     }
   ],
   "cross_check": [
     "PDF vs HTML: identical content (8 pages; produced by HeadlessChrome from the HTML). Only rendering differences (`--out` extracted as `/-out` by the PDF text layer).",
-    "HTML vs schema: schema file absent → cannot cross-check yet. The HTML's JSON example is illustrative (comments, `|` alternations) and is not a schema.",
+    "HTML vs schema: schema file absent \u2192 cannot cross-check yet. The HTML's JSON example is illustrative (comments, `|` alternations) and is not a schema.",
     "Kickoff prompt vs brief: kickoff items that the brief does NOT require (storage-category emphasis, Tiny Custom Investigator, Fixed Registry, tool stack, HTML transcript viewer) are project process choices, tagged as such, not Lava requirements."
   ]
 }
