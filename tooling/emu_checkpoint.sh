@@ -26,7 +26,7 @@ fi
 HOOK="$PLUGIN/hooks/pre-compact/save-checkpoint.sh"
 if [ -x "$HOOK" ] || [ -f "$HOOK" ]; then
   printf '{"session_id":"%s","transcript_path":"%s","cwd":"%s","hook_event_name":"PreCompact","trigger":"manual"}' \
-    "$SESSION" "$(cygpath -w "$TRANSCRIPT" 2>/dev/null || printf '%s' "$TRANSCRIPT")" "$(cygpath -w "$ROOT" 2>/dev/null || printf '%s' "$ROOT")" \
+    "$SESSION" "$TRANSCRIPT" "$ROOT" \
     | CLAUDE_PLUGIN_ROOT="$PLUGIN" bash "$HOOK" >"$MIRROR/hook_stdout.txt" 2>"$MIRROR/hook_stderr.txt"
   echo "hook rc=$? (spec: always 0); stdout $(wc -c < "$MIRROR/hook_stdout.txt") bytes, stderr $(wc -c < "$MIRROR/hook_stderr.txt") bytes"
 else

@@ -36,12 +36,18 @@ Access control on the devices (`storage.dev_ls`, `users.priv_groups`):
 `/dev/nvme0n1`, `p1`, `p2`, `/dev/nvme1n1` are `brw-rw---- root:disk`; **group `disk` has no members**.
 Therefore no non-root account on this host has any path to the block devices or the NVMe admin passthrough (R4-F04, R4-F13).
 
+**Correction carried in from stream S1 (R4-F54):** the admin passthrough is *not* gated by group `disk`.
+The character device `/dev/nvme0` is 0600 **root:root** by default udev rules — only the block devices
+`/dev/nvme0n1*` are `root:disk` — and `nvme_cmd_allowed()` in v6.8 requires **CAP_SYS_ADMIN** for the
+Get Log Page opcode that `smart-log` uses. Joining group `disk` would not grant SMART access. Any
+remediation text the sensor emits must say CAP_SYS_ADMIN, not group membership.
+
 ## 2. Unprivileged-confidence table
 
 | # | Posture question | Answerable now? | Evidence / why not | Probe ids |
 |---|---|---|---|---|
 | Q1 | Encryption at rest via dm-crypt/LUKS | **YES — provably absent** | `/dev/mapper` has only `control`; `/dev/dm-*` ENOENT; `/etc/lvm/*` ENOENT; every partition's FSTYPE is vfat/ext4, never `crypto_LUKS` | `storage.dev_mapper_ls`, `storage.dev_ls`, `storage.lvm_conf_ls`, `storage.lsblk_fs` |
-| Q2 | Encryption at rest via SED / TCG Opal | **UNKNOWN BY CONSTRUCTION** | Opal locking state lives behind Identify-Controller / Security-Receive on the char device; `/dev/nvme0` is root-only and `nvme id-ctrl` returned `Permission denied` | `storage.nvme_smart_try`, `storage.dev_ls` |
+| Q2 | Encryption at rest via SED / TCG Opal | **UNKNOWN BY CONSTRUCTION** | `block/sed-opal.c` gates every `IOC_OPAL_*` behind CAP_SYS_ADMIN and exposes **nothing** in sysfs (R4-F57); `nvme id-ctrl` returned `Permission denied`. And the model string cannot substitute: the Micron base part number is shared between the non-SED and Opal-2.0 SKUs (R4-F58) | `storage.nvme_smart_try`, `storage.dev_ls`, `storage.nvme_class` |
 | Q3 | Filesystem-level encryption (fscrypt) on ext4 | **UNKNOWN (unobserved)** | No probe read `/sys/fs/ext4/nvme0n1p2/feature*`; the directory itself is readable, so this is a gap, not a boundary → R4-OR6 | `storage.ext4_sysfs` |
 | Q4 | RAID / mirroring present | **YES — provably absent** | `/proc/mdstat` → `unused devices: <none>`; `/dev/md*` ENOENT; no dm target; no PCI class 0104 RAID controller | `storage.mdstat`, `storage.dev_ls`, `storage.lspci_storage` |
 | Q5 | RAID health / degraded state | **N/A here; UNKNOWN elsewhere without md** | With no array, there is nothing to degrade. On a host with md, `/sys/block/md*/md/degraded` is world-readable; hardware-RAID health needs a vendor CLI and is usually root-only | `storage.mdstat` |
@@ -50,7 +56,7 @@ Therefore no non-root account on this host has any path to the block devices or 
 | Q8 | World-readable data mounts | **YES** | `/boot/efi` mounted `fmask=0022,dmask=0022` ⇒ ESP contents world-readable; `/` has no `nodev`/`nosuid` (expected for a root fs, weak as a finding) | `storage.findmnt`, `storage.fstab` |
 | Q9 | Network-storage exposure (NFS/CIFS/iSCSI/Ceph) | **YES — provably absent** | Full `findmnt` listing contains only local + virtual filesystems; `/proc/fs/nfsfs/*` ENOENT; `/sys/class/iscsi_*` ENOENT (transport never loaded); `/sys/kernel/config/target` ENOENT **while configfs is mounted** | `storage.net_fs_mounts`, `storage.findmnt`, `storage.scsi_hosts`, `storage.configfs_bcache_btrfs` |
 | Q10 | Discard / TRIM behaviour | **PARTIAL** | `discard_granularity=512` (device supports discard) and `fstrim.timer` is scheduled weekly. Whether discards actually reach the device is not observable: the mount options show no `discard`, and fstrim's own results are in the root-only journal | `storage.blk_queue_detail`, `services.timers`, `storage.findmnt` |
-| Q11 | Write-cache mode | **YES (as reported by the block layer)** | `queue/write_cache=write through`. This is the block layer's view, not proof of the device's internal volatile-cache or power-loss-protection state | `storage.blk_queue_detail` |
+| Q11 | Write-cache mode | **YES (as reported by the block layer)** | `queue/write_cache=write through`. The sysfs-block ABI says nothing about power-loss protection, so this must never be translated into a durability claim about the device (R4-F59) | `storage.blk_queue_detail` |
 | Q12 | Firmware version visibility | **YES** | `firmware_rev=E2MU200` from sysfs and from `nvme list`, both unprivileged | `storage.nvme_sysfs_detail`, `storage.nvme_cli` |
 | Q13 | Firmware currency (is E2MU200 current?) | **UNKNOWN — out of scope** | Requires an external vendor advisory feed; the sensor makes no network calls | — |
 | Q14 | SMART / media health / wear / power-on hours | **NO — EACCES, and provably no unprivileged path** | `nvme smart-log` and `nvme id-ctrl` → `Permission denied`; smartctl UTILITY_MISSING; device nodes root-only and group `disk` empty | `storage.nvme_smart_try`, `storage.smartctl_scan`, `storage.dev_ls`, `users.priv_groups` |
@@ -76,8 +82,16 @@ in other categories. Out of scope: Q13.
   (group `disk` is empty), so `FSTYPE=""` means "udev recorded no signature at the last uevent" (R4-F08).
   Evidence wording must say so. A filesystem created after the last uevent would be invisible.
 - **T-S4 — `nvme smart-log` EACCES is not `nvme` missing and not "no SMART data".** Three distinct outcomes
-  (EACCES / UTILITY_MISSING / device absent) all end in "no health data"; only the first is true here, and
-  it is the one whose remediation is "grant group `disk` or run privileged".
+  (EACCES / UTILITY_MISSING / device absent) all end in "no health data"; only the first is true here.
+  Its remediation is **CAP_SYS_ADMIN on the NVMe character device**, not group membership (R4-F54) —
+  emitting the group-`disk` remediation would be a confidently wrong instruction to an operator.
+- **T-S12 — the model string cannot answer the encryption question.** The Micron base part number is
+  shared between the non-SED and the TCG Opal 2.0 SKUs, differing only in an order-code suffix the NVMe
+  model string does not carry (R4-F58). Inferring SED capability from `model` is a false-positive
+  generator in both directions.
+- **T-S13 — `/sys/block/nvmeXnY/nvme/` does not exist.** Namespace attributes (`wwid`, `nguid`, `uuid`,
+  `nsid`) are flat under `/sys/block/nvmeXnY/` (R4-F56). A wrong path here manufactures ENOENT and
+  therefore manufactures unknowns.
 - **T-S5 — a size-0 loop device is not a disk.** Enumerating `/sys/block/*` naively reports eight
   zero-byte "block devices". The machine-description storage list must exclude `loop`, `ram`, `zram` and,
   when a real disk exists, `dm`/`md` aggregates — but must not exclude them when they are all that exists.

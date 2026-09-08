@@ -2059,6 +2059,149 @@
       "requires": [],
       "sensitivity": "low",
       "facts": []
+    },
+    {
+      "id": "storage.sysblock_ls_la",
+      "group": "storage",
+      "cmd": "ls -la /sys/block/ 2>&1; ls -la /sys/class/nvme/ /sys/class/net/ 2>&1 | head -20",
+      "timeout_s": 5,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "storage.mountinfo",
+      "group": "storage",
+      "cmd": "head -80 /proc/self/mountinfo 2>&1; echo ---; stat -c \"%n dev=%d\" / /boot/efi /proc /sys /dev /run /tmp /home 2>&1",
+      "timeout_s": 5,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.sysfs_symlink_shape",
+      "group": "kernel",
+      "cmd": "readlink /sys/block/nvme0n1 2>&1; readlink -f /sys/block/nvme0n1 2>&1; readlink /proc/self 2>&1; stat -c \"%F %n\" /sys/block/nvme0n1 /sys/class/dmi/id /proc/1/exe 2>&1",
+      "timeout_s": 5,
+      "cap_bytes": 16384,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.i2c_dev_modes",
+      "group": "bmc",
+      "cmd": "ls -la /dev/i2c-* 2>&1; ls -la /sys/bus/i2c/devices/ 2>&1 | head -12",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "network.ufw_file_modes",
+      "group": "network",
+      "cmd": "ls -la /etc/ufw/ 2>&1; ls -la /etc/default/ufw /lib/ufw/ 2>&1 | head -12; cat /etc/default/ufw 2>&1 | grep -Ev \"^\\s*(#|$)\" | head -12",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "kernel.apparmor_profiles",
+      "group": "kernel",
+      "cmd": "ls -la /sys/kernel/security/apparmor/ 2>&1 | head -20; cat /sys/kernel/security/apparmor/profiles 2>&1 | head -40; wc -l /sys/kernel/security/apparmor/profiles 2>&1; cat /sys/module/apparmor/parameters/mode 2>&1",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.ext4_features",
+      "group": "storage",
+      "cmd": "ls /sys/fs/ext4/features/ 2>&1 | tr \"\n\" \" \"; echo; cat /sys/fs/ext4/features/* 2>&1 | head -5; ls -la /sys/fs/ext4/nvme0n1p2/ 2>&1 | head -30",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "bmc.dmi_entry_attrs",
+      "group": "bmc",
+      "cmd": "ls -la /sys/firmware/dmi/entries/38-0/ /sys/firmware/dmi/entries/42-0/ 2>&1; for f in /sys/firmware/dmi/entries/38-0/length /sys/firmware/dmi/entries/38-0/handle /sys/firmware/dmi/entries/38-0/type /sys/firmware/dmi/entries/38-0/instance /sys/firmware/dmi/entries/38-0/position /sys/firmware/dmi/entries/42-0/length /sys/firmware/dmi/entries/42-0/type; do echo \"$f=$(cat $f 2>&1)\"; done",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.udev_data_readability",
+      "group": "storage",
+      "cmd": "ls -la /run/udev/ 2>&1 | head -10; ls /run/udev/data/ 2>&1 | head -5; ls /run/udev/data/ 2>&1 | wc -l; head -c 600 /run/udev/data/b259:0 2>&1",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "identity",
+      "facts": []
+    },
+    {
+      "id": "network.sshd_dropin_mtime_vs_boot",
+      "group": "network",
+      "cmd": "stat -c \"%n mtime=%y\" /etc/ssh/sshd_config /etc/ssh/sshd_config.d /etc/ssh/sshd_config.d/*.conf 2>&1; uptime -s 2>&1; stat -c \"%n mtime=%y\" /var/lib/cloud/instance 2>&1",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.nvme_smart_rc",
+      "group": "storage",
+      "cmd": "nvme smart-log /dev/nvme0n1; echo rc=$?; nvme id-ctrl /dev/nvme0 2>&1 | head -3; echo rc=$?; ls -la /dev/nvme0 /dev/nvme0n1 /dev/ng0n1 2>&1",
+      "timeout_s": 10,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "users.group_members",
+      "group": "users",
+      "cmd": "getent group disk adm systemd-journal kmem tss video render input dialout sudo ubuntu 2>&1; id -G 2>&1",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
+    },
+    {
+      "id": "storage.mdadm_conf_content",
+      "group": "storage",
+      "cmd": "ls -la /etc/mdadm/ 2>&1; grep -Ev \"^\\s*(#|$)\" /etc/mdadm/mdadm.conf 2>&1",
+      "timeout_s": 6,
+      "cap_bytes": 65536,
+      "priority": 40,
+      "requires": [],
+      "sensitivity": "low",
+      "facts": []
     }
   ]
 }

@@ -101,7 +101,7 @@ snap = {
                 {"dev": "nvme1n1", "model": "Micron_7450_MTFDKCC960TFR", "size_bytes": DISK_BYTES, "transport": "pcie",
                  "fw": "E2MU200", "partitions": [], "filesystem": None, "holders": [], "note": "unused device"}],
             "device_mapper": "absent (only /dev/mapper/control) => no LVM, no LUKS/dm-crypt",
-            "md_raid": "modules loaded, no arrays (/proc/mdstat unused, no /dev/md*)",
+            "md_raid": "modules loaded, no arrays (/proc/mdstat unused, no /dev/md*); /etc/mdadm/mdadm.conf EXISTS (content: HOMEHOST <ignore>) — an earlier snapshot version wrongly listed it as absent (R4-F02 correction; the probe combined two paths and only /etc/mdadm.conf was ENOENT)",
             "multipath": "absent (utility + config missing)",
             "iscsi_fc_sas": "absent (no /sys/class/iscsi_*/fc_host/sas_host; iscsiadm missing)",
             "network_fs": "none mounted; /proc/fs/nfsfs absent",

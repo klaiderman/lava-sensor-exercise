@@ -1,0 +1,31 @@
+{
+  "source_model": "claude-opus-5",
+  "target_model": "claude-opus-5",
+  "note": "No cross-family translation performed — crafted directly for claude-opus-5 (Claude 5.x XML) from prompt.v1.md onward, per the task's explicit target-model instruction. This step confirms claude-opus-5-specific adaptation rather than converting between model families.",
+  "adaptations_confirmed": [
+    "XML structure throughout (role/context/mandatory_files/task/task_roadmap/attack_requirements/method/constraints/output_format/success_criteria/edge_cases/examples)",
+    "'Think thoroughly' phrasing present (constraints, method); 'step by step' absent anywhere",
+    "3+ few-shot <example> blocks present (registry recommends 3-5)",
+    "Explicit conciseness/scope-discipline instruction in <constraints> countering the registry's noted claude-opus-5 tendency toward longer output + self-verification",
+    "No forced tool-use assumptions; worker's own tool list (Read/Write/Edit/Glob/Grep/Bash) stated once in <role>, not re-asserted as a requirement to use every tool"
+  ],
+  "axes": {
+    "clarity":             { "before": 7.6, "after": 8.7 },
+    "completeness":        { "before": 10.0, "after": 10.0 },
+    "efficiency":          { "before": 8.5, "after": 8.5 },
+    "model_fit":           { "before": 9.5, "after": 10.0 },
+    "failure_resilience":  { "before": 7.5, "after": 10.0 }
+  },
+  "overall_before": 8.62,
+  "overall_after": 9.44,
+  "sigma_before": 1.00,
+  "sigma_after": 0.689,
+  "harden_pass_regression_check": {
+    "pre_harden_overall": 9.54,
+    "pre_harden_sigma": 0.605,
+    "post_harden_overall": 9.44,
+    "post_harden_sigma": 0.689,
+    "verdict": "non-regressive within the DEPLOY bar (overall stayed >=9.0, sigma stayed <=0.75 floor, 8/8 SAT held throughout); the small dip from 9.54 to 9.44 is the Clarity cost of the contract-check-driven final-message paragraph added after hardening, added to close a mapping gap, not a hardening regression"
+  },
+  "verdict": "DEPLOY"
+}
