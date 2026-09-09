@@ -76,6 +76,10 @@ const (
 	ReasonContested = "CONTESTED"
 	ReasonPolicy    = "POLICY"
 	ReasonInternal  = "INTERNAL_ERROR"
+	// ReasonTimestampRes means two events were observed with a timestamp too
+	// coarse to order them. It is distinct from CONTESTED: nothing disagrees,
+	// the instrument simply does not resolve the question.
+	ReasonTimestampRes = "TIMESTAMP_RESOLUTION"
 )
 
 // Env is the read-once shared state for a whole scan: the probe handles, a

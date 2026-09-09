@@ -30,7 +30,12 @@ Phase 19–20: review + fixes. Implementation complete (26 checks; 153 tests WSL
 - Ship BOTH native session JSONL files (573ece1e… + fork b64b46f1…), redact the single API-key value in the exported copy, disclose in NOTES; NOTES must say mid-turn (/btw) messages live in attachment records (state/BTW_INDEX.md).
 - Emu checkpoint before final implementation/review (formal #2); Pech/measure_usage re-run; TOOL_USAGE final audit incl. Crawl4AI evidence from research PROVENANCE files.
 
+## Review results (02:15Z)
+- code-reviewer (Fable): FIX-THEN-SHIP — C1/C2 (in fix batch 1), H1 walk-complete-with-unreadable-root, H2 registry summary (corrected by lead), M1 ufw ENABLED=no ignored, M2 MEDIA_HEALTH reason/device-open, M3 sshd -G label, M4 CrossedMounts, L1–L5 → fix batch 2
+- Ponytail pass 2: remove --timeout flag (LD-9), collapse Files interface, dead decls → fix batch 2; lab dedupe deferred; !unix stub documented
+- Lich: honest incompatibility (RLIMIT_AS 512 MB kills Go runtime; NPROC=0; cap edits refused) — surfaced in TOOL_USAGE/NOTES; dynamic evidence from plain WSL
+
 ## Next 3 actions
-1. Collect author + lab reports → Emu checkpoint #2 → launch Ponytail pass 2 (Opus), Lich witness runner (Sonnet), fresh-Fable code-reviewer in parallel
-2. Triage findings → author fixes → regression (go test, validator, prefilter re-run) → independent re-verification of important defects
-3. Real-host run via tooling/host_run.sh → compare with HOST_SUMMARY/CHECK_REGISTRY predictions → final audits (contract, safety, tool use) → export + redaction → transcript HTML → NOTES.md → clean-room gate → tarball
+1. Author batch-1 report → send fix batch 2 (H1, M1–M4, L1–L4, Ponytail F1/F3/F5) → regression (go test Windows+WSL, validator, prefilter) → fresh short re-verification of the fixed items (independent agent) 
+2. Final real-host run with the final artifact (tooling/host_run.sh) → compare to corrected registry prediction 12/9/5 → investigate any disagreement
+3. Final audits (contract coverage, safety, tool use) → transcript HTML (in progress) → export both sessions + single redaction → NOTES.md (≤ 1 page) → clean-room gate → tarball → ask user for final Claude Code Usage figure

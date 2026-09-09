@@ -165,7 +165,7 @@ func TestSSHPolicyInForce_ConfigNewerThanServiceStartFails(t *testing.T) {
 	})
 	runner := newFakeRunner().
 		ok("/usr/sbin/sshd -G", sshdGOutput("no")).
-		ok("systemctl show ssh.service -p ActiveEnterTimestamp -p ActiveState -p FragmentPath",
+		ok(svcShowCmd,
 			"ActiveEnterTimestamp=Mon 2020-01-01 00:00:00 UTC\nActiveState=active\nFragmentPath=/lib/systemd/system/ssh.service\n")
 	f := runCheck(t, root, runner, "SSH_POLICY_IN_FORCE")
 	wantStatus(t, f, scan.StatusFail)
@@ -184,7 +184,7 @@ func TestSSHPolicyInForce_ServiceStartedAfterConfigPasses(t *testing.T) {
 	})
 	runner := newFakeRunner().
 		ok("/usr/sbin/sshd -G", sshdGOutput("no")).
-		ok("systemctl show ssh.service -p ActiveEnterTimestamp -p ActiveState -p FragmentPath",
+		ok(svcShowCmd,
 			"ActiveEnterTimestamp=Mon 2099-01-01 00:00:00 UTC\nActiveState=active\n")
 	f := runCheck(t, root, runner, "SSH_POLICY_IN_FORCE")
 	wantStatus(t, f, scan.StatusPass)

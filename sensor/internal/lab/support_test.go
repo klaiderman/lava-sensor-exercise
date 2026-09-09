@@ -32,10 +32,6 @@ import (
 // checksTestdata is the author's fixture root, read-only from here.
 const checksTestdata = "../checks/testdata"
 
-// labTestdata is this package's own fixture root (storage matrix, fault
-// injection scenarios not already covered by the author's fixtures).
-const labTestdata = "testdata"
-
 // buildProfileFrom materialises a fixture tree rooted at srcRoot/name into a
 // fresh t.TempDir(), honouring the _dirs.txt/_modes.txt/_symlinks.txt seams.
 // This is a deliberate, independent reimplementation (not an import of the
@@ -131,12 +127,6 @@ func buildProfileFrom(t *testing.T, srcRoot, name string) string {
 func buildAuthorProfile(t *testing.T, name string) string {
 	t.Helper()
 	return buildProfileFrom(t, checksTestdata, name)
-}
-
-// buildLabFixture builds one of this package's own fixture trees.
-func buildLabFixture(t *testing.T, name string) string {
-	t.Helper()
-	return buildProfileFrom(t, labTestdata, name)
 }
 
 func restorePermissions(root string) {

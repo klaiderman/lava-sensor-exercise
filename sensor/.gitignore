@@ -1,0 +1,7 @@
+
+# transcript viewer (optional presentation layer; not a deliverable; regenerate with tooling/transcript/render.py)
+reports/claude-transcript.html
+reports/claude-transcript-data.json
+ai/transcripts/normalized/
+# external review inputs provided by the user (kept local)
+Claude outputs/

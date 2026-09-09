@@ -89,6 +89,7 @@ it:
 | `PARSE_ERROR` | Output was obtained but did not match the expected shape. |
 | `EXECUTION_ERROR` | A tool ran and failed for its own reasons. |
 | `CONTESTED` | Two observations disagree. Both are recorded; neither is silently preferred. |
+| `TIMESTAMP_RESOLUTION` | Two events were observed with a timestamp too coarse to order them. Nothing disagrees; the instrument does not resolve the question. |
 | `INTERNAL_ERROR` | The check itself panicked. The panic is in the evidence and no other check is affected. |
 
 An `unknown` is reported at the check's declared impact, not downgraded: an

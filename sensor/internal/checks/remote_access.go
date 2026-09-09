@@ -242,12 +242,12 @@ func (c sshPolicyInForce) Run(ctx context.Context, env *scan.Env) scan.Result {
 	}
 
 	svc := env.Runner.Run(ctx, probe.Spec{
-		Name: "systemctl", Args: []string{"show", "ssh.service", "-p", "ActiveEnterTimestamp", "-p", "ActiveState", "-p", "FragmentPath"},
+		Name: "systemctl", Args: []string{"show", "ssh.service", "-p", "ActiveEnterTimestamp", "-p", "ActiveEnterTimestampMonotonic", "-p", "ExecMainStartTimestampMonotonic", "-p", "ActiveState", "-p", "FragmentPath"},
 		Budget: 3 * time.Second, Purpose: "sshd service start time",
 	})
 	if svc.Status != probe.StatusOK || strings.TrimSpace(svc.Value) == "" {
 		alt := env.Runner.Run(ctx, probe.Spec{
-			Name: "systemctl", Args: []string{"show", "sshd.service", "-p", "ActiveEnterTimestamp", "-p", "ActiveState", "-p", "FragmentPath"},
+			Name: "systemctl", Args: []string{"show", "sshd.service", "-p", "ActiveEnterTimestamp", "-p", "ActiveEnterTimestampMonotonic", "-p", "ExecMainStartTimestampMonotonic", "-p", "ActiveState", "-p", "FragmentPath"},
 			Budget: 3 * time.Second, Purpose: "sshd service start time (rpm-family unit name)",
 		})
 		if alt.Status == probe.StatusOK {
@@ -276,13 +276,15 @@ func (c sshPolicyInForce) Run(ctx context.Context, env *scan.Env) scan.Result {
 		return finish(scan.Unknown(svc.Reason(),
 			"the sshd unit's start time could not be read ("+svc.Reason()+"), so whether the on-disk configuration is the one in force is unknown"))
 	}
-	started, ok := parseSystemdTimestamp(props["ActiveEnterTimestamp"])
+	started, resolution, tsSource, ok := serviceStartTime(env, props)
 	if !ok {
 		return finish(scan.Unknown(scan.ReasonParse,
 			"the sshd unit reported an unparseable ActiveEnterTimestamp "+quote(props["ActiveEnterTimestamp"])+
 				", so the configuration-versus-runtime comparison could not be made"))
 	}
-	r.Field("service_active_enter", started.UTC().Format(time.RFC3339))
+	r.Field("service_active_enter", started.UTC().Format(time.RFC3339Nano))
+	r.Field("service_start_source", tsSource)
+	r.Field("comparison_resolution_ms", resolution.Milliseconds())
 
 	if newest.IsZero() {
 		return finish(scan.Unknown(scan.ReasonEACCES,
@@ -290,19 +292,75 @@ func (c sshPolicyInForce) Run(ctx context.Context, env *scan.Env) scan.Result {
 	}
 	delta := started.Sub(newest)
 	r.Field("delta_seconds", int64(delta.Seconds()))
+	r.Field("delta_ms", delta.Milliseconds())
 
 	if len(cfg.MatchBlocks) > 0 {
 		r.Field("conditional_blocks", cfg.MatchBlocks)
 	}
-	// An equal timestamp is a pass: provisioning that rewrites the config and
-	// restarts the daemon *is* the propagation.
-	if newest.After(started) {
+
+	// Two events cannot be ordered more finely than the coarser of the two
+	// timestamps that describe them. Provisioning that rewrites the config and
+	// restarts the daemon lands both inside the same second, and calling that
+	// drift asserts an ordering the evidence does not carry.
+	switch {
+	case delta < -resolution:
 		return finish(scan.Fail(scan.ReasonPolicy,
-			"the configuration chain changed after the daemon started ("+newestPath+" modified "+
-				itoa(int64(-delta.Seconds()))+"s after ActiveEnterTimestamp), so the running daemon is enforcing something other than what is on disk"))
+			"the configuration chain changed after the daemon started ("+newestPath+" was modified "+
+				itoa(-delta.Milliseconds())+" ms after the unit's start time, read from "+tsSource+
+				"), so the running daemon is enforcing something other than what is on disk"))
+	case delta > resolution:
+		return finish(scan.Pass(
+			"every file in the resolved configuration chain is older than the daemon's start time by more than the " +
+				itoa(resolution.Milliseconds()) + " ms resolution of " + tsSource + ", so what is on disk is what is loaded"))
+	default:
+		return finish(scan.Unknown(scan.ReasonTimestampRes,
+			"the newest configuration file ("+newestPath+") and the daemon's start time fall within the "+
+				itoa(resolution.Milliseconds())+" ms resolution of "+tsSource+
+				", so their order cannot be established; this is the normal shape of a provisioning run that rewrote the configuration and restarted the daemon, but it is not proof of one"))
 	}
-	return finish(scan.Pass(
-		"every file in the resolved configuration chain is older than or equal to the daemon's start time, so what is on disk is what is loaded"))
+}
+
+// serviceStartTime resolves the unit's start instant as precisely as the system
+// will report it, and returns the resolution that instant is good to.
+//
+// systemd's rendered timestamps are whole seconds. Its *Monotonic properties
+// are microseconds since boot, so pairing one with /proc/uptime and the current
+// time recovers sub-second precision; that reconstruction inherits the error of
+// the uptime read, which is what the returned resolution accounts for.
+func serviceStartTime(env *scan.Env, props map[string]string) (time.Time, time.Duration, string, bool) {
+	for _, key := range []string{"ActiveEnterTimestampMonotonic", "ExecMainStartTimestampMonotonic"} {
+		raw := strings.TrimSpace(props[key])
+		if raw == "" || raw == "0" {
+			continue
+		}
+		usec, err := strconv.ParseInt(raw, 10, 64)
+		if err != nil || usec <= 0 {
+			continue
+		}
+		upObs := env.Files.Read("/proc/uptime", probe.Tiny)
+		if upObs.Status != probe.StatusOK {
+			continue
+		}
+		fields := strings.Fields(upObs.Value)
+		if len(fields) == 0 {
+			continue
+		}
+		secs, err := strconv.ParseFloat(fields[0], 64)
+		if err != nil {
+			continue
+		}
+		now := env.Now()
+		boot := now.Add(-time.Duration(secs * float64(time.Second)))
+		// /proc/uptime is published to 10 ms, and the read and the clock sample
+		// are not simultaneous; 100 ms is the honest floor for this path.
+		return boot.Add(time.Duration(usec) * time.Microsecond), 100 * time.Millisecond,
+			key + " + /proc/uptime", true
+	}
+	t, ok := parseSystemdTimestamp(props["ActiveEnterTimestamp"])
+	if !ok {
+		return time.Time{}, 0, "", false
+	}
+	return t, time.Second, "ActiveEnterTimestamp (whole-second resolution)", true
 }
 
 func statModTime(f probe.Files, p string) (time.Time, bool) {

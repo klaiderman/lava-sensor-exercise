@@ -2,6 +2,7 @@ package checks
 
 import (
 	"context"
+	"encoding/json"
 	"strconv"
 	"strings"
 
@@ -385,7 +386,16 @@ func (c rootFilesystemRedundancy) Run(ctx context.Context, env *scan.Env) scan.R
 	case blockObs.Status != probe.StatusOK || mdstat.Status != probe.StatusOK:
 		return finish(scan.Unknown(reasonOf(blockObs, mdstat),
 			"the redundancy enumerations did not all complete, so a single-device root cannot be asserted"))
-	case physical <= 1:
+	case physical == 0:
+		// No local block device backs / at all: a network, overlay or otherwise
+		// virtual root. Whatever redundancy it has lives on the other side of
+		// that boundary, and reporting it as a single disk would be a fabricated
+		// verdict about hardware that is not there.
+		return finish(scan.Unknown(scan.ReasonEINVAL,
+			"the root filesystem is "+rootFS+" backed by "+quote(rootSrc)+
+				", which resolves to no local block device: redundancy for it is provided on the other side of that boundary "+
+				"(a network server, a hypervisor or an overlay's lower layers) and is not observable from this operating system"))
+	case physical == 1:
 		msg := "the root filesystem resolves to a single physical device (" + strings.Join(backing, " -> ") +
 			") and every redundancy enumeration completed without finding an md array, a dm-raid target or a multi-device pool, so the loss of that device loses the root filesystem"
 		if len(spares) > 0 {
@@ -654,6 +664,7 @@ func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Resu
 	// SMART, behind sysfs. Both tools are fallbacks and both are expected to be
 	// denied or absent; the errno is the evidence.
 	smartObtained := false
+	smartParseError := ""
 	var smartAttempts []string
 	for _, n := range names {
 		if !strings.HasPrefix(n, "nvme") && !strings.HasPrefix(n, "sd") {
@@ -663,12 +674,26 @@ func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Resu
 			Budget: 3000000000, Purpose: "drive health (JSON only; a tool that rejects -j yields unknown, never positional parsing)"})
 		r.Add(obs)
 		smartAttempts = append(smartAttempts, "smartctl -H -j /dev/"+n+" -> "+string(obs.Status)+" "+obs.Reason())
-		if obs.Status == probe.StatusOK && strings.Contains(obs.Value, "{") {
-			smartObtained = true
-			if strings.Contains(obs.Value, `"passed":false`) {
-				adverse = append(adverse, "SMART health self-assessment failed for /dev/"+n)
+		if obs.Status == probe.StatusOK {
+			health, perr := parseSmartctlJSON(obs.Value)
+			switch {
+			case perr != "":
+				// Output that does not parse is not a health verdict. A
+				// substring sniff would read a truncated document as healthy.
+				smartParseError = perr
+				smartAttempts[len(smartAttempts)-1] += " (output did not parse: " + perr + ")"
+			case health == nil:
+				smartParseError = "the document parsed but carries no smart_status.passed field"
+				smartAttempts[len(smartAttempts)-1] += " (no smart_status.passed field)"
+			default:
+				smartObtained = true
+				if !*health {
+					adverse = append(adverse, "SMART health self-assessment failed for /dev/"+n)
+				}
 			}
-			break
+			if smartObtained || smartParseError != "" {
+				break
+			}
 		}
 		if strings.HasPrefix(n, "nvme") {
 			nobs := env.Runner.Run(ctx, probe.Spec{Name: "nvme", Args: []string{"smart-log", "/dev/" + n},
@@ -684,11 +709,18 @@ func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Resu
 	}
 	r.Field("smart_attempts", smartAttempts)
 	r.Field("smart_obtained", smartObtained)
+	if smartParseError != "" {
+		r.Field("smart_parse_error", smartParseError)
+	}
 
 	switch {
 	case len(adverse) > 0:
 		return finish(scan.Fail(scan.ReasonPolicy,
 			"a readable health signal reports a problem: "+strings.Join(adverse, "; ")))
+	case smartParseError != "":
+		return finish(scan.Unknown(scan.ReasonParse,
+			"the SMART tool ran and produced output that could not be parsed as a health report ("+smartParseError+
+				"), so drive health is unknown; a health verdict is never inferred from the shape of the output"))
 	case smartObtained:
 		return finish(scan.Pass("drive health telemetry is readable by this account and reports no failure"))
 	case readableCount > 0:
@@ -700,4 +732,34 @@ func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Resu
 		return finish(scan.Unknown(scan.ReasonEACCES,
 			"no health signal was readable at all: SMART needs a capability this account does not have, and no filesystem or device-state counter could be read"))
 	}
+}
+
+// smartctlReport is the subset of `smartctl --json` this sensor reads. The
+// document is parsed, never pattern-matched: a truncated or malformed report
+// must not read as a clean bill of health.
+type smartctlReport struct {
+	SmartStatus *struct {
+		Passed *bool `json:"passed"`
+	} `json:"smart_status"`
+	Smartctl *struct {
+		ExitStatus *int64 `json:"exit_status"`
+	} `json:"smartctl"`
+}
+
+// parseSmartctlJSON returns the health verdict, or a parse error naming why no
+// verdict is derivable. A nil verdict with no error means the document parsed
+// but does not carry smart_status.passed.
+func parseSmartctlJSON(body string) (*bool, string) {
+	trimmed := strings.TrimSpace(body)
+	if trimmed == "" {
+		return nil, "empty output"
+	}
+	var rep smartctlReport
+	if err := json.Unmarshal([]byte(trimmed), &rep); err != nil {
+		return nil, err.Error()
+	}
+	if rep.SmartStatus == nil || rep.SmartStatus.Passed == nil {
+		return nil, ""
+	}
+	return rep.SmartStatus.Passed, ""
 }
