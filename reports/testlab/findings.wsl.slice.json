@@ -1,0 +1,560 @@
+{
+  "schema_version": "1",
+  "collected_at": "2026-09-09T01:16:45Z",
+  "sensor_version": "0.1.0-dev",
+  "machine": {
+    "host_id": "9dbc6c4aeeb4dbdb77e38a1293f579deb5af543bfe0873a4d5961ed931b9de26",
+    "host_id_source": "machine-id (keyed hash)",
+    "host_id_caveat": "stable across reboots; regenerated on re-image; clone-vulnerable",
+    "hostname": "DESKTOP-7HHORM6",
+    "hostname_source": "/proc/sys/kernel/hostname",
+    "owner": "unknown",
+    "owner_source": "none (all sources placeholder, absent or denied)",
+    "owner_candidates": [],
+    "asset_tags": [
+      {
+        "field": "chassis_asset_tag",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/chassis_asset_tag",
+        "errno": "ENOENT"
+      },
+      {
+        "field": "board_asset_tag",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/board_asset_tag",
+        "errno": "ENOENT"
+      },
+      {
+        "field": "product_sku",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/product_sku",
+        "errno": "ENOENT"
+      },
+      {
+        "field": "product_family",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/product_family",
+        "errno": "ENOENT"
+      },
+      {
+        "field": "product_serial",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/product_serial",
+        "errno": "ENOENT"
+      },
+      {
+        "field": "board_serial",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/board_serial",
+        "errno": "ENOENT"
+      },
+      {
+        "field": "chassis_serial",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/chassis_serial",
+        "errno": "ENOENT"
+      },
+      {
+        "field": "product_uuid",
+        "value": "unknown",
+        "source": "/sys/class/dmi/id/product_uuid",
+        "errno": "ENOENT"
+      }
+    ],
+    "vendor": "unknown",
+    "vendor_source": "none",
+    "model": "unknown",
+    "model_source": "none",
+    "os": {
+      "name": "Ubuntu",
+      "version": "26.04",
+      "kernel": "6.18.33.2-microsoft-standard-WSL2",
+      "version_pretty": "Ubuntu 26.04 LTS",
+      "id": "ubuntu",
+      "id_like": "debian",
+      "source": "/etc/os-release",
+      "kernel_source": "/proc/sys/kernel/osrelease"
+    },
+    "cpu": {
+      "model": "12th Gen Intel(R) Core(TM) i7-1255U",
+      "cores": 6,
+      "logical_cpus": 12,
+      "sockets": 1,
+      "threads_per_core": 2,
+      "cores_basis": "sysfs-topology",
+      "cpu_vendor": "GenuineIntel",
+      "source": "/proc/cpuinfo"
+    },
+    "memory_bytes": 8095670272,
+    "memory_source": "/proc/meminfo:MemTotal",
+    "swap_total_bytes": 2147483648,
+    "storage": [
+      {
+        "device": "sda",
+        "model": "Virtual Disk",
+        "size_bytes": 374251520,
+        "device_path": "/dev/sda",
+        "model_source": "/sys/block/sda/device/model",
+        "size_source": "/sys/block/sda/size x 512",
+        "transport": "scsi",
+        "rotational": "1",
+        "logical_block_size": 512,
+        "physical_block_size": 512,
+        "scheduler": "none",
+        "write_cache": "write through",
+        "state": "running",
+        "filesystem": "ext4",
+        "filesystem_source": "udev-db-at-last-uevent",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "physical"
+      },
+      {
+        "device": "sdb",
+        "model": "Virtual Disk",
+        "size_bytes": 167149568,
+        "device_path": "/dev/sdb",
+        "model_source": "/sys/block/sdb/device/model",
+        "size_source": "/sys/block/sdb/size x 512",
+        "transport": "scsi",
+        "rotational": "1",
+        "logical_block_size": 512,
+        "physical_block_size": 512,
+        "scheduler": "none",
+        "write_cache": "write through",
+        "state": "running",
+        "filesystem": "ext4",
+        "filesystem_source": "udev-db-at-last-uevent",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "physical"
+      },
+      {
+        "device": "sdc",
+        "model": "Virtual Disk",
+        "size_bytes": 2147487744,
+        "device_path": "/dev/sdc",
+        "model_source": "/sys/block/sdc/device/model",
+        "size_source": "/sys/block/sdc/size x 512",
+        "transport": "scsi",
+        "rotational": "1",
+        "logical_block_size": 512,
+        "physical_block_size": 4096,
+        "scheduler": "none",
+        "write_cache": "write back",
+        "state": "running",
+        "filesystem": "swap",
+        "filesystem_source": "udev-db-at-last-uevent",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "physical"
+      },
+      {
+        "device": "sdd",
+        "model": "Virtual Disk",
+        "size_bytes": 1099511627776,
+        "device_path": "/dev/sdd",
+        "model_source": "/sys/block/sdd/device/model",
+        "size_source": "/sys/block/sdd/size x 512",
+        "transport": "scsi",
+        "rotational": "1",
+        "logical_block_size": 512,
+        "physical_block_size": 4096,
+        "scheduler": "none",
+        "write_cache": "write back",
+        "state": "running",
+        "filesystem": "ext4",
+        "filesystem_source": "udev-db-at-last-uevent",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "physical"
+      }
+    ],
+    "storage_source": "/sys/block",
+    "other_block_devices": [
+      {
+        "device": "loop0",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop0",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "loop1",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop1",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "loop2",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop2",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "loop3",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop3",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "loop4",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop4",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "loop5",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop5",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "loop6",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop6",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "loop7",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/loop7",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram0",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram0",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram1",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram1",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram10",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram10",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram11",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram11",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram12",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram12",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram13",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram13",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram14",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram14",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram15",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram15",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram2",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram2",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram3",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram3",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram4",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram4",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram5",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram5",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram6",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram6",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram7",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram7",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram8",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram8",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      },
+      {
+        "device": "ram9",
+        "model": "unknown",
+        "size_bytes": 0,
+        "device_path": "/dev/ram9",
+        "model_source": "n/a",
+        "size_source": "n/a",
+        "partitions": [],
+        "holders": [],
+        "slaves": [],
+        "class": "virtual"
+      }
+    ],
+    "firmware": {
+      "source": "none (ENOENT on /sys/class/dmi/id)"
+    },
+    "execution_context": "vm:wsl",
+    "execution_context_source": "systemd-detect-virt",
+    "unknowns": {
+      "model": {
+        "reason": "ENOENT",
+        "sources_tried": [
+          "/sys/class/dmi/id/product_name",
+          "/sys/class/dmi/id/board_name",
+          "/proc/device-tree/model"
+        ]
+      },
+      "owner": {
+        "reason": "ENOENT",
+        "sources_tried": [
+          "/etc/machine-info",
+          "/sys/class/dmi/id/chassis_asset_tag",
+          "/sys/class/dmi/id/board_asset_tag",
+          "/run/cloud-init/cloud-id"
+        ]
+      },
+      "vendor": {
+        "reason": "ENOENT",
+        "sources_tried": [
+          "/sys/class/dmi/id/sys_vendor",
+          "/sys/class/dmi/id/board_vendor",
+          "/proc/device-tree/model"
+        ]
+      }
+    }
+  },
+  "findings": [
+    {
+      "category": "REMOTE_ACCESS",
+      "check_id": "SSH_ROOT_LOGIN_POLICY",
+      "status": "unknown",
+      "severity": "high",
+      "title": "Root login over SSH is not permitted by the running sshd policy",
+      "reason": "UTILITY_MISSING",
+      "evidence": {
+        "detail": "no sshd binary and no sshd configuration were found, so there is no root-login policy to report; note that the absence of an SSH listener is not the absence of remote access to the machine",
+        "observations": [
+          {
+            "source": "sshd -G",
+            "observation_type": "command_exec",
+            "status": "UTILITY_MISSING",
+            "reason": "UTILITY_MISSING",
+            "duration_ms": 0,
+            "detail": "no sshd binary at /usr/sbin/sshd, /usr/local/sbin/sshd, /sbin/sshd, /usr/libexec/openssh/sshd or on the sensor PATH",
+            "command": [
+              "sshd",
+              "-G"
+            ]
+          },
+          {
+            "source": "/etc/ssh/sshd_config",
+            "observation_type": "file_read",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "detail": "sshd config chain: /etc/ssh/sshd_config"
+          }
+        ],
+        "config_resolution": {
+          "directive": "permitrootlogin",
+          "shadowed_occurrences": [],
+          "resolution_rule": "first-obtained-value-wins (sshd_config(5): the first obtained value for each parameter is used)",
+          "defaulted": false,
+          "conditional_blocks": [],
+          "files_read": [],
+          "found": false
+        }
+      },
+      "collected_at": "2026-09-09T01:16:45Z",
+      "impact": "high",
+      "duration_ms": 0
+    }
+  ],
+  "scan": {
+    "started_at": "2026-09-09T01:16:45Z",
+    "duration_ms": 12,
+    "deadline_ms": 60000,
+    "checks_run": 1,
+    "budget_cut": false,
+    "budget_cut_count": 0,
+    "euid": 1000,
+    "degradations": [],
+    "self_check": "pass"
+  }
+}
