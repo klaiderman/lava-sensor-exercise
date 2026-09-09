@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lava sensor findings.json (derived from the supplied brief)",
+  "description": "DERIVED ARTIFACT, not an original Lava file: machine-readable transcription of the output contract embedded in task/original/Lava-Sensor-Exercise.html and .pdf (section 'The output shape' plus its accompanying prose). No constraints beyond the brief were added; where the brief states a rule in prose (required-when, enums, UPPER_SNAKE_CASE, extra fields welcome) it is encoded here. See task/derived/SCHEMA_PROVENANCE.md.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "collected_at",
+    "machine",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1",
+      "description": "Literal value given in the brief example (\"1\")."
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 timestamp."
+    },
+    "sensor_version": {
+      "type": "string",
+      "description": "Optional per the brief."
+    },
+    "machine": {
+      "type": "object",
+      "description": "Part one: describe the machine. 'Report at least these' -> all listed fields required. If a value cannot be determined the brief requires the output to say so explicitly (never an empty string or a guess); owner explicitly allows an explicit-unknown value.",
+      "required": [
+        "host_id",
+        "hostname",
+        "owner",
+        "vendor",
+        "model",
+        "os",
+        "cpu",
+        "memory_bytes",
+        "storage"
+      ],
+      "properties": {
+        "host_id": {
+          "type": "string",
+          "description": "Stable across runs."
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Who the machine belongs to, or an explicit unknown."
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "os": {
+          "type": "object",
+          "required": [
+            "name",
+            "version",
+            "kernel"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "kernel": {
+              "type": "string"
+            }
+          }
+        },
+        "cpu": {
+          "type": "object",
+          "required": [
+            "model",
+            "cores"
+          ],
+          "properties": {
+            "model": {
+              "type": "string"
+            },
+            "cores": {
+              "type": "integer"
+            }
+          }
+        },
+        "memory_bytes": {
+          "type": "integer"
+        },
+        "storage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "device",
+              "model",
+              "size_bytes"
+            ],
+            "properties": {
+              "device": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "size_bytes": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "check_id",
+          "status",
+          "severity",
+          "title",
+          "evidence",
+          "collected_at"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "description": "UPPER_SNAKE_CASE."
+          },
+          "check_id": {
+            "type": "string",
+            "description": "Unique per check (uniqueness across the findings array is not expressible in JSON Schema core; enforced by the sensor's tests)."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "unknown"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "info"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "One line a person can read."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Required when status is fail or unknown."
+          },
+          "evidence": {
+            "type": "object",
+            "description": "What someone needs to act on it."
+          },
+          "collected_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "RFC 3339 timestamp."
+          }
+        },
+        "if": {
+          "properties": {
+            "status": {
+              "enum": [
+                "fail",
+                "unknown"
+              ]
+            }
+          },
+          "required": [
+            "status"
+          ]
+        },
+        "then": {
+          "required": [
+            "reason"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,391 @@
+===== BMC_CLIENT_TOOLING_INVENTORY pass info None
+DETAIL: no IPMI client tooling is installed — every candidate was resolved to not-found across 6 binary directories, and none was executed
+  - OK     /usr/sbin | dir | binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin di
+  - OK     /usr/bin | dir | binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin di
+  - OK     /sbin | symlink | binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin di
+  - OK     /bin | symlink | binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin di
+  - OK     /usr/local/sbin | dir | binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin di
+  - OK     /usr/local/bin | dir | binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin di
+  F executed = false
+  F path_dirs_scanned = ["/usr/sbin", "/usr/bin", "/sbin", "/bin", "/usr/local/sbin", "/usr/local/bin"]
+  F path_dirs_unreadable = null
+  F tools = [{"name": "ipmitool", "found": false}, {"name": "ipmiutil", "found": false}, {"name": "ipmievd", "found": false}, {"name": "openipmish", "found": false}, {"name": "freeipmi-config", "found": false}, {"name": "bmc-info", "found": false}, {"name": "ipmi-sensors", "found": false}, {"name": "ipmi-chassi
+  F inventory_note = "the absence of a client tool says nothing about whether a management controller exists or answers; it never sets another check to unknown"
+===== BMC_DEVICE_NODE_ACCESS pass info None
+DETAIL: the BMC device node is reachable by root only, and the restriction is the devtmpfs file mode rather than a capability check in the driver's open path
+  - OK     /dev/ipmi0 | chardev | BMC device node metadata; the node is never opened, not even O_RDONLY|O_NONBLOCK
+  - OK     /dev/ipmi0 [system.posix_acl_access] | no ACL (ENODATA) | the file carries no POSIX access ACL
+  - ENOENT ENOENT    /dev/ipmi/0 |  | BMC device node metadata; the node is never opened, not even O_RDONLY|O_NONBLOCK
+  - ENOENT ENOENT    /dev/ipmidev/0 |  | BMC device node metadata; the node is never opened, not even O_RDONLY|O_NONBLOCK
+  F node_opened = false
+  F never_issued_ipmi_command = true
+  F device_nodes = [{"path": "/dev/ipmi0", "exists": true, "file_type": "chardev", "mode": 384, "uid": 0, "gid": 0, "group_name": "root", "group_member_count": 0, "access_permitted": "root only", "acl": {"path": "/dev/ipmi0", "present": false, "grants_non_owner_read": false, "named_principals": 0, "errno": "ENODATA", 
+  F udev_or_modprobe_rules_matching_ipmi = null
+===== BMC_HOST_INTERFACE_EXPOSURE pass info None
+DETAIL: a management-controller host interface is present but down (enxbe3af2b6059f (operstate down)); down is its current state, not a control — anyone with the capability to bring it up gets a network path to the controller. out-of-band LAN exposure is unknown by construction: the dedicated BMC network port is not visible to this operating system
+  - OK     /sys/firmware/dmi/entries |  | 
+  - OK     /sys/class/net |  | network interface enumeration for a host-to-controller path
+  F oob_lan_exposure = "out-of-band LAN exposure is unknown by construction: the dedicated BMC network port is not visible to this operating system"
+  F smbios_type42_present = true
+  F interfaces = [{"ifname": "eno1", "driver": "ixgbe", "operstate": "up", "carrier": "1", "has_address": true, "classified_as_bmc": false, "classification_basis": []}, {"ifname": "eno2", "driver": "ixgbe", "operstate": "up", "carrier": "1", "has_address": true, "classified_as_bmc": false, "classification_basis": []
+===== BMC_INBAND_INTERFACE_PRESENT pass info None
+DETAIL: firmware declares an in-band management-controller interface: SMBIOS type 38 entry /sys/firmware/dmi/entries/38-0; ACPI device /sys/bus/acpi/devices/IPI0001:00; platform device /sys/devices/platform/dmi-ipmi-si.0; platform device /sys/devices/platform/ipmi_bmc.0 — declared, which is not the same as usable
+  - OK     /sys/firmware/dmi/entries |  | SMBIOS entry directory; the directory names are the only unprivileged signal, the attributes inside 
+  - OK     /sys/bus/acpi/devices |  | 
+  - OK     /sys/devices/platform |  | 
+  - EACCES EACCES    /sys/firmware/dmi/entries/38-0/type |  | SMBIOS entry attribute; kernel ships these 0400
+  - EACCES EACCES    /sys/firmware/dmi/entries/38-0/raw |  | SMBIOS entry attribute; kernel ships these 0400
+  F entries_observed = ["SMBIOS type 38 entry /sys/firmware/dmi/entries/38-0", "ACPI device /sys/bus/acpi/devices/IPI0001:00", "platform device /sys/devices/platform/dmi-ipmi-si.0", "platform device /sys/devices/platform/ipmi_bmc.0"]
+  F attribute_reads = [{"path": "/sys/firmware/dmi/entries/38-0/type", "errno": "EACCES", "status": "EACCES"}, {"path": "/sys/firmware/dmi/entries/38-0/raw", "errno": "EACCES", "status": "EACCES"}]
+  F decoded_fields = null
+  F decode_blocked_by = "EACCES on SMBIOS entry attributes (kernel ships them 0400); base address, IRQ and interface type stay unknown"
+  F interface_declared = true
+  F never_issued_ipmi_command = true
+===== BMC_RESPONDS_IN_BAND pass info None
+DETAIL: the management controller answered over the in-band interface: /sys/devices/platform/ipmi_bmc.0 returned 6 identity attribute(s) within the out-of-band deadline; no IPMI command was issued and no BMC device node was opened
+  - OK     /sys/devices/platform |  | 
+  - OK     /sys/devices/platform/ipmi_bmc.0/ipmi_version | 2.0 | BMC identity attribute read under an out-of-band deadline; a successful read is itself proof the con
+  - OK     /sys/devices/platform/ipmi_bmc.0/firmware_revision | 1.5 | BMC identity attribute read under an out-of-band deadline; a successful read is itself proof the con
+  - OK     /sys/devices/platform/ipmi_bmc.0/manufacturer_id | 0x002a7c | BMC identity attribute read under an out-of-band deadline; a successful read is itself proof the con
+  - OK     /sys/devices/platform/ipmi_bmc.0/product_id | 0x1d6e | BMC identity attribute read under an out-of-band deadline; a successful read is itself proof the con
+  - OK     /sys/devices/platform/ipmi_bmc.0/device_id | 32 | BMC identity attribute read under an out-of-band deadline; a successful read is itself proof the con
+  - OK     /sys/devices/platform/ipmi_bmc.0/guid | 08186271-905a-0000-0000-000000000000 | BMC identity attribute read under an out-of-band deadline; a successful read is itself proof the con
+  F never_issued_ipmi_command = true
+  F deadline_ms = 400
+  F bmc_sysfs_dirs = ["/sys/devices/platform/ipmi_bmc.0"]
+  F ipmi_modules_loaded = ["ipmi_si", "ipmi_devintf", "ipmi_msghandler", "ipmi_ssif", "acpi_ipmi"]
+  F module_note = "a loaded ipmi_si is a capability signal; only a populated identity attribute proves the controller answered"
+  F attributes = [{"path": "/sys/devices/platform/ipmi_bmc.0/ipmi_version", "value": "2.0", "bytes_read": 4, "elapsed_ms": 3, "status": "OK"}, {"path": "/sys/devices/platform/ipmi_bmc.0/firmware_revision", "value": "1.5", "bytes_read": 4, "elapsed_ms": 0, "status": "OK"}, {"path": "/sys/devices/platform/ipmi_bmc.0/m
+  F manufacturer_id = {"iana_pen_decimal": 10876, "note": "the value is an IANA Private Enterprise Number; it is reported as observed rather than mapped to a vendor name", "raw": "0x002a7c"}
+===== BOOT_ARTIFACT_READABILITY fail low POLICY
+DETAIL: boot artifacts are readable by any local user: /boot/initrd.img (a stale artifact); /boot/initrd.img-6.8.0-139-generic (the artifact the running kernel booted from); /boot/initrd.img-7.0.0-31-generic (a stale artifact); /boot/initrd.img.old (a stale artifact); the EFI system partition is mounted without a mask that blocks other — bare-metal provider images routinely inject provisioning material into the initramfs
+  - OK  LB /boot |  | 
+  - OK     /boot/grub/grub.cfg | regular | 
+  - OK     /proc/self/mountinfo | 25 31 0:23 / /sys rw,nosuid,nodev,noexec,relatime shared:7 - sysfs sysfs rw
+26 31 0:24 / /proc rw,no | 
+  F initramfs_not_opened = true
+  F scope_note = "the initramfs is never opened; extracting it to look for embedded provisioning material would be unbounded and outside read-only intent. Mode and size are the finding"
+  F artifacts = [{"path": "/boot/System.map-6.8.0-139-generic", "mode": 384, "uid": 0, "gid": 0, "size": 9135527, "matches_running_kernel": true, "other_readable": false}, {"path": "/boot/System.map-7.0.0-31-generic", "mode": 384, "uid": 0, "gid": 0, "size": 10651714, "matches_running_kernel": false, "other_readabl
+  F esp = {"dmask": "0022", "fmask": "0022", "fstype": "vfat", "mountpoint": "/boot/efi", "note": "vfat has no owners, so the mount mask is the control, not a file permission", "options": "rw,relatime,rw,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro", "umask": "", "w
+===== BOOT_KERNEL_DRIFT fail medium POLICY
+DETAIL: the running kernel is 6.8.0-139-generic while 7.0.0-31-generic is installed: the machine is running an older kernel than the one it would boot, so any fix in the newer kernel is not in effect until it reboots
+  - OK  LB /proc/sys/kernel/osrelease | 6.8.0-139-generic | 
+  - OK     /boot |  | 
+  - OK     /lib/modules |  | 
+  F running_kernel = "6.8.0-139-generic"
+  F installed_kernels = ["6.8.0-139-generic", "7.0.0-31-generic"]
+  F installed_from_boot = ["6.8.0-139-generic", "7.0.0-31-generic"]
+  F installed_from_modules = ["6.8.0-139-generic", "7.0.0-31-generic"]
+  F boot_listing_status = "OK"
+  F modules_listing_status = "OK"
+  F reboot_required_marker = {"note": "the absence of this marker is not evidence that no reboot is pending; it is a distribution convention, not a kernel fact", "path": "/run/reboot-required", "present": false}
+  F boot_default_symlink = "7.0.0-31-generic"
+  F newest_installed_kernel = "7.0.0-31-generic"
+===== KERNEL_LOCKDOWN_MODE fail medium POLICY
+DETAIL: kernel lockdown is [none], so a privileged user can modify or read the running kernel (kexec, /dev/mem, unsigned module loading); lockdown is independent of Secure Boot and neither implies the other
+  - OK     /sys/kernel/security/lsm | lockdown,capability,landlock,yama,apparmor | 
+  - OK  LB /sys/kernel/security/lockdown | [none] integrity confidentiality | 
+  F securityfs_mounted = true
+  F lsm_list = ["lockdown", "capability", "landlock", "yama", "apparmor"]
+  F file_read = {"options_offered": ["none", "integrity", "confidentiality"], "path": "/sys/kernel/security/lockdown", "selected": "none", "value": "[none] integrity confidentiality"}
+===== SECURE_BOOT_ENABLED fail high POLICY
+DETAIL: the SecureBoot UEFI variable reads 0 at byte 4 (attribute prefix 06000000), so the firmware does not verify the signature of the boot loader or the kernel
+  - OK  LB /sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c |      | 
+  F efi_present = true
+  F file_read = {"attribute_prefix_hex": "06000000", "bytes_read": 5, "path": "/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c", "value_byte": 0}
+  F applicable = true
+===== TPM_PRESENCE pass info None
+DETAIL: a TPM 2 device is present at /sys/class/tpm/tpm0; presence is not use — whether anything measures or seals to it is root-only and reported as unknown in the evidence
+  - OK  LB /sys/class/tpm |  | 
+  - OK     /dev/tpm0 | chardev | TPM device node metadata; the node is never opened
+  - OK     /dev/tpmrm0 | chardev | TPM device node metadata; the node is never opened
+  - OK     /sys/kernel/security/tpm0/binary_bios_measurements | regular | 
+  - OK     /sys/class/tpm/tpm0/tpm_version_major | 2 | 
+  F measured_boot_state = "unknown: the PCR values and the measured-boot event log are root-only, and a denial there is not evidence that measured boot is unused"
+  F device_nodes = [{"path": "/dev/tpm0", "exists": true, "file_type": "chardev", "mode": 384, "uid": 0, "gid": 0, "size": 0, "status": "OK"}, {"path": "/dev/tpmrm0", "exists": true, "file_type": "chardev", "mode": 384, "uid": 0, "gid": 0, "size": 0, "status": "OK"}]
+  F event_log = {"path": "/sys/kernel/security/tpm0/binary_bios_measurements", "exists": true, "file_type": "regular", "mode": 288, "uid": 0, "gid": 0, "size": 0, "status": "OK"}
+  F tpm_present = true
+  F tpm_version = "2"
+  F tpm_device = {"description": "", "firmware_id": "MSFT0101:00", "name": "tpm0"}
+===== UEFI_PLATFORM_SETUP_MODE fail critical POLICY
+DETAIL: the SetupMode UEFI variable reads 1 at byte 4 (attribute prefix 06000000): no Platform Key is enrolled, so anyone with firmware access — including whoever held this machine before us, and anyone reaching the management controller's virtual media or BIOS console — can enrol their own Secure Boot keys and produce a machine that appears to boot securely
+  - OK     /sys/firmware/efi/efivars |  | 
+  - OK  LB /sys/firmware/efi/efivars/SetupMode-8be4df61-93ca-11d2-aa0d-00e098032b8c |     | 
+  F efi_present = true
+  F key_variables_present = null
+  F file_read = {"attribute_prefix_hex": "06000000", "bytes_read": 5, "path": "/sys/firmware/efi/efivars/SetupMode-8be4df61-93ca-11d2-aa0d-00e098032b8c", "value_byte": 1}
+  F applicable = true
+===== UNSIGNED_OR_OUT_OF_TREE_MODULES fail medium POLICY
+DETAIL: the kernel taint mask has bit 12 O (out-of-tree module loaded) and bit 13 E (unsigned module loaded) set, attributed to bnxt_en (OE)
+  - OK  LB /proc/sys/kernel/tainted | 12288 | 
+  - OK     /sys/module |  | 
+  - OK     /boot/config-6.8.0-139-generic | #
+# Automatically generated file; DO NOT EDIT.
+# Linux/x86 6.8.12 Kernel Configuration
+#
+CONFIG_CC_V | 
+  F file_read = {"decoded_bits": [{"bit": 0, "letter": "P", "meaning": "proprietary module loaded", "set": false}, {"bit": 1, "letter": "F", "meaning": "module force-loaded", "set": false}, {"bit": 2, "letter": "S", "meaning": "kernel running on an out-of-specification system", "set": false}, {"bit": 3, "letter": "
+  F tainting_modules = [{"name": "bnxt_en", "taint_letters": "OE", "path": "/sys/module/bnxt_en/taint"}]
+  F modules_total = 221
+  F sig_enforce = {"errno": "", "value": "N"}
+  F config_module_sig = [{"key": "CONFIG_MODULE_SIG", "line": "CONFIG_MODULE_SIG=y", "source_path": "/boot/config-6.8.0-139-generic"}, {"key": "CONFIG_MODULE_SIG_ALL", "line": "CONFIG_MODULE_SIG_ALL=y", "source_path": "/boot/config-6.8.0-139-generic"}]
+  F enforcement_note = "taint bit E records that an unsigned module was loaded, even on a kernel that does not enforce module signatures; enforcement is read separately and never inferred from taint"
+  F modules_disabled = "0"
+===== HOST_FIREWALL_STATE unknown medium EXECUTION_ERROR
+DETAIL: a filtering subsystem is enabled but its effective ruleset is not readable by this account (EXECUTION_ERROR); the readable configuration defaults are in evidence, and 'no rules readable' is never reported as 'no rules'
+  - OK     systemctl is-active ufw | active | 
+  - OK     /etc/ufw/ufw.conf | # /etc/ufw/ufw.conf
+#
+
+# Set to yes to start on boot. If setting this remotely, be sure to add a rul | 
+  - EXEC_ERROR     systemctl is-active firewalld | inactive | exit status 4
+  - ENOENT ENOENT    /etc/firewalld/firewalld.conf |  | open: no such file or directory
+  - EXEC_ERROR     systemctl is-active nftables | inactive | exit status 4
+  - ENOENT ENOENT    /etc/nftables.conf |  | open: no such file or directory
+  - EXEC_ERROR     systemctl is-active iptables | inactive | exit status 4
+  - EXEC_ERROR     systemctl is-active netfilter-persistent | inactive | exit status 4
+  - OK     /etc/default/ufw | # /etc/default/ufw
+#
+
+# Set to yes to apply rules to support IPv6 (no means only IPv6 on loopback
+#  | 
+  - UTILITY_MISSING ENOENT    nft list ruleset |  | exec: "nft": executable file not found in $PATH
+  - EXEC_ERROR     iptables -S |  | exit status 4
+  - EXEC_ERROR     iptables-nft -S |  | exit status 4
+  F systemd_booted = true
+  F subsystems = [{"name": "ufw", "unit": "ufw", "is_active": "active", "is_active_rc": 0, "config_path": "/etc/ufw/ufw.conf", "config_values": {"DEFAULT_APPLICATION_POLICY": "SKIP", "DEFAULT_FORWARD_POLICY": "DROP", "DEFAULT_INPUT_POLICY": "DROP", "DEFAULT_OUTPUT_POLICY": "ACCEPT", "ENABLED": "no", "IPT_MODULES": "
+  F netfilter_modules_loaded = ["nf_tables", "ip_tables", "nft_chain_nat"]
+  F netfilter_modules_note = "a loaded module is a capability signal, not evidence that any rule is loaded"
+  F global_scope_listener_present = true
+===== LOGIN_AND_ESCALATION_SURFACE unknown medium EACCES
+DETAIL: the enumerable part is complete and in evidence, but this account cannot establish: the password state of other accounts (/etc/shadow EACCES) — unreadable is not 'no password set'; the sudo policy behind group membership (/etc/sudoers EACCES); key material in /root (EACCES)
+  - OK  LB /etc/passwd | root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/ | account inventory; the file is primary because it needs no tool
+  - OK     /etc/group | root:x:0:
+daemon:x:1:
+bin:x:2:
+sys:x:3:
+adm:x:4:
+tty:x:5:
+disk:x:6:
+lp:x:7:
+mail:x:8:
+news:x:9:
+uucp | 
+  - OK     /etc/nsswitch.conf | # /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you ha | 
+  - OK     passwd -S | ubuntu L 2026-09-07 0 99999 7 -1 | passwd -S reports the caller only; it is never generalised to other accounts
+  - OK     /etc/shadow | regular | 
+  - OK     /etc/gshadow | regular | 
+  - OK     /etc/sudoers | regular | 
+  - OK     /etc/sudoers.d | dir | 
+  - EACCES EACCES    /root/.ssh |  | lstat: permission denied
+  - EACCES EACCES    /root/.ssh/authorized_keys |  | lstat: permission denied
+  F nsswitch_backends = ["files"]
+  F accounts = [{"name": "root", "uid": 0, "shell": "/bin/bash", "shell_class": "login", "home": "/root", "authorized_keys_status": "EACCES", "authorized_keys_errno": "EACCES"}, {"name": "daemon", "uid": 1, "shell": "/usr/sbin/nologin", "shell_class": "nologin", "home": "/usr/sbin", "authorized_keys_status": ""}, 
+  F unreadable_homes = ["/root"]
+  F privileged_groups = [{"group": "disk", "gid": 6, "members": [], "effectively_root_only": true, "root_equivalent": true}, {"group": "kmem", "gid": 15, "members": [], "effectively_root_only": true, "root_equivalent": true}, {"group": "sudo", "gid": 27, "members": ["ubuntu"], "effectively_root_only": false, "root_equivale
+  F password_state_self = "ubuntu L 2026-09-07 0 99999 7 -1"
+  F policy_boundaries = [{"path": "/etc/shadow", "exists": true, "file_type": "regular", "mode": 416, "uid": 0, "gid": 42, "size": 681, "status": "OK"}, {"path": "/etc/gshadow", "exists": true, "file_type": "regular", "mode": 416, "uid": 0, "gid": 42, "size": 541, "status": "OK"}, {"path": "/etc/sudoers", "exists": true, "
+===== REMOTE_LISTENING_SURFACE pass info None
+DETAIL: every non-loopback listener is an expected remote-access path (tcp 0.0.0.0:22, tcp6 0000:0000:0000:0000:0000:0000:0000:0000:22); an outbound reverse tunnel (Cloudflare Tunnel, ngrok, frp, ssh -R) creates no listener and is structurally invisible to this check
+  - OK  LB /proc/net/tcp |   sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode     | socket table: the only source that is identical on every distribution
+  - OK  LB /proc/net/tcp6 |   sl  local_address                         remote_address                        st tx_queue rx_que | socket table: the only source that is identical on every distribution
+  - OK     /proc/net/udp |    sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode re | socket table: the only source that is identical on every distribution
+  - OK     /proc/net/udp6 |   sl  local_address                         remote_address                        st tx_queue rx_que | socket table: the only source that is identical on every distribution
+  - OK     /proc |  | process table scan for socket ownership; unreadable /proc/<pid>/fd of another uid is an attribution 
+  F blind_spots = ["an outbound reverse tunnel (Cloudflare Tunnel, ngrok, frp, ssh -R) creates no listener and is structurally invisible to this check"]
+  F listeners = [{"proto": "tcp", "local_addr": "0.0.0.0", "port": 22, "scope": "global", "uid": 0, "inode": 6556, "owner_reason": "EACCES: /proc/<pid>/fd of another uid is unreadable, so the owning process is unknown", "class": "ssh", "recognised": true}, {"proto": "tcp6", "local_addr": "0000:0000:0000:0000:0000:0
+  F global_scope_listeners = ["tcp 0.0.0.0:22", "tcp6 0000:0000:0000:0000:0000:0000:0000:0000:22"]
+  F attribution_gaps = null
+===== SSH_AUTH_METHODS_POLICY pass info None
+DETAIL: the running policy accepts public keys only: passwordauthentication no, kbdinteractiveauthentication no, permitemptypasswords no, pubkeyauthentication yes
+  - OK  LB /usr/sbin/sshd -G | port 22
+addressfamily any
+listenaddress [::]:22
+listenaddress 0.0.0.0:22
+usepam yes
+logingracetime 1 | 
+  - OK     /etc/ssh/sshd_config | 
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more informatio | sshd config chain: /etc/ssh/sshd_config
+  - OK     /etc/ssh/sshd_config.d |  | sshd Include expansion: /etc/ssh/sshd_config.d/*.conf
+  - OK     /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf | PasswordAuthentication no
+KbdInteractiveAuthentication no | sshd config chain: /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf
+  - OK     /etc/pam.d/sshd | regular | PAM stack for sshd; its presence is why kbdinteractiveauthentication matters
+  F pam_sshd = {"path": "/etc/pam.d/sshd", "exists": true, "file_type": "regular", "mode": 420, "uid": 0, "gid": 0, "size": 2133, "status": "OK"}
+  F directives = [{"directive": "passwordauthentication", "effective_value": "no", "source": "sshd -G (running daemon)", "winning_source": {"path": "/etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf", "line": 1, "value": "no"}, "shadowed_occurrences": [{"path": "/etc/ssh/sshd_config", "line": 66, "value": "no"}
+===== SSH_POLICY_IN_FORCE fail medium POLICY
+DETAIL: the configuration chain changed after the daemon started (/etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf modified 0s after ActiveEnterTimestamp), so the running daemon is enforcing something other than what is on disk
+  - OK     /etc/ssh/sshd_config | 
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more informatio | sshd config chain: /etc/ssh/sshd_config
+  - OK     /etc/ssh/sshd_config.d |  | sshd Include expansion: /etc/ssh/sshd_config.d/*.conf
+  - OK     /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf | PasswordAuthentication no
+KbdInteractiveAuthentication no | sshd config chain: /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf
+  - OK  LB systemctl show ssh.service -p ActiveEnterTimestamp -p ActiveState -p FragmentPath | ActiveState=active
+FragmentPath=/usr/lib/systemd/system/ssh.service
+ActiveEnterTimestamp=Tue 2026-09 | 
+  - OK     systemctl show ssh.socket -p ListenStream -p ActiveState | ActiveState=active | 
+  F config_chain = [{"path": "/etc/ssh/sshd_config", "status": "OK", "mode": 420, "uid": 0, "size": 3514}, {"path": "/etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf", "status": "OK", "mode": 420, "uid": 0, "size": 58}]
+  F newest_config_mtime = "2026-09-08T17:37:29Z"
+  F newest_config_path = "/etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf"
+  F systemd_booted = true
+  F socket_activation = {"active_state": "active", "listen_stream": "", "note": "the listener comes from the socket unit, so sshd_config never decides the listen address", "unit": "ssh.socket"}
+  F service_state = {"ActiveEnterTimestamp": "Tue 2026-09-08 17:37:29 UTC", "ActiveState": "active", "FragmentPath": "/usr/lib/systemd/system/ssh.service"}
+  F service_active_enter = "2026-09-08T17:37:29Z"
+  F delta_seconds = 0
+===== SSH_ROOT_LOGIN_POLICY unknown high EACCES
+DETAIL: the running policy permits root login by public key (permitrootlogin prohibit-password, per sshd -G (running daemon)) and at least one candidate AuthorizedKeysFile path could not be resolved (EACCES), so root key material can neither be confirmed nor excluded; denied is not absent
+  - OK  LB /usr/sbin/sshd -G | port 22
+addressfamily any
+listenaddress [::]:22
+listenaddress 0.0.0.0:22
+usepam yes
+logingracetime 1 | 
+  - OK     /etc/ssh/sshd_config | 
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more informatio | sshd config chain: /etc/ssh/sshd_config
+  - OK     /etc/ssh/sshd_config.d |  | sshd Include expansion: /etc/ssh/sshd_config.d/*.conf
+  - OK     /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf | PasswordAuthentication no
+KbdInteractiveAuthentication no | sshd config chain: /etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf
+  - EACCES EACCES    /root/.ssh |  | parent of a candidate root AuthorizedKeysFile; a successful listing is what makes absence provable
+  - EACCES EACCES LB /root/.ssh/authorized_keys |  | candidate root AuthorizedKeysFile (sshd -G authorizedkeysfile)
+  - EACCES EACCES    /root/.ssh |  | parent of a candidate root AuthorizedKeysFile; a successful listing is what makes absence provable
+  - EACCES EACCES LB /root/.ssh/authorized_keys2 |  | candidate root AuthorizedKeysFile (sshd -G authorizedkeysfile)
+  F config_resolution = {"directive": "permitrootlogin", "effective_value": "prohibit-password", "winning_source": {"path": "/etc/ssh/sshd_config", "line": 42, "value": "prohibit-password"}, "shadowed_occurrences": [], "resolution_rule": "first-obtained-value-wins (sshd_config(5): the first obtained value for each paramete
+  F effective_value = "prohibit-password"
+  F effective_value_source = "sshd -G (running daemon)"
+  F conditional_blocks = []
+  F authorized_keys_checked = [{"path": "/root/.ssh/authorized_keys", "status": "EACCES", "errno": "EACCES", "proven_absent": false, "parent_listing_status": "EACCES"}, {"path": "/root/.ssh/authorized_keys2", "status": "EACCES", "errno": "EACCES", "proven_absent": false, "parent_listing_status": "EACCES"}]
+  F authorized_keys_source = "sshd -G authorizedkeysfile"
+  F authorized_keys_command = "none"
+  F trusted_user_ca_keys = "none"
+  F root_home = "/root"
+===== CREDENTIAL_FILE_EXPOSURE unknown high EACCES
+DETAIL: at least one credential path could not be inspected (denied home directory or unreadable ACL), so that account's credential exposure is unknown rather than clean
+  - OK  LB /etc/passwd | root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/ | 
+  F credential_files = [{"path": "/root/.pgpass", "file_type": "", "magic_class": "", "group_member_count": 0, "effective_readers": "unknown (EACCES)", "errno": "EACCES", "adverse": false, "rule": "not group- or world-readable", "rule_source": "PostgreSQL libpq: a .pgpass with group or world permissions is ignored"}, {"pa
+  F homes_inspected = ["/root", "/bin", "/home/ubuntu"]
+  F unreadable_homes = ["/", "/root", "/root"]
+  F decoding_note = "a Docker config auths entry is base64, which is not encryption; it is never decoded"
+===== PRIVATE_KEY_MATERIAL_EXPOSURE pass info None
+DETAIL: every enumeration completed and each private-key-class file found is readable by its owner only (121 candidate(s) classified)
+  - OK     /etc/ssh |  | bounded key-material enumeration under /etc/ssh
+  - OK     /etc/ssl |  | bounded key-material enumeration under /etc/ssl
+  - OK     /opt |  | bounded key-material enumeration under /opt
+  - OK     /srv |  | bounded key-material enumeration under /srv
+  - OK     /home |  | bounded key-material enumeration under /home
+  - OK     /root |  | bounded key-material enumeration under /root
+  F walks = [{"root": "/etc/ssh", "entries_scanned": 13, "dirs_pruned": [], "unreadable_dirs": [], "crossed_mounts": false, "budget_exhausted": "none"}, {"root": "/etc/ssl", "entries_scanned": 247, "dirs_pruned": [], "unreadable_dirs": ["/etc/ssl/private"], "crossed_mounts": false, "budget_exhausted": "none"}, 
+  F private_key_files = [{"path": "/etc/ssl/certs/ACCVRAIZ1.pem", "file_type": "symlink", "mode": 511, "uid": 0, "gid": 0, "size": 48, "magic_class": "not-a-regular-file", "group_member_count": 0, "effective_readers": "", "adverse": false}, {"path": "/etc/ssl/certs/AC_RAIZ_FNMT-RCM.pem", "file_type": "symlink", "mode": 511
+  F content_read = "at most 64 bytes per candidate, used to classify and immediately discarded"
+===== PROVISIONING_DATA_PROTECTION fail medium POLICY
+DETAIL: provisioning data that can carry injected credentials is readable by unprivileged users: /run/cloud-init/instance-data.json readable by any local user (other-readable); /var/lib/cloud/instances/90:5a:08:31:9a:63 readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/05-preserve.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/05_logging.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/90-datasource.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/90_dpkg.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/99-apt-config.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/99-custom.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/99-hostname.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/99-networking-renderer.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/99-preserve-user.cfg readable by any local user (other-readable); /etc/cloud/cloud.cfg.d/README readable by any local user (other-readable)
+  - OK     /var/lib/cloud/instance/user-data.txt | regular | 
+  - OK     /var/lib/cloud/instance/user-data.txt.i | regular | 
+  - OK     /var/lib/cloud/instance/vendor-data.txt | regular | 
+  - OK     /var/lib/cloud/instance/obj.pkl | regular | 
+  - ENOENT ENOENT    /var/lib/cloud/seed/nocloud/user-data |  | provisioning artifact candidate
+  - ENOENT ENOENT    /var/lib/cloud/seed/nocloud-net/user-data |  | provisioning artifact candidate
+  - OK     /run/cloud-init/instance-data.json | regular | 
+  - OK     /run/cloud-init/instance-data-sensitive.json | regular | 
+  - OK     /run/cloud-init/combined-cloud-config.json | regular | 
+  - OK     /etc/cloud/ds-identify.cfg | regular | 
+  - ENOENT ENOENT    /usr/share/oem/config.ign |  | provisioning artifact candidate
+  - ENOENT ENOENT    /var/lib/ignition/user.ign |  | provisioning artifact candidate
+  - OK     /var/lib/cloud/instances |  | provisioning directory enumeration
+  - OK     /var/lib/cloud/instances/90:5a:08:31:9a:63 | dir | 
+  - OK     /var/lib/cloud/seed |  | provisioning directory enumeration
+  - OK     /etc/cloud/cloud.cfg.d |  | provisioning directory enumeration
+  - OK     /etc/cloud/cloud.cfg.d/05-preserve.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/05_logging.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/10_tinkerbell.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/90-datasource.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/90_dpkg.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/99-apt-config.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/99-custom.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/99-hostname.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/99-networking-renderer.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/99-preserve-user.cfg | regular | 
+  - OK     /etc/cloud/cloud.cfg.d/README | regular | 
+  F artifacts = [{"path": "/var/lib/cloud/instance/user-data.txt", "file_type": "regular", "mode": 384, "uid": 0, "gid": 0, "size": 0, "magic_class": "", "group_name": "root", "group_member_count": 0, "effective_readers": "the owner only", "adverse": false}, {"path": "/var/lib/cloud/instance/user-data.txt.i", "file
+  F redaction_observed = true
+  F datasource_class = "unknown"
+  F sensitive_paths_denied = ["/root/anaconda-ks.cfg (EACCES)"]
+  F content_read = "key names only; no provisioning payload value is read or emitted"
+===== SYSTEM_SECRET_STORE_PROTECTION pass info None
+DETAIL: every system secret store present keeps its expected restrictive permissions (6 inspected)
+  - OK     /etc/shadow | regular | system secret store (not other-readable)
+  - OK     /etc/shadow [system.posix_acl_access] | no ACL (ENODATA) | the file carries no POSIX access ACL
+  - OK     /etc/gshadow | regular | system secret store (not other-readable)
+  - OK     /etc/gshadow [system.posix_acl_access] | no ACL (ENODATA) | the file carries no POSIX access ACL
+  - OK     /etc/ssl/private | dir | system secret store (not other-traversable)
+  - OK     /etc/ssl/private [system.posix_acl_access] | no ACL (ENODATA) | the file carries no POSIX access ACL
+  - ENOENT ENOENT    /etc/pki/tls/private |  | system secret store (not other-traversable)
+  - OK     /etc/sudoers | regular | system secret store (not other-readable or other-writable)
+  - OK     /etc/sudoers [system.posix_acl_access] | no ACL (ENODATA) | the file carries no POSIX access ACL
+  - OK     /etc/sudoers.d | dir | system secret store (not other-readable or other-writable)
+  - OK     /etc/sudoers.d [system.posix_acl_access] | no ACL (ENODATA) | the file carries no POSIX access ACL
+  - OK     /var/lib/systemd/random-seed | regular | system secret store (not other-readable)
+  - OK     /var/lib/systemd/random-seed [system.posix_acl_access] | no ACL (ENODATA) | the file carries no POSIX access ACL
+  - ENOENT ENOENT    /etc/krb5.keytab |  | system secret store (not other-readable)
+  F stores = [{"path": "/etc/shadow", "file_type": "regular", "mode": 416, "uid": 0, "gid": 42, "size": 681, "magic_class": "", "group_name": "shadow", "group_member_count": 0, "effective_readers": "group shadow is empty, so this is owner-only in practice", "acl": {"path": "/etc/shadow", "present": false, "grant
+  F observation_boundaries = null
+  F acl_note = "ENODATA from system.posix_acl_access means the file has no ACL, which is a positive answer, not an unknown"
+===== DISK_ENCRYPTION_AT_REST fail high POLICY
+DETAIL: the device-mapper and block device listings both completed and contain no CRYPT- mapping, so dm-crypt/LUKS is provably not in use for any mounted filesystem; this statement is scoped to dm-crypt/LUKS and does not assert that the media is unencrypted — the named blind spots in the evidence say what remains unknown
+  - OK  LB /sys/block |  | 
+  - OK     /dev/mapper |  | 
+  - OK     /proc/self/mountinfo | 25 31 0:23 / /sys rw,nosuid,nodev,noexec,relatime shared:7 - sysfs sysfs rw
+26 31 0:24 / /proc rw,no | 
+  F scope = "dm-crypt/LUKS as visible to the kernel's device-mapper layer"
+  F dm_devices = null
+  F dm_devices_found = 0
+  F dev_mapper_entries = ["control"]
+  F mount_chain = [{"mountpoint": "/", "source": "/dev/nvme0n1p2", "fstype": "ext4", "backing_devices": ["nvme0n1p2", "nvme0n1"], "encrypted_by_dm_crypt": false}, {"mountpoint": "/boot/efi", "source": "/dev/nvme0n1p1", "fstype": "vfat", "backing_devices": ["nvme0n1p1", "nvme0n1"], "encrypted_by_dm_crypt": false}]
+  F ext4_fscrypt_kernel_support = true
+  F blind_spots = [{"mechanism": "self-encrypting drive / TCG Opal", "why_unknown": "every IOC_OPAL_* ioctl is gated on CAP_SYS_ADMIN and the kernel exposes no Opal state in sysfs; the drive model string cannot substitute, because vendors ship SED and non-SED SKUs under the same base part number", "evidence_path_or_e
+===== MEDIA_HEALTH_VISIBILITY unknown medium EACCES
+DETAIL: SMART telemetry is not obtainable by this account (smartctl -H -j /dev/nvme0n1 -> UTILITY_MISSING UTILITY_MISSING; nvme smart-log /dev/nvme0n1 -> EXEC_ERROR EXECUTION_ERROR), so media health itself is unknown; the 3 readable adjacent signals are in evidence and are all clean, but a filesystem error counter is not media health
+  - OK     /sys/fs/ext4 |  | 
+  - OK     /sys/block |  | 
+  - UTILITY_MISSING ENOENT    smartctl -H -j /dev/nvme0n1 |  | exec: "smartctl": executable file not found in $PATH
+  - EXEC_ERROR     nvme smart-log /dev/nvme0n1 |  | exit status 1
+  F capability_required = "CAP_SYS_ADMIN on the NVMe or SCSI character device for SMART; the NVMe admin passthrough is gated by a capability check, not by group membership"
+  F remediation_note = "obtaining SMART here requires CAP_SYS_ADMIN \u00e2\u20ac\u201d adding the account to the disk group would not grant it, and recommending that would be a wrong instruction"
+  F readable_signals = [{"path": "/sys/fs/ext4/nvme0n1p2/errors_count", "value": "0", "clean": true}, {"path": "/sys/fs/ext4/nvme0n1p2/first_error_time", "value": "0"}, {"path": "/sys/fs/ext4/nvme0n1p2/lifetime_write_kbytes", "value": "2872045"}, {"path": "/sys/block/nvme0n1/device/state", "value": "live", "clean": true},
+  F smart_attempts = ["smartctl -H -j /dev/nvme0n1 -> UTILITY_MISSING UTILITY_MISSING", "nvme smart-log /dev/nvme0n1 -> EXEC_ERROR EXECUTION_ERROR"]
+  F smart_obtained = false
+===== ROOT_FILESYSTEM_REDUNDANCY fail low POLICY
+DETAIL: the root filesystem resolves to a single physical device (nvme0n1p2 -> nvme0n1) and every redundancy enumeration completed without finding an md array, a dm-raid target or a multi-device pool, so the loss of that device loses the root filesystem; 1 attached device(s) (nvme1n1) are idle and could provide redundancy. A single-device root may be a deliberate rebuild-on-failure choice
+  - OK  LB /proc/self/mountinfo | 25 31 0:23 / /sys rw,nosuid,nodev,noexec,relatime shared:7 - sysfs sysfs rw
+26 31 0:24 / /proc rw,no | 
+  - OK     /proc/mdstat | Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10] 
+unused devices: <none> | 
+  - OK     /sys/block |  | 
+  F root_mount = {"fstype": "ext4", "major_minor": "259:2", "source": "/dev/nvme0n1p2"}
+  F backing_devices = ["nvme0n1p2", "nvme0n1"]
+  F md_arrays = null
+  F mdstat_excerpt = "Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10] \nunused devices: <none>"
+  F mdstat_note = "/proc/mdstat always lists the compiled-in personalities; a populated Personalities: line is not an array"
+  F pci_raid_controllers = null
+  F redundancy_layer = "none"
+  F idle_devices_present = ["nvme1n1"]
+  F distinct_backing_disks = 1
+===== UNUSED_ATTACHED_BLOCK_DEVICES fail medium POLICY
+DETAIL: attached but unaccounted for: nvme1n1 — no partition table and no filesystem signature known to udev, no holder, no mount and no swap entry. Whether prior-tenant data remains on it is unknown by design — the sensor does not open the device to find out what is on it
+  - OK  LB /sys/block |  | 
+  - OK     /proc/self/mountinfo | 25 31 0:23 / /sys rw,nosuid,nodev,noexec,relatime shared:7 - sysfs sysfs rw
+26 31 0:24 / /proc rw,no | 
+  - OK     /proc/swaps | Filename				Type		Size		Used		Priority | 
+  F device_not_opened = true
+  F remanence = "unknown by design \u00e2\u20ac\u201d the sensor does not open the device to find out what is on it"
+  F udev_caveat = "fstype comes from the udev database as recorded at the last uevent, not from a read of the disk; a filesystem created afterwards would be invisible"
+  F devices = [{"name": "nvme0n1", "size_bytes": 960197124096, "partitions": ["nvme0n1p1", "nvme0n1p2"], "holders": [], "slaves": [], "mountpoints": ["/", "/boot/efi"], "udev_fstype": "", "udev_record_path": "/run/udev/data/b259:0", "udev_record_readable": true, "in_swap": false, "in_use": true, "in_use_basis": [

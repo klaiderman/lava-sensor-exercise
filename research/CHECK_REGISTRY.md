@@ -1571,7 +1571,7 @@ C = restricted (container / EACCES-heavy). `p` = pass, `f` = fail, `u` = unknown
 | LOGIN_AND_ESCALATION_SURFACE | medium | **u** (sudoers + shadow + /root EACCES) | u (same class) | u |
 | HOST_FIREWALL_STATE | medium | **u** (ufw active, rules 0640) | f (no filter + listener) or u | u |
 | PRIVATE_KEY_MATERIAL_EXPOSURE | high | **p** (scope printed) | p or f | u (BUDGET/EACCES) |
-| CREDENTIAL_FILE_EXPOSURE | high | **p** | p or f | p or f (container scope) |
+| CREDENTIAL_FILE_EXPOSURE | high | **u** (corrected 2026-09-09 02:20Z: /root unreadable ⇒ unknown per this registry's own §2.2 rule; original prediction p was inconsistent) | p or f | p or f (container scope) |
 | PROVISIONING_DATA_PROTECTION | medium | **p** | p* (no cloud-init) | p* |
 | SYSTEM_SECRET_STORE_PROTECTION | high | **p** | p | p / u |
 | BMC_INBAND_INTERFACE_PRESENT | info | **p** (declared) | p (declared:false, proven) | u (host sysfs inherited, annotated) |
@@ -1590,7 +1590,7 @@ C = restricted (container / EACCES-heavy). `p` = pass, `f` = fail, `u` = unknown
 | TPM_PRESENCE | info | **p** (2.0) | p (proven absent) | u |
 | BOOT_ARTIFACT_READABILITY | low | **f** (initramfs 0644, ESP dmask 0022) | p (RHEL 0600) or f | p* (no /boot) |
 
-Predicted Lava-host distribution: **9 pass · 8 fail · 8 unknown** —
+Predicted Lava-host distribution (corrected 2026-09-09 02:20Z after the independent review, H2): the table above sums to **12 pass · 8 fail · 5 unknown** for the 25 registry checks after the CREDENTIAL_FILE_EXPOSURE correction (the original prose "9 pass · 8 fail · 8 unknown" was arithmetically wrong). With the lead-added BOOT_KERNEL_DRIFT (fail), 26 checks ⇒ 12/9/5. First real-host run (before fix batch 1) observed 10/11/5; the two extra FAILs were sensor bugs (SSH_POLICY_IN_FORCE same-second timestamp; PROVISIONING_DATA_PROTECTION redacted-file rule), fixed in batch 1 — regenerate and compare. Reason vocabulary addition: TIMESTAMP_RESOLUTION (order of config mtime vs daemon start undecidable at the available clock resolution).
 1 critical, 5 high, 8 medium, 1 low fail/unknown-carried severities, 10 info.
 Every one of the 8 unknowns has a named cause and an errno, and 4 of them are unknown *by
 construction* for an unprivileged account (D-08).

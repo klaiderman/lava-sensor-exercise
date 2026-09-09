@@ -1,0 +1,7 @@
+sys/devices/nvme0n1/holders
+sys/devices/nvme0n1/slaves
+sys/devices/nvme1n1/holders
+sys/devices/nvme1n1/slaves
+sys/block
+proc/1
+root/.ssh

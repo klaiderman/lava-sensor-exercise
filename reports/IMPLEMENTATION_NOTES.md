@@ -224,6 +224,80 @@ Per lead resolution of registry OPEN-4 (the registry itself argued for
 "may be a deliberate rebuild-on-failure choice" caveat lives in the reason
 rather than in the severity.
 
+## Fix batch 1 (from the test lab and the first real-host run)
+
+Five wrong answers, each removed and each pinned by a regression test in
+`internal/checks/fixbatch1_test.go`.
+
+1. **`ROOT_FILESYSTEM_REDUNDANCY` called a diskless root a single disk.** A root
+   backed by no local block device (NFS, diskless, overlay) took the same
+   single-device FAIL as a real one disk, printing an empty device list. It is
+   now `unknown` with reason `EINVAL`, naming the root's source and fstype and
+   saying that redundancy for it lives on the other side of that boundary. The
+   single-device FAIL is now reached only when exactly one disk really is there.
+   Tests: `TestRootRedundancy_NetworkRootIsUnknownNotSingleDevice`,
+   `TestRootRedundancy_OverlayRootIsUnknownButRealSingleDiskStillFails`.
+
+2. **SMART health was sniffed, not parsed.** `smartctl -H -j` output was tested
+   with `strings.Contains(v, "{")` and then for `"passed":false`, so a truncated
+   or malformed report — which contains neither — read as healthy. The document
+   is now unmarshalled into a struct: a parse failure or a missing
+   `smart_status.passed` yields `unknown` / `PARSE_ERROR` with the parse error in
+   evidence, and a health verdict is never inferred from the shape of the output.
+   Unreachable on the Lava host (smartctl absent), which is exactly why it had to
+   be fixed before shipping. Tests: `TestMediaHealth_TruncatedSmartJSONIsNotHealthy`,
+   `TestMediaHealth_SmartJSONWithoutPassedFieldIsNotHealthy`,
+   `TestMediaHealth_SmartJSONIsReadBothWays`, `TestParseSmartctlJSON`.
+
+3. **`SSH_POLICY_IN_FORCE` ordered two events inside one second.** On the host
+   the drop-in mtime was 17:37:29.291 and `ActiveEnterTimestamp` was 17:37:29,
+   and the check reported FAIL with `delta_seconds: 0` — an assertion of drift
+   that a whole-second timestamp cannot support. The comparison now resolves the
+   unit's start as precisely as systemd will report it: the `*TimestampMonotonic`
+   properties are microseconds since boot and are reconstructed against
+   `/proc/uptime`, giving a 100 ms resolution; otherwise the rendered
+   whole-second timestamp gives 1 s. A difference inside that resolution is
+   `unknown` with the new reason **`TIMESTAMP_RESOLUTION`** — nothing disagrees,
+   the instrument simply does not resolve the question, which is why it is not
+   `CONTESTED`. Beyond it, newer config is FAIL and older is PASS. The evidence
+   gains `service_start_source`, `comparison_resolution_ms` and `delta_ms`, and
+   keeps the socket-activation note. Tests:
+   `TestSSHPolicyInForce_SameSecondIsUndecidable` (four staged mtimes, end to
+   end), `..._ClearlyNewerConfigStillFails`,
+   `..._MonotonicSourceGivesSubSecondResolution`, `..._SocketActivationNoteIsKept`.
+
+4. **`PROVISIONING_DATA_PROTECTION` failed every cloud-init host by design.**
+   cloud-init publishes `instance-data.json` world-readable *on purpose* with its
+   sensitive keys redacted (the check's own evidence showed
+   `redaction_observed: true`), keeps the sensitive copy, user-data, vendor-data,
+   seeds and `obj.pkl` root-only, and ships `.cfg` drop-ins as public
+   configuration. Artifacts are now classified `payload` or `public-by-design`,
+   and only a readable payload artifact is adverse; a `.cfg` drop-in is promoted
+   to payload when it declares a credential-bearing key *name*. Instance
+   directories are descended one level and their contents classified by name,
+   because they are named after the instance id. `datasource_class` now comes
+   from `/run/cloud-init/cloud-id`, falling back to `v1.cloud_name` /
+   `v1.platform` parsed out of `instance-data.json`. Expected host result: pass,
+   with the artifact table in evidence. Tests:
+   `TestProvisioning_PublicByDesignArtifactsAreNotExposure`,
+   `..._ReadablePayloadStillFails`, `..._InstanceDirectoryPayloadIsFoundByName`,
+   `..._DropInDeclaringCredentialKeysIsPayload`, `TestCloudNameFrom`.
+
+5. **`CREDENTIAL_FILE_EXPOSURE` walked service accounts' placeholder homes.**
+   `homes_inspected` contained `/bin` and `unreadable_homes` contained `/` and a
+   duplicated `/root`, because every `/etc/passwd` line with a home was walked.
+   The set is now the deduplicated homes of accounts with a login-capable shell,
+   plus root whatever its shell says, minus the placeholder directories
+   distributions hand to service accounts (`/`, `/bin`, `/sbin`, `/dev`,
+   `/usr/sbin`, `/nonexistent`, `/var/empty`, …), which are reported in a new
+   `homes_skipped` field rather than silently dropped. Status semantics are
+   unchanged: an unreadable home is still `unknown` with the boundary in
+   evidence. Tests: `TestCredentialHomes_SkipsSystemDirsAndDeduplicates`,
+   `TestCredentialExposure_HomesAreCleanAndDeduplicated`.
+
+The closed reason vocabulary gained one class in this batch,
+`TIMESTAMP_RESOLUTION` (item 3). It is documented in `sensor/README.md`.
+
 ## Bugs the tests found during implementation
 
 - A binary that exists but is not executable was classified `EXECUTION_ERROR`

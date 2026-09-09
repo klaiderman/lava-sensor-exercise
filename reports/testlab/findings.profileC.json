@@ -1,12 +1,12 @@
 {
   "schema_version": "1",
-  "collected_at": "2026-09-09T01:57:14Z",
+  "collected_at": "2026-09-09T02:13:58Z",
   "sensor_version": "0.1.0-dev",
   "machine": {
     "host_id": "b3699e34d2c903fc97b80751870a0e4dc2fc14cccc609102aaff81ebedc572e3",
     "host_id_source": "machine-id (keyed hash)",
     "host_id_caveat": "stable across reboots; regenerated on re-image; clone-vulnerable",
-    "hostname": "6d2ed429d55f",
+    "hostname": "b38314a49ca7",
     "hostname_source": "/proc/sys/kernel/hostname",
     "owner": "unknown",
     "owner_source": "none (all sources placeholder, absent or denied)",
@@ -91,7 +91,7 @@
       "cpu_vendor": "GenuineIntel",
       "source": "/proc/cpuinfo"
     },
-    "memory_bytes": 8095682560,
+    "memory_bytes": 8095678464,
     "memory_source": "/proc/meminfo:MemTotal",
     "swap_total_bytes": 2147483648,
     "storage": [
@@ -696,7 +696,7 @@
         ],
         "inventory_note": "the absence of a client tool says nothing about whether a management controller exists or answers; it never sets another check to unknown"
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "info",
       "duration_ms": 0
     },
@@ -768,7 +768,7 @@
         "udev_or_modprobe_rules_matching_ipmi": null,
         "ipmi_class_device_present": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
       "duration_ms": 0
     },
@@ -806,7 +806,7 @@
         "smbios_type42_present": false,
         "interfaces": null
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -855,7 +855,7 @@
         "interface_declared": false,
         "never_issued_ipmi_command": true
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "info",
       "duration_ms": 0
     },
@@ -886,7 +886,7 @@
         "module_note": "a loaded ipmi_si is a capability signal; only a populated identity attribute proves the controller answered",
         "ipmi_class_device_present": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "info",
       "duration_ms": 0
     },
@@ -912,9 +912,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "392 178 0:85 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1037/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1",
+            "value": "893 778 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1041/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
             "value_truncated_in_evidence": true,
-            "bytes": 3375,
+            "bytes": 3384,
             "duration_ms": 0,
             "mode": 292,
             "uid": 1000,
@@ -925,7 +925,7 @@
         "scope_note": "the initramfs is never opened; extracting it to look for embedded provisioning material would be unbounded and outside read-only intent. Mode and size are the finding",
         "artifacts": null
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "low",
       "duration_ms": 0
     },
@@ -981,7 +981,7 @@
           "present": false
         }
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -1009,7 +1009,7 @@
         "securityfs_mounted": true,
         "applicable": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -1039,7 +1039,7 @@
             "status": "EXEC_ERROR",
             "reason": "EXECUTION_ERROR",
             "exit_code": 1,
-            "duration_ms": 9,
+            "duration_ms": 4,
             "detail": "exit status 1",
             "command": [
               "mokutil",
@@ -1053,9 +1053,9 @@
         "efi_present": false,
         "applicable": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
-      "duration_ms": 11
+      "duration_ms": 5
     },
     {
       "category": "BOOT_CHAIN",
@@ -1092,7 +1092,7 @@
         ],
         "tpm_present": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "info",
       "duration_ms": 1
     },
@@ -1121,7 +1121,7 @@
         "key_variables_present": null,
         "applicable": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "critical",
       "duration_ms": 0
     },
@@ -1151,7 +1151,7 @@
             "observation_type": "dir_walk",
             "status": "OK",
             "bytes": 210,
-            "duration_ms": 0,
+            "duration_ms": 1,
             "root": "/sys/module",
             "entries_scanned": 210
           }
@@ -1286,9 +1286,9 @@
         "enforcement_note": "taint bit E records that an unsigned module was loaded, even on a kernel that does not enforce module signatures; enforcement is read separately and never inferred from taint",
         "modules_disabled": "0"
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
-      "duration_ms": 4
+      "duration_ms": 3
     },
     {
       "category": "REMOTE_ACCESS",
@@ -1443,9 +1443,9 @@
         "netfilter_modules_note": "a loaded module is a capability signal, not evidence that any rule is loaded",
         "global_scope_listener_present": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
-      "duration_ms": 6
+      "duration_ms": 5
     },
     {
       "category": "REMOTE_ACCESS",
@@ -1849,7 +1849,7 @@
           }
         ]
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 3
     },
@@ -1916,11 +1916,11 @@
             "source": "/proc",
             "observation_type": "dir_walk",
             "status": "OK",
-            "bytes": 62,
+            "bytes": 63,
             "duration_ms": 0,
             "detail": "process table scan for socket ownership; unreadable /proc/<pid>/fd of another uid is an attribution gap, not an absence",
             "root": "/proc",
-            "entries_scanned": 62
+            "entries_scanned": 63
           }
         ],
         "blind_spots": [
@@ -1930,7 +1930,7 @@
         "global_scope_listeners": null,
         "attribution_gaps": null
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 1
     },
@@ -1951,7 +1951,7 @@
             "value_truncated_in_evidence": true,
             "exit_code": 0,
             "bytes": 4418,
-            "duration_ms": 6,
+            "duration_ms": 5,
             "load_bearing": true,
             "command": [
               "/usr/sbin/sshd",
@@ -2206,7 +2206,7 @@
           }
         ]
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
       "duration_ms": 0
     },
@@ -2276,7 +2276,7 @@
         "newest_config_path": "/etc/ssh/sshd_config",
         "systemd_booted": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -2298,7 +2298,7 @@
             "value_truncated_in_evidence": true,
             "exit_code": 0,
             "bytes": 4418,
-            "duration_ms": 6,
+            "duration_ms": 5,
             "load_bearing": true,
             "command": [
               "/usr/sbin/sshd",
@@ -2423,9 +2423,9 @@
         "trusted_user_ca_keys": "none",
         "root_home": "/root"
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
-      "duration_ms": 7
+      "duration_ms": 6
     },
     {
       "category": "SECRETS_ON_DISK",
@@ -2450,6 +2450,9 @@
             "uid": 0,
             "gid": 0
           }
+        ],
+        "homes_skipped": [
+          "/bin (a placeholder home for service accounts, not a user's home)"
         ],
         "credential_files": [
           {
@@ -2565,17 +2568,14 @@
         ],
         "homes_inspected": [
           "/root",
-          "/bin",
           "/home/ubuntu"
         ],
         "unreadable_homes": [
-          "/",
-          "/root",
           "/root"
         ],
         "decoding_note": "a Docker config auths entry is base64, which is not encryption; it is never decoded"
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
       "duration_ms": 0
     },
@@ -2689,7 +2689,7 @@
         "private_key_files": null,
         "content_read": "at most 64 bytes per candidate, used to classify and immediately discarded"
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
       "duration_ms": 0
     },
@@ -2710,7 +2710,7 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2720,7 +2720,7 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2730,7 +2730,17 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
+            "exists": false
+          },
+          {
+            "source": "/var/lib/cloud/instance/vendor-data.txt.i",
+            "observation_type": "file_metadata",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2740,7 +2750,7 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2750,7 +2760,17 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
+            "exists": false
+          },
+          {
+            "source": "/var/lib/cloud/seed/nocloud/meta-data",
+            "observation_type": "file_metadata",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2760,17 +2780,17 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
-            "source": "/run/cloud-init/instance-data.json",
+            "source": "/var/lib/cloud/seed/nocloud-net/meta-data",
             "observation_type": "file_metadata",
             "status": "ENOENT",
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2780,7 +2800,7 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2790,18 +2810,17 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
-            "source": "/etc/cloud/ds-identify.cfg",
+            "source": "/root/anaconda-ks.cfg",
             "observation_type": "file_metadata",
-            "status": "ENOENT",
-            "reason": "ENOENT",
-            "errno": "ENOENT",
+            "status": "EACCES",
+            "reason": "EACCES",
+            "errno": "EACCES",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
-            "exists": false
+            "detail": "provisioning artifact candidate (payload)"
           },
           {
             "source": "/usr/share/oem/config.ign",
@@ -2810,7 +2829,7 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
             "exists": false
           },
           {
@@ -2820,7 +2839,37 @@
             "reason": "ENOENT",
             "errno": "ENOENT",
             "duration_ms": 0,
-            "detail": "provisioning artifact candidate",
+            "detail": "provisioning artifact candidate (payload)",
+            "exists": false
+          },
+          {
+            "source": "/run/cloud-init/instance-data.json",
+            "observation_type": "file_metadata",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "detail": "provisioning artifact candidate (public-by-design)",
+            "exists": false
+          },
+          {
+            "source": "/run/cloud-init/cloud-id",
+            "observation_type": "file_metadata",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "detail": "provisioning artifact candidate (public-by-design)",
+            "exists": false
+          },
+          {
+            "source": "/etc/cloud/ds-identify.cfg",
+            "observation_type": "file_metadata",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "detail": "provisioning artifact candidate (public-by-design)",
             "exists": false
           },
           {
@@ -2857,12 +2906,10 @@
         "artifacts": [
           {
             "path": "/root/anaconda-ks.cfg",
-            "file_type": "",
-            "magic_class": "",
-            "group_member_count": 0,
+            "class": "payload",
             "effective_readers": "unknown",
-            "errno": "EACCES",
-            "adverse": false
+            "adverse": false,
+            "errno": "EACCES"
           }
         ],
         "redaction_observed": false,
@@ -2870,9 +2917,10 @@
         "sensitive_paths_denied": [
           "/root/anaconda-ks.cfg (EACCES)"
         ],
+        "classification_note": "payload artifacts (user-data, vendor-data, seeds, obj.pkl, the sensitive and combined configs) carry the verdict; instance-data.json and the .cfg drop-ins are published readable by design with their sensitive keys redacted, and are reported as inventory",
         "content_read": "key names only; no provisioning payload value is read or emitted"
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -3041,7 +3089,7 @@
         "observation_boundaries": null,
         "acl_note": "ENODATA from system.posix_acl_access means the file has no ACL, which is a positive answer, not an unknown"
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
       "duration_ms": 0
     },
@@ -3079,9 +3127,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "392 178 0:85 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1037/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1",
+            "value": "893 778 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1041/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
             "value_truncated_in_evidence": true,
-            "bytes": 3375,
+            "bytes": 3384,
             "duration_ms": 0,
             "mode": 292,
             "uid": 1000,
@@ -3139,9 +3187,9 @@
           }
         ]
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "high",
-      "duration_ms": 11
+      "duration_ms": 13
     },
     {
       "category": "STORAGE_POSTURE",
@@ -3151,16 +3199,16 @@
       "title": "Observability of drive health telemetry, and what it shows",
       "reason": "EACCES",
       "evidence": {
-        "detail": "SMART telemetry is not obtainable by this account (smartctl -H -j /dev/sda -> UTILITY_MISSING UTILITY_MISSING), so media health itself is unknown; the 10 readable adjacent signals are in evidence and are all clean, but a filesystem error counter is not media health",
+        "detail": "SMART telemetry is not obtainable by this account (smartctl -H -j /dev/sda -> UTILITY_MISSING UTILITY_MISSING), so media health itself is unknown; the 11 readable adjacent signals are in evidence and are all clean, but a filesystem error counter is not media health",
         "observations": [
           {
             "source": "/sys/fs/ext4",
             "observation_type": "dir_walk",
             "status": "OK",
-            "bytes": 5,
+            "bytes": 6,
             "duration_ms": 0,
             "root": "/sys/fs/ext4",
-            "entries_scanned": 5
+            "entries_scanned": 6
           },
           {
             "source": "/sys/block",
@@ -3217,6 +3265,19 @@
             "value": "0"
           },
           {
+            "path": "/sys/fs/ext4/sdd/errors_count",
+            "value": "0",
+            "clean": true
+          },
+          {
+            "path": "/sys/fs/ext4/sdd/first_error_time",
+            "value": "0"
+          },
+          {
+            "path": "/sys/fs/ext4/sdd/lifetime_write_kbytes",
+            "value": "20723653"
+          },
+          {
             "path": "/sys/fs/ext4/sde/errors_count",
             "value": "0",
             "clean": true
@@ -3227,7 +3288,7 @@
           },
           {
             "path": "/sys/fs/ext4/sde/lifetime_write_kbytes",
-            "value": "69182"
+            "value": "69218"
           },
           {
             "path": "/sys/fs/ext4/sdf/errors_count",
@@ -3240,7 +3301,7 @@
           },
           {
             "path": "/sys/fs/ext4/sdf/lifetime_write_kbytes",
-            "value": "34226577"
+            "value": "34232809"
           },
           {
             "path": "/sys/block/sda/device/state",
@@ -3278,7 +3339,7 @@
         ],
         "smart_obtained": false
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 2
     },
@@ -3296,9 +3357,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "392 178 0:85 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1037/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1",
+            "value": "893 778 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1041/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
             "value_truncated_in_evidence": true,
-            "bytes": 3375,
+            "bytes": 3384,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 292,
@@ -3326,7 +3387,7 @@
         ],
         "root_mount": {
           "fstype": "overlay",
-          "major_minor": "0:85",
+          "major_minor": "0:129",
           "source": "overlay"
         },
         "backing_devices": [],
@@ -3342,9 +3403,9 @@
         ],
         "distinct_backing_disks": 0
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "low",
-      "duration_ms": 6
+      "duration_ms": 10
     },
     {
       "category": "STORAGE_POSTURE",
@@ -3370,9 +3431,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "392 178 0:85 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1037/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1",
+            "value": "893 778 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1041/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1021/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1020/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1019/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
             "value_truncated_in_evidence": true,
-            "bytes": 3375,
+            "bytes": 3384,
             "duration_ms": 0,
             "mode": 292,
             "uid": 1000,
@@ -3488,14 +3549,14 @@
           }
         ]
       },
-      "collected_at": "2026-09-09T01:57:14Z",
+      "collected_at": "2026-09-09T02:13:58Z",
       "impact": "medium",
       "duration_ms": 1
     }
   ],
   "scan": {
-    "started_at": "2026-09-09T01:57:14Z",
-    "duration_ms": 73,
+    "started_at": "2026-09-09T02:13:58Z",
+    "duration_ms": 74,
     "deadline_ms": 60000,
     "checks_run": 26,
     "budget_cut": false,

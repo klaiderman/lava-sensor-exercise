@@ -1,0 +1,17 @@
+diff --git a/plugins/lich-sandbox/scripts/outcome.py b/plugins/lich-sandbox/scripts/outcome.py
+index 5bc83b5..41e245e 100644
+--- a/plugins/lich-sandbox/scripts/outcome.py
++++ b/plugins/lich-sandbox/scripts/outcome.py
+@@ -25,6 +25,12 @@ _EXPECTED: dict[str, frozenset[str]] = {
+     "div-zero": frozenset({"ZeroDivisionError"}),
+     "index-oob": frozenset({"IndexError", "KeyError"}),
+     "null-deref": frozenset({"AttributeError", "TypeError"}),
++    # go-runtime: witness_go.py wraps a prebuilt Go test/sensor binary. The
++    # adapter (not Lich) does 100% of Go outcome interpretation — it raises
++    # TimeoutError if the binary outlives the fence, AssertionError if exit
++    # code / output size are wrong, RuntimeError for other adapter-detected
++    # infra problems. See tooling/LICH_WITNESS_PLAN.md.
++    "go-runtime": frozenset({"AssertionError", "TimeoutError", "RuntimeError"}),
+ }
+ 
+ # Infrastructure exit codes reserved by the child runner (bridge/_child_runner.py,

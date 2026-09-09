@@ -26,3 +26,5 @@
 {"event":"MILESTONE","milestone":"implementation-complete","ts":"2026-09-09T01:57:15Z","note":"26 checks; 153 tests WSL; Docker A/B/C; validator PASS"}
 {"event":"PHASE_END","phase":"17-implementation","ts":"2026-09-09T01:57:15Z"}
 {"event":"PHASE","phase":"19-20-review-and-witness","ts":"2026-09-09T01:57:15Z","budget_min":30}
+{"event":"MILESTONE","milestone":"real-host-run-1","ts":"2026-09-09T01:59:46Z","note":"binary sha 9c835818...; 26 checks 88ms; 10 pass/11 fail/5 unknown; exit 0; findings sha e7e8bca1...; validator PASS"}
+{"event":"MILESTONE","milestone":"test-lab-complete","ts":"2026-09-09T02:02:20Z","note":"TEST_REPORT.md; 3 defects + 3 lead-found real-host issues sent to author as fix batch 1"}
