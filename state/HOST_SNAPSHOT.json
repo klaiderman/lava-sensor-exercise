@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-08T23:46:41Z",
+ "generated_at": "2026-09-08T23:53:11Z",
  "source": "tooling/tci Tiny Custom Investigator, registry v1 (175 probes), rounds 1-2 on 2026-09-08 21:52-22:08Z; 169 probes executed; per-probe evidence in state/HOST_SNAPSHOT.evidence.json (sanitized); raw lead-only in state/raw_host/",
  "recon_window": {
   "budget_min": 15,
@@ -462,6 +462,27 @@
    "alternatives": "none"
   }
  ],
+ "round3_probe_ids": [
+  "storage.sysblock_ls_la",
+  "storage.mountinfo",
+  "kernel.sysfs_symlink_shape",
+  "bmc.i2c_dev_modes",
+  "network.ufw_file_modes",
+  "kernel.apparmor_profiles",
+  "storage.ext4_features",
+  "bmc.dmi_entry_attrs",
+  "storage.udev_data_readability",
+  "network.sshd_dropin_mtime_vs_boot",
+  "storage.nvme_smart_rc",
+  "users.group_members",
+  "storage.mdadm_conf_content",
+  "network.sshd_g_effective",
+  "bmc.bmc_read_timing",
+  "kernel.securityfs_modes",
+  "network.ssh_service_cat",
+  "kernel.stat_sizes"
+ ],
+ "round3_note": "Probes added 23:04-23:13Z to answer research OBSERVATION_REQUESTs; their evidence is in HOST_SNAPSHOT.evidence.json and interpreted in research/OBSERVATION_ANSWERS.md (sshd -G works unprivileged; BMC sysfs read ~1-2 ms; securityfs lockdown 0644; /proc st_size 0, /sys 4096; udev data readable; apparmor profiles EACCES despite 0444; ufw rules 0640; i2c 0600; groups disk/adm/systemd-journal empty; mdadm.conf exists).",
  "technologies": {
   "detected": [
    "NVMe (2 PCIe SSDs)",

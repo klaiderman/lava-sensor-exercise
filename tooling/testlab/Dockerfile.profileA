@@ -1,0 +1,26 @@
+# PROFILE A — host-shaped userspace for the Lava sensor test lab.
+# Matches the target's USERSPACE only (Ubuntu 24.04, same utility set as observed in state/HOST_SNAPSHOT.json:
+# nvme-cli, mdadm, util-linux lsblk/findmnt, pciutils, iproute2, ufw, libcap2-bin, openssh-server for sshd -G,
+# systemd tooling present but not running). It CANNOT reproduce bare-metal /sys topology, DMI, NVMe controllers,
+# the BMC, efivars, TPM or kernel state — those are covered by fixtures and by the final real-host run.
+# Absent on the host and therefore absent here: golang, ipmitool, smartmontools, dmidecode, acl (getfacl), nftables,
+# docker, lshw, jq, multipath-tools, open-iscsi, zfsutils, chrony, apparmor-utils.
+FROM ubuntu:24.04
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      nvme-cli mdadm util-linux pciutils iproute2 ufw libcap2-bin openssh-server \
+      python3 perl curl wget rsync gzip xz-utils tar mokutil e2fsprogs procps \
+    && rm -rf /var/lib/apt/lists/*
+# Host-shaped account: uid 1000 "ubuntu" (already exists in ubuntu:24.04 images), member of group sudo but WITHOUT
+# any sudoers entry and without the sudo binary being usable (we never escalate; the membership is evidence only).
+RUN usermod -aG sudo ubuntu 2>/dev/null || true \
+    && mkdir -p /home/ubuntu/sensor && chown -R ubuntu:ubuntu /home/ubuntu
+# Host-shaped sshd configuration: Include first, one drop-in from the provider (values as observed).
+RUN mkdir -p /etc/ssh/sshd_config.d \
+    && printf 'PasswordAuthentication no\nKbdInteractiveAuthentication no\n' > /etc/ssh/sshd_config.d/00-provider-instant-deploy.conf \
+    && sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config \
+    && ssh-keygen -A
+USER ubuntu
+WORKDIR /home/ubuntu/sensor
+# The sensor binary is bind-mounted read-only at run time (see run_in_docker.sh); nothing is baked in.
+CMD ["/bin/bash"]

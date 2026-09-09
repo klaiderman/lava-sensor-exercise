@@ -33,7 +33,10 @@
 - (none yet)
 
 ## Claude suggestions rejected (with evidence)
-- (none yet)
+- 2026-09-08 22:05Z — TCI round-1 fact `is_virtual=true` (Sonnet-built rule: nonempty output ⇒ true). Rejected: `systemd-detect-virt` printed `none`, DMI shows Supermicro AS-3015MR-H10TNR, `/dev/ipmi0` + `ipmi_bmc.0` + `/dev/tpm0` exist. Fixed the rule to parse the value. Lesson carried into the sensor: never derive a boolean from "the command printed something".
+- 2026-09-08 ~22:30Z — Wixie convergence.py's automated clarity fixer rewrote the mandated-verbatim host-context block in R2/R4/R5 prompts (split sentences inside evidence). Rejected by three prompt-engineer agents via diff-against-v1; verbatim fidelity kept over the heuristic score (HOLD accepted for R2/R3).
+- 2026-09-09 00:00Z — Grill-Me (Opus) ranked Option 2 (capability-gated Fixed Registry) first. Rejected in favour of Option 1.5 after Ponytail: the challenger's own attack shows the gate layer is near-inert on this host and that gates must be read attempts (the 0444-but-EACCES apparmor `profiles` file), i.e. per-read errno classification, which a 20-LOC classify() already provides; the ~250-LOC pre-phase adds a single point of failure and ~20 min. The 30-LOC load-bearing-observation downgrade (Option 4's real value) is kept.
+- Research-time: R3/R4 assumed effective sshd config must be parse-only because `sshd -T` fails unprivileged; R1 found `sshd -G` dumps effective config before host-key loading, and the host confirmed it (85 directives). The parse-only assumption was retracted (F97), `sshd -G` is primary with the parser as fallback.
 
 ## Process notes
 - 21:12Z: first attempt to source `.env` with bash `.` stripped backslashes from the Windows key path -> false "key not found". Fixed with a raw-line loader (tooling/loadenv.sh). Lesson: never word-split .env values.
