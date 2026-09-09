@@ -33,3 +33,6 @@ venv/
 # reviewer scratch copies of the module (kept locally, not history)
 reports/review/sensorcopy/
 reports/review/*.test
+submission/transcripts/
+submission/stage/
+submission/*.tar.gz
