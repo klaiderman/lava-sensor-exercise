@@ -15,16 +15,24 @@
 #   - /etc/ufw/*.rules chmod 0000 (ufw's own binary is also gone, so this denies the
 #     config-file fallback path too, not just the exec path)
 #   - run_in_docker.sh additionally runs this image as uid:gid 4242:4242, which has
-#     no /etc/passwd entry and no home directory, and masks /proc/net and
-#     /sys/class/dmi with empty read-only tmpfs mounts — those are docker-run-time
-#     properties, not buildable into the image, so they live in run_in_docker.sh.
+#     no /etc/passwd entry and no home directory — a docker-run-time property, not
+#     buildable into the image.
 #
-# What this profile does NOT and cannot deny (structural, documented per CLAUDE.md
-# "never claim a container equals the bare-metal host"): there is still a real /sys
-# and /proc supplied by the container runtime's kernel, so checks whose primary
-# evidence is sysfs/procfs (not exec, not a config file) will still read *something*
-# — just the container host's, not the Lava host's, and every /sys-derived field is
-# expected to carry describes_host_kernel/execution_context annotation, not a denial.
+# What this profile does NOT and cannot deny, and why (structural, documented per
+# CLAUDE.md "never claim a container equals the bare-metal host"):
+#   - masking /proc/net or /sys/class/dmi with an empty tmpfs was attempted and
+#     removed: runc refuses any mount nested under /proc ("proc-safety") and
+#     docker mounts /sys read-only so no mountpoint can even be created there —
+#     both would need a capability this profile deliberately does not grant
+#     (see run_in_docker.sh for the exact errors). `--network none` still empties
+#     /proc/net{,6} of real listeners, which is the closest real restriction
+#     available without adding capabilities back.
+#   - there is still a real /sys and /proc supplied by the container runtime's
+#     kernel, so checks whose primary evidence is sysfs/procfs (not exec, not a
+#     config file) will still read *something* — just the container host's
+#     (Docker Desktop's backend VM), not the Lava host's, and every /sys-derived
+#     field is expected to carry describes_host_kernel/execution_context
+#     annotation, not a denial.
 FROM lava-sensor-testlab:profileA
 
 USER root

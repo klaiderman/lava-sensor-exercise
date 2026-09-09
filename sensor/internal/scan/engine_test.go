@@ -17,11 +17,12 @@ type stubCheck struct {
 	fn                          func(context.Context, *Env) Result
 }
 
-func (c stubCheck) ID() string          { return c.id }
-func (c stubCheck) Category() string    { return c.category }
-func (c stubCheck) Title() string       { return c.title }
-func (c stubCheck) Impact() string      { return c.impact }
-func (c stubCheck) Observational() bool { return c.observational }
+func (c stubCheck) ID() string            { return c.id }
+func (c stubCheck) Category() string      { return c.category }
+func (c stubCheck) Title() string         { return c.title }
+func (c stubCheck) Impact() string        { return c.impact }
+func (c stubCheck) Observational() bool   { return c.observational }
+func (c stubCheck) Budget() time.Duration { return DefaultCheckBudget }
 func (c stubCheck) Run(ctx context.Context, env *Env) Result {
 	return c.fn(ctx, env)
 }

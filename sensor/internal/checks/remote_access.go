@@ -70,13 +70,16 @@ func (c sshAuthMethodsPolicy) Run(ctx context.Context, env *scan.Env) scan.Resul
 	r.Add(pam)
 	r.Field("pam_sshd", renderMeta(pam))
 
-	finish := func(out scan.Result) scan.Result {
+	bare := func(out scan.Result) scan.Result {
 		out.Observations, out.Fields = r.Observations, r.Fields
 		return out
 	}
 	if !sshdIsPresent(oracle, cfg) {
-		return finish(scan.Unknown(scan.ReasonUtilMiss, noDaemonDetail))
+		return bare(scan.Unknown(scan.ReasonUtilMiss, noDaemonDetail))
 	}
+	// Every verdict below is read out of the files on disk, so it is a claim
+	// about the listening daemon only if the daemon loaded them.
+	finish := func(out scan.Result) scan.Result { return applyDaemonState(ctx, env, cfg, &r, out) }
 
 	osID, osIDLike := env.OSIDs()
 	rows := make([]directiveRow, 0, len(verdictDirectives)+len(contextDirectives))
@@ -166,7 +169,7 @@ func resolveDirective(oracle *scan.SSHDOracle, cfg *sshdConfig, name, osID, osID
 	}
 	switch {
 	case oracleOK:
-		row.EffectiveValue, row.Source = oracleVal, "sshd -G (running daemon)"
+		row.EffectiveValue, row.Source = oracleVal, "sshd -G (effective configuration as sshd would load it from disk now)"
 	case res.Found:
 		row.EffectiveValue, row.Source = res.EffectiveValue, "configuration chain walk"
 	default:
@@ -212,55 +215,28 @@ func (c sshPolicyInForce) Run(ctx context.Context, env *scan.Env) scan.Result {
 	}
 
 	files := make([]configFileRow, 0, len(cfg.Files))
-	var newest time.Time
-	var newestPath string
 	for _, p := range cfg.Files {
 		st := env.Files.Stat(p)
+		// Each file's metadata is load-bearing: the comparison is only as good
+		// as the set of files it saw.
+		st.LoadBearing = true
+		r.Add(st)
 		row := configFileRow{Path: p, Status: string(st.Status), Errno: st.Reason()}
 		if st.Meta != nil {
 			row.Mode, row.UID, row.Size = st.Meta.Mode, st.Meta.UID, st.Meta.Size
 		}
-		if mt, ok := statModTime(env.Files, p); ok && mt.After(newest) {
-			newest, newestPath = mt, p
-		}
 		files = append(files, row)
 	}
 	r.Field("config_chain", files)
-	if !newest.IsZero() {
-		r.Field("newest_config_mtime", newest.UTC().Format(time.RFC3339))
-		r.Field("newest_config_path", newestPath)
-	}
 
-	// The daemon's start time. systemd is a capability, gated on the documented
-	// sd_booted(3) test rather than on the presence of the systemctl binary.
-	systemd := env.Files.Exists("/run/systemd/system")
-	r.Field("systemd_booted", systemd)
-	if !systemd {
-		return finish(scan.Unknown(scan.ReasonEINVAL,
-			"systemd is not booted, so the daemon's start time is not obtainable from a unit; "+
-				"the configuration chain was resolved and is in evidence, but whether the running daemon loaded it is unknown"))
+	state, stateObs := daemonStateOf(ctx, env, cfg)
+	for _, o := range stateObs {
+		o.LoadBearing = true
+		r.Add(o)
 	}
+	r.Field("daemon_state", state)
 
-	svc := env.Runner.Run(ctx, probe.Spec{
-		Name: "systemctl", Args: []string{"show", "ssh.service", "-p", "ActiveEnterTimestamp", "-p", "ActiveEnterTimestampMonotonic", "-p", "ExecMainStartTimestampMonotonic", "-p", "ActiveState", "-p", "FragmentPath"},
-		Budget: 3 * time.Second, Purpose: "sshd service start time",
-	})
-	if svc.Status != probe.StatusOK || strings.TrimSpace(svc.Value) == "" {
-		alt := env.Runner.Run(ctx, probe.Spec{
-			Name: "systemctl", Args: []string{"show", "sshd.service", "-p", "ActiveEnterTimestamp", "-p", "ActiveEnterTimestampMonotonic", "-p", "ExecMainStartTimestampMonotonic", "-p", "ActiveState", "-p", "FragmentPath"},
-			Budget: 3 * time.Second, Purpose: "sshd service start time (rpm-family unit name)",
-		})
-		if alt.Status == probe.StatusOK {
-			svc = alt
-		}
-	}
-	svc.LoadBearing = true
-	r.Add(svc)
-
-	sock := env.Runner.Run(ctx, probe.Spec{
-		Name: "systemctl", Args: []string{"show", "ssh.socket", "-p", "ListenStream", "-p", "ActiveState"},
-		Budget: 3 * time.Second, Purpose: "socket activation state",
-	})
+	sock := env.SystemdShow(ctx, "ssh.socket", "ListenStream", "ActiveState")
 	r.Add(sock)
 	sockProps := parseSystemctlShow(sock.Value)
 	if sockProps["ActiveState"] == "active" {
@@ -269,65 +245,46 @@ func (c sshPolicyInForce) Run(ctx context.Context, env *scan.Env) scan.Result {
 			"note": "the listener comes from the socket unit, so sshd_config never decides the listen address",
 		})
 	}
-
-	props := parseSystemctlShow(svc.Value)
-	r.Field("service_state", props)
-	if svc.Status != probe.StatusOK {
-		return finish(scan.Unknown(svc.Reason(),
-			"the sshd unit's start time could not be read ("+svc.Reason()+"), so whether the on-disk configuration is the one in force is unknown"))
-	}
-	started, resolution, tsSource, ok := serviceStartTime(env, props)
-	if !ok {
-		return finish(scan.Unknown(scan.ReasonParse,
-			"the sshd unit reported an unparseable ActiveEnterTimestamp "+quote(props["ActiveEnterTimestamp"])+
-				", so the configuration-versus-runtime comparison could not be made"))
-	}
-	r.Field("service_active_enter", started.UTC().Format(time.RFC3339Nano))
-	r.Field("service_start_source", tsSource)
-	r.Field("comparison_resolution_ms", resolution.Milliseconds())
-
-	if newest.IsZero() {
-		return finish(scan.Unknown(scan.ReasonEACCES,
-			"no modification time could be read for any file in the configuration chain, so it cannot be compared with the daemon's start time"))
-	}
-	delta := started.Sub(newest)
-	r.Field("delta_seconds", int64(delta.Seconds()))
-	r.Field("delta_ms", delta.Milliseconds())
-
 	if len(cfg.MatchBlocks) > 0 {
 		r.Field("conditional_blocks", cfg.MatchBlocks)
 	}
 
-	// Two events cannot be ordered more finely than the coarser of the two
-	// timestamps that describe them. Provisioning that rewrites the config and
-	// restarts the daemon lands both inside the same second, and calling that
-	// drift asserts an ordering the evidence does not carry.
-	switch {
-	case delta < -resolution:
+	switch state.Relation {
+	case relConfigNewer:
 		return finish(scan.Fail(scan.ReasonPolicy,
-			"the configuration chain changed after the daemon started ("+newestPath+" was modified "+
-				itoa(-delta.Milliseconds())+" ms after the unit's start time, read from "+tsSource+
-				"), so the running daemon is enforcing something other than what is on disk"))
-	case delta > resolution:
+			"the configuration chain changed after the daemon started: "+state.Note+
+				", so the running daemon is enforcing something other than what is on disk"))
+	case relDaemonNewer:
 		return finish(scan.Pass(
-			"every file in the resolved configuration chain is older than the daemon's start time by more than the " +
-				itoa(resolution.Milliseconds()) + " ms resolution of " + tsSource + ", so what is on disk is what is loaded"))
-	default:
+			"the daemon started after every file in the resolved configuration chain was last modified (" + state.Note + ")"))
+	case relUndecidable:
 		return finish(scan.Unknown(scan.ReasonTimestampRes,
-			"the newest configuration file ("+newestPath+") and the daemon's start time fall within the "+
-				itoa(resolution.Milliseconds())+" ms resolution of "+tsSource+
-				", so their order cannot be established; this is the normal shape of a provisioning run that rewrote the configuration and restarted the daemon, but it is not proof of one"))
+			state.Note+"; this is the normal shape of a provisioning run that rewrote the configuration and restarted the daemon, but it is not proof of one"))
+	default:
+		return finish(scan.Unknown(scan.ReasonEINVAL,
+			"whether the running daemon loaded the configuration on disk could not be established: "+state.Note))
 	}
 }
 
-// serviceStartTime resolves the unit's start instant as precisely as the system
-// will report it, and returns the resolution that instant is good to.
+// serviceStartTime resolves the unit's start instant, and the resolution that
+// instant is actually good to.
 //
-// systemd's rendered timestamps are whole seconds. Its *Monotonic properties
-// are microseconds since boot, so pairing one with /proc/uptime and the current
-// time recovers sub-second precision; that reconstruction inherits the error of
-// the uptime read, which is what the returned resolution accounts for.
-func serviceStartTime(env *scan.Env, props map[string]string) (time.Time, time.Duration, string, bool) {
+// The reconstruction is boot = now - uptime, start = boot + monotonic. uptime is
+// CLOCK_BOOTTIME and now is CLOCK_REALTIME: the two diverge by however much NTP
+// has slewed or stepped the wall clock since boot, which is not observable from
+// a single sample and can be seconds. Claiming a fixed 100 ms floor for that
+// path would be asserting an accuracy the domains do not support.
+//
+// So the divergence is MEASURED against the one thing that is in the same
+// domain as the file times we compare with: systemd's own rendered
+// ActiveEnterTimestamp. If the reconstruction lands inside the whole second
+// that timestamp names, the two domains agree to better than a second here and
+// now, and the resolution is the read skew we measured. If they disagree, the
+// disagreement itself becomes the resolution. Either way the number is
+// observed, not assumed.
+func serviceStartTime(env *scan.Env, props map[string]string) (time.Time, time.Duration, string, string, bool) {
+	rendered, renderedOK := parseSystemdTimestamp(props["ActiveEnterTimestamp"])
+
 	for _, key := range []string{"ActiveEnterTimestampMonotonic", "ExecMainStartTimestampMonotonic"} {
 		raw := strings.TrimSpace(props[key])
 		if raw == "" || raw == "0" {
@@ -337,39 +294,171 @@ func serviceStartTime(env *scan.Env, props map[string]string) (time.Time, time.D
 		if err != nil || usec <= 0 {
 			continue
 		}
-		upObs := env.Files.Read("/proc/uptime", probe.Tiny)
-		if upObs.Status != probe.StatusOK {
-			continue
-		}
-		fields := strings.Fields(upObs.Value)
-		if len(fields) == 0 {
-			continue
-		}
-		secs, err := strconv.ParseFloat(fields[0], 64)
-		if err != nil {
-			continue
-		}
+		// Bracket the wall-clock sample with two uptime reads: the spread is
+		// the measured cost of not sampling both clocks at the same instant.
+		readStart := time.Now()
+		up1 := readUptime(env)
 		now := env.Now()
-		boot := now.Add(-time.Duration(secs * float64(time.Second)))
-		// /proc/uptime is published to 10 ms, and the read and the clock sample
-		// are not simultaneous; 100 ms is the honest floor for this path.
-		return boot.Add(time.Duration(usec) * time.Microsecond), 100 * time.Millisecond,
-			key + " + /proc/uptime", true
+		up2 := readUptime(env)
+		readSkew := time.Since(readStart)
+		if up1 <= 0 || up2 <= 0 {
+			continue
+		}
+		if spread := up2 - up1; spread > readSkew {
+			readSkew = spread
+		}
+		boot := now.Add(-up2)
+		start := boot.Add(time.Duration(usec) * time.Microsecond)
+
+		// uptime is published to 10 ms, so nothing derived from it is finer.
+		resolution := 10 * time.Millisecond
+		if readSkew > resolution {
+			resolution = readSkew
+		}
+		basis := "measured: uptime granularity 10 ms, read skew " + itoa(readSkew.Milliseconds()) + " ms"
+		if renderedOK {
+			// Both are meant to name the same instant; the rendered one is
+			// truncated to a whole second, so agreement means |diff| < 1 s.
+			diff := start.Sub(rendered)
+			if diff < 0 {
+				diff = -diff
+			}
+			if diff >= time.Second {
+				resolution = diff
+				basis = "measured: the monotonic reconstruction and the rendered timestamp disagree by " +
+					itoa(diff.Milliseconds()) + " ms, so the wall clock has moved relative to boot time since boot and " +
+					"the comparison is no finer than that disagreement"
+			} else {
+				basis += "; cross-checked against ActiveEnterTimestamp, which agrees to within " +
+					itoa(diff.Milliseconds()) + " ms, so the two clock domains have not diverged by more than a second"
+			}
+		} else {
+			// Nothing to cross-check against: the divergence between the two
+			// clock domains is unbounded from here.
+			resolution = time.Second
+			basis = "no rendered timestamp to cross-check the monotonic reconstruction against, so the wall-clock/boot-time divergence is unbounded and the comparison is held to one second"
+		}
+		return start, resolution, key + " + /proc/uptime", basis, true
 	}
-	t, ok := parseSystemdTimestamp(props["ActiveEnterTimestamp"])
-	if !ok {
-		return time.Time{}, 0, "", false
+
+	if !renderedOK {
+		return time.Time{}, 0, "", "", false
 	}
-	return t, time.Second, "ActiveEnterTimestamp (whole-second resolution)", true
+	return rendered, time.Second, "ActiveEnterTimestamp (whole-second resolution)",
+		"the only start time systemd rendered is truncated to a whole second", true
 }
 
-func statModTime(f probe.Files, p string) (time.Time, bool) {
-	// Modification times come from the same stat the metadata does; probe keeps
-	// only what evidence needs, so this re-stats through the same seam.
-	if r, ok := f.(*probe.Reader); ok {
-		return r.ModTime(p)
+// readUptime returns the system's uptime, which is CLOCK_BOOTTIME.
+func readUptime(env *scan.Env) time.Duration {
+	obs := env.Files.Read("/proc/uptime", probe.Tiny)
+	if obs.Status != probe.StatusOK {
+		return 0
 	}
-	return time.Time{}, false
+	fields := strings.Fields(obs.Value)
+	if len(fields) == 0 {
+		return 0
+	}
+	secs, err := strconv.ParseFloat(fields[0], 64)
+	if err != nil || secs <= 0 {
+		return 0
+	}
+	return time.Duration(secs * float64(time.Second))
+}
+
+// sshDaemonState is the set of RAW facts about whether the daemon is running
+// what is on disk. It is not a verdict: SSH_POLICY_IN_FORCE turns it into one,
+// and the policy checks read the same facts to decide whether their own answer
+// is still safe to state.
+type sshDaemonState struct {
+	SystemdBooted   bool   `json:"systemd_booted"`
+	Unit            string `json:"unit,omitempty"`
+	ActiveState     string `json:"active_state,omitempty"`
+	StartedAt       string `json:"daemon_started_at,omitempty"`
+	StartSource     string `json:"start_time_source,omitempty"`
+	ResolutionMS    int64  `json:"comparison_resolution_ms"`
+	ResolutionBasis string `json:"resolution_basis,omitempty"`
+	NewestConfig    string `json:"newest_config_path,omitempty"`
+	NewestConfigAt  string `json:"newest_config_mtime,omitempty"`
+	DeltaMS         *int64 `json:"delta_ms,omitempty"`
+	// Relation is one of: config-newer, daemon-newer, undecidable, unknown.
+	Relation string `json:"relation"`
+	Note     string `json:"note"`
+}
+
+const (
+	relConfigNewer = "config-newer"
+	relDaemonNewer = "daemon-newer"
+	relUndecidable = "undecidable"
+	relUnknown     = "unknown"
+)
+
+// daemonStateOf gathers the raw in-force facts. Every SSH check calls it; the
+// systemctl observation behind it is cached once per scan by Env.
+func daemonStateOf(ctx context.Context, env *scan.Env, cfg *sshdConfig) (sshDaemonState, []probe.Observation) {
+	st := sshDaemonState{Relation: relUnknown}
+	var obs []probe.Observation
+
+	st.SystemdBooted = env.Files.Exists("/run/systemd/system")
+	if !st.SystemdBooted {
+		st.Note = "systemd is not booted, so no unit can be asked when the daemon started; whether it loaded the files on disk is unknown"
+		return st, obs
+	}
+
+	const props = "ActiveEnterTimestamp ActiveEnterTimestampMonotonic ExecMainStartTimestampMonotonic ActiveState FragmentPath"
+	svc := env.SystemdShow(ctx, "ssh.service", strings.Fields(props)...)
+	st.Unit = "ssh.service"
+	if svc.Status != probe.StatusOK || strings.TrimSpace(svc.Value) == "" {
+		alt := env.SystemdShow(ctx, "sshd.service", strings.Fields(props)...)
+		if alt.Status == probe.StatusOK {
+			svc, st.Unit = alt, "sshd.service"
+		}
+	}
+	obs = append(obs, svc)
+	if svc.Status != probe.StatusOK {
+		st.Note = "the sshd unit's properties could not be read (" + svc.Reason() + ")"
+		return st, obs
+	}
+
+	p := parseSystemctlShow(svc.Value)
+	st.ActiveState = p["ActiveState"]
+	started, resolution, source, basis, ok := serviceStartTime(env, p)
+	if !ok {
+		st.Note = "the sshd unit reported no parseable start time"
+		return st, obs
+	}
+	st.StartedAt = started.UTC().Format(time.RFC3339Nano)
+	st.StartSource, st.ResolutionMS, st.ResolutionBasis = source, resolution.Milliseconds(), basis
+
+	var newest time.Time
+	for _, f := range cfg.Files {
+		if mt, ok := env.Files.ModTime(f); ok && mt.After(newest) {
+			newest, st.NewestConfig = mt, f
+		}
+	}
+	if newest.IsZero() {
+		st.Note = "no modification time could be read for any file in the configuration chain"
+		return st, obs
+	}
+	st.NewestConfigAt = newest.UTC().Format(time.RFC3339Nano)
+	delta := started.Sub(newest)
+	ms := delta.Milliseconds()
+	st.DeltaMS = &ms
+
+	switch {
+	case delta < -resolution:
+		st.Relation = relConfigNewer
+		st.Note = st.NewestConfig + " was modified " + itoa(-ms) + " ms after the daemon started, which is beyond the " +
+			itoa(st.ResolutionMS) + " ms resolution of " + source
+	case delta > resolution:
+		st.Relation = relDaemonNewer
+		st.Note = "every file in the configuration chain is older than the daemon's start time by more than the " +
+			itoa(st.ResolutionMS) + " ms resolution of " + source
+	default:
+		st.Relation = relUndecidable
+		st.Note = "the newest configuration file and the daemon's start time fall within the " +
+			itoa(st.ResolutionMS) + " ms resolution of " + source + ", so their order cannot be established"
+	}
+	return st, obs
 }
 
 func parseSystemctlShow(out string) map[string]string {
@@ -491,8 +580,9 @@ func (c remoteListeningSurface) Run(ctx context.Context, env *scan.Env) scan.Res
 
 	// Ownership: match the socket inode to a process only where /proc/<pid>/fd
 	// is readable, and say so when it is not.
-	inodeOwners, ownerObs := resolveSocketOwners(env)
+	ownerScan, ownerObs := resolveSocketOwners(ctx, env)
 	r.Add(ownerObs)
+	r.Field("owner_attribution", ownerScan)
 
 	var global, adverse, gaps []string
 	sort.Slice(all, func(i, j int) bool {
@@ -507,8 +597,10 @@ func (c remoteListeningSurface) Run(ctx context.Context, env *scan.Env) scan.Res
 		if l.Class == "" {
 			l.Class = "unclassified"
 		}
-		if unit, ok := inodeOwners[l.Inode]; ok {
+		if unit, ok := ownerScan.Owners[l.Inode]; ok {
 			l.OwnerUnit, l.OwnerReason = unit, "resolved from /proc/<pid>/fd"
+		} else if !ownerScan.Complete {
+			l.OwnerReason = "unattributed: the ownership scan stopped early (" + ownerScan.StoppedBy + ")"
 		} else {
 			l.OwnerReason = "EACCES: /proc/<pid>/fd of another uid is unreadable, so the owning process is unknown"
 		}
@@ -633,40 +725,101 @@ func addrScope(addr string) string {
 	return "global"
 }
 
+// Socket-owner attribution budget. The traversal is PIDs x file descriptors: on
+// a busy machine - a container host, an app server with 2000 processes each
+// holding 500 descriptors - that is millions of readlink calls. The per-check
+// context deadline cannot stop a loop that never consults it, and scan.Run is
+// sequential, so an unbounded loop here would blow the whole scan deadline on
+// somebody else's production machine.
+const (
+	socketOwnerMaxPIDs     = 2048
+	socketOwnerMaxSyscalls = 20000
+	socketOwnerMaxTime     = 2 * time.Second
+)
+
+// socketOwnerScan is the result of the attribution pass, including the boundary
+// it stopped at. Attribution that stopped early is marked incomplete, so the
+// listeners it did not reach are reported as unattributed rather than as
+// unowned.
+type socketOwnerScan struct {
+	Owners         map[int64]string
+	PIDsScanned    int64  `json:"pids_scanned"`
+	SyscallsIssued int64  `json:"syscalls_issued"`
+	Unreadable     int64  `json:"pids_unreadable"`
+	Complete       bool   `json:"complete"`
+	StoppedBy      string `json:"stopped_by"`
+	ElapsedMS      int64  `json:"elapsed_ms"`
+}
+
 // resolveSocketOwners maps socket inodes to process names where /proc/<pid>/fd
-// can be read. A gap is recorded, never filled in with a guess.
-func resolveSocketOwners(env *scan.Env) (map[int64]string, probe.Observation) {
-	owners := map[int64]string{}
+// can be read, under its own budget. A gap is recorded, never filled in with a
+// guess.
+func resolveSocketOwners(ctx context.Context, env *scan.Env) (socketOwnerScan, probe.Observation) {
+	res := socketOwnerScan{Owners: map[int64]string{}, Complete: true, StoppedBy: "none"}
+	start := env.Now()
+	deadline := time.Now().Add(socketOwnerMaxTime)
+
 	names, obs := env.Files.ReadDirNames("/proc", 4096)
-	obs.Detail = "process table scan for socket ownership; unreadable /proc/<pid>/fd of another uid is an attribution gap, not an absence"
+	obs.Detail = "process table scan for socket ownership; an unreadable /proc/<pid>/fd of another uid is an attribution gap, not an absence"
 	if obs.Status != probe.StatusOK {
-		return owners, obs
+		res.Complete, res.StoppedBy = false, "the process table could not be listed"
+		return res, obs
 	}
-	scanned := 0
+
 	for _, n := range names {
 		if n == "" || n[0] < '0' || n[0] > '9' {
 			continue
 		}
-		if scanned++; scanned > 4096 {
+		// Checked per PID, so a deadline that expires mid-traversal stops it.
+		if err := ctx.Err(); err != nil {
+			res.Complete, res.StoppedBy = false, "the check deadline expired"
 			break
 		}
+		if time.Now().After(deadline) {
+			res.Complete, res.StoppedBy = false, "the "+socketOwnerMaxTime.String()+" attribution budget expired"
+			break
+		}
+		if res.PIDsScanned >= socketOwnerMaxPIDs {
+			res.Complete, res.StoppedBy = false, "the "+itoa(socketOwnerMaxPIDs)+"-process budget was reached"
+			break
+		}
+		if res.SyscallsIssued >= socketOwnerMaxSyscalls {
+			res.Complete, res.StoppedBy = false, "the "+itoa(socketOwnerMaxSyscalls)+"-syscall budget was reached"
+			break
+		}
+		res.PIDsScanned++
+
 		fds, fdObs := env.Files.ReadDirNames("/proc/"+n+"/fd", 1024)
+		res.SyscallsIssued++
 		if fdObs.Status != probe.StatusOK {
+			res.Unreadable++
 			continue
 		}
 		comm, _ := env.Files.ReadTrimmed("/proc/"+n+"/comm", probe.Tiny)
+		res.SyscallsIssued++
 		for _, fd := range fds {
+			if res.SyscallsIssued >= socketOwnerMaxSyscalls {
+				res.Complete, res.StoppedBy = false, "the "+itoa(socketOwnerMaxSyscalls)+"-syscall budget was reached"
+				break
+			}
 			target, lObs := env.Files.ReadLinkBase("/proc/" + n + "/fd/" + fd)
+			res.SyscallsIssued++
 			if lObs.Status != probe.StatusOK || !strings.HasPrefix(target, "socket:[") {
 				continue
 			}
 			inode, err := strconv.ParseInt(strings.TrimSuffix(strings.TrimPrefix(target, "socket:["), "]"), 10, 64)
 			if err == nil && comm != "" {
-				owners[inode] = comm + " (pid " + n + ")"
+				res.Owners[inode] = comm + " (pid " + n + ")"
 			}
 		}
 	}
-	return owners, obs
+	res.ElapsedMS = env.Now().Sub(start).Milliseconds()
+	if !res.Complete {
+		obs.Truncated = true
+		obs.Detail = "socket-owner attribution stopped early: " + res.StoppedBy +
+			"; listeners it did not reach are unattributed, not unowned"
+	}
+	return res, obs
 }
 
 // ---------------------------------------------------------------------------
@@ -926,28 +1079,36 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 
 	systemd := env.Files.Exists("/run/systemd/system")
 	r.Field("systemd_booted", systemd)
+	r.Field("unit_state_note", "a unit being active means the unit ran, not that any rule is loaded: ufw.service is a oneshot that exits early when ufw.conf says ENABLED=no")
 
-	candidates := []struct{ name, unit, config string }{
-		{"ufw", "ufw", "/etc/ufw/ufw.conf"},
-		{"firewalld", "firewalld", "/etc/firewalld/firewalld.conf"},
-		{"nftables", "nftables", "/etc/nftables.conf"},
-		{"iptables", "iptables", ""},
-		{"netfilter-persistent", "netfilter-persistent", ""},
+	// disableKey names, per implementation, the configuration value that means
+	// "installed but switched off". Reading it is the only way to tell a
+	// firewall that is running from one that merely has a running unit.
+	candidates := []struct {
+		name, unit, config, disableKey, disabledValue string
+	}{
+		{"ufw", "ufw", "/etc/ufw/ufw.conf", "ENABLED", "no"},
+		{"firewalld", "firewalld", "/etc/firewalld/firewalld.conf", "", ""},
+		{"nftables", "nftables", "/etc/nftables.conf", "", ""},
+		{"iptables", "iptables", "", "", ""},
+		{"netfilter-persistent", "netfilter-persistent", "", "", ""},
 	}
 	var subsystems []firewallSubsystem
 	anyActive := false
+	var disabledByConfig []string
+
 	for _, cand := range candidates {
-		s := firewallSubsystem{Name: cand.name, Unit: cand.unit, IsActive: "unknown", ConfigValues: map[string]string{}}
+		sub := firewallSubsystem{Name: cand.name, Unit: cand.unit, IsActive: "unknown", ConfigValues: map[string]string{}}
 		if systemd {
 			obs := env.Runner.Run(ctx, probe.Spec{Name: "systemctl", Args: []string{"is-active", cand.unit},
 				Budget: 3 * time.Second, Purpose: "firewall unit state"})
 			r.Add(obs)
-			s.IsActive = strings.TrimSpace(obs.Value)
-			s.IsActiveRC = obs.ExitCode
-			if s.IsActive == "" {
-				s.IsActive = string(obs.Status)
+			sub.IsActive = strings.TrimSpace(obs.Value)
+			sub.IsActiveRC = obs.ExitCode
+			if sub.IsActive == "" {
+				sub.IsActive = string(obs.Status)
 			}
-			if s.IsActive == "active" {
+			if sub.IsActive == "active" {
 				anyActive = true
 			}
 		}
@@ -955,19 +1116,25 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 			cfg := env.Files.Read(cand.config, probe.Small)
 			r.Add(cfg)
 			if cfg.Status == probe.StatusOK {
-				s.ConfigPath = cand.config
+				sub.ConfigPath = cand.config
 				for k, v := range parseKeyValue(cfg.Value) {
-					s.ConfigValues[k] = v
+					sub.ConfigValues[k] = v
 				}
 			} else {
-				s.Errno = cfg.Reason()
+				sub.Errno = cfg.Reason()
 			}
 		}
-		subsystems = append(subsystems, s)
+		if cand.disableKey != "" && sub.IsActive == "active" {
+			if v, ok := sub.ConfigValues[cand.disableKey]; ok && strings.EqualFold(v, cand.disabledValue) {
+				disabledByConfig = append(disabledByConfig,
+					cand.name+" ("+cand.config+" says "+cand.disableKey+"="+v+", while the "+cand.unit+" unit reports active)")
+			}
+		}
+		subsystems = append(subsystems, sub)
 	}
 	// /etc/default/ufw carries the default policies and is world-readable even
-	// when the rule files are not: a partial answer that must be reported
-	// rather than discarded.
+	// where the rule files are not: a partial answer that is reported rather
+	// than discarded.
 	if def := env.Files.Read("/etc/default/ufw", probe.Small); def.Status == probe.StatusOK {
 		r.Add(def)
 		kv := parseKeyValue(def.Value)
@@ -979,12 +1146,24 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 			}
 		}
 	}
+	// The rule files' own permissions are the boundary the registry cites.
+	var ruleFileModes []fileMeta
+	for _, p := range []string{"/etc/ufw/user.rules", "/etc/ufw/user6.rules", "/etc/ufw/before.rules"} {
+		st := env.Files.Stat(p)
+		if st.Status == probe.StatusENOENT {
+			continue
+		}
+		r.Add(st)
+		ruleFileModes = append(ruleFileModes, renderMeta(st))
+	}
+	r.Field("rule_file_modes", ruleFileModes)
 
-	// The ruleset itself. nft absence says nothing about whether nftables rules
-	// exist, because iptables here is usually the nf_tables variant (L39).
+	// The effective ruleset. A missing nft says nothing about whether nftables
+	// rules exist, because iptables here is usually the nf_tables variant.
 	rulesetReadable := false
-	var rulesetErr string
-	var defaultPolicySource string
+	rulesetLines := 0
+	rulesetErr := ""
+	rulesetSource := ""
 	for _, attempt := range []struct {
 		name string
 		args []string
@@ -996,19 +1175,22 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 		obs := env.Runner.Run(ctx, probe.Spec{Name: attempt.name, Args: attempt.args, Budget: 3 * time.Second,
 			Purpose: "effective packet-filter ruleset"})
 		r.Add(obs)
-		if obs.Status == probe.StatusOK && strings.TrimSpace(obs.Value) != "" {
+		if obs.Status == probe.StatusOK {
 			rulesetReadable = true
-			defaultPolicySource = attempt.name + " " + strings.Join(attempt.args, " ")
-			r.Field("ruleset_lines", int64(len(strings.Split(strings.TrimSpace(obs.Value), "\n"))))
+			rulesetSource = attempt.name + " " + strings.Join(attempt.args, " ")
+			if body := strings.TrimSpace(obs.Value); body != "" {
+				rulesetLines = len(strings.Split(body, "\n"))
+			}
 			break
 		}
-		if obs.Status != probe.StatusUtilityMissing {
+		if obs.Status != probe.StatusUtilityMissing && rulesetErr == "" {
 			rulesetErr = obs.Reason()
-			if obs.Meta != nil && obs.Meta.StderrExcerpt != "" {
-				for i := range subsystems {
-					if subsystems[i].Name == attempt.name || (attempt.name == "iptables-nft" && subsystems[i].Name == "iptables") {
-						subsystems[i].StderrExcerpt = obs.Meta.StderrExcerpt
-					}
+		}
+		if obs.Meta != nil && obs.Meta.StderrExcerpt != "" {
+			for i := range subsystems {
+				if subsystems[i].Name == attempt.name ||
+					(attempt.name == "iptables-nft" && subsystems[i].Name == "iptables") {
+					subsystems[i].StderrExcerpt = obs.Meta.StderrExcerpt
 				}
 			}
 		}
@@ -1017,11 +1199,11 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 		subsystems[i].RulesetReadable = rulesetReadable
 	}
 	r.Field("subsystems", subsystems)
-	if defaultPolicySource != "" {
-		r.Field("default_policy_source", defaultPolicySource)
+	r.Field("ruleset_lines", int64(rulesetLines))
+	if rulesetSource != "" {
+		r.Field("default_policy_source", rulesetSource)
 	}
 
-	// Module presence is a capability signal only, never "rules exist".
 	if mods := env.Files.Read("/proc/modules", probe.Large); mods.Status == probe.StatusOK {
 		var present []string
 		for _, m := range []string{"nf_tables", "ip_tables", "iptable_filter", "nft_chain_nat"} {
@@ -1032,27 +1214,39 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 		r.Field("netfilter_modules_loaded", present)
 		r.Field("netfilter_modules_note", "a loaded module is a capability signal, not evidence that any rule is loaded")
 	}
-
-	globalListeners := hasGlobalListener(env)
-	r.Field("global_scope_listener_present", globalListeners)
+	r.Field("global_scope_listener_present", hasGlobalListener(env))
 
 	switch {
-	case rulesetReadable:
-		return finish(scan.Pass("a packet filter is active and its effective ruleset is readable from " + defaultPolicySource))
-	case anyActive:
-		return finish(scan.Unknown(firstNonEmpty(rulesetErr, scan.ReasonEACCES),
-			"a filtering subsystem is enabled but its effective ruleset is not readable by this account ("+
-				firstNonEmpty(rulesetErr, scan.ReasonEACCES)+"); the readable configuration defaults are in evidence, "+
-				"and 'no rules readable' is never reported as 'no rules'"))
-	case !systemd:
-		return finish(scan.Unknown(scan.ReasonEINVAL,
-			"systemd is not booted, so no unit can be asked whether a filtering subsystem is enabled, and no ruleset was readable"))
-	case globalListeners:
+	case len(disabledByConfig) > 0:
+		// The implementation is installed and its own configuration says it is
+		// off. That is a readable fact, and it outranks the unit's state.
 		return finish(scan.Fail(scan.ReasonPolicy,
-			"every candidate filtering subsystem reported inactive and no ruleset was readable, while at least one listener is bound to a non-loopback address: the machine is reachable and unfiltered"))
+			"a host firewall is installed but switched off in its own configuration: "+strings.Join(disabledByConfig, "; ")+
+				" — the unit running is not the same as rules being loaded"))
+	case rulesetReadable && rulesetLines > 0:
+		return finish(scan.Pass("the effective packet-filter ruleset is readable from " + rulesetSource + " and carries " +
+			itoa(int64(rulesetLines)) + " rule line(s)"))
+	case rulesetReadable:
+		return finish(scan.Fail(scan.ReasonPolicy,
+			"the effective packet-filter ruleset was read from "+rulesetSource+" and is empty: nothing is filtering inbound traffic"))
+	case rulesetErr != "":
+		return finish(scan.Unknown(rulesetErr,
+			"the effective packet-filter ruleset is not readable by this account ("+rulesetErr+
+				"), so whether this host is filtered is unknown; the readable configuration and unit states are in evidence, "+
+				"and an unreadable ruleset is never reported as an absent one"))
+	case anyActive:
+		return finish(scan.Unknown(scan.ReasonUtilMiss,
+			"a filtering unit reports active but no tool that can print the effective ruleset is installed, "+
+				"so what it loaded is unknown; a unit's state is not proof that rules exist"))
 	default:
-		return finish(scan.Unknown(scan.ReasonENOENT,
-			"no filtering subsystem is enabled and no ruleset was readable; with no non-loopback listener observed, this is recorded rather than judged"))
+		// Rules can be loaded by something outside any candidate unit: an
+		// iptables-restore ExecStartPre, rc.local, a config-management run, a
+		// provider's own unit. Not finding a unit we know about is not finding
+		// that the host is unfiltered.
+		return finish(scan.Unknown(scan.ReasonUtilMiss,
+			"no filtering implementation this sensor recognises reported active, and no tool that can print the effective "+
+				"ruleset is installed; rules loaded by an unrecognised mechanism would be invisible here, so whether this "+
+				"host is filtered is unknown"))
 	}
 }
 
@@ -1078,4 +1272,42 @@ func firstNonEmpty(vals ...string) string {
 		}
 	}
 	return ""
+}
+
+// applyDaemonState attaches the raw in-force facts to a policy check's evidence
+// and decides whether the policy verdict is still safe to state.
+//
+// A policy verdict read out of the files on disk is a claim about the daemon
+// only if the daemon loaded those files. Where the chain is provably newer than
+// the daemon, it did not, and the verdict is downgraded. Where the order cannot
+// be established, the verdict stands and the caveat rides with it: the caveat
+// observation is deliberately NOT load-bearing, because an undecidable ordering
+// is not a failed observation and turning every SSH finding on every
+// provisioned host into an unknown would be its own kind of dishonesty.
+func applyDaemonState(ctx context.Context, env *scan.Env, cfg *sshdConfig, r *scan.Result, out scan.Result) scan.Result {
+	state, obs := daemonStateOf(ctx, env, cfg)
+	for _, o := range obs {
+		r.Add(o)
+	}
+	r.Field("daemon_state", state)
+
+	switch state.Relation {
+	case relConfigNewer:
+		out = scan.Unknown(scan.ReasonContested,
+			"the configuration this verdict was read from is newer than the running daemon ("+state.Note+
+				"), so it describes what sshd would load if restarted, not what the listening daemon is enforcing")
+	case relUndecidable, relUnknown:
+		note := probe.Observation{
+			Source: "in-force caveat (" + state.Relation + ")",
+			Kind:   probe.KindFileMetadata,
+			Status: probe.StatusOK,
+			Value:  state.Relation,
+			Detail: "this verdict is read from the configuration on disk; whether the listening daemon loaded it is " +
+				state.Relation + " (" + state.Note + "). See SSH_POLICY_IN_FORCE.",
+		}
+		r.Add(note)
+		out.Detail += " [in-force caveat: " + state.Note + "; see SSH_POLICY_IN_FORCE]"
+	}
+	out.Observations, out.Fields = r.Observations, r.Fields
+	return out
 }

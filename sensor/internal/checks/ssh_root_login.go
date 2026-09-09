@@ -53,10 +53,13 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 	normOracle := normalisePermitRootLogin(oracleVal)
 	normWalker := normalisePermitRootLogin(res.EffectiveValue)
 
-	finish := func(out scan.Result) scan.Result {
+	bare := func(out scan.Result) scan.Result {
 		out.Observations, out.Fields = r.Observations, r.Fields
 		return out
 	}
+	// Every verdict below is read out of the files on disk, so it is a claim
+	// about the listening daemon only if the daemon loaded them.
+	finish := func(out scan.Result) scan.Result { return applyDaemonState(ctx, env, cfg, &r, out) }
 
 	var effective, source string
 	switch {
@@ -67,7 +70,7 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 		r.Field("conditional_blocks", cfg.MatchBlocks)
 		return finish(scan.Unknown(scan.ReasonContested, contestedDetail("permitrootlogin", oracleVal, res.EffectiveValue)))
 	case oracleOK:
-		effective, source = normOracle, "sshd -G (running daemon)"
+		effective, source = normOracle, "sshd -G (effective configuration as sshd would load it from disk now)"
 	case res.Found:
 		effective, source = normWalker, "configuration chain walk"
 	default:
@@ -77,7 +80,7 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 		// policy for software that is not installed.
 		if !sshdIsPresent(oracle, cfg) {
 			r.Field("config_resolution", res)
-			return finish(scan.Unknown(scan.ReasonUtilMiss, noDaemonDetail))
+			return bare(scan.Unknown(scan.ReasonUtilMiss, noDaemonDetail))
 		}
 		// A compiled-in default is only usable with a citation AND a known
 		// distribution family (L19).
@@ -119,7 +122,7 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 		return finish(scan.Fail(scan.ReasonPolicy,
 			"the running policy permits direct root login over SSH (permitrootlogin yes, per "+source+")"))
 	case "prohibit-password", "forced-commands-only":
-		return c.keyBasedRootLogin(ctx, env, r, effective, source)
+		return finish(c.keyBasedRootLogin(env, &r, effective, source))
 	default:
 		r.Field("unrecognised_value", effective)
 		return finish(scan.Unknown(scan.ReasonParse,
@@ -152,14 +155,11 @@ type keyPathVerdict struct {
 // established (the usual case on an unprivileged run: /root/.ssh is EACCES),
 // root key login can neither be confirmed nor excluded, and the honest answer
 // is unknown (R4 B2 trap (d); L39 under-claim rule).
-func (c sshRootLoginPolicy) keyBasedRootLogin(ctx context.Context, env *scan.Env, r scan.Result, effective, source string) scan.Result {
-	finish := func(out scan.Result) scan.Result {
-		out.Observations, out.Fields = r.Observations, r.Fields
-		return out
-	}
+func (c sshRootLoginPolicy) keyBasedRootLogin(env *scan.Env, r *scan.Result, effective, source string) scan.Result {
+	finish := func(out scan.Result) scan.Result { return out }
 	policyNote := "the running policy permits root login by public key (permitrootlogin " + effective + ", per " + source + ")"
 
-	oracle := env.SSHD(ctx)
+	oracle := env.SSHDCached()
 	rootHome := homeOf(env.Files, "root")
 	paths, akfSource := rootAuthorizedKeyPaths(oracle, rootHome)
 
@@ -294,7 +294,7 @@ func expandAuthorizedKeysToken(tok, home string) string {
 
 // homeOf resolves an account's home directory from /etc/passwd. No exec, and a
 // documented convention rather than a guess when the file cannot be read.
-func homeOf(f probe.Files, user string) string {
+func homeOf(f *probe.Reader, user string) string {
 	obs := f.Read("/etc/passwd", probe.Large)
 	if obs.Status == probe.StatusOK {
 		for _, ln := range strings.Split(obs.Value, "\n") {

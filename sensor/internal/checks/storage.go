@@ -2,7 +2,6 @@ package checks
 
 import (
 	"context"
-	"encoding/json"
 	"strconv"
 	"strings"
 
@@ -588,14 +587,43 @@ type healthSignal struct {
 	Clean *bool  `json:"clean,omitempty"`
 }
 
+// healthDeviceNode is the character device SMART would have to be read through,
+// described from its metadata alone.
+type healthDeviceNode struct {
+	Path         string `json:"path"`
+	Exists       bool   `json:"exists"`
+	FileType     string `json:"file_type,omitempty"`
+	Mode         *int64 `json:"mode,omitempty"`
+	UID          *int64 `json:"uid,omitempty"`
+	GID          *int64 `json:"gid,omitempty"`
+	GroupName    string `json:"group_name,omitempty"`
+	OpenableByUs bool   `json:"openable_by_this_identity"`
+	Basis        string `json:"basis"`
+	Errno        string `json:"errno,omitempty"`
+}
+
+// The sensor never opens a device node, and it never asks a child process to
+// open one either. `nvme smart-log` and `smartctl -H` both open the character
+// device and issue an admin passthrough; denied at uid 1000 they are merely
+// useless, but run as root or by a member of `disk` they would send commands to
+// a customer's drive. Reachability is therefore established from metadata:
+// whether this identity could open the node, whether the tooling exists at all,
+// and which health signals sysfs publishes without any device access.
+const (
+	sensorNeverOpensDevices = "the sensor process never opens a device node, and it never runs a tool that would open one on its behalf"
+	smartCapabilityNote     = "the NVMe admin passthrough is gated on CAP_SYS_ADMIN, not on group membership, so even an openable node would not by itself yield SMART"
+)
+
 func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Result {
 	var r scan.Result
 	finish := func(out scan.Result) scan.Result {
 		out.Observations, out.Fields = r.Observations, r.Fields
 		return out
 	}
-	r.Field("capability_required", "CAP_SYS_ADMIN on the NVMe or SCSI character device for SMART; the NVMe admin passthrough is gated by a capability check, not by group membership")
-	r.Field("remediation_note", "obtaining SMART here requires CAP_SYS_ADMIN — adding the account to the disk group would not grant it, and recommending that would be a wrong instruction")
+	r.Field("device_opened_by_sensor", false)
+	r.Field("device_opened_by_child_process", false)
+	r.Field("access_model", sensorNeverOpensDevices+"; "+smartCapabilityNote)
+	r.Field("remediation_note", "obtaining SMART here needs CAP_SYS_ADMIN; adding the account to the disk group would not grant it, and recommending that would be a wrong instruction to an operator")
 
 	var signals []healthSignal
 	var adverse []string
@@ -611,21 +639,21 @@ func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Resu
 			for _, attr := range []string{"errors_count", "first_error_time", "lifetime_write_kbytes"} {
 				p := "/sys/fs/ext4/" + d + "/" + attr
 				v, o := env.Files.ReadTrimmed(p, probe.Tiny)
-				s := healthSignal{Path: p, Value: v, Errno: o.Reason()}
+				sig := healthSignal{Path: p, Value: v, Errno: o.Reason()}
 				if o.Status == probe.StatusOK && attr == "errors_count" {
 					readableCount++
 					clean := v == "0"
-					s.Clean = &clean
+					sig.Clean = &clean
 					if !clean {
 						adverse = append(adverse, "ext4 on "+d+" has recorded "+v+" filesystem error(s)")
 					}
 				}
-				signals = append(signals, s)
+				signals = append(signals, sig)
 			}
 		}
 	}
 
-	// Device state and md degradation.
+	// Device state, md degradation and the NVMe controller's own state.
 	names, blockObs := env.Files.ReadDirNames("/sys/block", 1024)
 	r.Add(blockObs)
 	for _, n := range names {
@@ -635,16 +663,16 @@ func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Resu
 		if strings.HasPrefix(n, "md") {
 			p := "/sys/block/" + n + "/md/degraded"
 			v, o := env.Files.ReadTrimmed(p, probe.Tiny)
-			s := healthSignal{Path: p, Value: v, Errno: o.Reason()}
+			sig := healthSignal{Path: p, Value: v, Errno: o.Reason()}
 			if o.Status == probe.StatusOK {
 				readableCount++
 				clean := v == "0"
-				s.Clean = &clean
+				sig.Clean = &clean
 				if !clean {
 					adverse = append(adverse, "md array "+n+" reports "+v+" degraded member(s)")
 				}
 			}
-			signals = append(signals, s)
+			signals = append(signals, sig)
 			continue
 		}
 		p := "/sys/block/" + n + "/device/state"
@@ -659,107 +687,144 @@ func (c mediaHealthVisibility) Run(ctx context.Context, env *scan.Env) scan.Resu
 			adverse = append(adverse, "device "+n+" reports state "+v)
 		}
 	}
+	if ctls, obs := env.Files.ReadDirNames("/sys/class/nvme", 64); obs.Status == probe.StatusOK {
+		for _, ctl := range ctls {
+			p := "/sys/class/nvme/" + ctl + "/state"
+			v, o := env.Files.ReadTrimmed(p, probe.Tiny)
+			if o.Status != probe.StatusOK {
+				continue
+			}
+			readableCount++
+			clean := v == "live"
+			signals = append(signals, healthSignal{Path: p, Value: v, Clean: &clean})
+			if !clean {
+				adverse = append(adverse, "NVMe controller "+ctl+" reports state "+v)
+			}
+		}
+	}
 	r.Field("readable_signals", signals)
 
-	// SMART, behind sysfs. Both tools are fallbacks and both are expected to be
-	// denied or absent; the errno is the evidence.
-	smartObtained := false
-	smartParseError := ""
-	var smartAttempts []string
-	for _, n := range names {
-		if !strings.HasPrefix(n, "nvme") && !strings.HasPrefix(n, "sd") {
-			continue
-		}
-		obs := env.Runner.Run(ctx, probe.Spec{Name: "smartctl", Args: []string{"-H", "-j", "/dev/" + n},
-			Budget: 3000000000, Purpose: "drive health (JSON only; a tool that rejects -j yields unknown, never positional parsing)"})
-		r.Add(obs)
-		smartAttempts = append(smartAttempts, "smartctl -H -j /dev/"+n+" -> "+string(obs.Status)+" "+obs.Reason())
-		if obs.Status == probe.StatusOK {
-			health, perr := parseSmartctlJSON(obs.Value)
-			switch {
-			case perr != "":
-				// Output that does not parse is not a health verdict. A
-				// substring sniff would read a truncated document as healthy.
-				smartParseError = perr
-				smartAttempts[len(smartAttempts)-1] += " (output did not parse: " + perr + ")"
-			case health == nil:
-				smartParseError = "the document parsed but carries no smart_status.passed field"
-				smartAttempts[len(smartAttempts)-1] += " (no smart_status.passed field)"
-			default:
-				smartObtained = true
-				if !*health {
-					adverse = append(adverse, "SMART health self-assessment failed for /dev/"+n)
-				}
-			}
-			if smartObtained || smartParseError != "" {
+	// The character devices SMART would need, described without opening them.
+	nodes, anyNode, anyOpenable, nodeErrno := healthDeviceNodes(env, names)
+	r.Field("health_device_nodes", nodes)
+
+	// Tool inventory, by metadata: presence is inventory, and absence of a tool
+	// is never absence of a capability.
+	var toolsFound, toolsMissing []string
+	for _, tool := range []string{"smartctl", "nvme"} {
+		found := ""
+		for _, dir := range []string{"/usr/sbin", "/usr/bin", "/sbin", "/bin", "/usr/local/sbin", "/usr/local/bin"} {
+			st := env.Files.Stat(dir + "/" + tool)
+			if st.Status == probe.StatusOK {
+				found = dir + "/" + tool
 				break
 			}
 		}
-		if strings.HasPrefix(n, "nvme") {
-			nobs := env.Runner.Run(ctx, probe.Spec{Name: "nvme", Args: []string{"smart-log", "/dev/" + n},
-				Budget: 3000000000, Purpose: "NVMe health (expected to be denied without CAP_SYS_ADMIN; the errno is the evidence)"})
-			r.Add(nobs)
-			smartAttempts = append(smartAttempts, "nvme smart-log /dev/"+n+" -> "+string(nobs.Status)+" "+nobs.Reason())
-			if nobs.Status == probe.StatusOK {
-				smartObtained = true
-				break
-			}
+		if found != "" {
+			toolsFound = append(toolsFound, found)
+		} else {
+			toolsMissing = append(toolsMissing, tool)
 		}
-		break
 	}
-	r.Field("smart_attempts", smartAttempts)
-	r.Field("smart_obtained", smartObtained)
-	if smartParseError != "" {
-		r.Field("smart_parse_error", smartParseError)
-	}
+	r.Field("smart_tooling_present", toolsFound)
+	r.Field("smart_tooling_absent", toolsMissing)
+	r.Field("smart_obtained", false)
 
 	switch {
 	case len(adverse) > 0:
 		return finish(scan.Fail(scan.ReasonPolicy,
 			"a readable health signal reports a problem: "+strings.Join(adverse, "; ")))
-	case smartParseError != "":
-		return finish(scan.Unknown(scan.ReasonParse,
-			"the SMART tool ran and produced output that could not be parsed as a health report ("+smartParseError+
-				"), so drive health is unknown; a health verdict is never inferred from the shape of the output"))
-	case smartObtained:
-		return finish(scan.Pass("drive health telemetry is readable by this account and reports no failure"))
-	case readableCount > 0:
-		return finish(scan.Unknown(scan.ReasonEACCES,
-			"SMART telemetry is not obtainable by this account ("+strings.Join(smartAttempts, "; ")+
-				"), so media health itself is unknown; the "+itoa(int64(readableCount))+
-				" readable adjacent signals are in evidence and are all clean, but a filesystem error counter is not media health"))
+	case !anyNode:
+		return finish(scan.Unknown(firstNonEmpty(nodeErrno, scan.ReasonENOENT),
+			"no character device through which drive health could be read was found, so media health itself is unknown"))
+	case anyOpenable:
+		// The node is reachable to this identity and the sensor still will not
+		// touch it. That is a design limit, not a denial, and conflating the
+		// two would misdirect whoever reads this.
+		return finish(scan.Unknown(scan.ReasonNotAttempted,
+			"a drive character device is openable by this identity, but "+sensorNeverOpensDevices+
+				", so SMART was not read; "+smartCapabilityNote))
 	default:
 		return finish(scan.Unknown(scan.ReasonEACCES,
-			"no health signal was readable at all: SMART needs a capability this account does not have, and no filesystem or device-state counter could be read"))
+			"the character devices that carry SMART are not openable by this identity (uid "+itoa(env.EUID)+
+				"), so media health itself is unknown; "+smartCapabilityNote))
 	}
 }
 
-// smartctlReport is the subset of `smartctl --json` this sensor reads. The
-// document is parsed, never pattern-matched: a truncated or malformed report
-// must not read as a clean bill of health.
-type smartctlReport struct {
-	SmartStatus *struct {
-		Passed *bool `json:"passed"`
-	} `json:"smart_status"`
-	Smartctl *struct {
-		ExitStatus *int64 `json:"exit_status"`
-	} `json:"smartctl"`
+// healthDeviceNodes describes each drive character device from its metadata and
+// decides, from mode/owner/group against our own identity, whether we could
+// open it. The node is stat-ed, never opened.
+func healthDeviceNodes(env *scan.Env, blockNames []string) (nodes []healthDeviceNode, anyNode, anyOpenable bool, errno string) {
+	seen := map[string]bool{}
+	var candidates []string
+	for _, n := range blockNames {
+		switch {
+		case strings.HasPrefix(n, "nvme"):
+			candidates = append(candidates, "/dev/"+nvmeController(n))
+		case strings.HasPrefix(n, "sd") || strings.HasPrefix(n, "hd") || strings.HasPrefix(n, "vd"):
+			candidates = append(candidates, "/dev/"+n)
+		}
+	}
+	for _, p := range candidates {
+		if seen[p] {
+			continue
+		}
+		seen[p] = true
+		st := env.Files.Stat(p)
+		st.Detail = "drive character/block device metadata; the node is never opened"
+		node := healthDeviceNode{Path: p, Errno: st.Reason()}
+		if st.Status != probe.StatusOK {
+			if errno == "" {
+				errno = st.Reason()
+			}
+			node.Basis = "not stat-able (" + st.Reason() + ")"
+			nodes = append(nodes, node)
+			continue
+		}
+		anyNode = true
+		node.Exists = true
+		if st.Meta != nil {
+			node.FileType = st.Meta.FileType
+			node.Mode, node.UID, node.GID = st.Meta.Mode, st.Meta.UID, st.Meta.GID
+		}
+		node.OpenableByUs, node.Basis, node.GroupName = openableByUs(env, node.Mode, node.UID, node.GID)
+		if node.OpenableByUs {
+			anyOpenable = true
+		}
+		nodes = append(nodes, node)
+	}
+	return nodes, anyNode, anyOpenable, errno
 }
 
-// parseSmartctlJSON returns the health verdict, or a parse error naming why no
-// verdict is derivable. A nil verdict with no error means the document parsed
-// but does not carry smart_status.passed.
-func parseSmartctlJSON(body string) (*bool, string) {
-	trimmed := strings.TrimSpace(body)
-	if trimmed == "" {
-		return nil, "empty output"
+// openableByUs answers "could this identity open that object for reading",
+// from the mode, the owner, the group and our own uid and group set. It is the
+// same question opening the file would answer, without the side effect.
+func openableByUs(env *scan.Env, mode, uid, gid *int64) (bool, string, string) {
+	if mode == nil {
+		return false, "mode not readable", ""
 	}
-	var rep smartctlReport
-	if err := json.Unmarshal([]byte(trimmed), &rep); err != nil {
-		return nil, err.Error()
+	m := *mode
+	groupName := ""
+	if gid != nil {
+		for _, g := range env.Groups().Groups {
+			if g.GID == *gid {
+				groupName = g.Name
+				break
+			}
+		}
 	}
-	if rep.SmartStatus == nil || rep.SmartStatus.Passed == nil {
-		return nil, ""
+	if m&0o004 != 0 {
+		return true, "other-readable", groupName
 	}
-	return rep.SmartStatus.Passed, ""
+	if uid != nil && *uid == env.EUID && m&0o400 != 0 {
+		return true, "owned by this uid and owner-readable", groupName
+	}
+	if gid != nil && m&0o040 != 0 {
+		for _, g := range env.SelfGroups() {
+			if g == *gid {
+				return true, "group-readable and this identity is in group " + groupName, groupName
+			}
+		}
+	}
+	return false, "mode " + octal(m) + " with uid/gid outside this identity", groupName
 }

@@ -273,11 +273,177 @@ nit, or a testlab tooling gap.
 - The storage matrix's "malformed lsblk JSON" fixture has no code path to hit (§4) — reported as n/a
   rather than forced.
 
-## 10. Files
+## 10. Second lab pass — closing the Docker Gate and the test-gate findings
+
+Triggered by the external hiring-panel adversarial review (`Claude outputs/LAVA_ADVERSARIAL_REVIEW.md`,
+"Docker Gate" and "Tests" sections) and `reports/CLOSURE_TABLE.md` rows 18/19. Scope for this pass:
+`sensor/internal/lab/`, `tooling/testlab/`, this file. `internal/{probe,scan,checks}` were not touched —
+and, notably, **they were mid-edit by the author during this pass** (`go vet ./internal/checks/...` and
+`./internal/scan/...` both failed on WIP test files — `parseSmartctlJSON` undefined,
+`scan.Check` gaining a `Budget()` method — exactly the "concurrently fixing" the coordinator described).
+My own `internal/lab` test types (`panickingCheck`, `noEvidenceCheck`) had to add a `Budget()` method to
+keep implementing the now-wider `scan.Check` interface; that is the only reason any file from the first
+pass changed. `internal/checks`' production (non-test) code still compiles, so `checks.All()` /
+`checks.CollectMachine()` remained usable throughout.
+
+### 10.1 Docker profile C — rebuilt to be genuinely hostile
+
+`tooling/testlab/Dockerfile.profileC` (new) builds `FROM lava-sensor-testlab:profileA` and, with real
+mechanisms, not a `PATH` trick:
+- **removes the actual binaries** for `nvme, mdadm, lsblk, findmnt, lspci, ss, ip, ufw, getcap, mokutil,
+  sshd` from every directory `internal/probe/exec.go`'s `resolveBinary` consults (`/usr/sbin`, `/usr/bin`,
+  `/sbin`, `/bin`), so there is nowhere left for the sensor's own resolver to find them, independent of
+  `$PATH`.
+- **`chmod 0000`** on `/etc/ssh`, `/etc/ssl/private`, `/var/lib/cloud`, `/run/udev` (created first where
+  the base image did not already have them) and on three `/etc/ufw/*.rules` files.
+- `run_in_docker.sh` runs this image as **uid:gid 4242:4242**, which has no `/etc/passwd` entry and no
+  home directory anywhere, plus `--read-only --cap-drop ALL --network none` (already used for A/B).
+
+**Masking `/proc/net` and `/sys/class/dmi` with an empty tmpfs, as originally specified, was attempted
+and is not available without capabilities this profile deliberately withholds** — recorded as a real,
+verified limitation, not skipped silently:
+- `--tmpfs /proc/net`: runc refuses (`check proc-safety of /proc/net mount`) — a container-escape
+  hardening rule in the runtime itself; bypassing it needs `CAP_SYS_ADMIN`, which would contradict
+  `--cap-drop ALL`.
+- `--tmpfs /sys/class/dmi`: docker mounts `/sys` read-only by default, so runc cannot even create the
+  mountpoint (`read-only file system`) without write access to `/sys`.
+Both exact `docker run` errors are preserved in `run_in_docker.sh`'s comments. `--network none` still
+genuinely empties `/proc/net/tcp{,6}` of listeners (a real restriction, just not a masked path), and
+`/sys/class/dmi` here is Docker Desktop's own backend VM's table, never the Lava host's, whether hidden
+or not — consistent with CLAUDE.md's "never claim a container equals the bare-metal host."
+
+**Result — A ≠ C, mechanically confirmed:**
+
+| | Profile A | Profile C |
+|---|---|---|
+| pass/fail/unknown | 10 / 2 / 14 | 9 / 1 / 16 |
+| Runtime | 225ms | 76ms |
+
+2 of 26 check_ids flip status label outright (`SSH_AUTH_METHODS_POLICY` pass→unknown,
+`UNUSED_ATTACHED_BLOCK_DEVICES` fail→unknown) and the pass/fail/unknown distribution itself shifts —
+the previous profile C was byte-identical to A on all 26 (0 differences); this one is not.
+
+Getting a real artifact required two more infrastructure fixes, both scoped to `tooling/testlab/`:
+- Git Bash/MSYS on Windows silently rewrites standalone container-internal path arguments
+  (`-w /home/ubuntu/sensor`) into Windows paths before exec-ing `docker.exe`. Fixed by scoping
+  `MSYS2_ARG_CONV_EXCL='*'` to just the affected `docker run`/`docker build`-for-container-paths
+  invocations (not exported globally, so it never breaks the host-path arguments `docker build` needs
+  converted).
+- uid 4242 owns nothing on the host and a bind-mounted `/out` (even `chmod 0777`'d) was refused
+  (`permission denied`) — Docker Desktop's Windows bind-mount layer does not honour that reliably for an
+  unmapped uid, and a `--tmpfs /out` target's contents do not survive long enough for `docker cp` after
+  the container stops. Fixed with a throwaway docker **volume**, world-writable by a one-shot root prep
+  container, mounted at `/out` for the actual restricted run, then copied to the host by a second
+  one-shot container — three tiny container runs, none of which grants the sensor's own run any
+  capability.
+
+### 10.2 Mechanical assertions: `tooling/testlab/assert_profile.py` (new)
+
+Wired into `run_in_docker.sh` after every run (non-zero exit fails the script). Four gates, in order:
+- **G1 schema** — delegates to `tooling/validate_findings.py` (no second hand-written schema).
+- **G2 roster completeness** — all 26 registered `check_id`s present exactly once.
+- **G3 per-profile expected status** — profile A is scored against a single required value per check
+  (`EXPECTED_A`, the corrected `research/CHECK_REGISTRY.md` §5.3 column A, 12 pass/9 fail/5 unknown
+  including `BOOT_KERNEL_DRIFT`); the **Docker run itself** is scored against `EXPECTED_A_DOCKER`, a
+  documented widening of exactly the 10 checks a container structurally cannot prove (no real DMI, no
+  BMC, no EFI, no securityfs, no real `/boot` kernel/initramfs, no systemd PID 1) — kept separate and
+  explained in-file so the raw host target (`EXPECTED_A`) stays available, unwidened, for anything
+  scored against a synthetic fixture instead of a real container. B and C use documented ranges.
+- **G4 verdict-text-entailment** — the external review's "single highest-value test missing": no
+  finding's detail may claim completeness/absence ("enumerated successfully", "proven absent", "all
+  sources", a bare "successfully", etc.) while a load-bearing observation in the same finding is
+  `EACCES`/`EPERM`/`TIMEOUT`/`EXEC_ERROR`/`UTILITY_MISSING`/`ENOENT`/truncated/budget-incomplete.
+  **Verified live, not just written**: a hand-built finding claiming "every enumeration completed" next
+  to a load-bearing `EACCES` observation was fed to the script as a positive control and G4 correctly
+  flagged it (`VIOLATION G4 ... claims 'every enumeration completed' while a load-bearing observation is
+  adverse`) — this is not a silently-inert check.
+
+**Current results (against the pre-batch-2 binary, i.e. interim per the coordinator's instruction):**
+
+| Profile | G1 | G2 | G3 | G4 | Overall |
+|---|---|---|---|---|---|
+| A (Docker, `EXPECTED_A_DOCKER`) | pass | pass | pass | pass | **PASS** |
+| B (alpine, ranges) | pass | pass | pass | pass | **PASS** |
+| C (hostile, calibrated ranges) | pass | pass | pass | pass | **PASS** |
+
+Three `EXPECTED_C` entries were widened from an initial unknown-only guess *after* running the real
+image and confirming each pass is legitimate, not a defect (documented in-script with the reasoning):
+`REMOTE_LISTENING_SURFACE` (the /proc/net mask is unavailable, so the real, unmasked read of a genuinely
+empty table is a true pass), `BMC_CLIENT_TOOLING_INVENTORY` (removing binaries from `/usr/bin` etc. does
+not make those directories unlistable — "none found, proven" is correct), `TPM_PRESENCE` (this Docker
+runtime genuinely registers no `/sys/class/tpm`, a proven-absence pass, same pattern the registry
+documents for a generic no-TPM VM).
+
+### 10.3 The profile/check matrix is now a hard gate (was `t.Logf`)
+
+`sensor/internal/lab/profile_matrix_test.go` rewritten:
+- `TestProfileMatrix_ProfileA_HardGate` (new, replaces the old soft comparison): `expectedProfileA` is a
+  single required `scan.Status` per check (not a range) — the corrected §5.3 column A, asserted by an
+  `init()` panic-if-wrong to sum to exactly 12/9/5 so the table itself cannot silently drift from
+  `CLOSURE_TABLE.md` row 20. Every mismatch is `t.Errorf`, not `t.Logf`.
+- `TestProfileMatrix_ProfilesBC_HardGate` (new): same promotion for the documented B/C ranges.
+- `TestProfileBIsGenericNoHostAssumptions` and `TestProfileCNeverPassesOrFailsWhatItCannotObserve` are
+  unchanged (they already used `t.Errorf`).
+
+**Interim result (expected, not a surprise): both new hard-gate tests currently FAIL.** This is the
+correct behaviour of a gate that previously could not fail at all — it is now red for real reasons:
+
+- **Profile A: 15 of 26 mismatches, all `unknown` where the registry requires `pass`/`fail`.** Every one
+  traces to a missing fixture file in `internal/checks/testdata/profileA` (no `/sys/firmware/dmi/entries`
+  or `/sys/bus/acpi/devices`, no `/sys/devices/platform/ipmi_bmc.*`, no `/proc/net/*`, no
+  `/sys/kernel/security`, no `/sys/class/tpm`, no `/proc/sys/kernel/tainted`, no `/boot/initramfs-*`, no
+  systemd unit data, no `/proc/swaps`) — not a single one is a confident wrong answer; every mismatch is
+  the check correctly reporting `unknown` with a precise `ENOENT`/`EINVAL`/`UTILITY_MISSING` reason
+  rather than guessing. Distribution observed: 6 pass / 1 fail / 19 unknown vs. the 12/9/5 target.
+- **Profile B: 13 mismatches**, same shape (fixture completeness), plus the pre-existing
+  `CREDENTIAL_FILE_EXPOSURE`-class gap.
+- **Profile C: 6 mismatches**, split two ways: 4 are the fixture-completeness class again
+  (`BOOT_ARTIFACT_READABILITY`, `CREDENTIAL_FILE_EXPOSURE`); **2 are the exact defect this whole
+  exercise was chasing** — `PRIVATE_KEY_MATERIAL_EXPOSURE` and `SSH_ROOT_LOGIN_POLICY`/
+  `SSH_AUTH_METHODS_POLICY` (3 findings total) report a confident `pass` on this fixture even though the
+  registry says a restricted profile's honest answer is `unknown`, matching `reports/CLOSURE_TABLE.md`
+  rows 2/3 (`WalkResult.Complete()` ignores `UnreadableDirs`) and row 1 (evidence-must-entail-verdict) —
+  **both already OPEN, already assigned to the author's batch 2, not new findings**, but this is
+  independent confirmation from a Go-fixture path that the Python `assert_profile.py` run against the
+  *Docker* image did not surface (that image's `/etc/ssh` denial is real and does gate the SSH checks;
+  `internal/checks/testdata/profileC`'s Go fixture, by contrast, ships a readable `sshd_config` with
+  `PermitRootLogin no` and no `/root`/`/home` walk-root denial at all, so it does not exercise the same
+  path — a fixture-fidelity gap on the Go side worth the author's attention alongside the Docker
+  evidence).
+
+Per the task's own instructions ("either add the fixture file... or change the expectation table
+deliberately with a one-line justification — no `t.Logf` mismatches remain"): the mechanism is fixed
+(no more silent logging); most red is fixture incompleteness I did not have scope or time to fully close
+in `internal/checks/testdata/` (out of my write scope this pass, and the author is actively editing that
+package concurrently); the 3 genuinely code-driven reds are pre-existing, already-tracked defects, not
+new ones. **This gate is expected to go green after the author's batch 2 lands and the fixtures are
+completed** — see §12 for the standing action item.
+
+Full lab suite under WSL after this pass: **29 pass / 2 fail** (the two new hard-gate tests, both
+correctly and expectedly red) — no regressions in the 27 other tests from the first pass.
+`GOOS=linux staticcheck ./internal/lab/...` and `go vet ./internal/lab/...`: clean.
+
+## 11. Standing action items for the next pass (after batch 2 lands)
+
+1. Rebuild `sensor/bin/sensor`, re-run `tooling/testlab/run_in_docker.sh A|B|C` (now asserted
+   automatically), and re-run the cross-compiled `internal/lab` suite under WSL.
+2. Expect `TestProfileMatrix_ProfileA_HardGate`/`...ProfilesBC_HardGate` to still show the
+   fixture-completeness reds in §10.3 until `internal/checks/testdata/profileA` gains the missing
+   evidence files listed there — either the author adds them, or someone changes
+   `expectedProfileA`/`registryMatrixBC` with a justification, per the rule above.
+3. Re-check the 3 `profileC` SSH/key mismatches specifically: they should flip from `pass` to `unknown`
+   once `reports/CLOSURE_TABLE.md` rows 1-3 close; if they do not, that is a real regression to report,
+   not fixture noise.
+4. Update this section and §§1-9 above with the post-batch-2 numbers.
+
+## 12. Files
 
 - Tests: `sensor/internal/lab/support_test.go`, `profile_matrix_test.go`, `fault_injection_test.go`,
   `storage_matrix_test.go`, `schema_test.go`.
 - Built artifacts: `sensor/bin/sensor` (linux/amd64), `sensor/bin/lab/lab.test` (linux/amd64 test
   binary), `sensor/bin/lab/findings.wsl.json` (WSL real run).
 - Real-run outputs: `reports/testlab/findings.profileA.json`, `findings.profileB.json`,
-  `findings.profileC.json`.
+  `findings.profileC.json` (all three rebuilt this pass; C is the new hostile image's output).
+- New this pass: `tooling/testlab/Dockerfile.profileC`, `tooling/testlab/assert_profile.py`,
+  `tooling/testlab/run_in_docker.sh` (updated: real profile C build/run, MSYS path fixes, the
+  docker-volume output path for uid 4242, and the `assert_profile.py` gate wired in after every run).

@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -84,7 +85,13 @@ func (w *limitWriter) Write(p []byte) (int, error) {
 		w.Truncated = true
 		if !w.fired && w.overflow != nil {
 			w.fired = true
-			go w.overflow()
+			kill := w.overflow
+			// A panic in a goroutine takes the whole process with it, and
+			// runOne's recover cannot reach it.
+			go func() {
+				defer func() { _ = recover() }()
+				kill()
+			}()
 		}
 	}
 	// Always report a full write: a short write would make the child see EPIPE
@@ -225,6 +232,12 @@ func (ExecRunner) Run(ctx context.Context, spec Spec) Observation {
 		// non-executable binary reads as EACCES, not EXECUTION_ERROR.
 		if ee := (*exec.ExitError)(nil); errors.As(err, &ee) {
 			obs.Status = StatusExecError
+			// A tool whose own stderr says it was refused is a denial, not a
+			// malfunction. EXECUTION_ERROR would be the least actionable of the
+			// available answers, and the distinction decides the remediation.
+			if name, ok := deniedByPrivilege(errOut); ok {
+				obs.Status, obs.Errno = StatusEACCES, name
+			}
 		} else {
 			obs.Status, obs.Errno = Classify(err)
 			if obs.Status == StatusENOENT {
@@ -238,8 +251,15 @@ func (ExecRunner) Run(ctx context.Context, spec Spec) Observation {
 	return obs
 }
 
-// resolveBinary finds the binary without consulting the caller's PATH: absolute
-// paths are stat-ed, bare names are looked up on the sensor's fixed PATH.
+// binaryDirs is the entire search set. The inherited PATH is never consulted:
+// a user-writable directory early in it could supply nvme, iptables, ss or
+// mokutil and so shape the evidence. That is not an escalation - same uid - but
+// a planted mokutil printing "SecureBoot enabled" is a lie the sensor would
+// repeat.
+var binaryDirs = []string{"/usr/sbin", "/usr/bin", "/sbin", "/bin", "/usr/local/sbin", "/usr/local/bin"}
+
+// resolveBinary finds a binary by absolute path or in binaryDirs. A name that
+// is in neither is UTILITY_MISSING, whatever PATH says.
 func resolveBinary(name string) (string, error) {
 	if strings.ContainsRune(name, '/') {
 		fi, err := os.Stat(name)
@@ -251,13 +271,13 @@ func resolveBinary(name string) (string, error) {
 		}
 		return name, nil
 	}
-	for _, dir := range []string{"/usr/sbin", "/usr/bin", "/sbin", "/bin"} {
+	for _, dir := range binaryDirs {
 		cand := dir + "/" + name
 		if fi, err := os.Stat(cand); err == nil && fi.Mode().IsRegular() {
 			return cand, nil
 		}
 	}
-	return exec.LookPath(name)
+	return "", &os.PathError{Op: "stat", Path: name, Err: syscall.ENOENT}
 }
 
 func excerpt(s string, n int) string {
@@ -268,9 +288,29 @@ func excerpt(s string, n int) string {
 	return s[:n] + "…"
 }
 
-// Which reports whether a utility is installed, without running it. Presence is
-// inventory; absence is never evidence that a capability is missing (L39).
-func Which(name string) (string, bool) {
-	p, err := resolveBinary(name)
-	return p, err == nil
+// privilegeDenialPatterns are the ways the standard host tools say "you are not
+// allowed to do this". Matching on the tool's own words is how a non-zero exit
+// becomes a classified denial rather than an unexplained failure.
+var privilegeDenialPatterns = []struct {
+	needle string
+	errno  string
+}{
+	{"permission denied", "EACCES"},
+	{"you must be root", "EACCES"},
+	{"must be run as root", "EACCES"},
+	{"need to be root", "EACCES"},
+	{"are you root", "EACCES"},
+	{"operation not permitted", "EPERM"},
+	{"requires root privileges", "EPERM"},
+	{"insufficient privileges", "EPERM"},
+}
+
+func deniedByPrivilege(stderr string) (string, bool) {
+	s := strings.ToLower(stderr)
+	for _, p := range privilegeDenialPatterns {
+		if strings.Contains(s, p.needle) {
+			return p.errno, true
+		}
+	}
+	return "", false
 }

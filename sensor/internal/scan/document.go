@@ -70,6 +70,10 @@ type Finding struct {
 	CollectedAt string   `json:"collected_at"`
 	Impact      string   `json:"impact"`
 	DurationMS  int64    `json:"duration_ms"`
+	// EntailmentViolation is set when a check wrote a completeness claim its
+	// own observations did not support. The finding is downgraded, and this
+	// flag makes the fact auditable from the artifact alone.
+	EntailmentViolation bool `json:"entailment_violation,omitempty"`
 }
 
 // Field is one ordered extra key in an evidence object. Insertion order is the
@@ -157,6 +161,7 @@ type ObsEvidence struct {
 	Bytes           int64    `json:"bytes,omitempty"`
 	DurationMS      int64    `json:"duration_ms"`
 	LoadBearing     bool     `json:"load_bearing,omitempty"`
+	AbsenceProven   bool     `json:"absence_proven,omitempty"`
 	Detail          string   `json:"detail,omitempty"`
 	Command         []string `json:"command,omitempty"`
 	BinaryPath      string   `json:"binary_resolved_path,omitempty"`

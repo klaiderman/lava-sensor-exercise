@@ -494,8 +494,18 @@ func (c bootArtifactReadability) Run(ctx context.Context, env *scan.Env) scan.Re
 
 	names, obs := env.Files.ReadDirNames("/boot", 1024)
 	obs.LoadBearing = true
+	// A /boot that does not exist is not a boundary: there are no boot
+	// artifacts on this system to expose, which is an answer. A /boot we were
+	// refused is a boundary.
+	obs.AbsenceProven = obs.Status == probe.StatusENOENT
 	r.Add(obs)
-	if obs.Status != probe.StatusOK {
+	switch obs.Status {
+	case probe.StatusOK:
+	case probe.StatusENOENT:
+		r.Field("boot_directory_present", false)
+		return finish(scan.Pass(
+			"this system exposes no /boot directory, so there are no kernel, initramfs or boot loader artifacts on it for a local user to read"))
+	default:
 		return finish(scan.Unknown(obs.Reason(),
 			"/boot could not be listed ("+obs.Reason()+"), so who can read the kernel, initramfs and boot loader configuration is unknown"))
 	}

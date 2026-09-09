@@ -22,7 +22,25 @@ const evidenceValueCap = 512
 //	(b) the severity rule LD-2 is applied;
 //	(c) the evidence object is built from the observations by one function.
 func finalize(c Check, r Result, env *Env, start time.Time, elapsed time.Duration) Finding {
-	// (a) load-bearing downgrade.
+	// (a1) evidence must entail the verdict. This runs FIRST, on the detail the
+	// check actually wrote: once the load-bearing downgrade has rewritten the
+	// text, the over-claim it was meant to catch is no longer there to catch.
+	comp := completenessOf(r.Observations)
+	violation := false
+	if phrase, claims := claimsCompleteness(r.Detail); claims && !comp.AbsenceProvable {
+		violation = true
+		if r.Status == StatusPass || r.Status == StatusFail {
+			r.Status = StatusUnknown
+			r.Reason = entailmentReason(r.Observations)
+		}
+		r.Detail = r.Detail + " [engine: this detail claims " + quoteStr(phrase) +
+			", which its own observations do not support — " + comp.Statement + "]"
+	}
+	// The generated statement leads the evidence extras, so a reader meets the
+	// scope of the answer before its content.
+	r.Fields = append([]Field{F("completeness", comp)}, r.Fields...)
+
+	// (a2) load-bearing downgrade.
 	if r.Status == StatusPass || r.Status == StatusFail {
 		if bad, ok := firstUnclean(r.Observations); ok {
 			reason := bad.Reason()
@@ -32,7 +50,7 @@ func finalize(c Check, r Result, env *Env, start time.Time, elapsed time.Duratio
 			if bad.Truncated && bad.Status == probe.StatusOK {
 				reason = ReasonBudget
 			}
-			r.Detail = downgradeDetail(r.Status, bad)
+			r.Detail = strings.TrimSpace(r.Detail + " [" + downgradeDetail(r.Status, bad) + "]")
 			r.Status = StatusUnknown
 			r.Reason = reason
 		}
@@ -57,17 +75,30 @@ func finalize(c Check, r Result, env *Env, start time.Time, elapsed time.Duratio
 	}
 
 	return Finding{
-		Category:    c.Category(),
-		CheckID:     c.ID(),
-		Status:      r.Status,
-		Severity:    severity,
-		Title:       c.Title(),
-		Reason:      r.Reason,
-		Evidence:    buildEvidence(r), // (c)
-		CollectedAt: rfc3339(start),
-		Impact:      c.Impact(),
-		DurationMS:  elapsed.Milliseconds(),
+		EntailmentViolation: violation,
+		Category:            c.Category(),
+		CheckID:             c.ID(),
+		Status:              r.Status,
+		Severity:            severity,
+		Title:               c.Title(),
+		Reason:              r.Reason,
+		Evidence:            buildEvidence(r), // (c)
+		CollectedAt:         rfc3339(start),
+		Impact:              c.Impact(),
+		DurationMS:          elapsed.Milliseconds(),
 	}
+}
+
+// entailmentReason picks the reason for a finding the engine downgraded because
+// its prose over-claimed: the first load-bearing failure if there is one, and
+// otherwise the fact that nothing was load-bearing at all.
+func entailmentReason(obs []probe.Observation) string {
+	if bad, ok := firstUnclean(obs); ok {
+		if r := bad.Reason(); r != "" {
+			return r
+		}
+	}
+	return ReasonParse
 }
 
 // firstUnclean returns the first load-bearing observation that did not fully
@@ -78,7 +109,7 @@ func firstUnclean(obs []probe.Observation) (probe.Observation, bool) {
 		if !o.LoadBearing {
 			continue
 		}
-		if o.Status != probe.StatusOK || o.Truncated {
+		if !clean(o) {
 			return o, true
 		}
 	}
@@ -119,6 +150,7 @@ func renderObservation(o probe.Observation) ObsEvidence {
 		Bytes:           o.Bytes,
 		DurationMS:      o.Elapsed.Milliseconds(),
 		LoadBearing:     o.LoadBearing,
+		AbsenceProven:   o.AbsenceProven,
 		Detail:          o.Detail,
 	}
 	if v := strings.TrimRight(o.Value, "\n"); v != "" {

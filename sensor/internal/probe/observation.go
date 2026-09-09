@@ -46,8 +46,6 @@ const (
 	KindFileMetadata = "file_metadata"
 	KindDirWalk      = "dir_walk"
 	KindCommandExec  = "command_exec"
-	KindConfigRes    = "config_resolution"
-	KindDeviceProbe  = "device_probe"
 )
 
 // Observation is one attempt to learn one fact from the host.
@@ -77,6 +75,11 @@ type Observation struct {
 	Bytes int64
 	// Elapsed is how long the observation took.
 	Elapsed time.Duration
+	// AbsenceProven marks an ENOENT that IS the answer rather than a gap in
+	// it: a stat that resolved the path and found nothing there. Without this
+	// distinction "the file is not present" and "we could not look" collapse
+	// into one status, which is the failure the evidence model exists to stop.
+	AbsenceProven bool
 	// LoadBearing marks an observation the check's verdict depends on. A
 	// pass/fail whose load-bearing observations are not OK is downgraded to
 	// unknown centrally in scan.finalize (L07/L39).
@@ -121,9 +124,6 @@ type Meta struct {
 
 // OK reports whether the observation succeeded.
 func (o Observation) OK() bool { return o.Status == StatusOK }
-
-// Failed reports whether the observation did not succeed.
-func (o Observation) Failed() bool { return o.Status != StatusOK }
 
 // Bearing returns a copy of o marked load-bearing.
 func (o Observation) Bearing() Observation { o.LoadBearing = true; return o }

@@ -32,18 +32,56 @@ type WalkBudget struct {
 // WalkResult is the boundary of an enumeration. It is mandatory evidence: a
 // finding that reports "nothing found" without it is invalid.
 type WalkResult struct {
-	Root            string   `json:"root"`
-	EntriesScanned  int64    `json:"entries_scanned"`
-	DirsPruned      []string `json:"dirs_pruned"`
-	UnreadableDirs  []string `json:"unreadable_dirs"`
-	CrossedMounts   bool     `json:"crossed_mounts"`
-	BudgetExhausted string   `json:"budget_exhausted"`
-	Errno           string   `json:"errno,omitempty"`
+	Root           string   `json:"root"`
+	EntriesScanned int64    `json:"entries_scanned"`
+	DirsPruned     []string `json:"dirs_pruned"`
+	UnreadableDirs []string `json:"unreadable_dirs"`
+	// UnreadableDirsCount and DirsPrunedCount are counters, not lists: the
+	// lists are capped for size, and a boundary that is dropped from a capped
+	// list would otherwise disappear from the evidence entirely.
+	UnreadableDirsCount int64  `json:"unreadable_dirs_count"`
+	DirsPrunedCount     int64  `json:"dirs_pruned_count"`
+	ListsTruncated      bool   `json:"boundary_lists_truncated,omitempty"`
+	CrossedMounts       bool   `json:"crossed_mounts"`
+	BudgetExhausted     string `json:"budget_exhausted"`
+	Errno               string `json:"errno,omitempty"`
 }
 
 // Complete reports whether the enumeration finished, which is the only state in
 // which the absence of a match is evidence.
-func (w WalkResult) Complete() bool { return w.BudgetExhausted == "none" && w.Errno == "" }
+//
+// A denied subtree is not a completed enumeration. filepath.WalkDir calls the
+// visitor a second time with the error and then carries on, so a walk that
+// could not enter /root looks finished unless the boundary is consulted here;
+// that is how "no exposed key material" came to be reported for a directory the
+// sensor never saw inside.
+func (w WalkResult) Complete() bool {
+	return w.BudgetExhausted == "none" && w.Errno == "" &&
+		w.UnreadableDirsCount == 0 && !w.CrossedMounts
+}
+
+// Boundary renders why an enumeration is not evidence of absence.
+func (w WalkResult) Boundary() string {
+	var parts []string
+	if w.Errno != "" {
+		parts = append(parts, w.Root+" could not be opened ("+w.Errno+")")
+	}
+	if w.UnreadableDirsCount > 0 {
+		sample := w.UnreadableDirs
+		if len(sample) > 4 {
+			sample = sample[:4]
+		}
+		parts = append(parts, itoa(w.UnreadableDirsCount)+" directory/ies under "+w.Root+
+			" could not be read ("+strings.Join(sample, ", ")+")")
+	}
+	if w.CrossedMounts {
+		parts = append(parts, "a mount boundary under "+w.Root+" was not crossed")
+	}
+	if w.BudgetExhausted != "none" && w.BudgetExhausted != "" {
+		parts = append(parts, "the "+w.BudgetExhausted+" budget was exhausted under "+w.Root)
+	}
+	return strings.Join(parts, "; ")
+}
 
 // Walk enumerates a tree under explicit bounds.
 //
@@ -91,9 +129,13 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 	_ = filepath.WalkDir(base, func(p string, d fs.DirEntry, err error) error {
 		host := r.unbase(p)
 		if err != nil {
-			// A denied subtree is the honest boundary of the enumeration.
+			// A denied subtree is the honest boundary of the enumeration. The
+			// count is always kept; the list is capped.
+			res.UnreadableDirsCount++
 			if len(res.UnreadableDirs) < 64 {
 				res.UnreadableDirs = append(res.UnreadableDirs, host)
+			} else {
+				res.ListsTruncated = true
 			}
 			return nil
 		}
@@ -113,16 +155,27 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 			}
 			for _, pre := range prunedPrefixes {
 				if host == pre || strings.HasPrefix(host, pre+"/") {
-					res.DirsPruned = append(res.DirsPruned, host)
+					res.DirsPrunedCount++
+					if len(res.DirsPruned) < 64 {
+						res.DirsPruned = append(res.DirsPruned, host)
+					} else {
+						res.ListsTruncated = true
+					}
 					return fs.SkipDir
 				}
 			}
 			if haveDev {
 				if fi, e := d.Info(); e == nil {
 					if _, _, dev, _, ok := ownerOf(fi); ok && dev != rootDev {
-						// xdev: another filesystem is another question.
-						res.CrossedMounts = false
-						res.DirsPruned = append(res.DirsPruned, host+" (other filesystem)")
+						// xdev: another filesystem is another question, and the
+						// fact that one was declined belongs in the evidence.
+						res.CrossedMounts = true
+						res.DirsPrunedCount++
+						if len(res.DirsPruned) < 64 {
+							res.DirsPruned = append(res.DirsPruned, host+" (other filesystem, not crossed)")
+						} else {
+							res.ListsTruncated = true
+						}
 						return fs.SkipDir
 					}
 				}
@@ -141,9 +194,11 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 		UnreadableDirs: res.UnreadableDirs, BudgetExhausted: res.BudgetExhausted,
 		CrossedMounts: res.CrossedMounts,
 	}
-	if res.BudgetExhausted != "none" {
+	if !res.Complete() {
+		// The observation itself carries the incompleteness, so a check that
+		// marks this walk load-bearing cannot return pass from it.
 		obs.Truncated = true
-		obs.Detail = "enumeration stopped at its " + res.BudgetExhausted + " budget; absence is not provable from it"
+		obs.Detail = "enumeration did not complete: " + res.Boundary() + "; absence is not provable from it"
 	}
 	return res, obs
 }

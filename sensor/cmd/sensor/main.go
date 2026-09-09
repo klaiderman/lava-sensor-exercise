@@ -5,7 +5,7 @@
 //
 // Usage:
 //
-//	sensor scan --out findings.json [--timeout 60s]
+//	sensor scan --out findings.json
 //	sensor --version
 //
 // Exit codes:
@@ -46,10 +46,9 @@ func run(args []string, stdout, stderr *os.File) int {
 	var (
 		out         = fs.String("out", "", "path of the findings JSON file to write (required)")
 		showVersion = fs.Bool("version", false, "print the sensor version and exit")
-		timeout     = fs.Duration("timeout", scan.DefaultScanDeadline, "whole-scan deadline")
 	)
 	fs.Usage = func() {
-		fmt.Fprintf(stderr, "usage: sensor scan --out findings.json [--timeout %s]\n       sensor --version\n\n", scan.DefaultScanDeadline)
+		fmt.Fprint(stderr, "usage: sensor scan --out findings.json\n       sensor --version\n\n")
 		fs.PrintDefaults()
 	}
 
@@ -81,10 +80,6 @@ func run(args []string, stdout, stderr *os.File) int {
 		fmt.Fprintln(stderr, "sensor: --out is required")
 		return exitFatal
 	}
-	if *timeout <= 0 {
-		fmt.Fprintln(stderr, "sensor: --timeout must be positive")
-		return exitFatal
-	}
 	if fs.NArg() > 0 {
 		fmt.Fprintf(stderr, "sensor: unexpected argument %q\n", fs.Arg(0))
 		return exitFatal
@@ -102,7 +97,9 @@ func run(args []string, stdout, stderr *os.File) int {
 	defer files.Close()
 
 	started := time.Now()
-	deadline := started.Add(*timeout)
+	// The whole-scan deadline is a constant: a bound an operator can raise
+	// from the command line is not a bound.
+	deadline := started.Add(scan.DefaultScanDeadline)
 	ctx, cancel := context.WithDeadline(context.Background(), deadline)
 	defer cancel()
 
@@ -123,7 +120,7 @@ func run(args []string, stdout, stderr *os.File) int {
 		Scan: scan.ScanMeta{
 			StartedAt:      started.UTC().Format(time.RFC3339),
 			DurationMS:     time.Since(started).Milliseconds(),
-			DeadlineMS:     timeout.Milliseconds(),
+			DeadlineMS:     scan.DefaultScanDeadline.Milliseconds(),
 			ChecksRun:      int64(len(roster)),
 			BudgetCut:      cut > 0,
 			BudgetCutCount: cut,

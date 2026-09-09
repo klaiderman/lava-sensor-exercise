@@ -606,7 +606,7 @@ func hasAnyPrefix(s string, prefixes []string) bool {
 // describeBlockDevice reads one whole disk from sysfs and the udev database.
 // The device node itself is never opened: the whole storage category depends on
 // that (L13, L29).
-func describeBlockDevice(f probe.Files, mounts *scan.MountTable, n string) scan.StorageDevice {
+func describeBlockDevice(f *probe.Reader, mounts *scan.MountTable, n string) scan.StorageDevice {
 	base := "/sys/block/" + n
 	d := scan.StorageDevice{
 		Device: n, DevicePath: "/dev/" + n, Model: scan.UnknownString,
@@ -688,16 +688,34 @@ func describeBlockDevice(f probe.Files, mounts *scan.MountTable, n string) scan.
 	return d
 }
 
+// nvmeController strips the namespace suffix from an NVMe block device name:
+// nvme0n1 -> nvme0. Searching forward for "n" finds the one in "nvme", so the
+// cut is made at the LAST "n" that is followed only by digits.
 func nvmeController(n string) string {
-	if i := strings.Index(n, "n"); i > 0 {
-		if j := strings.Index(n[i+1:], "n"); j >= 0 {
-			return n[:i+1+j]
+	for i := len(n) - 1; i > 0; i-- {
+		if n[i] != 'n' {
+			continue
 		}
+		rest := n[i+1:]
+		if rest == "" {
+			return n
+		}
+		allDigits := true
+		for _, c := range rest {
+			if c < '0' || c > '9' {
+				allDigits = false
+				break
+			}
+		}
+		if allDigits && n[i-1] >= '0' && n[i-1] <= '9' {
+			return n[:i]
+		}
+		return n
 	}
 	return n
 }
 
-func readInto(f probe.Files, path string, dst *string) bool {
+func readInto(f *probe.Reader, path string, dst *string) bool {
 	v, obs := f.ReadTrimmed(path, probe.Tiny)
 	if obs.Status == probe.StatusOK && v != "" {
 		*dst = v
@@ -708,7 +726,7 @@ func readInto(f probe.Files, path string, dst *string) bool {
 
 // readBool reads a sysfs 0/1 flag. A missing or unparseable flag is nil, never
 // a defaulted false.
-func readBool(f probe.Files, path string) *bool {
+func readBool(f *probe.Reader, path string) *bool {
 	v, obs := f.ReadTrimmed(path, probe.Tiny)
 	if obs.Status != probe.StatusOK {
 		return nil
@@ -724,7 +742,7 @@ func readBool(f probe.Files, path string) *bool {
 	return nil
 }
 
-func readInt(f probe.Files, path string) int64 {
+func readInt(f *probe.Reader, path string) int64 {
 	v, obs := f.ReadTrimmed(path, probe.Tiny)
 	if obs.Status != probe.StatusOK {
 		return 0
@@ -747,7 +765,7 @@ func activeScheduler(v string) string {
 
 // transportOf reads the bus a device sits on from the subsystem symlink rather
 // than guessing from the kernel name (L37).
-func transportOf(f probe.Files, base string) string {
+func transportOf(f *probe.Reader, base string) string {
 	for _, rel := range []string{"/device/subsystem", "/device/device/subsystem"} {
 		if t, obs := f.ReadLinkBase(base + rel); obs.Status == probe.StatusOK && t != "" {
 			return t
@@ -759,7 +777,7 @@ func transportOf(f probe.Files, base string) string {
 // readUdevRecord reads /run/udev/data/b<major>:<minor>. The udev database
 // answers identity and filesystem type without opening the device; an empty
 // field means "not recorded at the last uevent", never "no filesystem" (L29).
-func readUdevRecord(f probe.Files, majmin string) map[string]string {
+func readUdevRecord(f *probe.Reader, majmin string) map[string]string {
 	out := map[string]string{}
 	if majmin == "" {
 		return out

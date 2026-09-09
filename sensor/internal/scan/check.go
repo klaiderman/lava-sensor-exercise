@@ -21,13 +21,11 @@ type Check interface {
 	// Observational marks a check that inventories rather than judges. Those
 	// are always reported at severity info.
 	Observational() bool
-	Run(ctx context.Context, env *Env) Result
-}
-
-// Budgeted is an optional interface a check implements when its own work needs
-// more or less than the default per-check budget.
-type Budgeted interface {
+	// Budget is the check's own declared time bound. The engine takes
+	// min(Budget, remaining scan deadline), so a declared budget can only ever
+	// shrink (see scan.Run).
 	Budget() time.Duration
+	Run(ctx context.Context, env *Env) Result
 }
 
 // Result is what a check returns. It carries the verdict, the closed-vocabulary
@@ -45,6 +43,29 @@ func (r *Result) Add(obs ...probe.Observation) { r.Observations = append(r.Obser
 
 // Field appends an ordered evidence extra.
 func (r *Result) Field(key string, value any) { r.Fields = append(r.Fields, F(key, value)) }
+
+// LoadBearingIf marks already-recorded observations as load-bearing when the
+// verdict turns out to rest on them.
+//
+// Whether an observation is load-bearing depends on the branch taken, not on
+// the order the observations were gathered in: a check that FOUND something
+// stands on that positive observation, while a check about to say it found
+// nothing stands on every listing having succeeded. Marking unconditionally
+// would manufacture unknowns out of positive findings.
+func (r *Result) LoadBearingIf(cond bool, sources ...string) {
+	if !cond {
+		return
+	}
+	want := map[string]bool{}
+	for _, s := range sources {
+		want[s] = true
+	}
+	for i := range r.Observations {
+		if len(want) == 0 || want[r.Observations[i].Source] {
+			r.Observations[i].LoadBearing = true
+		}
+	}
+}
 
 // Pass builds a passing result.
 func Pass(detail string) Result { return Result{Status: StatusPass, Detail: detail} }
@@ -67,7 +88,6 @@ const (
 	ReasonEPERM     = "EPERM"
 	ReasonENOENT    = "ENOENT"
 	ReasonEINVAL    = "EINVAL"
-	ReasonENODEV    = "ENODEV"
 	ReasonTimeout   = "TIMEOUT"
 	ReasonUtilMiss  = "UTILITY_MISSING"
 	ReasonBudget    = "BUDGET_EXHAUSTED"
@@ -80,13 +100,18 @@ const (
 	// coarse to order them. It is distinct from CONTESTED: nothing disagrees,
 	// the instrument simply does not resolve the question.
 	ReasonTimestampRes = "TIMESTAMP_RESOLUTION"
+	// ReasonNotAttempted means the observation was reachable but the sensor
+	// declined to make it, by design. It is distinct from EACCES (we were
+	// refused) and from ENOENT (there was nothing there): the limit is the
+	// sensor's own read-only contract, and saying so is the honest answer.
+	ReasonNotAttempted = "NOT_ATTEMPTED"
 )
 
 // Env is the read-once shared state for a whole scan: the probe handles, a
 // fixed clock, and the three observations more than one check needs. Everything
 // else a check wants, it reads itself.
 type Env struct {
-	Files    probe.Files
+	Files    *probe.Reader
 	Runner   probe.Runner
 	Now      func() time.Time
 	Deadline time.Time
@@ -96,15 +121,74 @@ type Env struct {
 	// not open, for instance) for the run-level scan block.
 	Degradations []string
 
-	onceSSHD  sync.Once
-	sshd      *SSHDOracle
-	onceMount sync.Once
-	mounts    *MountTable
-	onceGroup sync.Once
-	groups    *GroupDB
-	onceOS    sync.Once
-	osID      string
-	osIDLike  string
+	onceSSHD   sync.Once
+	sshd       *SSHDOracle
+	onceMount  sync.Once
+	mounts     *MountTable
+	onceGroup  sync.Once
+	groups     *GroupDB
+	onceOS     sync.Once
+	osID       string
+	osIDLike   string
+	onceGroups sync.Once
+	selfGroups []int64
+	muUnits    sync.Mutex
+	units      map[string]probe.Observation
+}
+
+// SystemdShow runs `systemctl show` for one unit at most once per scan and
+// caches the RAW observation. Env caches observations, never conclusions: what
+// the properties mean is decided by each check that reads them.
+func (e *Env) SystemdShow(ctx context.Context, unit string, props ...string) probe.Observation {
+	key := unit + " " + strings.Join(props, " ")
+	e.muUnits.Lock()
+	if obs, ok := e.units[key]; ok {
+		e.muUnits.Unlock()
+		return obs
+	}
+	e.muUnits.Unlock()
+
+	args := []string{"show", unit}
+	for _, p := range props {
+		args = append(args, "-p", p)
+	}
+	obs := e.Runner.Run(ctx, probe.Spec{
+		Name: "systemctl", Args: args, Budget: 3 * time.Second,
+		Purpose: "unit properties of " + unit,
+	})
+	e.muUnits.Lock()
+	if e.units == nil {
+		e.units = map[string]probe.Observation{}
+	}
+	e.units[key] = obs
+	e.muUnits.Unlock()
+	return obs
+}
+
+// SelfGroups returns the effective and supplementary group ids of the running
+// sensor, read from /proc/self/status.
+//
+// This is what makes "who may open this device node" answerable without opening
+// it: a node's mode, owner and group are compared against the identity we
+// actually have, rather than against an assumption about it.
+func (e *Env) SelfGroups() []int64 {
+	e.onceGroups.Do(func() {
+		e.selfGroups = []int64{}
+		obs := e.Files.Read("/proc/self/status", probe.Small)
+		if obs.Status != probe.StatusOK {
+			return
+		}
+		for _, ln := range strings.Split(obs.Value, "\n") {
+			rest, ok := strings.CutPrefix(ln, "Groups:")
+			if !ok {
+				continue
+			}
+			for _, f := range strings.Fields(rest) {
+				e.selfGroups = append(e.selfGroups, atoi64(f))
+			}
+		}
+	})
+	return e.selfGroups
 }
 
 // OSIDs returns the os-release ID and ID_LIKE. A check that needs a documented
@@ -137,16 +221,20 @@ func (e *Env) OSIDs() (id, idLike string) {
 }
 
 // NewEnv builds the production environment.
-func NewEnv(files probe.Files, runner probe.Runner, now func() time.Time, deadline time.Time, euid int64) *Env {
+func NewEnv(files *probe.Reader, runner probe.Runner, now func() time.Time, deadline time.Time, euid int64) *Env {
 	if now == nil {
 		now = time.Now
 	}
 	return &Env{Files: files, Runner: runner, Now: now, Deadline: deadline, EUID: euid}
 }
 
-// SSHDOracle is the effective sshd configuration as the running daemon reports
-// it. `sshd -G` is the primary in-force oracle; it is run at most once per scan
-// because it is one observation shared by the whole SSH family (L18, L41).
+// SSHDOracle is what sshd itself makes of the configuration on disk right now.
+//
+// `sshd -G` re-parses the current files with the installed binary's compiled-in
+// defaults; it says nothing about the process that is listening. Whether the
+// daemon loaded these files is a separate question, answered by
+// SSH_POLICY_IN_FORCE, and the policy checks carry that answer as a caveat.
+// It is run at most once per scan: one observation, shared (L18, L41).
 type SSHDOracle struct {
 	Obs        probe.Observation
 	Directives map[string][]string
@@ -205,13 +293,23 @@ func (e *Env) SSHD(ctx context.Context) *SSHDOracle {
 		o.Obs = e.Runner.Run(ctx, probe.Spec{
 			Name: bin, Args: []string{"-G"},
 			Budget:  5 * time.Second,
-			Purpose: "effective sshd configuration as the daemon resolves it",
+			Purpose: "effective sshd configuration as sshd resolves it from disk now",
 		})
 		if o.Obs.Status == probe.StatusOK {
 			parseSSHDG(o)
 		}
 		e.sshd = o
 	})
+	return e.sshd
+}
+
+// SSHDCached returns the oracle from the one run this scan already made. It is
+// for callers that are downstream of SSHD(ctx) in the same check and have no
+// context to hand; it never starts a process.
+func (e *Env) SSHDCached() *SSHDOracle {
+	if e.sshd == nil {
+		return &SSHDOracle{Directives: map[string][]string{}}
+	}
 	return e.sshd
 }
 

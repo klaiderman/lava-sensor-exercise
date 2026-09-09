@@ -2,16 +2,15 @@ package lab
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"lava-sensor-exercise/sensor/internal/scan"
 )
 
 // expectedSet is the set of statuses research/CHECK_REGISTRY.md §5.3 allows for
-// one check on one profile. Several cells in that table are themselves an
+// one check on profile B or C. Several cells in that table are themselves an
 // explicit "p or f" / "p or u" — a fixed fixture necessarily lands on one
-// concrete value, so both are accepted here and the observed one is logged.
+// concrete value, so both are accepted here.
 type expectedSet map[scan.Status]bool
 
 func set(ss ...scan.Status) expectedSet {
@@ -31,98 +30,161 @@ var (
 	anyS    = set(scan.StatusPass, scan.StatusFail, scan.StatusUnknown)
 )
 
-// registryMatrix is research/CHECK_REGISTRY.md §5.3, transcribed. Profile A is
-// the Lava-host-shaped fixture and its column is the one hard prediction in
-// that document; B and C are documented as ranges ("p or f", "u"), which is
-// exactly what expectedSet models.
-var registryMatrix = map[string][3]expectedSet{
-	"SSH_ROOT_LOGIN_POLICY":           {unknown, passF, unknown},
-	"SSH_AUTH_METHODS_POLICY":         {pass, passF, unknown},
-	"SSH_POLICY_IN_FORCE":             {pass, passU, unknown},
-	"REMOTE_LISTENING_SURFACE":        {pass, passF, unknown},
-	"LOGIN_AND_ESCALATION_SURFACE":    {unknown, unknown, unknown},
-	"HOST_FIREWALL_STATE":             {unknown, set(scan.StatusFail, scan.StatusUnknown), unknown},
-	"PRIVATE_KEY_MATERIAL_EXPOSURE":   {pass, passF, unknown},
-	"CREDENTIAL_FILE_EXPOSURE":        {pass, passF, passF},
-	"PROVISIONING_DATA_PROTECTION":    {pass, pass, pass},
-	"SYSTEM_SECRET_STORE_PROTECTION":  {pass, pass, passU},
-	"BMC_INBAND_INTERFACE_PRESENT":    {pass, pass, unknown},
-	"BMC_RESPONDS_IN_BAND":            {pass, pass, unknown},
-	"BMC_DEVICE_NODE_ACCESS":          {pass, pass, unknown},
-	"BMC_CLIENT_TOOLING_INVENTORY":    {pass, pass, pass},
-	"BMC_HOST_INTERFACE_EXPOSURE":     {pass, pass, unknown},
-	"DISK_ENCRYPTION_AT_REST":         {fail, passF, unknown},
-	"ROOT_FILESYSTEM_REDUNDANCY":      {fail, fail, unknown},
-	"UNUSED_ATTACHED_BLOCK_DEVICES":   {fail, pass, unknown},
-	"MEDIA_HEALTH_VISIBILITY":         {unknown, unknown, unknown},
-	"SECURE_BOOT_ENABLED":             {fail, anyS, unknown},
-	"UEFI_PLATFORM_SETUP_MODE":        {fail, anyS, unknown},
-	"KERNEL_LOCKDOWN_MODE":            {fail, set(scan.StatusFail, scan.StatusUnknown), unknown},
-	"UNSIGNED_OR_OUT_OF_TREE_MODULES": {fail, passF, set(scan.StatusFail, scan.StatusUnknown)},
-	"TPM_PRESENCE":                    {pass, pass, unknown},
-	"BOOT_ARTIFACT_READABILITY":       {fail, passF, pass},
-	"BOOT_KERNEL_DRIFT":               {anyS, anyS, anyS}, // not yet in the registry's §5.3 table (added after it was drafted)
+// expectedProfileA is research/CHECK_REGISTRY.md §5.3, column A, corrected
+// 2026-09-09 02:20Z after the external adversarial review (H2 — the original
+// prose "9 pass · 8 fail · 8 unknown" was arithmetically wrong; the table's own
+// rows sum to 12/8/5 for the 25 registry checks), plus the lead-added
+// BOOT_KERNEL_DRIFT row (fail: running 6.8.0-139-generic while /boot/vmlinuz
+// points at the newer installed 7.0.0-31-generic). This is a single required
+// value per check, not a range: profile A is the fixture meant to reproduce
+// the Lava host's predicted outcome exactly, and reports/CLOSURE_TABLE.md row
+// 20 records the corrected total as 12 pass / 9 fail / 5 unknown = 26.
+//
+// This is scored as a hard gate (t.Errorf on every mismatch, external review
+// "Tests" item 1: "A test that logs is not a test"). It is expected to be RED
+// right now against internal/checks/testdata/profileA: that fixture predates
+// several fixture-completeness gaps this exact test surfaced in the previous
+// pass (no /sys/firmware/efi, /sys/class/tpm, /sys/kernel/security,
+// /sys/devices/platform/ipmi_bmc.*, /proc/sys/kernel/tainted, /etc/passwd,
+// /proc/swaps, /proc/net/*, /boot/initramfs-*, a systemd unit tree) and on the
+// implementation-side CLOSURE_TABLE.md defects the author is fixing
+// concurrently (rows 1-5, 18-19) in a batch this test is not gated behind. The
+// gate's job is to go red on exactly those gaps until they close, and green
+// once they do — not to be pre-massaged into passing. See TEST_REPORT.md for
+// the current run's mismatch list and which CLOSURE_TABLE row each maps to.
+var expectedProfileA = map[string]scan.Status{
+	"SSH_ROOT_LOGIN_POLICY":           scan.StatusUnknown,
+	"SSH_AUTH_METHODS_POLICY":         scan.StatusPass,
+	"SSH_POLICY_IN_FORCE":             scan.StatusPass,
+	"REMOTE_LISTENING_SURFACE":        scan.StatusPass,
+	"LOGIN_AND_ESCALATION_SURFACE":    scan.StatusUnknown,
+	"HOST_FIREWALL_STATE":             scan.StatusUnknown,
+	"PRIVATE_KEY_MATERIAL_EXPOSURE":   scan.StatusPass,
+	"CREDENTIAL_FILE_EXPOSURE":        scan.StatusUnknown, // corrected 02:20Z: /root unreadable ⇒ unknown per the registry's own §2.2 rule
+	"PROVISIONING_DATA_PROTECTION":    scan.StatusPass,
+	"SYSTEM_SECRET_STORE_PROTECTION":  scan.StatusPass,
+	"BMC_INBAND_INTERFACE_PRESENT":    scan.StatusPass,
+	"BMC_RESPONDS_IN_BAND":            scan.StatusPass,
+	"BMC_DEVICE_NODE_ACCESS":          scan.StatusPass,
+	"BMC_CLIENT_TOOLING_INVENTORY":    scan.StatusPass,
+	"BMC_HOST_INTERFACE_EXPOSURE":     scan.StatusPass,
+	"DISK_ENCRYPTION_AT_REST":         scan.StatusFail,
+	"ROOT_FILESYSTEM_REDUNDANCY":      scan.StatusFail,
+	"UNUSED_ATTACHED_BLOCK_DEVICES":   scan.StatusFail,
+	"MEDIA_HEALTH_VISIBILITY":         scan.StatusUnknown,
+	"SECURE_BOOT_ENABLED":             scan.StatusFail,
+	"UEFI_PLATFORM_SETUP_MODE":        scan.StatusFail,
+	"KERNEL_LOCKDOWN_MODE":            scan.StatusFail,
+	"UNSIGNED_OR_OUT_OF_TREE_MODULES": scan.StatusFail,
+	"TPM_PRESENCE":                    scan.StatusPass,
+	"BOOT_ARTIFACT_READABILITY":       scan.StatusFail,
+	"BOOT_KERNEL_DRIFT":               scan.StatusFail,
 }
 
-// TestFullScanAgainstCheckRegistryMatrix runs the complete registered roster
-// (checks.All(), 26 checks as of this writing — one more than the 25 the
-// registry document was drafted against; BOOT_KERNEL_DRIFT is the addition,
-// see OPEN-3 in research/CHECK_REGISTRY.md) against each of the author's
-// profileA/B/C fixtures and compares every check's status against
-// research/CHECK_REGISTRY.md §5.3.
-//
-// This is intentionally a soft comparison (t.Errorf, not t.Fatalf, and a full
-// pass is not required for the suite to be useful): a mismatch here is either
-// a fixture gap, an implementation defect, or a registry prediction that
-// deserves revisiting, and all three are worth surfacing rather than hiding
-// behind a green checkmark. Every mismatch found is transcribed into
-// reports/TEST_REPORT.md with the observed status, reason and evidence
-// excerpt.
-func TestFullScanAgainstCheckRegistryMatrix(t *testing.T) {
+func init() {
+	if len(expectedProfileA) != 26 {
+		panic(fmt.Sprintf("expectedProfileA has %d entries, want 26", len(expectedProfileA)))
+	}
+	counts := map[scan.Status]int{}
+	for _, v := range expectedProfileA {
+		counts[v]++
+	}
+	if counts[scan.StatusPass] != 12 || counts[scan.StatusFail] != 9 || counts[scan.StatusUnknown] != 5 {
+		panic(fmt.Sprintf("expectedProfileA sums to %d pass / %d fail / %d unknown, want 12/9/5 (CLOSURE_TABLE.md row 20)",
+			counts[scan.StatusPass], counts[scan.StatusFail], counts[scan.StatusUnknown]))
+	}
+}
+
+// registryMatrixBC is research/CHECK_REGISTRY.md §5.3, columns B and C,
+// transcribed as documented ranges (the registry itself says "p or f" / "u"
+// for these profiles — they are not the reproduction target profile A is).
+var registryMatrixBC = map[string][2]expectedSet{
+	"SSH_ROOT_LOGIN_POLICY":           {passF, unknown},
+	"SSH_AUTH_METHODS_POLICY":         {passF, unknown},
+	"SSH_POLICY_IN_FORCE":             {passU, unknown},
+	"REMOTE_LISTENING_SURFACE":        {passF, unknown},
+	"LOGIN_AND_ESCALATION_SURFACE":    {unknown, unknown},
+	"HOST_FIREWALL_STATE":             {set(scan.StatusFail, scan.StatusUnknown), unknown},
+	"PRIVATE_KEY_MATERIAL_EXPOSURE":   {passF, unknown},
+	"CREDENTIAL_FILE_EXPOSURE":        {passF, passF},
+	"PROVISIONING_DATA_PROTECTION":    {pass, pass},
+	"SYSTEM_SECRET_STORE_PROTECTION":  {pass, passU},
+	"BMC_INBAND_INTERFACE_PRESENT":    {pass, unknown},
+	"BMC_RESPONDS_IN_BAND":            {pass, unknown},
+	"BMC_DEVICE_NODE_ACCESS":          {pass, unknown},
+	"BMC_CLIENT_TOOLING_INVENTORY":    {pass, pass},
+	"BMC_HOST_INTERFACE_EXPOSURE":     {pass, unknown},
+	"DISK_ENCRYPTION_AT_REST":         {passF, unknown},
+	"ROOT_FILESYSTEM_REDUNDANCY":      {fail, unknown},
+	"UNUSED_ATTACHED_BLOCK_DEVICES":   {pass, unknown},
+	"MEDIA_HEALTH_VISIBILITY":         {unknown, unknown},
+	"SECURE_BOOT_ENABLED":             {anyS, unknown},
+	"UEFI_PLATFORM_SETUP_MODE":        {anyS, unknown},
+	"KERNEL_LOCKDOWN_MODE":            {set(scan.StatusFail, scan.StatusUnknown), unknown},
+	"UNSIGNED_OR_OUT_OF_TREE_MODULES": {passF, set(scan.StatusFail, scan.StatusUnknown)},
+	"TPM_PRESENCE":                    {pass, unknown},
+	"BOOT_ARTIFACT_READABILITY":       {passF, pass},
+	"BOOT_KERNEL_DRIFT":               {anyS, anyS}, // not in the registry's §5.3 table (added after it was drafted)
+}
+
+// TestProfileMatrix_ProfileA_HardGate is the promotion CLOSURE_TABLE.md row 18
+// and the external review's "Tests" item 1 and item 3 (item 3: "the change
+// that makes the existing one worth having") both ask for: every mismatch
+// against expectedProfileA is a build failure (t.Errorf), not a log line.
+func TestProfileMatrix_ProfileA_HardGate(t *testing.T) {
+	root := buildAuthorProfile(t, "profileA")
+	runner := newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("prohibit-password"))
+	env := newLabEnv(t, root, runner)
+	byID := runFullScan(t, env)
+
+	counts := map[scan.Status]int{}
+	for id, want := range expectedProfileA {
+		f, ok := byID[id]
+		if !ok {
+			continue // already reported as a hard failure by runFullScan
+		}
+		counts[f.Status]++
+		if f.Status != want {
+			t.Errorf("%s: research/CHECK_REGISTRY.md §5.3 (profile A) requires %s, observed %s (reason=%q, detail=%.180q)",
+				id, want, f.Status, f.Reason, f.Evidence.Detail)
+		}
+	}
+	t.Logf("profile A observed distribution: %d pass / %d fail / %d unknown (target: 12/9/5)",
+		counts[scan.StatusPass], counts[scan.StatusFail], counts[scan.StatusUnknown])
+}
+
+// TestProfileMatrix_ProfilesBC_HardGate is the same promotion for profiles B
+// and C: every status outside the registry's documented range is a build
+// failure, not a log line.
+func TestProfileMatrix_ProfilesBC_HardGate(t *testing.T) {
 	profiles := []struct {
 		name   string
 		col    int
 		runner *fakeRunner
-		notes  string
 	}{
-		{"profileA", 0, newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("prohibit-password")),
-			"host-shaped: DMI, NVMe, systemd-shaped mounts, root login policy prohibit-password"},
-		{"profileB", 1, newFakeRunner(), // no /usr/sbin/sshd in profileB at all -> UTILITY_MISSING
-			"generic minimal: Alpine, virtio disk, no DMI/BMC/sshd"},
-		{"profileC", 2, newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("no")),
-			"restricted: sshd_config present but chmod 0000, no /sys tree at all"},
+		{"profileB", 0, newFakeRunner()}, // no /usr/sbin/sshd in profileB at all -> UTILITY_MISSING
+		{"profileC", 1, newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("no"))},
 	}
-
 	for _, p := range profiles {
 		t.Run(p.name, func(t *testing.T) {
 			root := buildAuthorProfile(t, p.name)
 			env := newLabEnv(t, root, p.runner)
 			byID := runFullScan(t, env)
 
-			var mismatches []string
-			var matched int
-			for id, cell := range registryMatrix {
+			for id, cell := range registryMatrixBC {
 				f, ok := byID[id]
 				if !ok {
-					continue // already reported by runFullScan
-				}
-				allowed := cell[p.col]
-				if allowed[f.Status] {
-					matched++
 					continue
 				}
-				var allowedList []string
-				for s := range allowed {
-					allowedList = append(allowedList, string(s))
+				allowed := cell[p.col]
+				if !allowed[f.Status] {
+					var allowedList []string
+					for s := range allowed {
+						allowedList = append(allowedList, string(s))
+					}
+					t.Errorf("%s: research/CHECK_REGISTRY.md §5.3 (profile %s) requires one of %v, observed %s (reason=%q, detail=%.140q)",
+						id, p.name, allowedList, f.Status, f.Reason, f.Evidence.Detail)
 				}
-				mismatches = append(mismatches, fmt.Sprintf(
-					"%s: registry expects one of %v, observed %s (reason=%q, detail=%.140q)",
-					id, allowedList, f.Status, f.Reason, f.Evidence.Detail))
-			}
-			t.Logf("%s (%s): %d/%d checks matched research/CHECK_REGISTRY.md §5.3", p.name, p.notes, matched, matched+len(mismatches))
-			if len(mismatches) > 0 {
-				t.Logf("mismatches against the registry prediction (see reports/TEST_REPORT.md for the full triage):\n  %s",
-					strings.Join(mismatches, "\n  "))
 			}
 		})
 	}

@@ -92,11 +92,12 @@ func TestFaultInjection_TimeoutRealSleepingChildLeavesNoDescendants(t *testing.T
 
 type panickingCheck struct{ id string }
 
-func (p panickingCheck) ID() string          { return p.id }
-func (p panickingCheck) Category() string    { return "TEST_LAB_INJECTED" }
-func (p panickingCheck) Title() string       { return "deliberately panics for isolation testing" }
-func (p panickingCheck) Impact() string      { return scan.SeverityHigh }
-func (p panickingCheck) Observational() bool { return false }
+func (p panickingCheck) ID() string            { return p.id }
+func (p panickingCheck) Category() string      { return "TEST_LAB_INJECTED" }
+func (p panickingCheck) Title() string         { return "deliberately panics for isolation testing" }
+func (p panickingCheck) Impact() string        { return scan.SeverityHigh }
+func (p panickingCheck) Observational() bool   { return false }
+func (p panickingCheck) Budget() time.Duration { return scan.DefaultCheckBudget }
 func (p panickingCheck) Run(context.Context, *scan.Env) scan.Result {
 	var arr []int
 	_ = arr[7] // index out of range panic
@@ -391,11 +392,12 @@ func TestFaultInjection_ContradictoryObservationsAreContested(t *testing.T) {
 
 type noEvidenceCheck struct{}
 
-func (noEvidenceCheck) ID() string          { return "LAB_NO_EVIDENCE" }
-func (noEvidenceCheck) Category() string    { return "TEST_LAB_INJECTED" }
-func (noEvidenceCheck) Title() string       { return "returns a bare pass with no observations or fields" }
-func (noEvidenceCheck) Impact() string      { return scan.SeverityInfo }
-func (noEvidenceCheck) Observational() bool { return true }
+func (noEvidenceCheck) ID() string            { return "LAB_NO_EVIDENCE" }
+func (noEvidenceCheck) Category() string      { return "TEST_LAB_INJECTED" }
+func (noEvidenceCheck) Title() string         { return "returns a bare pass with no observations or fields" }
+func (noEvidenceCheck) Impact() string        { return scan.SeverityInfo }
+func (noEvidenceCheck) Observational() bool   { return true }
+func (noEvidenceCheck) Budget() time.Duration { return scan.DefaultCheckBudget }
 func (noEvidenceCheck) Run(context.Context, *scan.Env) scan.Result {
 	return scan.Pass("")
 }

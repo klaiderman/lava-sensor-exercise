@@ -392,7 +392,11 @@ func TestFirewall_MissingNftIsNotNoRules(t *testing.T) {
 	wantStatus(t, f, scan.StatusUnknown)
 }
 
-func TestFirewall_NoFilterWithGlobalListenerFails(t *testing.T) {
+// A host can be filtered by something this sensor does not know the name of:
+// an iptables-restore ExecStartPre, rc.local, a config-management run, a
+// provider's own unit. Not recognising the mechanism is not observing its
+// absence, so a global listener plus no recognised unit is unknown, not fail.
+func TestFirewall_UnknownImplementationIsUnknown(t *testing.T) {
 	root := tree(t, map[string]string{
 		"/run/systemd/system/": "",
 		"/proc/net/tcp":        procNetTCP("00000000:0016", "0A", "1"),
@@ -401,7 +405,10 @@ func TestFirewall_NoFilterWithGlobalListenerFails(t *testing.T) {
 		Status: probe.StatusExecError, Value: "inactive\n",
 	})
 	f := runCheck(t, root, runner, "HOST_FIREWALL_STATE")
-	wantStatus(t, f, scan.StatusFail)
+	wantStatus(t, f, scan.StatusUnknown)
+	if !strings.Contains(f.Evidence.Detail, "invisible here") {
+		t.Errorf("the detail must name the blind spot rather than assert the host is unfiltered: %q", f.Evidence.Detail)
+	}
 }
 
 // ---------------------------------------------------------------------------

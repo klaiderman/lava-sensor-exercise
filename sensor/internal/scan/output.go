@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"regexp"
 	"strings"
 	"time"
 )
@@ -32,7 +31,6 @@ func Write(path string, b []byte) error {
 }
 
 var (
-	upperSnake = regexp.MustCompile(`^[A-Z][A-Z0-9_]*$`)
 	statusEnum = map[string]bool{"pass": true, "fail": true, "unknown": true}
 	sevEnum    = map[string]bool{"critical": true, "high": true, "medium": true, "low": true, "info": true}
 )

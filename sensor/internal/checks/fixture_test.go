@@ -214,3 +214,6 @@ func requireLinux(t *testing.T) {
 		t.Skipf("linux-only behaviour; this test is executed under WSL/Docker (GOOS=%s here)", runtime.GOOS)
 	}
 }
+
+// mkfifoForTest creates a FIFO where the platform supports one.
+func mkfifoForTest(p string) error { return mkfifoPlatform(p) }

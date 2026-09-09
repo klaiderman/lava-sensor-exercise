@@ -67,83 +67,10 @@ func TestRootRedundancy_OverlayRootIsUnknownButRealSingleDiskStillFails(t *testi
 }
 
 // ---------------------------------------------------------------------------
-// 2. SMART health is parsed, never sniffed
+// 2. SMART health was parsed rather than sniffed in batch 1; in batch 2 the
+//    child executions that would have produced it were removed entirely, so the
+//    parser and its tests went with them. See fixbatch2_test.go.
 // ---------------------------------------------------------------------------
-
-func smartTree(t *testing.T) string {
-	t.Helper()
-	return tree(t, map[string]string{
-		"/sys/block/sda/size":         "1000\n",
-		"/sys/block/sda/dev":          "8:0\n",
-		"/sys/block/sda/device/state": "running\n",
-	})
-}
-
-// Truncated JSON has no "passed":false in it, so a substring sniff read it as a
-// clean bill of health. It must be a parse failure instead.
-func TestMediaHealth_TruncatedSmartJSONIsNotHealthy(t *testing.T) {
-	runner := newFakeRunner().ok("smartctl -H -j /dev/sda", `{"smart_status": {"pas`)
-	f := runCheck(t, smartTree(t), runner, "MEDIA_HEALTH_VISIBILITY")
-	wantStatus(t, f, scan.StatusUnknown)
-	if f.Reason != scan.ReasonParse {
-		t.Errorf("reason = %q, want PARSE_ERROR", f.Reason)
-	}
-	ev := evidenceOf(t, f)
-	if ev["smart_parse_error"] == nil {
-		t.Errorf("the parse failure must be in evidence: %v", ev)
-	}
-	if ev["smart_obtained"] != false {
-		t.Errorf("smart_obtained must stay false when nothing parsed")
-	}
-}
-
-// A document that parses but carries no health field is also not a verdict.
-func TestMediaHealth_SmartJSONWithoutPassedFieldIsNotHealthy(t *testing.T) {
-	runner := newFakeRunner().ok("smartctl -H -j /dev/sda", `{"smartctl": {"exit_status": 0}, "device": {"name": "/dev/sda"}}`)
-	f := runCheck(t, smartTree(t), runner, "MEDIA_HEALTH_VISIBILITY")
-	wantStatus(t, f, scan.StatusUnknown)
-	if f.Reason != scan.ReasonParse {
-		t.Errorf("reason = %q, want PARSE_ERROR", f.Reason)
-	}
-}
-
-// A well-formed failing report is a fail, and a well-formed passing one is a
-// pass: the parser has to work in both directions.
-func TestMediaHealth_SmartJSONIsReadBothWays(t *testing.T) {
-	failing := newFakeRunner().ok("smartctl -H -j /dev/sda", `{"smart_status": {"passed": false}}`)
-	f := runCheck(t, smartTree(t), failing, "MEDIA_HEALTH_VISIBILITY")
-	wantStatus(t, f, scan.StatusFail)
-	if !strings.Contains(f.Evidence.Detail, "SMART health self-assessment failed") {
-		t.Errorf("detail = %q", f.Evidence.Detail)
-	}
-
-	passing := newFakeRunner().ok("smartctl -H -j /dev/sda", `{"smart_status": {"passed": true}}`)
-	p := runCheck(t, smartTree(t), passing, "MEDIA_HEALTH_VISIBILITY")
-	wantStatus(t, p, scan.StatusPass)
-}
-
-// The nesting matters: "passed": true somewhere unrelated is not a health
-// verdict, and neither is a bare JSON fragment.
-func TestParseSmartctlJSON(t *testing.T) {
-	if v, err := parseSmartctlJSON(`{"smart_status": {"passed": true}}`); err != "" || v == nil || !*v {
-		t.Errorf("passing report: v=%v err=%q", v, err)
-	}
-	if v, err := parseSmartctlJSON(`{"smart_status": {"passed": false}}`); err != "" || v == nil || *v {
-		t.Errorf("failing report: v=%v err=%q", v, err)
-	}
-	if v, err := parseSmartctlJSON(`{"json_format_version": [1, 0]}`); err != "" || v != nil {
-		t.Errorf("no health field: v=%v err=%q", v, err)
-	}
-	if _, err := parseSmartctlJSON(`{"smart_status": {"pas`); err == "" {
-		t.Errorf("truncated JSON must report a parse error")
-	}
-	if _, err := parseSmartctlJSON("   "); err == "" {
-		t.Errorf("empty output must report a parse error")
-	}
-	if _, err := parseSmartctlJSON("SMART overall-health self-assessment test result: PASSED"); err == "" {
-		t.Errorf("positional output must not be accepted as JSON")
-	}
-}
 
 // ---------------------------------------------------------------------------
 // 3. Two events inside one second cannot be ordered
@@ -199,8 +126,12 @@ func TestSSHPolicyInForce_SameSecondIsUndecidable(t *testing.T) {
 				t.Errorf("reason = %q, want TIMESTAMP_RESOLUTION", f.Reason)
 			}
 			ev := evidenceOf(t, f)
-			if ev["comparison_resolution_ms"].(float64) != 1000 {
-				t.Errorf("the whole-second path must declare a 1000 ms resolution: %v", ev["comparison_resolution_ms"])
+			ds, _ := ev["daemon_state"].(map[string]any)
+			if ds == nil {
+				t.Fatalf("the raw in-force facts must be in evidence: %v", ev)
+			}
+			if ms, _ := ds["comparison_resolution_ms"].(float64); ms != 1000 {
+				t.Errorf("the whole-second path must declare a 1000 ms resolution: %v", ds["comparison_resolution_ms"])
 			}
 		})
 	}
@@ -215,32 +146,41 @@ func TestSSHPolicyInForce_ClearlyNewerConfigStillFails(t *testing.T) {
 	f := runCheck(t, policyInForceTree(t), runner, "SSH_POLICY_IN_FORCE")
 	wantStatus(t, f, scan.StatusFail)
 	ev := evidenceOf(t, f)
-	if ev["service_start_source"] != "ActiveEnterTimestamp (whole-second resolution)" {
-		t.Errorf("source = %v; without a monotonic property the whole-second path must be used", ev["service_start_source"])
+	ds, _ := ev["daemon_state"].(map[string]any)
+	if ds == nil {
+		t.Fatalf("the raw in-force facts must be in evidence: %v", ev)
 	}
-	if ev["comparison_resolution_ms"].(float64) != 1000 {
-		t.Errorf("the whole-second path must declare a 1000 ms resolution: %v", ev["comparison_resolution_ms"])
+	if ds["start_time_source"] != "ActiveEnterTimestamp (whole-second resolution)" {
+		t.Errorf("source = %v; without a monotonic property the whole-second path must be used", ds["start_time_source"])
+	}
+	if ms, _ := ds["comparison_resolution_ms"].(float64); ms != 1000 {
+		t.Errorf("the whole-second path must declare a 1000 ms resolution: %v", ds["comparison_resolution_ms"])
 	}
 }
 
-// When systemd offers the monotonic property, the comparison gets sub-second
-// resolution and says so.
-func TestSSHPolicyInForce_MonotonicSourceGivesSubSecondResolution(t *testing.T) {
+// When systemd offers the monotonic property the reconstruction is used, and
+// the resolution it declares is measured rather than asserted. Batch 2 replaced
+// the fixed 100 ms claim: see TestInForce_ResolutionIsMeasuredNotAssumed.
+func TestSSHPolicyInForce_MonotonicSourceIsUsedWhenOffered(t *testing.T) {
 	requireLinux(t)
 	runner := newFakeRunner().
 		ok("/usr/sbin/sshd -G", sshdGOutput("no")).
 		ok(svcShowCmd, "ActiveEnterTimestamp=Mon 2020-01-01 00:00:00 UTC\nActiveEnterTimestampMonotonic=5000000\nActiveState=active\n")
 	f := runCheck(t, policyInForceTree(t), runner, "SSH_POLICY_IN_FORCE")
 	ev := evidenceOf(t, f)
-	src, _ := ev["service_start_source"].(string)
+	ds, _ := ev["daemon_state"].(map[string]any)
+	if ds == nil {
+		t.Fatalf("the raw in-force facts must be in evidence: %v", ev)
+	}
+	src, _ := ds["start_time_source"].(string)
 	if !strings.Contains(src, "Monotonic") || !strings.Contains(src, "/proc/uptime") {
 		t.Errorf("source = %q, want the monotonic reconstruction", src)
 	}
-	if ev["comparison_resolution_ms"].(float64) != 100 {
-		t.Errorf("the monotonic path must declare a 100 ms resolution: %v", ev["comparison_resolution_ms"])
-	}
-	if ev["delta_ms"] == nil {
+	if ds["delta_ms"] == nil {
 		t.Errorf("the millisecond delta must be reported alongside the second one")
+	}
+	if basis, _ := ds["resolution_basis"].(string); !strings.Contains(basis, "measured") {
+		t.Errorf("resolution_basis = %q, want a measured figure", basis)
 	}
 }
 

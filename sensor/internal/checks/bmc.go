@@ -30,6 +30,11 @@ func (c bmcInbandInterfacePresent) Run(ctx context.Context, env *scan.Env) scan.
 		return out
 	}
 
+	// All three listings are load-bearing: "no interface is declared" is a
+	// claim about all of them, so any one of them failing makes the claim
+	// unsupported. /sys/firmware/dmi/entries needs the dmi-sysfs module, which
+	// plenty of bare-metal installs do not load - on such a host the old OR
+	// over the three listings reported "no BMC declared" next to an ENOENT.
 	dmiEntries, dmiObs := env.Files.ReadDirNames("/sys/firmware/dmi/entries", 1024)
 	dmiObs.Detail = "SMBIOS entry directory; the directory names are the only unprivileged signal, the attributes inside are 0400"
 	r.Add(dmiObs)
@@ -76,20 +81,35 @@ func (c bmcInbandInterfacePresent) Run(ctx context.Context, env *scan.Env) scan.
 	r.Field("interface_declared", len(evidence) > 0)
 	r.Field("never_issued_ipmi_command", true)
 
-	listingsOK := dmiObs.Status == probe.StatusOK || acpiObs.Status == probe.StatusOK || platObs.Status == probe.StatusOK
+	var unseen []string
+	for _, l := range []struct {
+		path string
+		obs  probe.Observation
+	}{
+		{"/sys/firmware/dmi/entries", dmiObs},
+		{"/sys/bus/acpi/devices", acpiObs},
+		{"/sys/devices/platform", platObs},
+	} {
+		if l.obs.Status != probe.StatusOK {
+			unseen = append(unseen, l.path+" ("+l.obs.Reason()+")")
+		}
+	}
+	// Only an absence claim rests on all three listings having worked.
+	r.LoadBearingIf(len(evidence) == 0,
+		"/sys/firmware/dmi/entries", "/sys/bus/acpi/devices", "/sys/devices/platform")
+
 	switch {
 	case len(evidence) > 0:
+		// A positive observation stands on its own.
 		return finish(scan.Pass("firmware declares an in-band management-controller interface: " + strings.Join(evidence, "; ") +
 			" — declared, which is not the same as usable"))
-	case dmiObs.Status == probe.StatusENOENT && acpiObs.Status == probe.StatusENOENT:
-		return finish(scan.Unknown(scan.ReasonEINVAL,
-			"neither SMBIOS entries nor ACPI devices are exposed by this kernel or namespace, so whether the platform declares a management-controller interface cannot be determined — this is not evidence that there is no BMC"))
-	case !listingsOK:
+	case len(unseen) > 0:
 		return finish(scan.Unknown(reasonOf(dmiObs, acpiObs, platObs),
-			"the firmware and device listings could not be read, so a management-controller declaration can neither be found nor ruled out"))
+			"a source that would carry a management-controller declaration could not be read ("+strings.Join(unseen, ", ")+
+				"), so a declaration can neither be found nor ruled out; a kernel that does not expose SMBIOS entries is not a machine without a BMC"))
 	default:
 		return finish(scan.Pass(
-			"no management-controller interface is declared: the SMBIOS entry directory, the ACPI device list and the platform device list were all enumerated successfully and none contains one"))
+			"no management-controller interface is declared in the SMBIOS entry directory, the ACPI device list or the platform device list"))
 	}
 }
 
@@ -329,7 +349,22 @@ func (c bmcDeviceNodeAccess) Run(ctx context.Context, env *scan.Env) scan.Result
 	}
 	r.Field("udev_or_modprobe_rules_matching_ipmi", relaxing)
 
+	// "No node exists" rests on all three stats; a node we found does not.
+	r.LoadBearingIf(len(adverse) == 0 && len(undetermined) == 0 && !found, ipmiNodes...)
+
 	switch {
+	case len(adverse) > 0:
+		// A node we can see is reachable is a positive observation.
+		return finish(scan.Fail(scan.ReasonPolicy,
+			"an unprivileged local principal can open the BMC device node: "+strings.Join(adverse, "; ")+
+				" — that is an out-of-band-equivalent compromise path from a local account"))
+	case len(undetermined) > 0:
+		// Before "no node exists": one of the three spellings was denied, and a
+		// denial is not an absence. This ordering is why the node is stat-ed in
+		// all three spellings in the first place.
+		return finish(scan.Unknown(scan.ReasonEACCES,
+			"a BMC device node path could not be resolved ("+strings.Join(undetermined, ", ")+
+				"), so who may open it is not established; a denied stat is not an absent node"))
 	case !found:
 		interfaceDeclared := env.Files.Exists("/sys/class/ipmi/ipmi0")
 		r.Field("ipmi_class_device_present", interfaceDeclared)
@@ -338,14 +373,7 @@ func (c bmcDeviceNodeAccess) Run(ctx context.Context, env *scan.Env) scan.Result
 				"an IPMI interface is present but no /dev/ipmi* node exists in any of its three spellings, which means ipmi_devintf is not loaded — not that there is no BMC"))
 		}
 		return finish(scan.Pass(
-			"no in-band BMC device node exists in any of its three spellings, proven by successful stats of each path, so no local user has an in-band path to a management controller"))
-	case len(adverse) > 0:
-		return finish(scan.Fail(scan.ReasonPolicy,
-			"an unprivileged local principal can open the BMC device node: "+strings.Join(adverse, "; ")+
-				" — that is an out-of-band-equivalent compromise path from a local account"))
-	case len(undetermined) > 0:
-		return finish(scan.Unknown(scan.ReasonEACCES,
-			"who may open the BMC device node could not be fully established ("+strings.Join(undetermined, ", ")+")"))
+			"no in-band BMC device node exists in any of its three spellings, so no local user has an in-band path to a management controller"))
 	default:
 		return finish(scan.Pass(
 			"the BMC device node is reachable by root only, and the restriction is the devtmpfs file mode rather than a capability check in the driver's open path"))
@@ -400,6 +428,10 @@ func (c bmcClientToolingInventory) Run(ctx context.Context, env *scan.Env) scan.
 	for _, d := range pathDirs {
 		st := env.Files.Stat(d)
 		st.Detail = "binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin directories"
+		// A binary directory that does not exist is not a boundary; one we
+		// could not read is.
+		st.LoadBearing = st.Status == probe.StatusOK
+		st.AbsenceProven = st.Status == probe.StatusENOENT
 		r.Add(st)
 		switch st.Status {
 		case probe.StatusOK:
@@ -440,8 +472,8 @@ func (c bmcClientToolingInventory) Run(ctx context.Context, env *scan.Env) scan.
 				"), so which IPMI client tooling is installed is unknown"))
 	}
 	if len(installed) == 0 {
-		return finish(scan.Pass("no IPMI client tooling is installed — every candidate was resolved to not-found across " +
-			itoa(int64(len(scanned))) + " binary directories, and none was executed"))
+		return finish(scan.Pass("no IPMI client tooling is installed: every candidate name was looked for in " +
+			itoa(int64(len(scanned))) + " binary directories and none was found, and none was executed"))
 	}
 	return finish(scan.Pass("IPMI client tooling is installed: " + strings.Join(installed, ", ") +
 		" — inventory only; none was executed, and whether it could reach the controller is decided by BMC_DEVICE_NODE_ACCESS"))
@@ -565,6 +597,10 @@ func (c bmcHostInterfaceExposure) Run(ctx context.Context, env *scan.Env) scan.R
 	}
 	r.Field("interfaces", ifaces)
 
+	// The absence branch is the only one that needs both listings.
+	r.LoadBearingIf(len(live) == 0 && len(latent) == 0 && !undetermined,
+		"/sys/firmware/dmi/entries", "/sys/class/net")
+
 	switch {
 	case len(live) > 0:
 		return finish(scan.Fail(scan.ReasonPolicy,
@@ -580,8 +616,12 @@ func (c bmcHostInterfaceExposure) Run(ctx context.Context, env *scan.Env) scan.R
 	case type42 && dmiObs.Status == probe.StatusOK:
 		return finish(scan.Unknown(scan.ReasonENOENT,
 			"firmware declares an SMBIOS type 42 management-controller host interface but no matching network interface is enumerated, so whether a second path to the controller exists is unknown. "+oobBlindSpot))
+	case dmiObs.Status != probe.StatusOK:
+		return finish(scan.Unknown(dmiObs.Reason(),
+			"the SMBIOS entry list could not be read ("+dmiObs.Reason()+
+				"), so a firmware-declared host interface can neither be found nor ruled out. "+oobBlindSpot))
 	default:
 		return finish(scan.Pass(
-			"no management-controller host interface is observable: the SMBIOS entry list and the network interface list were both enumerated and neither contains one. " + oobBlindSpot))
+			"no management-controller host interface is observable in the SMBIOS entry list or the network interface list. " + oobBlindSpot))
 	}
 }

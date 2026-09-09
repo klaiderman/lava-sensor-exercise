@@ -17,8 +17,9 @@ const DefaultCheckBudget = 8 * time.Second
 // goroutine (L14, F17).
 const DefaultScanDeadline = 60 * time.Second
 
-var checkIDPattern = regexp.MustCompile(`^[A-Z][A-Z0-9_]*$`)
-var categoryPattern = regexp.MustCompile(`^[A-Z][A-Z0-9_]*$`)
+// upperSnake is the identifier shape the output contract requires of both
+// check ids and categories. One regexp, compiled once for the package.
+var upperSnake = regexp.MustCompile(`^[A-Z][A-Z0-9_]*$`)
 
 // ValidateRoster asserts the registry is well formed. It is called at startup
 // and fails fast: a duplicate check_id would silently drop a finding.
@@ -26,14 +27,14 @@ func ValidateRoster(checks []Check) error {
 	seen := map[string]bool{}
 	for _, c := range checks {
 		id := c.ID()
-		if !checkIDPattern.MatchString(id) {
+		if !upperSnake.MatchString(id) {
 			return fmt.Errorf("check id %q is not UPPER_SNAKE_CASE", id)
 		}
 		if seen[id] {
 			return fmt.Errorf("duplicate check id %q in the registry", id)
 		}
 		seen[id] = true
-		if !categoryPattern.MatchString(c.Category()) {
+		if !upperSnake.MatchString(c.Category()) {
 			return fmt.Errorf("check %s: category %q is not UPPER_SNAKE_CASE", id, c.Category())
 		}
 		switch c.Impact() {
@@ -83,9 +84,15 @@ func runOne(parent context.Context, c Check, env *Env) (f Finding, budgetCut boo
 		return finalize(c, r, env, start, 0), true
 	}
 
-	budget := DefaultCheckBudget
-	if b, ok := c.(Budgeted); ok && b.Budget() > 0 {
-		budget = b.Budget()
+	// Budget arithmetic, stated once: the declared per-check budgets sum to far
+	// more than the scan deadline, and the loop is sequential. The scan
+	// deadline therefore dominates - a check gets min(its declared budget, the
+	// time left) - so a slow early check cannot silently starve a later one:
+	// it runs out of remaining time and every check after it emits its own
+	// finding with reason BUDGET_EXHAUSTED rather than being dropped.
+	budget := c.Budget()
+	if budget <= 0 {
+		budget = DefaultCheckBudget
 	}
 	if !env.Deadline.IsZero() {
 		if remaining := env.Deadline.Sub(start); remaining < budget {

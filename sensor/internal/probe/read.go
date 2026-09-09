@@ -56,21 +56,6 @@ var (
 	TinyFollow  = Policy{Cap: CapTiny, Follow: true}
 )
 
-// Files is the read surface the checks use. Production is *Reader; tests may
-// substitute a fake where a real fixture tree is not the point of the test.
-type Files interface {
-	Read(p string, pol Policy) Observation
-	ReadTrimmed(p string, pol Policy) (string, Observation)
-	ReadOOB(p string, pol Policy, deadline time.Duration) Observation
-	Stat(p string) Observation
-	ReadDir(p string, max int) ([]fs.DirEntry, Observation)
-	ReadDirNames(p string, max int) ([]string, Observation)
-	ReadLinkBase(p string) (string, Observation)
-	ReadACL(p string) (ACL, Observation)
-	Walk(root string, b WalkBudget, visit func(path string, d fs.DirEntry)) (WalkResult, Observation)
-	Exists(p string) bool
-}
-
 // Reader is the one bounded read path in the sensor.
 //
 // /sys and /proc are read through *os.Root: openat per component, in-root

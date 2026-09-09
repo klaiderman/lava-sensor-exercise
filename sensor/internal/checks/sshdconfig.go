@@ -67,7 +67,7 @@ type sshdResolution struct {
 // the position it appears in the file and glob-sorting each expansion, because
 // OpenSSH takes the FIRST obtained value for a keyword: an Include at the top
 // and the same Include at the bottom give opposite answers (L16, F27).
-func walkSSHDConfig(f probe.Files, rootPath string) *sshdConfig {
+func walkSSHDConfig(f *probe.Reader, rootPath string) *sshdConfig {
 	if rootPath == "" {
 		rootPath = sshdDefaultPath
 	}
@@ -78,11 +78,16 @@ func walkSSHDConfig(f probe.Files, rootPath string) *sshdConfig {
 		MatchBlocks: []sshdMatchBlock{},
 	}
 	seen := map[string]bool{}
-	c.parseFile(f, rootPath, 0, seen, true)
+	c.parseFile(f, rootPath, 0, seen, true, "")
 	return c
 }
 
-func (c *sshdConfig) parseFile(f probe.Files, p string, depth int, seen map[string]bool, isRoot bool) {
+// parseFile walks one configuration file. inheritedMatch is the Match scope the
+// Include that reached this file was written inside: a directive in a file
+// included from within a Match block applies only under that Match, and
+// flattening it into global scope either hides a Match-scoped root-login grant
+// or fabricates a global one.
+func (c *sshdConfig) parseFile(f *probe.Reader, p string, depth int, seen map[string]bool, isRoot bool, inheritedMatch string) {
 	if depth > sshdMaxIncludeDepth {
 		c.BudgetHit = "depth"
 		return
@@ -115,7 +120,7 @@ func (c *sshdConfig) parseFile(f probe.Files, p string, depth int, seen map[stri
 		c.Resolved = true
 	}
 
-	currentMatch := ""
+	currentMatch := inheritedMatch
 	for i, raw := range strings.Split(obs.Value, "\n") {
 		line := int64(i + 1)
 		s := strings.TrimSpace(strings.TrimRight(raw, "\r"))
@@ -133,7 +138,7 @@ func (c *sshdConfig) parseFile(f probe.Files, p string, depth int, seen map[stri
 		switch lk {
 		case "match":
 			if strings.EqualFold(val, "all") {
-				currentMatch = ""
+				currentMatch = inheritedMatch
 			} else {
 				currentMatch = val
 				c.MatchBlocks = append(c.MatchBlocks, sshdMatchBlock{Criteria: val, Path: p, Line: line})
@@ -143,7 +148,7 @@ func (c *sshdConfig) parseFile(f probe.Files, p string, depth int, seen map[stri
 			// Include expands here, in place, glob-sorted.
 			for _, pattern := range splitArgs(val) {
 				for _, inc := range c.expand(f, pattern) {
-					c.parseFile(f, inc, depth+1, seen, false)
+					c.parseFile(f, inc, depth+1, seen, false, currentMatch)
 				}
 			}
 			continue
@@ -157,7 +162,7 @@ func (c *sshdConfig) parseFile(f probe.Files, p string, depth int, seen map[stri
 // expand resolves an Include pattern against the filesystem, sorted, with the
 // listing bounded. Globbing is supported in the final path component only; a
 // pattern with a directory glob is recorded as read but not expanded.
-func (c *sshdConfig) expand(f probe.Files, pattern string) []string {
+func (c *sshdConfig) expand(f *probe.Reader, pattern string) []string {
 	pattern = strings.Trim(pattern, `"`)
 	if !strings.HasPrefix(pattern, "/") {
 		pattern = path.Join(sshdConfigDir, pattern)
@@ -175,6 +180,16 @@ func (c *sshdConfig) expand(f probe.Files, pattern string) []string {
 	}
 	names, obs := f.ReadDirNames(dir, 512)
 	obs.Detail = "sshd Include expansion: " + pattern
+	if obs.Truncated {
+		// The directory listing hit its cap, so the expansion is a prefix of
+		// the real one and any answer derived from the chain is a prefix too.
+		// Marking it load-bearing is what makes finalize downgrade a verdict
+		// built on it.
+		obs.LoadBearing = true
+		obs.Detail += " — the listing hit its entry cap, so the configuration chain is incomplete"
+		c.Truncated = true
+		c.BudgetHit = "include-entries"
+	}
 	c.Observations = append(c.Observations, obs)
 	if obs.Status != probe.StatusOK {
 		return nil
@@ -297,7 +312,7 @@ func normalisePermitRootLogin(v string) string {
 
 // sshdRootPath finds the config file the daemon actually loads. Only observed
 // paths are used; the distro name never selects a path (L37).
-func sshdRootPath(f probe.Files) string {
+func sshdRootPath(f *probe.Reader) string {
 	for _, p := range []string{sshdDefaultPath, "/etc/sshd_config", "/usr/local/etc/sshd_config"} {
 		if f.Exists(p) {
 			return p

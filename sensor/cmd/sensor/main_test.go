@@ -34,7 +34,7 @@ func TestExitCodeContract(t *testing.T) {
 		{"no subcommand", []string{"--out", out}, exitFatal},
 		{"unknown subcommand", []string{"inspect", "--out", out}, exitFatal},
 		{"missing --out", []string{"scan"}, exitFatal},
-		{"non-positive timeout", []string{"scan", "--out", out, "--timeout", "0s"}, exitFatal},
+		{"no flag may widen the scan deadline", []string{"scan", "--out", out, "--timeout", "3600s"}, exitFatal},
 		{"unwritable output", []string{"scan", "--out", filepath.Join(t.TempDir(), "no", "such", "dir", "f.json")}, exitFatal},
 		{"unexpected extra argument", []string{"scan", "--out", out, "extra"}, exitFatal},
 	}
@@ -52,7 +52,7 @@ func TestExitCodeContract(t *testing.T) {
 func TestScanWritesAValidArtifactAndExitsZero(t *testing.T) {
 	null := devNullFile(t)
 	out := filepath.Join(t.TempDir(), "findings.json")
-	if code := run([]string{"scan", "--out", out, "--timeout", "30s"}, null, null); code != exitOK {
+	if code := run([]string{"scan", "--out", out}, null, null); code != exitOK {
 		t.Fatalf("exit = %d, want 0", code)
 	}
 	b, err := os.ReadFile(out)

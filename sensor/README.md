@@ -23,8 +23,9 @@ One command, as an ordinary user. No `sudo`, no arguments beyond these.
 ./sensor scan --out findings.json
 ```
 
-Options: `--timeout <duration>` (whole-scan deadline, default 60s) and
-`--version`.
+The only other flag is `--version`. There is deliberately no `--timeout`, no
+`--root` and no `--skip`: the whole-scan deadline is a 60-second constant, and a
+bound an operator can raise from the command line is not a bound.
 
 **Expected runtime:** well under a second on the current roster; the scan is
 bounded at 60 seconds by default and every check, subprocess and file read has
@@ -41,6 +42,19 @@ its own smaller bound inside that.
 A finding's verdict never becomes an exit code: a run in which every check
 fails still exits 0, because the sensor did its job. Everything the sensor says
 about itself goes to stderr; the output file contains only the report.
+
+## Evidence entails the verdict
+
+Every finding carries a generated `completeness` object: how many observations
+were made, how many were load-bearing, which of those did not succeed, and
+whether an absence is provable from them. Checks do not write that sentence
+themselves — the engine derives it from the observations.
+
+A check that claims an enumeration finished while one of its load-bearing
+observations failed is downgraded to `unknown` and marked with
+`entailment_violation`, and the test suite fails the build on any such claim.
+The same rule can be pointed at an artifact after the fact, so a findings.json
+from a container or from a real host can be audited without re-running anything.
 
 ## What is in the output
 
@@ -90,6 +104,8 @@ it:
 | `EXECUTION_ERROR` | A tool ran and failed for its own reasons. |
 | `CONTESTED` | Two observations disagree. Both are recorded; neither is silently preferred. |
 | `TIMESTAMP_RESOLUTION` | Two events were observed with a timestamp too coarse to order them. Nothing disagrees; the instrument does not resolve the question. |
+| `NOT_ATTEMPTED` | The observation was reachable and the sensor declined to make it, by design — it never opens a device node. Not a denial, and not an absence. |
+| `POLICY` | The control was observed and is not in the state the check asks about. This is the reason on a `fail`. |
 | `INTERNAL_ERROR` | The check itself panicked. The panic is in the evidence and no other check is affected. |
 
 An `unknown` is reported at the check's declared impact, not downgraded: an
@@ -117,7 +133,7 @@ GOOS=linux GOARCH=amd64 go test -c -o bin/probe.test ./internal/probe
 wsl -e bash -lc "cd internal/probe && ../../bin/probe.test -test.v"
 ```
 
-The full suite is 153 test cases: 19 in `internal/probe`, 32 in
+The full suite is 202 test cases: 19 in `internal/probe`, 32 in
 `internal/scan`, 92 in `internal/checks` and 10 in `cmd/sensor`.
 
 Fixture profiles live under `internal/checks/testdata/` (A: host-shaped bare

@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
+	"unsafe"
 )
 
 // openFlags are the flags used for every direct open the sensor performs.
@@ -116,9 +117,14 @@ func signalOf(err error) string {
 // devNull is the read end every child gets as stdin.
 const devNull = os.DevNull
 
-// getxattr reads an extended attribute without following the final symlink.
+// getxattr reads an extended attribute of the named object itself.
+//
+// Lgetxattr, not Getxattr: getxattr(2) resolves the final symlink, so on a
+// symlink candidate it would describe the target rather than the object whose
+// mode the caller reported from lstat. In a user-writable tree the target is
+// attacker-chosen, so the ACL evidence would be attributed to the wrong inode.
 func getxattr(path, attr string) ([]byte, error) {
-	sz, err := syscall.Getxattr(path, attr, nil)
+	sz, err := lgetxattr(path, attr, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +135,7 @@ func getxattr(path, attr string) ([]byte, error) {
 		sz = 64 << 10
 	}
 	buf := make([]byte, sz)
-	n, err := syscall.Getxattr(path, attr, buf)
+	n, err := lgetxattr(path, attr, buf)
 	if err != nil {
 		return nil, err
 	}
@@ -137,4 +143,29 @@ func getxattr(path, attr string) ([]byte, error) {
 		n = len(buf)
 	}
 	return buf[:n], nil
+}
+
+// lgetxattr is lgetxattr(2). Go's syscall package wraps getxattr but not the
+// symlink-safe variant, and golang.org/x/sys is not a dependency of this
+// binary, so the one syscall is issued directly.
+func lgetxattr(path, attr string, dest []byte) (int, error) {
+	p, err := syscall.BytePtrFromString(path)
+	if err != nil {
+		return 0, err
+	}
+	a, err := syscall.BytePtrFromString(attr)
+	if err != nil {
+		return 0, err
+	}
+	var buf unsafe.Pointer
+	if len(dest) > 0 {
+		buf = unsafe.Pointer(&dest[0])
+	}
+	n, _, errno := syscall.Syscall6(syscall.SYS_LGETXATTR,
+		uintptr(unsafe.Pointer(p)), uintptr(unsafe.Pointer(a)),
+		uintptr(buf), uintptr(len(dest)), 0, 0)
+	if errno != 0 {
+		return 0, errno
+	}
+	return int(n), nil
 }

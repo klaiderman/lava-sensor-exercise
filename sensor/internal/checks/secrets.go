@@ -58,7 +58,7 @@ func looksLikeKeyName(name string) bool {
 
 // classifyHeader reads at most 64 bytes, decides what the file is, and returns
 // only the label. The bytes are not retained.
-func classifyHeader(f probe.Files, path string) (string, probe.Observation) {
+func classifyHeader(f *probe.Reader, path string) (string, probe.Observation) {
 	obs := f.Read(path, probe.Policy{Cap: probe.CapHeaderSniff})
 	head := obs.Value
 	obs.Value = "" // the header never leaves this function
@@ -141,29 +141,64 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 
 	var hits []secretHit
 	var walks []probe.WalkResult
-	incomplete := false
+	var boundaries []string
+	var rootsPresent, rootsAbsent []string
+	var walkSources []string
+	symlinksSkipped := int64(0)
+	nonRegularSkipped := int64(0)
+	aclUndetermined := 0
 	deadline, hasDeadline := ctx.Deadline()
 
 	for _, root := range keyWalkRoots {
-		if !env.Files.Exists(root) {
+		// A root that is not there is not a boundary: its absence is proved by
+		// the stat, and the stat is recorded.
+		st := env.Files.Stat(root)
+		if st.Status == probe.StatusENOENT {
+			// A root that is not on this machine is an answer, not a gap.
+			rootsAbsent = append(rootsAbsent, root)
+			st.AbsenceProven = true
+			r.Add(st)
 			continue
 		}
+		if st.Status != probe.StatusOK {
+			st.LoadBearing = true
+			st.Detail = "scan root for key material; it could not be stat-ed, so its contents are unknown"
+			r.Add(st)
+			boundaries = append(boundaries, root+" ("+st.Reason()+")")
+			continue
+		}
+		rootsPresent = append(rootsPresent, root)
+
 		budget := probe.WalkBudget{MaxTime: 3 * time.Second}
 		if hasDeadline {
 			budget.Deadline = deadline
 		}
 		var candidates []string
 		res, obs := env.Files.Walk(root, budget, func(path string, d fs.DirEntry) {
-			if looksLikeKeyName(d.Name()) {
-				candidates = append(candidates, path)
+			// Only a regular file can be key material. A symlink is counted
+			// and skipped: following it would describe another inode, and
+			// listing 121 CA-bundle links as "candidates" buries the answer.
+			if !looksLikeKeyName(d.Name()) {
+				return
 			}
+			if d.Type()&fs.ModeSymlink != 0 {
+				symlinksSkipped++
+				return
+			}
+			if !d.Type().IsRegular() {
+				nonRegularSkipped++
+				return
+			}
+			candidates = append(candidates, path)
 		})
 		obs.Detail = "bounded key-material enumeration under " + root
+		walkSources = append(walkSources, obs.Source)
 		r.Add(obs)
 		walks = append(walks, res)
 		if !res.Complete() {
-			incomplete = true
+			boundaries = append(boundaries, res.Boundary())
 		}
+
 		for _, p := range candidates {
 			st := env.Files.Stat(p)
 			hit := secretHit{Path: p, Errno: st.Reason()}
@@ -172,9 +207,7 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 				hit.Mode, hit.UID, hit.GID, hit.Size = st.Meta.Mode, st.Meta.UID, st.Meta.GID, st.Meta.Size
 			}
 			if hit.FileType != "regular" {
-				// A FIFO or device at a key path is recorded and never opened.
-				hit.MagicClass = "not-a-regular-file"
-				hits = append(hits, hit)
+				nonRegularSkipped++
 				continue
 			}
 			cls, cObs := classifyHeader(env.Files, p)
@@ -194,13 +227,21 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 				hit.EffectiveReaders += "; an ACL grants a non-owner principal read"
 			}
 			if !acl.Determined && aclObs.Status != probe.StatusOK {
-				incomplete = true
+				aclUndetermined++
+				aclObs.LoadBearing = true
+				r.Add(aclObs)
+				boundaries = append(boundaries, p+" ACL ("+acl.Errno+")")
 			}
 			hits = append(hits, hit)
 		}
 	}
 
 	r.Field("walks", walks)
+	r.Field("scan_roots_present", rootsPresent)
+	r.Field("scan_roots_absent", rootsAbsent)
+	r.Field("boundaries", boundaries)
+	r.Field("symlinks_skipped", symlinksSkipped)
+	r.Field("non_regular_skipped", nonRegularSkipped)
 	r.Field("private_key_files", hits)
 	r.Field("content_read", "at most 64 bytes per candidate, used to classify and immediately discarded")
 
@@ -210,19 +251,44 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 			exposed = append(exposed, h.Path+" ("+h.EffectiveReaders+")")
 		}
 	}
+	// A claim that no exposed key material exists rests on every enumeration
+	// having finished. A key we FOUND does not: it is a positive observation
+	// and stands whether or not the rest of the search completed.
+	r.LoadBearingIf(len(exposed) == 0, walkSources...)
+
 	switch {
 	case len(exposed) > 0:
+		// An exposed key is a positive observation. It stands whether or not
+		// the rest of the enumeration finished.
 		return finish(scan.Fail(scan.ReasonPolicy,
 			"private key material is readable beyond its owner: "+strings.Join(exposed, "; ")))
-	case incomplete:
-		return finish(scan.Unknown(scan.ReasonBudget,
-			"the enumeration did not complete everywhere (budgets or denied subtrees are listed in the walk boundaries), "+
-				"so the absence of further exposed key material is not proven; what was enumerated shows none"))
+	case len(rootsPresent) == 0:
+		return finish(scan.Unknown(scan.ReasonENOENT,
+			"no candidate scan root for key material exists on this machine, so nothing was searched and the absence of exposed key material is not established"))
+	case len(boundaries) > 0:
+		reason := scan.ReasonEACCES
+		if aclUndetermined == 0 && !anyDenied(boundaries) {
+			reason = scan.ReasonBudget
+		}
+		return finish(scan.Unknown(reason,
+			"the search could not cover everything it was pointed at: "+strings.Join(boundaries, "; ")+
+				"; exposed key material there can neither be confirmed nor excluded"))
 	default:
 		return finish(scan.Pass(
-			"every enumeration completed and each private-key-class file found is readable by its owner only (" +
-				itoa(int64(len(hits))) + " candidate(s) classified)"))
+			"each private-key-class file the search found is readable by its owner only (" +
+				itoa(int64(len(hits))) + " candidate(s) classified across " + itoa(int64(len(rootsPresent))) + " root(s))"))
 	}
+}
+
+// anyDenied reports whether a boundary was a permission denial rather than a
+// budget. The two call for different remediation and are not collapsed.
+func anyDenied(boundaries []string) bool {
+	for _, b := range boundaries {
+		if strings.Contains(b, "EACCES") || strings.Contains(b, "EPERM") || strings.Contains(b, "could not be read") {
+			return true
+		}
+	}
+	return false
 }
 
 // ---------------------------------------------------------------------------
@@ -501,6 +567,10 @@ func (c provisioningDataProtection) Run(ctx context.Context, env *scan.Env) scan
 	inspect := func(path string, class provisioningClass) int {
 		st := env.Files.Stat(path)
 		st.Detail = "provisioning artifact candidate (" + string(class) + ")"
+		// Absence here is a real answer: ENOENT from a stat that resolved the
+		// path IS the observation, while EACCES is a boundary.
+		st.LoadBearing = true
+		st.AbsenceProven = st.Status == probe.StatusENOENT
 		r.Add(st)
 		if st.Status == probe.StatusENOENT {
 			return -1
@@ -548,6 +618,8 @@ func (c provisioningDataProtection) Run(ctx context.Context, env *scan.Env) scan
 	for _, dir := range []string{"/var/lib/cloud/instances", "/var/lib/cloud/seed", "/etc/cloud/cloud.cfg.d"} {
 		names, obs := env.Files.ReadDirNames(dir, 256)
 		obs.Detail = "provisioning directory enumeration"
+		obs.LoadBearing = true
+		obs.AbsenceProven = obs.Status == probe.StatusENOENT
 		r.Add(obs)
 		if obs.Status == probe.StatusENOENT {
 			continue
