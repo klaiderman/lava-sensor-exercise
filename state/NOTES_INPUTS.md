@@ -78,3 +78,7 @@
 
 ## Harness caveat discovered by R2 (2026-09-09 02:00Z)
 - The Claude Code harness blocks sub-agents from writing a file literally named REPORT.md ("Subagents should return findings as text, not write report files"). R2 wrote R2_ANSWERS.md instead; the lead renamed it to research/R2/REPORT.md. Other tracks may do the same; the synthesizer must accept either name. Not a research defect.
+
+## Fixture hygiene check (2026-09-09 01:23Z)
+- sensor/ fixtures grep: no real NVMe serial fragments, no IPv4, no MAC addresses. DMI serial placeholder SUPERMICRO-SERIAL-DENIED with mode 0000 emulated via the _modes.txt seam; udev fixture carries model but no serial.
+- The hostname f4-metal-small-chi-1 appears in profileA/proc/sys/kernel/hostname and machine_test.go. Not a secret (it is in the deliverable findings.json), but listed for the public-release audit: decide whether to keep or replace with a neutral name before making the repo public.

@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"lava.sh/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/probe"
 )
 
 // Bounds on the config walk. An Include chain is attacker-influencable on a

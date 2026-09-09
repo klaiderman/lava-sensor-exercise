@@ -1,0 +1,7240 @@
+### /c/lava-sensor-exercise/sensor/cmd/sensor/main.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/cmd/sensor/main.go",
+    "language": "go",
+    "lines_total": 184,
+    "lines_analyzed": 184
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/cmd/sensor/main_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/cmd/sensor/main_test.go",
+    "language": "go",
+    "lines_total": 141,
+    "lines_analyzed": 141
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/bmc.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/bmc.go",
+    "language": "go",
+    "lines_total": 587,
+    "lines_analyzed": 587
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/bootchain.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/bootchain.go",
+    "language": "go",
+    "lines_total": 789,
+    "lines_analyzed": 789
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/checks_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/checks_test.go",
+    "language": "go",
+    "lines_total": 1069,
+    "lines_analyzed": 1069
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/document_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/document_test.go",
+    "language": "go",
+    "lines_total": 275,
+    "lines_analyzed": 275
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/fixture_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/fixture_test.go",
+    "language": "go",
+    "lines_total": 216,
+    "lines_analyzed": 216
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/machine.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/machine.go",
+    "language": "go",
+    "lines_total": 875,
+    "lines_analyzed": 875
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/machine_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/machine_test.go",
+    "language": "go",
+    "lines_total": 262,
+    "lines_analyzed": 262
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/registry.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/registry.go",
+    "language": "go",
+    "lines_total": 174,
+    "lines_analyzed": 174
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/remote_access.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/remote_access.go",
+    "language": "go",
+    "lines_total": 1023,
+    "lines_analyzed": 1023
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/secrets.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/secrets.go",
+    "language": "go",
+    "lines_total": 615,
+    "lines_analyzed": 615
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/ssh_root_login.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/ssh_root_login.go",
+    "language": "go",
+    "lines_total": 467,
+    "lines_analyzed": 467
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/ssh_root_login_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/ssh_root_login_test.go",
+    "language": "go",
+    "lines_total": 396,
+    "lines_analyzed": 396
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/sshdconfig.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/sshdconfig.go",
+    "language": "go",
+    "lines_total": 314,
+    "lines_analyzed": 314
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/checks/storage.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/checks/storage.go",
+    "language": "go",
+    "lines_total": 703,
+    "lines_analyzed": 703
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/lab/fault_injection_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/lab/fault_injection_test.go",
+    "language": "go",
+    "lines_total": 453,
+    "lines_analyzed": 453
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/lab/profile_matrix_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/lab/profile_matrix_test.go",
+    "language": "go",
+    "lines_total": 194,
+    "lines_analyzed": 194
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/lab/schema_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/lab/schema_test.go",
+    "language": "go",
+    "lines_total": 249,
+    "lines_analyzed": 249
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/lab/storage_matrix_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/lab/storage_matrix_test.go",
+    "language": "go",
+    "lines_total": 278,
+    "lines_analyzed": 278
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/lab/support_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/lab/support_test.go",
+    "language": "go",
+    "lines_total": 297,
+    "lines_analyzed": 297
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/acl.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/acl.go",
+    "language": "go",
+    "lines_total": 178,
+    "lines_analyzed": 178
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/exec.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/exec.go",
+    "language": "go",
+    "lines_total": 276,
+    "lines_analyzed": 276
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/exec_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/exec_test.go",
+    "language": "go",
+    "lines_total": 249,
+    "lines_analyzed": 249
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/fifo_other_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/fifo_other_test.go",
+    "language": "go",
+    "lines_total": 7,
+    "lines_analyzed": 7
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/fifo_unix_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/fifo_unix_test.go",
+    "language": "go",
+    "lines_total": 7,
+    "lines_analyzed": 7
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/observation.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/observation.go",
+    "language": "go",
+    "lines_total": 203,
+    "lines_analyzed": 203
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/oob.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/oob.go",
+    "language": "go",
+    "lines_total": 45,
+    "lines_analyzed": 45
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/read.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/read.go",
+    "language": "go",
+    "lines_total": 461,
+    "lines_analyzed": 461
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/read_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/read_test.go",
+    "language": "go",
+    "lines_total": 326,
+    "lines_analyzed": 326
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/sysdep_other.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/sysdep_other.go",
+    "language": "go",
+    "lines_total": 51,
+    "lines_analyzed": 51
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/sysdep_unix.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/sysdep_unix.go",
+    "language": "go",
+    "lines_total": 140,
+    "lines_analyzed": 140
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/probe/walk.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/probe/walk.go",
+    "language": "go",
+    "lines_total": 154,
+    "lines_analyzed": 154
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/scan/check.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/scan/check.go",
+    "language": "go",
+    "lines_total": 395,
+    "lines_analyzed": 395
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/scan/document.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/scan/document.go",
+    "language": "go",
+    "lines_total": 388,
+    "lines_analyzed": 388
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/scan/engine.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/scan/engine.go",
+    "language": "go",
+    "lines_total": 123,
+    "lines_analyzed": 123
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/scan/engine_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/scan/engine_test.go",
+    "language": "go",
+    "lines_total": 264,
+    "lines_analyzed": 264
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/scan/finalize.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/scan/finalize.go",
+    "language": "go",
+    "lines_total": 163,
+    "lines_analyzed": 163
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/scan/output.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/scan/output.go",
+    "language": "go",
+    "lines_total": 189,
+    "lines_analyzed": 189
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+
+### /c/lava-sensor-exercise/sensor/internal/scan/output_test.go
+NO FINDINGS, BUT COVERAGE IS PARTIAL — this is NOT a clean result. Uncovered: credentials, crypto, dos, injection, misconfiguration, path-traversal, ssrf, xxe
+{
+  "schema": "enchanter.analysis-report/v1",
+  "tool": "hydra-vuln-scanner",
+  "tool_version": null,
+  "target": {
+    "path": "C:/lava-sensor-exercise/sensor/internal/scan/output_test.go",
+    "language": "go",
+    "lines_total": 177,
+    "lines_analyzed": 177
+  },
+  "analysis_status": "partial",
+  "truncated": false,
+  "false_clean_risk": true,
+  "clean": false,
+  "coverage": [
+    {
+      "class": "credentials",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "crypto",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "10 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "dos",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "injection",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "misconfiguration",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); literal/token match only"
+    },
+    {
+      "class": "path-traversal",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "ssrf",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "http-handler taint on the same line as the sink"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "3 single-line regex rule(s); requires an HTTP taint token on the sink line"
+    },
+    {
+      "class": "xxe",
+      "engine": "hydra-regex",
+      "depth": "pattern",
+      "status": "partial",
+      "shapes_supported": [
+        "same-line literal match"
+      ],
+      "shapes_unsupported": [
+        "argv",
+        "environment",
+        "config-file",
+        "stdin",
+        "function-parameter",
+        "cross-line",
+        "cross-function"
+      ],
+      "truncated": false,
+      "notes": "1 single-line regex rule(s); literal/token match only"
+    }
+  ],
+  "findings": []
+}
+

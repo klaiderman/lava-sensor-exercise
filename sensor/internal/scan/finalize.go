@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"lava.sh/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/probe"
 )
 
 // evidenceValueCap bounds how much of an observed value reaches the artifact.

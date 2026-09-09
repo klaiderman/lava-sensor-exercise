@@ -1,0 +1,120 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: [/docs/llms.txt](https://www.latitude.sh/docs/llms.txt)
+> Use this file to discover all available pages before exploring further.
+[Skip to main content](https://www.latitude.sh/docs/servers/deploying-a-server#content-area)
+[Latitude.sh Docs home page![light logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/dark.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=efad591085db2784ff1a0d7ca22dbefc)![dark logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/light.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=1d247b0f651e131bd726c634f9a4d660)](https://www.latitude.sh/docs)
+Search...
+Ctrl K
+  * [Website](https://www.latitude.sh)
+  * [Support](https://www.latitude.sh/support)
+  * [Dashboard](https://www.latitude.sh/dashboard)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+
+
+Search...
+Navigation
+Server deployment
+Deploying a server
+[Docs](https://www.latitude.sh/docs)[Guides](https://www.latitude.sh/docs/guides)[API reference](https://www.latitude.sh/docs/api-reference/summary)[Developer resources](https://www.latitude.sh/docs/development)
+### Docs
+  * [Overview](https://www.latitude.sh/docs)
+
+
+### Getting started
+  * [Setting up your account](https://www.latitude.sh/docs/account-setup/sign-up)
+  * [Verifying your account](https://www.latitude.sh/docs/account-setup/verify-account)
+  * [Dashboard](https://www.latitude.sh/docs/dashboard/overview)
+  * [Command menu](https://www.latitude.sh/docs/dashboard/command-menu)
+  * [Regions & Locations](https://www.latitude.sh/docs/regions-locations)
+  * [Referral program](https://www.latitude.sh/docs/referral-program)
+
+
+### Compute
+  * Bare metal
+    * Server deployment
+      * [Deploying a server](https://www.latitude.sh/docs/servers/deploying-a-server)
+      * [Instant deployment](https://www.latitude.sh/docs/servers/instant-deployment)
+      * [Logging into your server](https://www.latitude.sh/docs/servers/logging-into-your-server)
+      * [ Network bondingNew ](https://www.latitude.sh/docs/servers/network-bonding)
+    * Server configuration
+    * Server actions
+    * [Waitlist](https://www.latitude.sh/docs/dashboard/server-waitlist)
+  * Virtual machines
+  * KubernetesPreview
+
+
+### Storage & data
+  * [Object storage](https://www.latitude.sh/docs/storage/object-storage)
+  * [Block storage](https://www.latitude.sh/docs/storage/block-storage)
+  * [File storage](https://www.latitude.sh/docs/storage/filesystem)
+  * [Egress](https://www.latitude.sh/docs/storage/egress)
+  * Managed Databases
+
+
+### Networking
+  * [Private networks](https://www.latitude.sh/docs/networking/private-networks)
+  * [ Public networksNew ](https://www.latitude.sh/docs/networking/public-networks)
+  * IP addresses
+  * [DDoS protection](https://www.latitude.sh/docs/networking/ddos-protection)
+  * [Firewall](https://www.latitude.sh/docs/networking/firewall)
+  * Interconnection
+
+
+### Resource management
+  * [Projects](https://www.latitude.sh/docs/projects)
+  * [Tags](https://www.latitude.sh/docs/tags)
+  * [Filters and views](https://www.latitude.sh/docs/dashboard/filters-and-views)
+  * [Activity logs](https://www.latitude.sh/docs/events)
+
+
+### Platform settings
+  * Team management
+  * Account security
+
+
+### Usage & billing
+  * [Bandwidth usage](https://www.latitude.sh/docs/usage/bandwidth)
+  * Billing
+
+
+### Support
+  * [Contact support](https://www.latitude.sh/docs/support/contact-support)
+  * [Support access](https://www.latitude.sh/docs/support/support-access)
+
+
+### Legal
+  * [Service Schedules](https://www.megaport.com/legal/service-schedules/)
+
+
+close
+Server deployment
+# Deploying a server
+Copy pageCopy page
+Copy pageCopy page
+You can deploy a bare metal server via the dashboard or [API](https://www.latitude.sh/docs/api-reference/create-server). Latitude.sh takes care of provisioning, OS installation, and configuration based on the settings you choose. Once deployment is complete, you’ll receive your access credentials. ![Server deployment page](https://mintcdn.com/latitudesh/ZWurrjun6MJRTyC0/images/product/4.Docs25Q4.ServerDeploy.png?fit=max&auto=format&n=ZWurrjun6MJRTyC0&q=85&s=25aa419543784fa7fcd38da223af4982)
+[metal.new](https://metal.new) takes you straight to the server deployment page.
+Follow these steps to deploy a server from the dashboard:
+1
+Access server creation
+[Sign in](https://www.latitude.sh/dashboard) to your Latitude.sh account, navigate to **Bare metal** > **Servers** in the sidebar, then click **Create server**.
+2
+Choose hardware and operating system
+Select a server based on your workload and location needs. If the configuration you need isn’t available, the page may show **Join waitlist** or **Ask custom build**. Choose **Join waitlist** to get notified when stock is available, or **Ask custom build** to request a custom server setup. You can also [contact the team](https://www.latitude.sh/contact) directly.Select the Operating System. If the OS you’re looking for isn’t offered, you can use a [custom image](https://www.latitude.sh/docs/servers/custom-images) instead.
+SSH and User data are not available for some operating systems. You can list all operating systems and their supported features using the [/plans/operating_systems endpoint](https://www.latitude.sh/docs/api-reference/get-plans-operating-system).
+3
+Configure access and automation
+Add SSH keys if desired. Password authentication is enabled by default and **disabled** when you deploy with an SSH key. This means the dashboard won’t show the password to you after deployment. Learn more about creating and adding your SSH keys [here](https://www.latitude.sh/docs/servers/ssh-keys).
+Latitude.sh does not provide a root password when you select one or more SSH keys.
+Optionally, select or create a **User Data script**. User data scripts run automatically on the server’s first boot through the [cloud-init](https://cloud-init.io/) process. See the [Server Configuration section](https://www.latitude.sh/docs/servers/user-data) for more details.Optionally, open the **Advanced** section to configure RAID or a **custom disk layout**. This is available when your server has at least two disks and you select a compatible operating system. Enable **Custom disk layout** to control how disks are grouped into OS, storage, and raw volumes — including the RAID level, filesystem, and mount point of each — or use **Quick apply** to set a simple RAID level. Use the [/plans](https://www.latitude.sh/docs/api-reference/get-plans) endpoint to check compatibility. Learn more about [custom disk layout](https://www.latitude.sh/docs/servers/custom-disk-layout).The **Advanced** section also has a **Bond to a public network** toggle, which joins the server’s two NICs into a redundant link and places it on a routed network you own — a public network. See [Network bonding](https://www.latitude.sh/docs/servers/network-bonding).![Custom disk layout editor](https://mintcdn.com/latitudesh/r9o2dNUjVSTatd1E/images/product/Docs.CustomDiskLayout.png?fit=max&auto=format&n=r9o2dNUjVSTatd1E&q=85&s=92f91628fa5b4a4d6112cd173004f261)
+4
+Set billing and quantity
+Select the Billing Type. For **On Demand billing** , choose between hourly and monthly when deploying an instance. See the [Billing section](https://www.latitude.sh/docs/billing/on-demand-vs-reserved) for more information.Choose the number of servers to deploy. Select up to **5 servers** to deploy at once using the quantity selector.
+5
+Deploy the server
+Click **Deploy** to start the provisioning process.
+Was this page helpful?
+YesNo
+[ Referral program Previous ](https://www.latitude.sh/docs/referral-program)[ Instant deployment Next ](https://www.latitude.sh/docs/servers/instant-deployment)
+[x](https://www.x.com/latitudesh)[github](https://www.github.com/latitudesh)[linkedin](https://www.linkedin.com/company/latitude-sh)
+[Powered byThis documentation is built and hosted on Mintlify, a developer documentation platform](https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=latitudesh)

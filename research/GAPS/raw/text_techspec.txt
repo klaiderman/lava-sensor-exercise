@@ -1,0 +1,229 @@
+## Micron 7450 SSD Series Technical
+
+Product Specification For additional technical and warranty information, contact your Micron sales representative.
+
+Features • Micron® 3D TLC NAND Flash • PCI Express Gen4M.2 single port (x4)EDSFF E1.S single port (x4) • NVM Express 1.4bNumber of name spaces supported: 132Weighted round robin with urgent arbitration supported • TCG Storage Security Subsystem Class: Opal Rev 2.01 • Capacity (unformatted)7450 PRO M.2 2280: 480GB, 960GB7450 PRO M.2 22110: 960GB, 1920GB, 3840GB7450 PRO E1.S: 960GB, 1920GB, 3840GB, 7680GB7450 MAX M.2 2280: 400GB, 800GB7450 MAX M.2 22110: 800GB, 1600GB, 3200GB7450 MAX E1.S: 800GB, 1600GB, 3200GB, 6400GB • Endurance: Total bytes written (TBW)7450 PRO: Up to 28,000TB at 1 DWPD7450 MAX: Up to 70,000TB at 3 DWPD • Enterprise sector size support = 512 and 4096-byte sector size (configurable) • Security: Digitally signed firmware • Surprise insertion/surprise removal (SISR) and hot plug capable • Self-monitoring, analysis, and reporting technology (SMART) • Performance1Sequential 128KB READ: Up to 6800 MB/sSequential 128KB WRITE: Up to 5600 MB/sRandom 4KB READ: Up to 1,000,000 IOPSRandom 4KB WRITE: Up to 400,000 IOPS • Latency2, 3READ (TYP): 80µsWRITE (TYP): 15µs • ReliabilityMTTF: 2 million device hours4Static and dynamic wear levelingUncorrectable bit error rate (UBER): <1 sector per 1017 bits readEnd-to-end data protectionFull power-loss protection • Operating temperature5Commercial (0°C to +70°C) • Field upgradeable firmware • Form factorEDSFF E1.S: 31.5 x 111.49 x 5.9mmEDSFF E1.S: 31.5 x 111.49 x 15mmEDSFF E1.S: 31.5 x 111.49 x 25mmM.2: 22.00 x 80.00mmM.2: 22.00 x 110.00mm • Electrical specificationE1.S power supply: 12V ±10%E1.S AUX supply: 3.3V ±5%M.2 power supply: 3.3V ±5% Notes: 1. Steady state as defined by SNIA Solid State Storage Performance Test Specification Enterprise v1.1.
+
+2. 4KB, queue depth 1 transfers used for READ/ WRITE latency values.
+
+3. TYP: Median, 50th percentile 4. Product achieves MTTF based on population statistics not relevant to individual units.
+
+5. Temperature measured by SMART.
+
+6. Not all MAX configurations available in all markets. Contact your Micron sales representative for more information.
+
+Micron 7450 SSD Series (PCIe® Gen4) Features CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 1 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+Products and specifications discussed herein are subject to change by Micron without notice.
+
+## Part Numbering Information
+
+Micron 7450 SSDs are available in different configurations and capacities. The chart below is a comprehensive list of options; not all options listed can be combined to define an offered product. Visit https:// www.micron.com for a list of valid part numbers.
+
+_[Figure 1: Part Number Chart]_
+
+MTMT
+
+FDFD KK BABA 15T315T3 TT FRFR11 BCBC 44 Micron TechnologyMicron Technology Drive InterfaceDrive Interface K = PCIe Gen4K = PCIe Gen4 Drive Form FactorDrive Form Factor BA = M.2 (80mm x 22mm)BA = M.2 (80mm x 22mm) BG = M.2 (110mm x 22mm)BG = M.2 (110mm x 22mm) BZ = E1.S (Bare board 5.9mm)BZ = E1.S (Bare board 5.9mm) CE = E1.S (15mm Including enclosure)CE = E1.S (15mm Including enclosure) BU = E1.S (25mm including enclosure)BU = E1.S (25mm including enclosure) Extended Firmware FeaturesExtended Firmware Features D = OCP 1.0a + SED Opal 2.01D = OCP 1.0a + SED Opal 2.01 Z = Non-SEDZ = Non-SED 5 = SED Opal 2.015 = SED Opal 2.01 Product FamilyProduct Family FR = 7450 PROFR = 7450 PRO FS = 7450 MAXFS = 7450 MAX Drive CapacityDrive Capacity 400 = 400GB400 = 400GB 480 = 480GB480 = 480GB 800 = 800GB800 = 800GB 960 = 960GB960 = 960GB 1T6 = 1600GB1T6 = 1600GB 1T9 = 1920GB1T9 = 1920GB 3T2 = 3200GB3T2 = 3200GB 3T8 = 3840GB3T8 = 3840GB 6T4 = 6400GB6T4 = 6400GB 7T6 = 7680GB7T6 = 7680GB ZZ ABAB YYYYMT FD K BA 15T3 T FR 1 BC 4 Micron Technology Drive Interface K = PCIe Gen4 Drive Form Factor BA = M.2 (80mm x 22mm) BG = M.2 (110mm x 22mm) BZ = E1.S (Bare board 5.9mm) CE = E1.S (15mm Including enclosure) BU = E1.S (25mm including enclosure) Extended Firmware Features D = OCP 1.0a + SED Opal 2.01 Z = Non-SED 5 = SED Opal 2.01 Product Family FR = 7450 PRO FS = 7450 MAX Drive Capacity 400 = 400GB 480 = 480GB 800 = 800GB 960 = 960GB 1T6 = 1600GB 1T9 = 1920GB 3T2 = 3200GB 3T8 = 3840GB 6T4 = 6400GB 7T6 = 7680GB Z AB YY Micron 7450 SSD Series (PCIe® Gen4) Features CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 2 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+## Important Notes and Warnings
+
+Micron Technology, Inc. ("Micron") reserves the right to make changes to information published in this document, including without limitation specifications and product descriptions. This document supersedes and replaces all information supplied prior to the publication hereof. You may not rely on any information set forth in this document if you obtain the product described herein from any unauthorized distributor or other source not authorized by Micron.
+
+Automotive Applications. Products are not designed or intended for use in automotive applications unless specifically designated by Micron as automotive-grade by their respective data sheets. Distributor and customer/ distributor shall assume the sole risk and liability for and shall indemnify and hold Micron harmless against all claims, costs, damages, and expenses and reasonable attorneys' fees arising out of, directly or indirectly, any claim of product liability, personal injury, death, or property damage resulting directly or indirectly from any use of non-automotive-grade products in automotive applications. Customer/distributor shall ensure that the terms and conditions of sale between customer/distributor and any customer of distributor/customer (1) state that Micron products are not designed or intended for use in automotive applications unless specifically designated by Micron as automotive-grade by their respective data sheets and (2) require such customer of distributor/customer to indemnify and hold Micron harmless against all claims, costs, damages, and expenses and reasonable attorneys' fees arising out of, directly or indirectly, any claim of product liability, personal injury, death, or property damage resulting from any use of non-automotive-grade products in automotive applications.
+
+Critical Applications. Products are not authorized for use in applications in which failure of the Micron component could result, directly or indirectly in death, personal injury, or severe property or environmental damage ("Critical Applications"). Customer must protect against death, personal injury, and severe property and environmental damage by incorporating safety design measures into customer's applications to ensure that failure of the Micron component will not result in such harms. Should customer or distributor purchase, use, or sell any Micron component for any critical application, customer and distributor shall indemnify and hold harmless Micron and its subsidiaries, subcontractors, and affiliates and the directors, officers, and employees of each against all claims, costs, damages, and expenses and reasonable attorneys' fees arising out of, directly or indirectly, any claim of product liability, personal injury, or death arising in any way out of such critical application, whether or not Micron or its subsidiaries, subcontractors, or affiliates were negligent in the design, manufacture, or warning of the Micron product.
+
+Customer Responsibility. Customers are responsible for the design, manufacture, and operation of their systems, applications, and products using Micron products. ALL SEMICONDUCTOR PRODUCTS HAVE INHERENT FAILURE RATES AND LIMITED USEFUL LIVES. IT IS THE CUSTOMER'S SOLE RESPONSIBILITY TO DETERMINE WHETHER THE MICRON PRODUCT IS SUITABLE AND FIT FOR THE CUSTOMER'S SYSTEM, APPLICATION, OR PRODUCT. Customers must ensure that adequate design, manufacturing, and operating safeguards are included in customer's applications and products to eliminate the risk that personal injury, death, or severe property or environmental damages will result from failure of any semiconductor component.
+
+Limited Warranty. In no event shall Micron be liable for any indirect, incidental, punitive, special or consequential damages (including without limitation lost profits, lost savings, business interruption, costs related to the removal or replacement of any products or rework charges) whether or not such damages are based on tort, warranty, breach of contract or other legal theory, unless explicitly stated in a written agreement executed by Micron's duly authorized representative.
+
+Micron 7450 SSD Series (PCIe® Gen4) Important Notes and Warnings CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 3 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+Performance Measured performance can vary for a number of reasons. The major factors affecting drive performance are the capacity of the drive and the interface of the host. Additionally, overall system performance can affect the measured drive performance. When comparing drives, it is recommended that all system variables are the same, and only the drive being tested varies.
+
+Performance numbers will vary depending on the host system configuration.
+
+_[Table 1: Drive Performance – PRO]_
+
+Parameter
+
+Power State 0 Capacity (GB) M.2 (2280) M.2 (2280/ 22110) M.2 (22110) E1.S (25mm/15mm/5.9mm)1 480 960 1920 3840 960 1920 3840 7680 Sequential (128KB transfer) (MB/s) Read 5000 5000 5000 5000 6800 6800 6800 6800 Write 700 1400 2400 2500 1400 2600 5000/ 40002 5600/ 40002 Random (4KB transfer) (IOPS) Read 280K 520K 735K 735K 530K 800K 1M 1M Write 40K 82K 120K 160K 85K 120K 180K 215K 70/30 random read/write 50K 110K 185K 300K 110K 190K 300K 415K Latency (µs) READ (TYP) 80 80 80 80 80 80 80 80 WRITE (TYP) 30 15 15 15 15 15 15 15 READ (99%) 95 95 90 90 95 90 90 90 WRITE (99%) 65 65 65 65 65 65 65 65 Notes: 1. E1.S 25mm and E1.S 15mm performance measured at 25W, E1.S 5.9mm measured at 12W 2. Reduced performance at 12W.
+
+3. Performance values measured under the following conditions: • Steady state as defined by SNIA Solid State Storage Performance Test Specification Enterprise v1.1 • 4K sector size • Drive write cache enabled • NVMe power state 0 • Sequential workloads measured using FIO with a queue depth of 32 • Random READ workloads measured using FIO with a queue depth of 256 • Random WRITE workloads measured using FIO with a queue depth of 128 Micron 7450 SSD Series (PCIe® Gen4) Performance CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 4 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+## Table 2: Drive Performance – MAX
+
+Parameter Power State 0 Capacity (GB) M.2 (2280) M.2 (2280/ 22110) M.2 (22110) E1.S (25mm/15mm/5.9mm)1 400 800 1600 3200 800 1600 3200 6400 Sequential (128KB transfer) (MB/s) Read 5000 5000 5000 5000 6800 6800 6800 6800 Write 700 1400 2400 2500 1400 2600 5000/ 40002 5600/ 40002 Random (4KB transfer) (IOPS) Read 280K 520K 735K 735K 530K 800K 1M 1M Write 65K 156K 250K 300K 145K 250K 390K 400K 70/30 random read/ write 78K 165K 270K 450K 165K 290K 500K 645K Latency (µs) READ (TYP) 80 80 80 80 80 80 80 80 WRITE (TYP) 15 15 15 15 15 15 15 15 READ (99%) 95 95 90 90 95 90 90 90 WRITE (99%) 65 65 65 65 65 65 65 65 Notes: 1. E1.S 25mm and E1.S 15mm performance measured at 25W, E1.S 5.9mm measured at 12W 2. Reduced performance at 12W.
+
+3. Performance values measured under the following conditions: • Steady state as defined by SNIA Solid State Storage Performance Test Specification Enterprise v1.1 • 4K sector size • Drive write cache enabled • NVMe power state 0 • Sequential workloads measured using FIO with a queue depth of 32 • Random READ workloads measured using FIO with a queue depth of 256 • Random WRITE workloads measured using FIO with a queue depth of 128 4. Performance values measured with the following system configuration: • Generic X570 motherboard • AMD Ryzen 73700X 8-Core CPU @ 2.6 GHz • DDR4 16GB @ 3200 MHz 5. Latency values measured under the following configuration: • Random workloads using FIO with 4KB transfers and a queue depth of 1 • TYP = median, 50th percentile 6. System variations will affect measured results.
+
+Micron 7450 SSD Series (PCIe® Gen4) Performance CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 5 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+Endurance While actual endurance varies depending on conditions, the drive lifetime can be estimated based on capacity, assumed fixed-use models, ECC, and formatted sector size.
+
+Lifetime estimates for the device are shown in the following tables in total bytes written.
+
+_[Table 3: Total Bytes Written]_
+
+Model Capacity (GB)
+
+4K Random Total Bytes Written (TB) 128K Sequential Total Bytes Written (TB) PRO 480 800 3550 960 1700 6400 1920 3650 12,800 3840 7300 24,400 7680 14,000 48,800 MAX 400 2100 4000 800 4300 7800 1600 8700 15,900 3200 17,500 30,900 6400 35,000 61,800 Notes: 1. Values represent the theoretical maximum endurance for the given transfer size and type. Actual lifetime will vary by workload. Refer to Percentage Used in the SMART/Health Information (Log Identifier 02h) to check the device life used.
+
+2. Total bytes written calculated assuming drive is 100% full (user capacity) with workload of 100% random aligned 4KB writes.
+
+Micron 7450 SSD Series (PCIe® Gen4) Endurance CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 6 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+Electrical Characteristics
+
+_[Table 4: Power Consumption – PRO]_
+
+Parameter
+
+Power State 0 Capacity (GB) Unit M.2 E1.S 480 960 1920 3840 960 1920 3840 7680 Active read (maximum RMS) 7 7 7.3 8.2 9.5 12 12 12 W Active write (maximum RMS) 4.5 5.7 7.5 8.2 7 12 12/ 13.51 12/ 151 W 128K sequential read (average RMS) 7 7 8 7.9 9 11.3 11.5 12 W 128K sequential write (average RMS) 4.3 5.6 7.5 7.9 7 9 12/ 13 12/ 14 W 4K random read (average RMS) 4.3 5.5 7 8.2 7 8 10 11 W 4K random write (average RMS) 4.5 5.5 8 8 7 8.3 11.5 12 W Idle (average RMS) 2.9 2.9 2.9 2.9 5 5 5 5 W Notes: 1. Split indicates 12W/20W.
+
+2. Power limiting is configured through Set/Get Features Power Management.
+
+3. Power consumption measurements are for reference only; actual workload power consumption will vary.
+
+_[Table 5: Power Consumption – MAX]_
+
+Parameter
+
+Power State 0 Capacity (GB) Unit M.2 E1.S 400 800 1600 3200 800 1600 3200 6400 Active read (maximum RMS) 7.1 7.1 7.3 8.2 9.5 12 12 12 W Active write (maximum RMS) 4.5 5.7 8.2 7 12 12.0 12/ 13.51 12/ 151 W 128K sequential read (average RMS) 7 7 8 7.9 9 11.3 11.5 12 W 128K sequential write (average RMS) 4.3 5.6 7.5 7.9 7 9 12/ 13 12/ 14 W 4K random read (average RMS) 4.3 5.5 7 8.2 7 8 10 11 W 4K random write (average RMS) 4.5 5.5 8 8 7 8.3 11.5 12 W Idle (average RMS) 2.9 2.9 2.9 2.9 5 5 5 5 W Notes: 1. Split indicates 12W/20W.
+
+2. Power limiting is configured through Set/Get Features Power Management.
+
+3. Power consumption measurements are for reference only; actual workload power consumption will vary.
+
+_[Table 6: Operating Voltage – EDSFF]_
+
+Power Rail Electrical Parameter Value
+
+12V Operating voltage 12 Vdc (±10%) MIN/MAX rise time 10ms/100ms Fall time <5s MIN power-off time 50ms Inrush current (typical peak) 2.0A MAX average current (RMS) 1.2A Micron 7450 SSD Series (PCIe® Gen4) Electrical Characteristics CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 7 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+## Table 6: Operating Voltage – EDSFF (Continued)
+
+Power Rail Electrical Parameter Value 3.3 VAUX Operating voltage 3.3 Vdc (±5%) MIN/MAX rise time 1ms/50ms MIN/MAX fall time 1ms/5s MAX average current 20mA
+
+_[Table 7: Operating Voltage – M.2]_
+
+Power Rail Electrical Parameter Value
+
+3.3V Operating voltage 3.3 Vdc (±5%) MIN/MAX rise time 1ms/50ms MIN/MAX fall time 1ms/5s MIN power-off time 1s Inrush current (typical peak) 2.5A MAX average current (RMS) 2.4A Micron 7450 SSD Series (PCIe® Gen4) Electrical Characteristics CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 8 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+Physical Configuration M.2 Type 2280 and 22110 M.2 Type 2280 product mass: less than 11 grams M.2 Type 22110 product mass: less than 14 grams
+
+_[Figure 2: M.2 Type 2280 Nominal Dimensions]_
+
+R1.75±0.80
+
+22.00 ±0.15 80.00 ±0.15 6.125 ±0.150 19.85 ±0.10 0.80 ±0.08 1.50 MAX 1.60 MAX 5.0 ±1.0 11.2 ±1.0 Label, MID 18mm x 12mm C 15.0 ±1.0 1.0 ±1.0 Label, Product 25mm x 20mm R1.75±0.80 22.00 ±0.15 80.00 ±0.15 6.125 ±0.150 19.85 ±0.10 0.80 ±0.08 1.50 MAX 1.60 MAX 5.0 ±1.0 11.2 ±1.0 Label, MID 18mm x 12mm C 15.0 ±1.0 1.0 ±1.0 Label, Product 25mm x 20mm Note: 1. All dimensions are in millimeters.
+
+Micron 7450 SSD Series (PCIe® Gen4) Physical Configuration CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 9 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+## Figure 3: M.2 Type 22110 Nominal Dimensions
+
+Label, Product 25mm x 20mm 22.00 ±0.15 110.00 ±0.15 19.85 ±0.10 6.125 ±0.150 R1.75 ±0.08 0.80 ±0.08 1.60 MAX 1.50 MAX 11.6 ±1.0 5.0 ±1.0 Label, mid 18mm x 12mm C 21.0 ±1 40.4 ±1 Label, Product 25mm x 20mm 22.00 ±0.15 110.00 ±0.15 19.85 ±0.10 6.125 ±0.150 R1.75 ±0.08 0.80 ±0.08 1.60 MAX 1.50 MAX 11.6 ±1.0 5.0 ±1.0 Label, mid 18mm x 12mm C 21.0 ±1 40.4 ±1 Note: 1. All dimensions are in millimeters.
+
+_[Table 8: M.2 Type 2280 and 22110 Maximum Dimensions]_
+
+Form Factor Width Length Height Unit
+
+M.2 2280 22.00 80.00 3.9 mm M.2 22110 22.00 110.00 3.9 mm
+
+_[Table 9: M.2 Type 2280 and 22110 Minimum Gold Finger Dimensions]_
+
+Form Factor Height Unit
+
+M.2 2280 0.76 µm M.2 22110 0.76 µm Micron 7450 SSD Series (PCIe® Gen4) Physical Configuration CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 10 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+## E1.S Enterprise PCIe x4
+
+Product mass: less than 110g/85g/30 grams for E1.S 25mm/15mm/5.9mm.
+
+_[Figure 4: E1.S 25mm Nominal Dimensions]_
+
+33.75 ±0.25
+
+7.50±0.25 118.75±0.55 112.50 + 0.15 0.95 12.42 ±0.35 1.57 ±0.13 3.96 ±0.15 9.50 ±0.35 2.20 ±0.15 108.00 30.05 3.55 2X 2.70 0.15 4.7 0.15 25.00 + 0.35 0.6033.75 ±0.25 7.50±0.25 118.75±0.55 112.50 + 0.15 0.95 12.42 ±0.35 1.57 ±0.13 3.96 ±0.15 9.50 ±0.35 2.20 ±0.15 108.00 30.05 3.55 2X 2.70 0.15 4.7 0.15 25.00 + 0.35 0.60 Note: 1. All dimensions are in millimeters.
+
+Micron 7450 SSD Series (PCIe® Gen4) Physical Configuration CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 11 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+## Figure 5: E1.S 15mm Nominal Dimensions
+
+7.50 ±0.25 12.42 ±0.35 3.96 ±0.15 1.57 ±0.13 2.20 ±0.15 9.50 ±0.35 108.00 3.55 30.05 33.75 ±0.25 118.75 ±0.55 112.50 +0.15 –0.95 15.00 +0.35 –0.60 2X Ø2.70 ±0.15 Ø4.7 ±0.157.50 ±0.25 12.42 ±0.35 3.96 ±0.15 1.57 ±0.13 2.20 ±0.15 9.50 ±0.35 108.00 3.55 30.05 33.75 ±0.25 118.75 ±0.55 112.50 +0.15 –0.95 15.00 +0.35 –0.60 2X Ø2.70 ±0.15 Ø4.7 ±0.15 Note: 1. All dimensions are in millimeters.
+
+Micron 7450 SSD Series (PCIe® Gen4) Physical Configuration CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 12 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+## Figure 6: E1.S 5.9mm Nominal Dimensions
+
+31.50 ±0.20 18.48 111.49 ±0.15 6.15 11.24 ±0.15 4X 1.90 ±0.08 2.50 29.00 107.19 106.19 12.95 1.57 ±0.13 2.10 MAX 2.10 MAX 31.50 ±0.20 18.48 111.49 ±0.15 6.15 11.24 ±0.15 4X 1.90 ±0.08 2.50 29.00 107.19 106.19 12.95 1.57 ±0.13 2.10 MAX 2.10 MAX Note: 1. All dimensions are in millimeters.
+
+_[Table 10: E1.S Enterprise PCIe x4 Maximum Dimensions]_
+
+Form Factor Width Length Height Unit
+
+E1.S 33.75 118.75 15/25 mm E1.S 31.50 111.50 5.90 mm Note: 1. Dimension values per SFF-TA-1006 Revision 1.4.
+
+Micron 7450 SSD Series (PCIe® Gen4) Physical Configuration CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 13 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+Compliance Micron SSDs comply with the following: • Micron Green Standard • Built with sulfur-resistant resistors • CE (Europe): EN55032, EN55035 Class B, RoHS • FCC: CFR Title 47, Part 15, Class B • UL/cUL: approval to UL 62368-1, IEC 62368-1 • BSMI (Taiwan): approval to CNS 13438, Class B, CNS 15663 • RCM (Australia, New Zealand): AS/NZS CISPR32 Class B • KC RRL (Korea): approval to KS C 9835, KS C 9832 • W.E.E.E.: Compliance with EU WEEE directive 2012/19/EC. Additional obligations may apply to customers who place these products in the markets where WEEE is enforced.
+
+• TUV (Germany): approval to EN 62368-1 • V CCI (Japan): CRISPR 32 Class B • IC (Canada): ICES-003 Class BThis Class B digital apparatus complies with Canadian ICES-003.Cet appareil numérique de la classe B est conforme à la norme NMB-003 du Canada.
+
+• Morocco: EN55032, EN55035 Class B • UkrSEPRO (Ukraine): EN55032 Class B, EN 62368, RoHS (Resolution 2017 No. 139)
+
+• UKCA (UK): SI 2016/1091 Class B and SI 2012/3032 RoHS Micron 7450 SSD Series (PCIe® Gen4) Compliance CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 14 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.
+
+Revision History Rev. C – 02/2026 • Removed U.3 form factors.
+
+Rev. B – 03/2024 • Added 128K Sequential Total Bytes Written (TB) column to Endurance section.
+
+Rev. A – 07/2023 • First Production release.
+
+Micron 7450 SSD Series (PCIe® Gen4) Revision History
+
+_[8000 S. Federal Way, P.O. Box 6, Boise, ID 83707-0006]_
+
+208-368-4000, micron.com/support
+
+Micron and the Micron logo are trademarks of Micron Technology, Inc.
+
+All other trademarks are the property of their respective owners.
+
+This data sheet contains minimum and maximum limits specified over the power supply and temperature range set forth herein.
+
+Although considered final, these specifications are subject to change, as further product development and data characterization sometimes occur.
+
+CCM005-731836775-10658 7450_nvme_ssd_tech_prod_spec.pdfRev. C 02/2026 EN 15 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+
+©2023 Micron Technology, Inc.. All rights reserved.

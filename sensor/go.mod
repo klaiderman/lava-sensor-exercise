@@ -1,4 +1,4 @@
-module lava.sh/sensor
+module lava-sensor-exercise/sensor
 
 go 1.26.2
 

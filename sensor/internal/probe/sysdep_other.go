@@ -47,3 +47,5 @@ func ownerOf(os.FileInfo) (uid, gid, dev, ino int64, ok bool) { return 0, 0, 0, 
 func signalOf(error) string { return "" }
 
 const devNull = os.DevNull
+
+func getxattr(string, string) ([]byte, error) { return nil, syscall.ENOTSUP }

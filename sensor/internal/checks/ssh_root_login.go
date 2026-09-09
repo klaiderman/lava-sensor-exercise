@@ -4,13 +4,13 @@ import (
 	"context"
 	"strings"
 
-	"lava.sh/sensor/internal/probe"
-	"lava.sh/sensor/internal/scan"
+	"lava-sensor-exercise/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/scan"
 )
 
-// rootAuthKeysPath is the default AuthorizedKeysFile location for root. It is
-// the default only: AuthorizedKeysFile can point elsewhere, which is why the
-// absence of a key here never proves the absence of root key material.
+// rootSSHDir is the conventional location of root's key material. It is a
+// starting point, not an authority: where root's keys actually come from is
+// what the daemon's effective authorizedkeysfile says.
 const (
 	rootSSHDir       = "/root/.ssh"
 	rootAuthKeysPath = "/root/.ssh/authorized_keys"
@@ -53,6 +53,11 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 	normOracle := normalisePermitRootLogin(oracleVal)
 	normWalker := normalisePermitRootLogin(res.EffectiveValue)
 
+	finish := func(out scan.Result) scan.Result {
+		out.Observations, out.Fields = r.Observations, r.Fields
+		return out
+	}
+
 	var effective, source string
 	switch {
 	case oracleOK && res.Found && normOracle != normWalker:
@@ -60,9 +65,7 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 		r.Field("oracle_value", oracleVal)
 		r.Field("walker_value", res.EffectiveValue)
 		r.Field("conditional_blocks", cfg.MatchBlocks)
-		out := scan.Unknown(scan.ReasonContested, contestedDetail("permitrootlogin", oracleVal, res.EffectiveValue))
-		out.Observations, out.Fields = r.Observations, r.Fields
-		return out
+		return finish(scan.Unknown(scan.ReasonContested, contestedDetail("permitrootlogin", oracleVal, res.EffectiveValue)))
 	case oracleOK:
 		effective, source = normOracle, "sshd -G (running daemon)"
 	case res.Found:
@@ -74,28 +77,22 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 		// policy for software that is not installed.
 		if !sshdIsPresent(oracle, cfg) {
 			r.Field("config_resolution", res)
-			out := scan.Unknown(scan.ReasonUtilMiss,
-				"no sshd binary and no sshd configuration were found, so there is no root-login policy to report; "+
-					"note that the absence of an SSH listener is not the absence of remote access to the machine")
-			out.Observations, out.Fields = r.Observations, r.Fields
-			return out
+			return finish(scan.Unknown(scan.ReasonUtilMiss, noDaemonDetail))
 		}
 		// A compiled-in default is only usable with a citation AND a known
 		// distribution family (L19).
 		osID, osIDLike := env.OSIDs()
-		if d, ok := defaultFor("permitrootlogin", osID, osIDLike); ok {
-			effective = normalisePermitRootLogin(d.value)
-			source = "compiled-in default"
-			res.Defaulted = true
-			res.DefaultSource = d.citation
-			res.EffectiveValue = d.value
-		} else {
+		d, ok := defaultFor("permitrootlogin", osID, osIDLike)
+		if !ok {
 			r.Field("config_resolution", res)
-			out := scan.Unknown(unresolvedReason(oracle, cfg),
-				"the effective permitrootlogin could not be established: "+unresolvedDetail(oracle, cfg))
-			out.Observations, out.Fields = r.Observations, r.Fields
-			return out
+			return finish(scan.Unknown(unresolvedReason(oracle, cfg),
+				"the effective permitrootlogin could not be established: "+unresolvedDetail(oracle, cfg)))
 		}
+		effective = normalisePermitRootLogin(d.value)
+		source = "compiled-in default"
+		res.Defaulted = true
+		res.DefaultSource = d.citation
+		res.EffectiveValue = d.value
 	}
 
 	r.Field("config_resolution", res)
@@ -108,87 +105,233 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 	//    one (L17, F29).
 	if override, ok := conflictingMatch(res, effective); ok {
 		r.Field("match_override", override)
-		out := scan.Unknown(scan.ReasonContested,
+		return finish(scan.Unknown(scan.ReasonContested,
 			"global permitrootlogin "+effective+" is overridden to "+override.Value+
 				" for `Match "+override.MatchCriteria+"` at "+override.Path+":"+itoa(override.Line)+
-				"; a host-wide verdict would be wrong in both directions")
-		out.Observations, out.Fields = r.Observations, r.Fields
-		return out
+				"; a host-wide verdict would be wrong in both directions"))
 	}
 
 	// 5. The verdict.
 	switch effective {
 	case "no":
-		out := scan.Pass("the running policy refuses root logins over SSH outright (permitrootlogin no, per " + source + ")")
-		out.Observations, out.Fields = r.Observations, r.Fields
-		return out
+		return finish(scan.Pass("the running policy refuses root logins over SSH outright (permitrootlogin no, per " + source + ")"))
 	case "yes":
-		out := scan.Fail(scan.ReasonPolicy,
-			"the running policy permits direct root login over SSH (permitrootlogin yes, per "+source+")")
-		out.Observations, out.Fields = r.Observations, r.Fields
-		return out
+		return finish(scan.Fail(scan.ReasonPolicy,
+			"the running policy permits direct root login over SSH (permitrootlogin yes, per "+source+")"))
 	case "prohibit-password", "forced-commands-only":
-		return c.keyBasedRootLogin(env, r, effective, source)
+		return c.keyBasedRootLogin(ctx, env, r, effective, source)
 	default:
 		r.Field("unrecognised_value", effective)
-		out := scan.Unknown(scan.ReasonParse,
-			"permitrootlogin resolved to the unrecognised value "+quote(effective)+" (per "+source+"); no verdict is derivable from it")
-		out.Observations, out.Fields = r.Observations, r.Fields
-		return out
+		return finish(scan.Unknown(scan.ReasonParse,
+			"permitrootlogin resolved to the unrecognised value "+quote(effective)+" (per "+source+"); no verdict is derivable from it"))
 	}
+}
+
+const noDaemonDetail = "no sshd binary and no sshd configuration were found, so there is no root-login policy to report; " +
+	"note that the absence of an SSH listener is not the absence of remote access to the machine"
+
+// keyPathVerdict is the per-path evidence row of the key-material question.
+type keyPathVerdict struct {
+	Path         string `json:"path"`
+	Status       string `json:"status"`
+	Errno        string `json:"errno,omitempty"`
+	Size         *int64 `json:"size,omitempty"`
+	Mode         *int64 `json:"mode,omitempty"`
+	ProvenAbsent bool   `json:"proven_absent"`
+	ParentStatus string `json:"parent_listing_status"`
 }
 
 // keyBasedRootLogin decides the prohibit-password / forced-commands-only
 // branch, where password login as root is refused but key login is not.
 //
-// The distinction that matters: EACCES on /root/.ssh is not "no keys". On an
-// unprivileged run that directory is normally 0700 root, so root key login can
-// neither be confirmed nor excluded — the honest answer is unknown, and it is
-// worth more than a comfortable pass (R4 B2 trap (d)).
-func (c sshRootLoginPolicy) keyBasedRootLogin(env *scan.Env, r scan.Result, effective, source string) scan.Result {
-	dirObs := env.Files.Stat(rootSSHDir)
-	keyObs := env.Files.Stat(rootAuthKeysPath)
-	dirObs.Detail = "root's ssh directory; its readability decides whether root key material is observable at all"
-	keyObs.Detail = "root's default AuthorizedKeysFile"
-	keyObs.LoadBearing = true
-	r.Add(dirObs, keyObs)
-	r.Field("root_ssh_dir", renderMeta(dirObs))
-	r.Field("root_authorized_keys", renderMeta(keyObs))
-
+// Absence proven by a successful listing is evidence, not an unknown. This
+// passes only when the daemon itself told us where root's keys would come from
+// — `authorizedkeysfile` expanded for root, with `authorizedkeyscommand` and
+// `trustedusercakeys` both none — AND every one of those paths is proven absent
+// by a successful stat of its parent directory. When any of that cannot be
+// established (the usual case on an unprivileged run: /root/.ssh is EACCES),
+// root key login can neither be confirmed nor excluded, and the honest answer
+// is unknown (R4 B2 trap (d); L39 under-claim rule).
+func (c sshRootLoginPolicy) keyBasedRootLogin(ctx context.Context, env *scan.Env, r scan.Result, effective, source string) scan.Result {
 	finish := func(out scan.Result) scan.Result {
 		out.Observations, out.Fields = r.Observations, r.Fields
 		return out
 	}
+	policyNote := "the running policy permits root login by public key (permitrootlogin " + effective + ", per " + source + ")"
+
+	oracle := env.SSHD(ctx)
+	rootHome := homeOf(env.Files, "root")
+	paths, akfSource := rootAuthorizedKeyPaths(oracle, rootHome)
+
+	akc, akcKnown := oracle.Value("authorizedkeyscommand")
+	tuca, tucaKnown := oracle.Value("trustedusercakeys")
+
+	checked := make([]keyPathVerdict, 0, len(paths))
+	allProvenAbsent := true
+	var undetermined probe.Observation
+
+	for _, p := range paths {
+		keyObs := env.Files.Stat(p)
+		keyObs.Detail = "candidate root AuthorizedKeysFile (" + akfSource + ")"
+		keyObs.LoadBearing = true
+		parentObs := env.Files.Stat(parentDir(p))
+		parentObs.Detail = "parent of a candidate root AuthorizedKeysFile; a successful listing is what makes absence provable"
+		r.Add(parentObs, keyObs)
+
+		v := keyPathVerdict{Path: p, Status: string(keyObs.Status), Errno: keyObs.Reason(), ParentStatus: string(parentObs.Status)}
+		if keyObs.Meta != nil {
+			v.Size, v.Mode = keyObs.Meta.Size, keyObs.Meta.Mode
+		}
+		switch {
+		case keyObs.Status == probe.StatusOK && keyObs.Meta != nil && keyObs.Meta.Size != nil && *keyObs.Meta.Size > 0:
+			checked = append(checked, v)
+			r.Field("authorized_keys_checked", checked)
+			return finish(scan.Fail(scan.ReasonPolicy,
+				policyNote+" and root key material is present at "+p+" ("+itoa(*keyObs.Meta.Size)+" bytes)"))
+		case keyObs.Status == probe.StatusENOENT && parentObs.Status == probe.StatusOK:
+			// Absent, and the parent listing succeeded: a proven negative.
+			v.ProvenAbsent = true
+		case keyObs.Status == probe.StatusOK:
+			// Present and empty: no key material to authenticate with.
+			v.ProvenAbsent = true
+		default:
+			allProvenAbsent = false
+			if undetermined.Status == "" {
+				undetermined = keyObs
+			}
+		}
+		checked = append(checked, v)
+	}
+
+	r.Field("authorized_keys_checked", checked)
+	r.Field("authorized_keys_source", akfSource)
+	r.Field("authorized_keys_command", renderDirective(akc, akcKnown))
+	r.Field("trusted_user_ca_keys", renderDirective(tuca, tucaKnown))
+	r.Field("root_home", rootHome)
+
+	akcNone := akcKnown && isNoneValue(akc)
+	tucaNone := tucaKnown && isNoneValue(tuca)
 
 	switch {
-	case keyObs.Status == probe.StatusOK && keyObs.Meta != nil && keyObs.Meta.Size != nil && *keyObs.Meta.Size > 0:
-		return finish(scan.Fail(scan.ReasonPolicy,
-			"the running policy permits root login by public key (permitrootlogin "+effective+
-				", per "+source+") and root key material is present at "+rootAuthKeysPath+
-				" ("+itoa(*keyObs.Meta.Size)+" bytes)"))
-
-	case keyObs.Status == probe.StatusOK:
-		// Readable and empty: key login is currently impossible at the default
-		// path, but the policy still permits it and AuthorizedKeysFile may
-		// point elsewhere. Not a pass; not a fail.
-		return finish(scan.Unknown(scan.ReasonENOENT,
-			"the running policy permits root login by public key (permitrootlogin "+effective+
-				", per "+source+"); "+rootAuthKeysPath+" is readable and empty, but AuthorizedKeysFile may name another path "+
-				"and a key can be added without a policy change, so root access cannot be excluded from the policy alone"))
-
-	case keyObs.Status == probe.StatusENOENT && dirObs.Status == probe.StatusOK:
-		return finish(scan.Unknown(scan.ReasonENOENT,
-			"the running policy permits root login by public key (permitrootlogin "+effective+
-				", per "+source+"); no key file exists at "+rootAuthKeysPath+" right now, proven by a successful listing of "+
-				rootSSHDir+", but the policy itself still permits key-based root login"))
-
-	default:
-		// The live branch on an unprivileged run of a normally configured host.
-		return finish(scan.Unknown(reasonOf(keyObs, dirObs),
-			"the running policy permits root login by public key (permitrootlogin "+effective+
-				", per "+source+") and "+rootSSHDir+" is not readable by this uid ("+reasonOf(keyObs, dirObs)+
+	case !oracle.OK():
+		// Without the daemon's own answer we do not know which paths, which
+		// command or which CA it would consult, so the absence of a key at the
+		// conventional path proves nothing.
+		return finish(scan.Unknown(scan.ReasonUtilMiss,
+			policyNote+"; the daemon did not report its effective authorizedkeysfile, authorizedkeyscommand or "+
+				"trustedusercakeys, so the paths root's keys could come from are not established and key-based "+
+				"root login cannot be excluded"))
+	case !allProvenAbsent:
+		reason := scan.ReasonEACCES
+		if undetermined.Status != "" && undetermined.Reason() != "" {
+			reason = undetermined.Reason()
+		}
+		return finish(scan.Unknown(reason,
+			policyNote+" and at least one candidate AuthorizedKeysFile path could not be resolved ("+reason+
 				"), so root key material can neither be confirmed nor excluded; denied is not absent"))
+	case !akcNone || !tucaNone:
+		what := "authorizedkeyscommand " + renderDirective(akc, akcKnown)
+		if !tucaNone {
+			what = "trustedusercakeys " + renderDirective(tuca, tucaKnown)
+		}
+		return finish(scan.Unknown(scan.ReasonPolicy,
+			policyNote+"; no key file exists at any path the daemon named, but "+what+
+				" can supply root keys from outside the filesystem paths we checked"))
+	default:
+		return finish(scan.Pass(policyNote + ", but root has no key material it could use: " + akfSource +
+			" resolves to " + strings.Join(paths, ", ") + ", each proven absent by a successful listing of its parent, " +
+			"authorizedkeyscommand is none and trustedusercakeys is none, so no remote party can authenticate as root over SSH"))
 	}
+}
+
+// rootAuthorizedKeyPaths expands the daemon's effective authorizedkeysfile for
+// root. OpenSSH resolves a relative path against the user's home directory and
+// substitutes %h (home), %u (user name) and %% (a literal percent).
+func rootAuthorizedKeyPaths(oracle *scan.SSHDOracle, rootHome string) (paths []string, source string) {
+	if v, ok := oracle.Value("authorizedkeysfile"); ok && strings.TrimSpace(v) != "" {
+		source = "sshd -G authorizedkeysfile"
+		for _, tok := range splitArgs(v) {
+			if isNoneValue(tok) {
+				continue
+			}
+			paths = append(paths, expandAuthorizedKeysToken(tok, rootHome))
+		}
+	}
+	if len(paths) == 0 {
+		source = "default AuthorizedKeysFile path (the daemon did not report one)"
+		paths = []string{rootHome + "/.ssh/authorized_keys"}
+	}
+	return paths, source
+}
+
+func expandAuthorizedKeysToken(tok, home string) string {
+	var b strings.Builder
+	for i := 0; i < len(tok); i++ {
+		if tok[i] == '%' && i+1 < len(tok) {
+			switch tok[i+1] {
+			case 'h':
+				b.WriteString(home)
+				i++
+				continue
+			case 'u':
+				b.WriteString("root")
+				i++
+				continue
+			case '%':
+				b.WriteByte('%')
+				i++
+				continue
+			}
+		}
+		b.WriteByte(tok[i])
+	}
+	out := b.String()
+	if !strings.HasPrefix(out, "/") {
+		out = home + "/" + out
+	}
+	return out
+}
+
+// homeOf resolves an account's home directory from /etc/passwd. No exec, and a
+// documented convention rather than a guess when the file cannot be read.
+func homeOf(f probe.Files, user string) string {
+	obs := f.Read("/etc/passwd", probe.Large)
+	if obs.Status == probe.StatusOK {
+		for _, ln := range strings.Split(obs.Value, "\n") {
+			fields := strings.Split(strings.TrimSpace(ln), ":")
+			if len(fields) >= 6 && fields[0] == user && fields[5] != "" {
+				return strings.TrimRight(fields[5], "/")
+			}
+		}
+	}
+	if user == "root" {
+		return rootHomeDefault
+	}
+	return "/home/" + user
+}
+
+const rootHomeDefault = "/root"
+
+func parentDir(p string) string {
+	if i := strings.LastIndexByte(p, '/'); i > 0 {
+		return p[:i]
+	}
+	return "/"
+}
+
+func isNoneValue(v string) bool {
+	t := strings.ToLower(strings.TrimSpace(v))
+	return t == "" || t == "none"
+}
+
+func renderDirective(v string, known bool) string {
+	if !known {
+		return "unknown (not reported by the daemon)"
+	}
+	if strings.TrimSpace(v) == "" {
+		return "none"
+	}
+	return v
 }
 
 // conflictingMatch returns a Match-scoped occurrence whose verdict class
@@ -254,7 +397,8 @@ func unresolvedDetail(oracle *scan.SSHDOracle, cfg *sshdConfig) string {
 		parts = append(parts, "oracle parse: "+oracle.ParseError)
 	}
 	if cfg.RootObs.Status == probe.StatusOK {
-		parts = append(parts, "the config chain was read ("+strings.Join(cfg.Files, ", ")+") but does not set the directive, and no compiled-in default is citable for this distribution")
+		parts = append(parts, "the config chain was read ("+strings.Join(cfg.Files, ", ")+
+			") but does not set the directive, and no compiled-in default is citable for this distribution")
 	} else {
 		parts = append(parts, cfg.RootPath+": "+string(cfg.RootObs.Status))
 	}

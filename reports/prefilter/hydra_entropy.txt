@@ -1,0 +1,2 @@
+entropy-analyzer.py: input file not found or not a regular file: .
+Usage: entropy-analyzer.py <file_to_scan> [threshold] [min_length]

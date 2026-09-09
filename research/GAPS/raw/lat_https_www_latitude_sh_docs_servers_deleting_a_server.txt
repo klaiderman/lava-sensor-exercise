@@ -1,0 +1,138 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: [/docs/llms.txt](https://www.latitude.sh/docs/llms.txt)
+> Use this file to discover all available pages before exploring further.
+[Skip to main content](https://www.latitude.sh/docs/servers/deleting-a-server#content-area)
+[Latitude.sh Docs home page![light logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/dark.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=efad591085db2784ff1a0d7ca22dbefc)![dark logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/light.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=1d247b0f651e131bd726c634f9a4d660)](https://www.latitude.sh/docs)
+Search...
+Ctrl K
+  * [Website](https://www.latitude.sh)
+  * [Support](https://www.latitude.sh/support)
+  * [Dashboard](https://www.latitude.sh/dashboard)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+
+
+Search...
+Navigation
+Server actions
+Deleting a server
+[Docs](https://www.latitude.sh/docs)[Guides](https://www.latitude.sh/docs/guides)[API reference](https://www.latitude.sh/docs/api-reference/summary)[Developer resources](https://www.latitude.sh/docs/development)
+### Docs
+  * [Overview](https://www.latitude.sh/docs)
+
+
+### Getting started
+  * [Setting up your account](https://www.latitude.sh/docs/account-setup/sign-up)
+  * [Verifying your account](https://www.latitude.sh/docs/account-setup/verify-account)
+  * [Dashboard](https://www.latitude.sh/docs/dashboard/overview)
+  * [Command menu](https://www.latitude.sh/docs/dashboard/command-menu)
+  * [Regions & Locations](https://www.latitude.sh/docs/regions-locations)
+  * [Referral program](https://www.latitude.sh/docs/referral-program)
+
+
+### Compute
+  * Bare metal
+    * Server deployment
+    * Server configuration
+    * Server actions
+      * [Out-of-band](https://www.latitude.sh/docs/servers/out-of-band)
+      * [Remote access](https://www.latitude.sh/docs/servers/remote-access)
+      * [Rescue mode](https://www.latitude.sh/docs/servers/rescue-mode)
+      * [Reinstalling a server](https://www.latitude.sh/docs/servers/reinstalling-a-server)
+      * [Moving a server to a different project](https://www.latitude.sh/docs/servers/change-project)
+      * [Power management](https://www.latitude.sh/docs/servers/power-management)
+      * [Deleting a server](https://www.latitude.sh/docs/servers/deleting-a-server)
+    * [Waitlist](https://www.latitude.sh/docs/dashboard/server-waitlist)
+  * Virtual machines
+  * KubernetesPreview
+
+
+### Storage & data
+  * [Object storage](https://www.latitude.sh/docs/storage/object-storage)
+  * [Block storage](https://www.latitude.sh/docs/storage/block-storage)
+  * [File storage](https://www.latitude.sh/docs/storage/filesystem)
+  * [Egress](https://www.latitude.sh/docs/storage/egress)
+  * Managed Databases
+
+
+### Networking
+  * [Private networks](https://www.latitude.sh/docs/networking/private-networks)
+  * [ Public networksNew ](https://www.latitude.sh/docs/networking/public-networks)
+  * IP addresses
+  * [DDoS protection](https://www.latitude.sh/docs/networking/ddos-protection)
+  * [Firewall](https://www.latitude.sh/docs/networking/firewall)
+  * Interconnection
+
+
+### Resource management
+  * [Projects](https://www.latitude.sh/docs/projects)
+  * [Tags](https://www.latitude.sh/docs/tags)
+  * [Filters and views](https://www.latitude.sh/docs/dashboard/filters-and-views)
+  * [Activity logs](https://www.latitude.sh/docs/events)
+
+
+### Platform settings
+  * Team management
+  * Account security
+
+
+### Usage & billing
+  * [Bandwidth usage](https://www.latitude.sh/docs/usage/bandwidth)
+  * Billing
+
+
+### Support
+  * [Contact support](https://www.latitude.sh/docs/support/contact-support)
+  * [Support access](https://www.latitude.sh/docs/support/support-access)
+
+
+### Legal
+  * [Service Schedules](https://www.megaport.com/legal/service-schedules/)
+
+
+close
+## On this page
+  * [Immediate deletion](https://www.latitude.sh/docs/servers/deleting-a-server#immediate-deletion)
+  * [Scheduled deletion](https://www.latitude.sh/docs/servers/deleting-a-server#scheduled-deletion)
+  * [Canceling a scheduled deletion](https://www.latitude.sh/docs/servers/deleting-a-server#canceling-a-scheduled-deletion)
+
+
+Server actions
+# Deleting a server
+Copy pageCopy page
+Learn how to delete a server immediately or schedule it for deletion.
+Copy pageCopy page
+Deleting a server permanently erases all data on its disks and **cannot be undone**. Ensure you are deleting the correct server. Note that it may take up to an hour for the deletion to reflect on your billing summary.
+## 
+[​](https://www.latitude.sh/docs/servers/deleting-a-server#immediate-deletion)
+Immediate deletion
+Follow these steps to delete a server:
+  1. Open the server’s page on the [dashboard](https://www.latitude.sh/dashboard/).
+  2. Click **Actions** and select **Delete server**.
+  3. Confirm the deletion by typing the server’s hostname.
+
+![Delete server confirmation](https://mintcdn.com/latitudesh/jTa6J8Hv5F4W4vnJ/images/product/19.Docs25Q4.DeleteServer.png?fit=max&auto=format&n=jTa6J8Hv5F4W4vnJ&q=85&s=426e48b4f1545701f358b185a9c4c9ed)
+## 
+[​](https://www.latitude.sh/docs/servers/deleting-a-server#scheduled-deletion)
+Scheduled deletion
+You can schedule a server for deletion at a future date, allowing you to plan decommissioning while the server continues running. To schedule a deletion:
+  1. Open the server’s page on the [dashboard](https://www.latitude.sh/dashboard/).
+  2. Click **Actions** and select **Schedule deletion**.
+  3. Choose the date and time for the deletion.
+  4. Confirm by typing the server’s hostname.
+
+When a server is scheduled for deletion, an alert banner appears on the server details page showing the scheduled date.
+## 
+[​](https://www.latitude.sh/docs/servers/deleting-a-server#canceling-a-scheduled-deletion)
+Canceling a scheduled deletion
+You can cancel a scheduled deletion before it occurs.
+  1. Open the server’s page on the [dashboard](https://www.latitude.sh/dashboard/).
+  2. Find the alert banner indicating the scheduled deletion.
+  3. Click **Cancel** on the alert banner.
+
+The server will continue running normally.
+Was this page helpful?
+YesNo
+[ Power management Previous ](https://www.latitude.sh/docs/servers/power-management)[ Waitlist Next ](https://www.latitude.sh/docs/dashboard/server-waitlist)
+[x](https://www.x.com/latitudesh)[github](https://www.github.com/latitudesh)[linkedin](https://www.linkedin.com/company/latitude-sh)
+[Powered byThis documentation is built and hosted on Mintlify, a developer documentation platform](https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=latitudesh)

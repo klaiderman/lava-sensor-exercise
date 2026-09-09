@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"lava.sh/sensor/internal/probe"
-	"lava.sh/sensor/internal/scan"
+	"lava-sensor-exercise/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/scan"
 )
 
 // tree materialises an ad-hoc fixture tree. A path ending in "/" is a directory.
@@ -17,15 +17,15 @@ func tree(t *testing.T, files map[string]string) string {
 	t.Helper()
 	root := t.TempDir()
 	for p, content := range files {
-		full := filepath.Join(root, filepath.FromSlash(strings.TrimPrefix(p, "/")))
+		full := filepath.Join(root, filepath.FromSlash(decodePath(strings.TrimPrefix(p, "/"))))
 		if strings.HasSuffix(p, "/") {
 			if err := os.MkdirAll(full, 0o755); err != nil {
-				t.Fatal(err)
+				t.Skipf("this filesystem cannot represent the fixture path %s: %v", p, err)
 			}
 			continue
 		}
 		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
-			t.Fatal(err)
+			t.Skipf("this filesystem cannot represent the fixture path %s: %v", p, err)
 		}
 		if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
 			t.Fatal(err)
@@ -162,9 +162,13 @@ func TestSSHRootLogin_ProhibitPasswordWithDeniedRootSSH_IsUnknown(t *testing.T) 
 		t.Errorf("severity = %s, want high on an unknown with impact high", f.Severity)
 	}
 	ev := evidenceMap(t, f)
-	rk, _ := ev["root_authorized_keys"].(map[string]any)
-	if rk == nil || rk["status"] == "OK" {
-		t.Errorf("evidence must record the denied stat of %s, got %v", rootAuthKeysPath, ev["root_authorized_keys"])
+	checked, _ := ev["authorized_keys_checked"].([]any)
+	if len(checked) == 0 {
+		t.Fatalf("evidence must record every candidate AuthorizedKeysFile path, got %v", ev["authorized_keys_checked"])
+	}
+	row := checked[0].(map[string]any)
+	if row["status"] == "OK" || row["proven_absent"] != false {
+		t.Errorf("the denied stat of %s must be recorded as undetermined, got %v", rootAuthKeysPath, row)
 	}
 	if !strings.Contains(f.Evidence.Detail, "prohibit-password") {
 		t.Errorf("the detail must name the effective policy, got %q", f.Evidence.Detail)

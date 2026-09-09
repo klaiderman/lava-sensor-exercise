@@ -1,0 +1,116 @@
+[Latitude.sh](https://www.latitude.sh/)
+  * Products
+  * Solutions
+  * Developers
+  * [Customers](https://www.latitude.sh/customers)
+  * [Pricing](https://www.latitude.sh/pricing)
+
+
+[Log in](https://www.latitude.sh/dashboard)[Contact](https://www.latitude.sh/contact)[Get started](https://www.latitude.sh/dashboard/signup) 
+
+[Latitude.sh](https://www.latitude.sh/)
+Products
+Products
+Platform
+[ Locations Deploy in 26 global regions ](https://www.latitude.sh/locations)[ Network Physically connected to 1,000+ data centers ](https://www.latitude.sh/network)
+Compute
+[ Metal Automated bare metal ](https://www.latitude.sh/features)[ Metal GPU Dedicated GPU clusters ](https://www.latitude.sh/accelerate)[ Kubernetes (LKS) Production-ready k8s on Metal ](https://www.latitude.sh/docs/kubernetes)[ Virtual machines Powerfully simple VMs ](https://www.latitude.sh/docs/vms/virtual-machines)[ Build Bespoke bare metal ](https://www.latitude.sh/build)
+Storage & data
+[ Storage New Block, object & file ](https://www.latitude.sh/storage)[ Managed Postgres Scalable databases ](https://www.latitude.sh/databases)
+Network
+[ Cloud Gateway Multi-cloud connect ](https://www.latitude.sh/cloud-gateway)[ Global Gateway Megaport private DC links ](https://www.latitude.sh/global-gateway)[ Private Networks Secure isolation ](https://www.latitude.sh/docs/networking/private-networks)[ Firewall Traffic control ](https://www.latitude.sh/docs/networking/firewall)[ DDoS Protection Attack mitigation ](https://www.latitude.sh/ddos-protection)
+[Start now](https://www.latitude.sh/dashboard/signup)[Speak to sales](https://www.latitude.sh/contact)
+Solutions
+Solutions
+By industry
+[AI](https://www.latitude.sh/accelerate)[Web3 & Crypto](https://www.latitude.sh/solutions/web3)[Solana](https://www.latitude.sh/solutions/solana)[Adtech](https://www.latitude.sh/solutions/adtech)[Gaming](https://www.latitude.sh/solutions/online-gaming)[Ethereum](https://www.latitude.sh/solutions/ethereum)
+By use case
+[Confidential Compute](https://www.latitude.sh/solutions/confidential-compute)[Kubernetes](https://www.latitude.sh/solutions/containers)[Cloud Migration](https://www.latitude.sh/solutions/cloud-migration)[Video Streaming](https://www.latitude.sh/solutions/streaming)[DDoS Protection](https://www.latitude.sh/ddos-protection)
+Stage
+[Enterprise](https://www.latitude.sh/build)
+[Start now](https://www.latitude.sh/dashboard/signup)[Speak to sales](https://www.latitude.sh/contact)
+Developers
+Developers
+Resources
+[Examples](https://github.com/latitudesh/examples)[Blog](https://www.latitude.sh/blog)[Terraform](https://registry.terraform.io/providers/latitudesh/latitudesh/latest)[Service status](https://status.latitude.sh)[Looking glass](https://lg.latitude.sh)
+Documentation
+[Docs](https://www.latitude.sh/docs)[API reference](https://www.latitude.sh/docs/api-reference/summary)[Changelog](https://www.latitude.sh/changelog)[Libraries and SDKs](https://www.latitude.sh/docs/api-reference/client-libraries)[CLI](https://www.latitude.sh/docs/cli)
+Guides
+[Kubernetes on bare metal](https://www.latitude.sh/docs/guides/kubernetes-on-bare-metal)[Kubernetes load balancing](https://www.latitude.sh/docs/guides/kubernetes-load-balancing-on-bare-metal)[Kubernetes monitoring](https://www.latitude.sh/docs/guides/k8s-monitoring)[Kubernetes persistent storage](https://www.latitude.sh/docs/guides/kubernetes-persistent-storage-longhorn)[Terraform on Latitude.sh](https://www.latitude.sh/docs/guides/terraform)[Terraform with Rancher](https://www.latitude.sh/docs/guides/terraform-rancher)
+[Start now](https://www.latitude.sh/dashboard/signup)[Speak to sales](https://www.latitude.sh/contact)
+[Customers](https://www.latitude.sh/customers)[Pricing](https://www.latitude.sh/pricing)[Contact](https://www.latitude.sh/contact)
+##  [Blog](https://www.latitude.sh/blog)/[Changelog](https://www.latitude.sh/changelog)
+# Remote Access without VPN now generally available
+April 29, 2025
+The new and improved Remote Access is now available for instances deployed in all sites, enabling access to your server's IPMI without requiring a VPN and generating credentials with a single click.
+[Try it out](https://www.latitude.sh/dashboard)
+Share this release
+[](http://x.com/share?text=Remote%20Access%20without%20VPN%20now%20generally%20available&url=https://www.latitude.sh/changelog/remote-access-without-vpn-now-generally-available)
+## Footer
+  * [](https://x.com/latitudesh)
+  * [](https://github.com/latitudesh)
+  * [](https://www.linkedin.com/company/22318494/)
+
+
+Stay updated with our latest news and updates
+Loading...
+# Platform
+[Locations](https://www.latitude.sh/locations)
+[Network](https://www.latitude.sh/network)
+[Pricing](https://www.latitude.sh/pricing)
+# Products
+[Metal](https://www.latitude.sh/features)
+[Metal GPU](https://www.latitude.sh/accelerate)
+[Kubernetes (LKS)](https://www.latitude.sh/docs/kubernetes)
+[Virtual machines](https://www.latitude.sh/docs/vms/virtual-machines)
+[Build](https://www.latitude.sh/build)
+[Storage](https://www.latitude.sh/storage)
+[Managed Postgres](https://www.latitude.sh/databases)
+[Cloud Gateway](https://www.latitude.sh/cloud-gateway)
+[Global Gateway](https://www.latitude.sh/global-gateway)
+[Private Networks](https://www.latitude.sh/docs/networking/private-networks)
+[Firewall](https://www.latitude.sh/docs/networking/firewall)
+[DDoS Protection](https://www.latitude.sh/ddos-protection)
+# Solutions
+[AI](https://www.latitude.sh/accelerate)
+[Web3 & Crypto](https://www.latitude.sh/solutions/web3)
+[Solana](https://www.latitude.sh/solutions/solana)
+[Confidential Compute](https://www.latitude.sh/solutions/confidential-compute)
+[Ethereum](https://www.latitude.sh/solutions/ethereum)
+[AdTech](https://www.latitude.sh/solutions/adtech)
+[Gaming](https://www.latitude.sh/solutions/online-gaming)
+[Kubernetes](https://www.latitude.sh/solutions/containers)
+[Cloud Migration](https://www.latitude.sh/solutions/cloud-migration)
+[Video Streaming](https://www.latitude.sh/solutions/streaming)
+# Developers
+[Docs](https://www.latitude.sh/docs)
+[API reference](https://www.latitude.sh/docs/api-reference/summary)
+[SDKs](https://www.latitude.sh/docs/api-reference/client-libraries)
+[CLI](https://www.latitude.sh/docs/cli)
+[Terraform](https://registry.terraform.io/providers/latitudesh/latitudesh/latest)
+[Examples](https://github.com/latitudesh/examples)
+[Blog](https://www.latitude.sh/blog)
+[Changelog](https://www.latitude.sh/changelog)
+[Service status](https://status.latitude.sh/)
+[Looking glass](https://lg.latitude.sh/)
+# Company
+[Customers](https://www.latitude.sh/customers)
+[About us](https://www.latitude.sh/about)
+[Careers](https://www.latitude.sh/careers)
+[Contact sales](https://www.latitude.sh/contact)
+[Contact support](https://www.latitude.sh/dashboard/account?contactSupport)
+[Brand assets](https://www.megaport.com/brand-center/)
+# Legal
+[DPA](https://www.latitude.sh/legal/dpa)
+[Terms of Service](https://www.latitude.sh/legal/terms)
+[Privacy Policy](https://www.latitude.sh/legal/privacy)
+[Fair Usage Policy](https://www.latitude.sh/legal/fair-usage)
+[Security](https://www.latitude.sh/legal/security)
+[Trust Center](https://trust.latitude.sh)
+Manage cookies
+© Latitude.sh
+////////////////////////////////////////////////////////////////////////////////////////////////
+Our website uses tracking cookies to understand how you interact with it. The tracking will be enabled only if you accept explicitly. [Manage preferences](https://www.latitude.sh/changelog/remote-access-without-vpn-now-generally-available#privacy-policy)
+Accept allReject all
+Manage preferences
+[Privacy Policy](https://www.latitude.sh/legal/privacy)

@@ -193,7 +193,15 @@ func TestFourFailureClassesStayDistinct(t *testing.T) {
 // The sensor never invokes an escalation tool. This greps the whole production
 // tree rather than trusting a code review.
 func TestNoPrivilegeEscalationAnywhere(t *testing.T) {
-	banned := []string{`"sudo"`, `"su"`, `"doas"`, `"pkexec"`, "/bin/sh", "/bin/bash", `"sh", "-c"`}
+	// The guard targets what would actually be executed — the runner's Name
+	// field and any direct exec construction — rather than the mere appearance
+	// of the word, because a check legitimately reasons about the sudo GROUP.
+	banned := []string{
+		`Name: "sudo"`, `Name: "su"`, `Name: "doas"`, `Name: "pkexec"`,
+		`Name: "sh"`, `Name: "bash"`, `Name: "/bin/sh"`, `Name: "/bin/bash"`,
+		`exec.Command("sudo"`, `exec.Command("sh"`, `exec.CommandContext(ctx, "sh"`,
+		`"sh", "-c"`, `"bash", "-c"`,
+	}
 	err := filepath.WalkDir("../..", func(p string, d os.DirEntry, err error) error {
 		if err != nil || d.IsDir() || !strings.HasSuffix(p, ".go") || strings.HasSuffix(p, "_test.go") {
 			return nil

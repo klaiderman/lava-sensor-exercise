@@ -13,7 +13,7 @@ import (
 
 	"github.com/santhosh-tekuri/jsonschema/v6"
 
-	"lava.sh/sensor/internal/scan"
+	"lava-sensor-exercise/sensor/internal/scan"
 )
 
 // schemaPaths are, in order, the copy that ships with the sensor and the
@@ -69,7 +69,15 @@ func TestShippedSchemaMatchesTheAuthoritativeOne(t *testing.T) {
 // whole roster through the engine, and the deterministic writer.
 func buildDocument(t *testing.T, profile string, runner *fakeRunner) (*scan.Document, []byte) {
 	t.Helper()
-	env := newTestEnv(t, buildProfile(t, profile), runner)
+	return buildDocumentAt(t, buildProfile(t, profile), runner)
+}
+
+// buildDocumentAt runs the pipeline over an already-materialised fixture tree,
+// which is what makes a determinism comparison meaningful: a rebuilt tree has
+// fresh modification times, and the sensor is right to report them.
+func buildDocumentAt(t *testing.T, root string, runner *fakeRunner) (*scan.Document, []byte) {
+	t.Helper()
+	env := newTestEnv(t, root, runner)
 	roster := All()
 	if err := scan.ValidateRoster(roster); err != nil {
 		t.Fatalf("roster: %v", err)
@@ -160,16 +168,40 @@ func TestNoSecretValuesInOutput(t *testing.T) {
 	}
 }
 
-// Two runs over the same fixture with a fixed clock are byte-identical.
-func TestTwoRunsAreByteIdentical(t *testing.T) {
+// durationField matches the only genuinely volatile values in the artifact:
+// measured elapsed times. Everything else must be byte-stable between runs.
+var durationField = regexp.MustCompile(`"(duration_ms|elapsed_ms|entries_scanned)": *[0-9]+`)
+
+// Two runs over the same fixture with a fixed clock differ only in measured
+// durations: key order, field order, findings order and every value are stable.
+func TestTwoRunsDifferOnlyInMeasuredDurations(t *testing.T) {
+	root := buildProfile(t, "profileA")
 	mk := func() []byte {
 		runner := newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("without-password"))
-		_, body := buildDocument(t, "profileA", runner)
+		_, body := buildDocumentAt(t, root, runner)
 		return body
 	}
 	first, second := mk(), mk()
-	if !bytes.Equal(first, second) {
-		t.Errorf("two runs over the same fixture differ")
+	if bytes.Equal(first, second) {
+		return
+	}
+	normalise := func(b []byte) []byte { return durationField.ReplaceAll(b, []byte(`"$1": 0`)) }
+	a, c := normalise(first), normalise(second)
+	if !bytes.Equal(a, c) {
+		for i := 0; i < len(a) && i < len(c); i++ {
+			if a[i] != c[i] {
+				lo := i - 120
+				if lo < 0 {
+					lo = 0
+				}
+				hi := i + 120
+				if hi > len(a) {
+					hi = len(a)
+				}
+				t.Fatalf("two runs over the same fixture differ outside measured durations, near byte %d:\n%s\n---\n%s", i, a[lo:hi], c[lo:hi])
+			}
+		}
+		t.Fatalf("two runs differ in length outside measured durations: %d vs %d", len(a), len(c))
 	}
 }
 

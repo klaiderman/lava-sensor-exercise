@@ -42,6 +42,25 @@ A finding's verdict never becomes an exit code: a run in which every check
 fails still exits 0, because the sensor did its job. Everything the sensor says
 about itself goes to stderr; the output file contains only the report.
 
+## What is in the output
+
+Two parts, plus one extra block.
+
+- `machine` — part one: what this machine is. Every field carries a sibling
+  `*_source` naming the exact path or command it came from, so the report
+  documents its own provenance.
+- `findings` — one finding per registered check, always, sorted by
+  `(category, check_id)`. There are 26 checks across five categories:
+  `REMOTE_ACCESS`, `SECRETS_ON_DISK`, `BMC_INBAND_ACCESS` and the two the
+  sensor adds, `STORAGE_POSTURE` and `BOOT_CHAIN`.
+- `scan` — an extra run-level block: `started_at`, `duration_ms`,
+  `deadline_ms`, `checks_run`, `budget_cut`, `budget_cut_count`, `euid`,
+  `degradations` and `self_check`. Run-level facts live here and never inside
+  the findings array, so a reader can tell "this check failed" from "this run
+  was cut short". `degradations` names any capability the sensor lost at
+  startup (an `os.Root` that would not open, for instance) rather than letting
+  it show up as a silent scattering of unknowns.
+
 ## What the sensor does not do
 
 It never writes anything except the `--out` file. It never opens a network
@@ -96,6 +115,9 @@ them under WSL from their package directory:
 GOOS=linux GOARCH=amd64 go test -c -o bin/probe.test ./internal/probe
 wsl -e bash -lc "cd internal/probe && ../../bin/probe.test -test.v"
 ```
+
+The full suite is 153 test cases: 19 in `internal/probe`, 32 in
+`internal/scan`, 92 in `internal/checks` and 10 in `cmd/sensor`.
 
 Fixture profiles live under `internal/checks/testdata/` (A: host-shaped bare
 metal, B: generic minimal VM, C: restricted container). They are materialised

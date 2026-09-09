@@ -1,0 +1,131 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: [/docs/llms.txt](https://www.latitude.sh/docs/llms.txt)
+> Use this file to discover all available pages before exploring further.
+[Skip to main content](https://www.latitude.sh/docs/servers/logging-into-your-server#content-area)
+[Latitude.sh Docs home page![light logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/dark.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=efad591085db2784ff1a0d7ca22dbefc)![dark logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/light.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=1d247b0f651e131bd726c634f9a4d660)](https://www.latitude.sh/docs)
+Search...
+Ctrl K
+  * [Website](https://www.latitude.sh)
+  * [Support](https://www.latitude.sh/support)
+  * [Dashboard](https://www.latitude.sh/dashboard)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+
+
+Search...
+Navigation
+Server deployment
+Logging into your server
+[Docs](https://www.latitude.sh/docs)[Guides](https://www.latitude.sh/docs/guides)[API reference](https://www.latitude.sh/docs/api-reference/summary)[Developer resources](https://www.latitude.sh/docs/development)
+### Docs
+  * [Overview](https://www.latitude.sh/docs)
+
+
+### Getting started
+  * [Setting up your account](https://www.latitude.sh/docs/account-setup/sign-up)
+  * [Verifying your account](https://www.latitude.sh/docs/account-setup/verify-account)
+  * [Dashboard](https://www.latitude.sh/docs/dashboard/overview)
+  * [Command menu](https://www.latitude.sh/docs/dashboard/command-menu)
+  * [Regions & Locations](https://www.latitude.sh/docs/regions-locations)
+  * [Referral program](https://www.latitude.sh/docs/referral-program)
+
+
+### Compute
+  * Bare metal
+    * Server deployment
+      * [Deploying a server](https://www.latitude.sh/docs/servers/deploying-a-server)
+      * [Instant deployment](https://www.latitude.sh/docs/servers/instant-deployment)
+      * [Logging into your server](https://www.latitude.sh/docs/servers/logging-into-your-server)
+      * [ Network bondingNew ](https://www.latitude.sh/docs/servers/network-bonding)
+    * Server configuration
+    * Server actions
+    * [Waitlist](https://www.latitude.sh/docs/dashboard/server-waitlist)
+  * Virtual machines
+  * KubernetesPreview
+
+
+### Storage & data
+  * [Object storage](https://www.latitude.sh/docs/storage/object-storage)
+  * [Block storage](https://www.latitude.sh/docs/storage/block-storage)
+  * [File storage](https://www.latitude.sh/docs/storage/filesystem)
+  * [Egress](https://www.latitude.sh/docs/storage/egress)
+  * Managed Databases
+
+
+### Networking
+  * [Private networks](https://www.latitude.sh/docs/networking/private-networks)
+  * [ Public networksNew ](https://www.latitude.sh/docs/networking/public-networks)
+  * IP addresses
+  * [DDoS protection](https://www.latitude.sh/docs/networking/ddos-protection)
+  * [Firewall](https://www.latitude.sh/docs/networking/firewall)
+  * Interconnection
+
+
+### Resource management
+  * [Projects](https://www.latitude.sh/docs/projects)
+  * [Tags](https://www.latitude.sh/docs/tags)
+  * [Filters and views](https://www.latitude.sh/docs/dashboard/filters-and-views)
+  * [Activity logs](https://www.latitude.sh/docs/events)
+
+
+### Platform settings
+  * Team management
+  * Account security
+
+
+### Usage & billing
+  * [Bandwidth usage](https://www.latitude.sh/docs/usage/bandwidth)
+  * Billing
+
+
+### Support
+  * [Contact support](https://www.latitude.sh/docs/support/contact-support)
+  * [Support access](https://www.latitude.sh/docs/support/support-access)
+
+
+### Legal
+  * [Service Schedules](https://www.megaport.com/legal/service-schedules/)
+
+
+close
+## On this page
+  * [Access credentials](https://www.latitude.sh/docs/servers/logging-into-your-server#access-credentials)
+  * [Linux](https://www.latitude.sh/docs/servers/logging-into-your-server#linux)
+  * [Windows](https://www.latitude.sh/docs/servers/logging-into-your-server#windows)
+    * [from Windows](https://www.latitude.sh/docs/servers/logging-into-your-server#from-windows)
+    * [from Linux](https://www.latitude.sh/docs/servers/logging-into-your-server#from-linux)
+    * [from Mac OS X](https://www.latitude.sh/docs/servers/logging-into-your-server#from-mac-os-x)
+
+
+Server deployment
+# Logging into your server
+Copy pageCopy page
+Copy pageCopy page
+## 
+[​](https://www.latitude.sh/docs/servers/logging-into-your-server#access-credentials)
+Access credentials
+When a server is deployed or reinstalled, a section on the server overview page is shown with the username and password that was set for your server. Use that, along with the public IP address, to gain access to your server for the first time. If you didn’t deploy with an SSH key you’ll be prompted to change your password when logging in for the first time. ![Server credentials section on the dashboard](https://mintcdn.com/latitudesh/ZWurrjun6MJRTyC0/images/product/6.Docs25Q4.ServerCredentials.png?fit=max&auto=format&n=ZWurrjun6MJRTyC0&q=85&s=99faa76a9ce94427b7e8ae96752f4c89)
+## 
+[​](https://www.latitude.sh/docs/servers/logging-into-your-server#linux)
+Linux
+The default SSH TCP port for Linux servers is 22. Root access is disabled by default so you first need to log in with the provided username and then sudo to root. To find your server credentials, go to the server overview page. You should be able to copy and paste the command to access your server. As a security measure, Latitude.sh will force you to change the password on the first login. On Windows, you can either use WSL and log in using the command from the overview page or install an application that allows you to connect via SSH. The most popular one is PuttY.
+## 
+[​](https://www.latitude.sh/docs/servers/logging-into-your-server#windows)
+Windows
+### 
+[​](https://www.latitude.sh/docs/servers/logging-into-your-server#from-windows)
+from Windows
+Windows servers are delivered with RDP and Administrator account enabled. Use the Remote Desktop Connection application.
+### 
+[​](https://www.latitude.sh/docs/servers/logging-into-your-server#from-linux)
+from Linux
+You will need to install a package to enable RDP sessions. Remmina is a popular one, but there are many others available.
+### 
+[​](https://www.latitude.sh/docs/servers/logging-into-your-server#from-mac-os-x)
+from Mac OS X
+To make a remote desktop connection, you need additional software. Commonly, the Microsoft Remote Desktop Connection Client for Mac is used, which can be found from the Mac App Store.
+Was this page helpful?
+YesNo
+[ Instant deployment Previous ](https://www.latitude.sh/docs/servers/instant-deployment)[ Network bonding Next ](https://www.latitude.sh/docs/servers/network-bonding)
+[x](https://www.x.com/latitudesh)[github](https://www.github.com/latitudesh)[linkedin](https://www.linkedin.com/company/latitude-sh)
+[Powered byThis documentation is built and hosted on Mintlify, a developer documentation platform](https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=latitudesh)

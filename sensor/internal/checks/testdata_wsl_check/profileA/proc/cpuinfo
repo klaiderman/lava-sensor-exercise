@@ -1,0 +1,26 @@
+processor	: 0
+vendor_id	: AuthenticAMD
+cpu family	: 25
+model name	: AMD EPYC 4484PX 12-Core Processor
+physical id	: 0
+core id		: 0
+cpu cores	: 12
+siblings	: 24
+
+processor	: 1
+vendor_id	: AuthenticAMD
+model name	: AMD EPYC 4484PX 12-Core Processor
+physical id	: 0
+core id		: 0
+
+processor	: 2
+vendor_id	: AuthenticAMD
+model name	: AMD EPYC 4484PX 12-Core Processor
+physical id	: 0
+core id		: 1
+
+processor	: 3
+vendor_id	: AuthenticAMD
+model name	: AMD EPYC 4484PX 12-Core Processor
+physical id	: 0
+core id		: 1

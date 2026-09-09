@@ -1,40 +1,36 @@
 # EXECUTION_STATE
 
 ## Current phase
-Phase 16: implementation — vertical slice (`implementation-author`, claude-opus-5, approved prompt `prompts/IMPL/prompt.md` after a user-requested hardening-only pass: 12/12 attacks, 4 minimal patches, HOLD 8.65/σ0.833 accepted). The author stops after the slice; the lead validates `sensor/bin/findings.wsl.json` against `task/derived/finding.schema.json`, then resumes the author for Tier 1 → Tier 2 → tests → README. Clock started 2026-09-08T21:00:43Z; elapsed ≈3h37m at 00:37Z. Remaining: slice ~25 min → expansion ~50 min → test lab (test-lab-author) ~25 min → prefilter + fresh-Fable review + Lich ~25 min → Ponytail pass 2 → real-host run ~10 min → audit/export/NOTES/clean-room/tarball ~30 min. Over the 4 h guideline (≈6 h active expected); validation phases protected.
+Phase 17→18: implementation finishing (all 26 checks registered; author completing per-check tests, README, IMPLEMENTATION_NOTES) while the testing phase runs in parallel (`test-lab-author`, confined to `sensor/internal/lab/`, `sensor/bin/lab/`, `reports/`). Prefilter already run on the current code: Staticcheck 0, go vet 0, Hydra 0 vuln/secret findings (regex prefilter; not the reviewer). Clock started 2026-09-08T21:00:43Z; elapsed ≈4h30m at 01:30Z. Remaining: author + lab finish (~20 min) → Ponytail pass 2 (Opus) + Lich witness (Sonnet) + fresh-Fable code review in parallel (~25 min) → fixes → regression → re-verify → real-host run (tooling/host_run.sh) → final audits → export/redaction → transcript HTML → NOTES → clean-room → tarball (~45 min). Expected ≈6h active; validation phases protected.
 
 ## Completed
-- Phases 1–13: contract, SSH, workbench, TCI recon (193-probe registry, 3 rounds), CLAUDE.md, five Wixie prompts approved, five research tracks, Fable synthesis (100 facts / 52 laws / 38 contradictions / propagation audit), lead decisions LD-1..LD-8 (`research/DECISIONS.md`), contract + summary + snapshot propagation fixes, all research observation requests answered or explicitly OPEN (`research/OBSERVATION_ANSWERS.md`, D-09).
-- Grill-Me (approved prompt, Opus): `research/GRILL/{OPTIONS,ATTACKS,SCORECARD,OPEN_QUESTIONS}.md` — ranking Opt2 capability-gated Fixed Registry > Opt4 collector/evaluator > Opt1 flat > Opt3 data-driven (fatal); cheap steals identified.
-- Test substrate ready: WSL Ubuntu 26.04 + Docker (profile A image `lava-sensor-testlab:profileA` built; `tooling/testlab/run_in_docker.sh` for profiles A/B/C).
-- Git: checkpoints 1–6 on origin/main (private), attribution klaiderman verified.
+- Phases 1–16: contract, SSH, workbench, TCI recon (193 probes), CLAUDE.md, five Wixie prompts + research (R1–R5), Fable synthesis + propagation audit, decisions LD-1..LD-9 (architecture frozen: Option 1.5), CHECK_REGISTRY (25+1), IMPL prompt (Wixie + hardening-only pass) approved, vertical slice lead-validated (schema PASS), all 26 checks implemented (WSL uid 1000: 8 pass / 5 fail / 13 unknown; validator PASS 0 violations).
+- Tooling ready: validate_findings.py (self-tested), host_run.sh (SSH_PLAN-exact), prefilter.sh (run), testlab Docker profile A image, emu_checkpoint.sh, extract_schema.py, measure_usage.py.
+- Ledgers: agents.jsonl, time_events.jsonl, TOOL_USAGE.md (Wixie, Vis, deep-research, Trafilatura, Crawlee, Pech, Emu, Ponytail-1, Lich-fix, Staticcheck, Hydra logged; Lich witness + Ponytail-2 + Crawl4AI-in-research pending), USAGE_REPORT.md (authoritative $263.46 snapshot; final refresh due), BTW_INDEX.md.
+- Git: checkpoints 1–10 on origin/main (private), attribution klaiderman verified.
 
 ## Active agents
-- ponytail-reviewer-pass1 (opus) → reports/PONYTAIL_PASS1.md
-- check-registry-drafter (opus) → research/CHECK_REGISTRY.md
+- implementation-author (opus): per-check tests, Docker run, README, IMPLEMENTATION_NOTES → final report
+- test-lab-author (sonnet): profiles A/B/C, fault injection, storage matrix, schema tests, real-binary runs → reports/TEST_REPORT.md
 
 ## Important artifacts
-- research/{DECISIONS.md, DESIGN_LAWS.md, PRIOR_ART.md, FACTS.jsonl, SOURCES.jsonl, CONTRADICTIONS.md, PROPAGATION_AUDIT.md, INDEX.md, OBSERVATION_ANSWERS.md, GRILL/}
-- task/derived/{TASK_CONTRACT.md, finding.schema.json (DERIVED), SCHEMA_PROVENANCE.md}
-- state/{HOST_SNAPSHOT.json, HOST_SNAPSHOT.evidence.json, HOST_SUMMARY.md, NOTES_INPUTS.md, TOOL_USAGE.md, emu/}
-- prompts/raw/IMPL.intent.md (skeleton with placeholders), prompts/GRILL/prompt.md (approved)
-- tooling/{tci/, testlab/, extract_schema.py, emu_checkpoint.sh, measure_usage.py, build_snapshot.py}
+- sensor/ (Go module `lava-sensor-exercise/sensor`), reports/{PREFILTER.md, IMPLEMENTATION_NOTES.md, PONYTAIL_PASS1.md, testlab/}, research/{DECISIONS.md, CHECK_REGISTRY.md, DESIGN_LAWS.md, …}, task/derived/finding.schema.json (DERIVED), state/HOST_SNAPSHOT*.json, prompts/*/prompt.md
 
 ## Frozen decisions
-- LD-1..LD-8 (see research/DECISIONS.md): two custom categories STORAGE_POSTURE + BOOT_CHAIN; severity = impact for fail/unknown, info for pass; no IPMI commands ever; host_id keyed hash of machine-id; sshd -G primary + parser fallback; zero runtime deps (jsonschema/v6 test-only + release gate); bounded primitives; implementation author claude-opus-5
-- Earlier: Go; local orchestration + controlled SSH; TCI-only host observation; cross-compiled static linux/amd64; derived schema is the validation source; private repo, no squash; export redaction + disclosure
+- LD-1..LD-9 (research/DECISIONS.md); derived schema is the validation source; private repo, no squash, public only after release audit + approval; export: redact one API-key value + disclose; both session JSONL files ship; Claude Code Usage panel = authoritative cost, Pech secondary.
 
 ## Open questions
-- LD-9 architecture shape — decide after Ponytail pass 1 (leaning Option 2 + steal #1 load-bearing-observation downgrade + steal #3 generated evidence + limited multiplicity for sshd -G vs walker)
+- None blocking. Release-audit items: hostname in fixtures/tests; sanitized snapshot files in the repo.
 
 ## Blockers
 - None.
 
 ## Packaging-time checklist additions (do not forget)
-- Ask the user for the FINAL Claude Code Usage panel figure and refresh the authoritative row in state/USAGE_REPORT.md (mid-run snapshot $263.46 at 00:21Z); Pech / measure_usage.py stay secondary token evidence.
-- Ship BOTH native session JSONL files (573ece1e… + fork b64b46f1…); NOTES must say mid-turn (/btw) messages live in attachment records, not user turns (state/BTW_INDEX.md).
+- Ask the user for the FINAL Claude Code Usage panel figure and refresh the authoritative row in state/USAGE_REPORT.md (mid-run snapshot $263.46 at 00:21Z).
+- Ship BOTH native session JSONL files (573ece1e… + fork b64b46f1…), redact the single API-key value in the exported copy, disclose in NOTES; NOTES must say mid-turn (/btw) messages live in attachment records (state/BTW_INDEX.md).
+- Emu checkpoint before final implementation/review (formal #2); Pech/measure_usage re-run; TOOL_USAGE final audit incl. Crawl4AI evidence from research PROVENANCE files.
 
 ## Next 3 actions
-1. Ponytail pass 1 result → LD-9 → DECISIONS.md final → CLAUDE.md architecture freeze → checkpoint 7
-2. CHECK_REGISTRY.md → fill IMPL.intent.md placeholders → Wixie lifecycle (Sonnet engineer) → AskUserQuestion approval
-3. Launch implementation-author (Opus): vertical slice → schema validation → full check set; in parallel prepare fixture profiles A/B/C from FIXTURE_MATRIX
+1. Collect author + lab reports → Emu checkpoint #2 → launch Ponytail pass 2 (Opus), Lich witness runner (Sonnet), fresh-Fable code-reviewer in parallel
+2. Triage findings → author fixes → regression (go test, validator, prefilter re-run) → independent re-verification of important defects
+3. Real-host run via tooling/host_run.sh → compare with HOST_SUMMARY/CHECK_REGISTRY predictions → final audits (contract, safety, tool use) → export + redaction → transcript HTML → NOTES.md → clean-room gate → tarball

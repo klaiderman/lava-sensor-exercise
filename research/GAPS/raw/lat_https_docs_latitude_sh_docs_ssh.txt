@@ -1,0 +1,198 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: [/docs/llms.txt](https://www.latitude.sh/docs/llms.txt)
+> Use this file to discover all available pages before exploring further.
+[Skip to main content](https://www.latitude.sh/docs/servers/ssh-keys#content-area)
+[Latitude.sh Docs home page![light logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/dark.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=efad591085db2784ff1a0d7ca22dbefc)![dark logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/light.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=1d247b0f651e131bd726c634f9a4d660)](https://www.latitude.sh/docs)
+Search...
+Ctrl K
+  * [Website](https://www.latitude.sh)
+  * [Support](https://www.latitude.sh/support)
+  * [Dashboard](https://www.latitude.sh/dashboard)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+
+
+Search...
+Navigation
+Server configuration
+SSH keys
+[Docs](https://www.latitude.sh/docs)[Guides](https://www.latitude.sh/docs/guides)[API reference](https://www.latitude.sh/docs/api-reference/summary)[Developer resources](https://www.latitude.sh/docs/development)
+### Docs
+  * [Overview](https://www.latitude.sh/docs)
+
+
+### Getting started
+  * [Setting up your account](https://www.latitude.sh/docs/account-setup/sign-up)
+  * [Verifying your account](https://www.latitude.sh/docs/account-setup/verify-account)
+  * [Dashboard](https://www.latitude.sh/docs/dashboard/overview)
+  * [Command menu](https://www.latitude.sh/docs/dashboard/command-menu)
+  * [Regions & Locations](https://www.latitude.sh/docs/regions-locations)
+  * [Referral program](https://www.latitude.sh/docs/referral-program)
+
+
+### Compute
+  * Bare metal
+    * Server deployment
+    * Server configuration
+      * [Operating systems](https://www.latitude.sh/docs/servers/operating-systems)
+      * [SSH keys](https://www.latitude.sh/docs/servers/ssh-keys)
+      * [Custom disk layout](https://www.latitude.sh/docs/servers/custom-disk-layout)
+      * [Custom images](https://www.latitude.sh/docs/servers/custom-images)
+      * [User data](https://www.latitude.sh/docs/servers/user-data)
+      * [ Instance metadata serviceNew ](https://www.latitude.sh/docs/servers/metadata-service)
+    * Server actions
+    * [Waitlist](https://www.latitude.sh/docs/dashboard/server-waitlist)
+  * Virtual machines
+  * KubernetesPreview
+
+
+### Storage & data
+  * [Object storage](https://www.latitude.sh/docs/storage/object-storage)
+  * [Block storage](https://www.latitude.sh/docs/storage/block-storage)
+  * [File storage](https://www.latitude.sh/docs/storage/filesystem)
+  * [Egress](https://www.latitude.sh/docs/storage/egress)
+  * Managed Databases
+
+
+### Networking
+  * [Private networks](https://www.latitude.sh/docs/networking/private-networks)
+  * [ Public networksNew ](https://www.latitude.sh/docs/networking/public-networks)
+  * IP addresses
+  * [DDoS protection](https://www.latitude.sh/docs/networking/ddos-protection)
+  * [Firewall](https://www.latitude.sh/docs/networking/firewall)
+  * Interconnection
+
+
+### Resource management
+  * [Projects](https://www.latitude.sh/docs/projects)
+  * [Tags](https://www.latitude.sh/docs/tags)
+  * [Filters and views](https://www.latitude.sh/docs/dashboard/filters-and-views)
+  * [Activity logs](https://www.latitude.sh/docs/events)
+
+
+### Platform settings
+  * Team management
+  * Account security
+
+
+### Usage & billing
+  * [Bandwidth usage](https://www.latitude.sh/docs/usage/bandwidth)
+  * Billing
+
+
+### Support
+  * [Contact support](https://www.latitude.sh/docs/support/contact-support)
+  * [Support access](https://www.latitude.sh/docs/support/support-access)
+
+
+### Legal
+  * [Service Schedules](https://www.megaport.com/legal/service-schedules/)
+
+
+close
+## On this page
+  * [What is SSH](https://www.latitude.sh/docs/servers/ssh-keys#what-is-ssh)
+    * [How does SSH work](https://www.latitude.sh/docs/servers/ssh-keys#how-does-ssh-work)
+    * [On Windows](https://www.latitude.sh/docs/servers/ssh-keys#on-windows)
+    * [On Linux & macOS](https://www.latitude.sh/docs/servers/ssh-keys#on-linux-%26-macos)
+  * [Adding your SSH Key](https://www.latitude.sh/docs/servers/ssh-keys#adding-your-ssh-key)
+  * [Project and Team scope](https://www.latitude.sh/docs/servers/ssh-keys#project-and-team-scope)
+  * [Using your SSH key](https://www.latitude.sh/docs/servers/ssh-keys#using-your-ssh-key)
+
+
+Server configuration
+# SSH keys
+Copy pageCopy page
+Copy pageCopy page
+Latitude.sh allows you to deploy servers using SSH keys. SSH is extremely easy to get started and provides a secure way of logging into your servers. Here you can learn what SSH is, how it works, and how to create SSH keys on Windows, Linux, and macOS. If you’re already comfortable with SSH, head to [Adding your SSH key](https://www.latitude.sh/docs/servers/ssh-keys#adding-your-ssh-key) .
+## 
+[​](https://www.latitude.sh/docs/servers/ssh-keys#what-is-ssh)
+What is SSH
+SSH is a remote administration protocol that allows users to control and modify their servers remotely. SSH uses cryptographic techniques to ensure that all communication to and from the remote server happens in an encrypted manner. It provides a mechanism for authenticating a user, transferring inputs from the client to the host, and relaying the output back to the client. Any Linux or Mac user can SSH into their remote server directly from the terminal window.
+### 
+[​](https://www.latitude.sh/docs/servers/ssh-keys#how-does-ssh-work)
+How does SSH work
+Linux or Mac enables you to use SSH clients straight from the terminal window. If you use Windows, you will need to download an SSH client to open SSH connections. The most popular SSH client is [PuTTY](https://www.putty.org/). The SSH command consists of three distinct parts:
+
+```
+ssh {user}@{host}
+
+```
+
+The SSH key command instructs your system that you want to open an encrypted Secure Shell Connection. `{user}` represents the account you want to access. For example, you may want to access the root user, which is basically synonymous for system administrator with complete rights to modify anything on the system. `{host}` refers to the computer you want to access. This can be an IP Address or a domain name (e.g. `http://www.xyzdomain.com`). When you hit enter, you will be prompted to enter the password for the requested account. When you type it in, nothing will appear on the screen, but your password is, in fact being transmitted. Once you’re done typing, hit enter once again. If your password is correct, you will be greeted with a remote terminal window. You can read more about SSH commands [here](https://www.ssh.com/academy/ssh/command).
+### 
+[​](https://www.latitude.sh/docs/servers/ssh-keys#on-windows)
+On Windows
+You can create SSH keys in many ways. Windows requires an SSH client but doesn’t have a default SSH client on their operating system. The easiest way is to generate SSH Keys using [PuttY](https://www.putty.org/).
+1
+Download and set up PuTTY
+Download PuTTY. The two binaries you will need are:
+  * PuTTY (the SSH and Telnet client itself)
+  * PuTTYgen (an RSA and DSA key generation utility)
+
+Open the PuTTYgen program and for the Type of key to generate, select SSH-2 RSA. Click the Generate button.
+2
+Configure and save keys
+Type a passphrase in the **Key passphrase** field. Type the same passphrase in the **Confirm passphrase** field. You can use a key without a passphrase, but this is not recommended.Click the **Save private key** button to save the private key. Important: Never share your private key with anyone.Copy the contents under **Public key** for pasting into OpenSSH **authorized_keys** file. Save the contents you just copied somewhere. This is the public key you’re going to use with Latitude.sh and any other services you’d like to connect with SSH. You can save it as a .txt file in order to be able to open it with a text file later.
+### 
+[​](https://www.latitude.sh/docs/servers/ssh-keys#on-linux-&-macos)
+On Linux & macOS
+When you generate the keys, you will use `ssh-keygen` to store the keys in a safe location so you can bypass the login prompt when connecting to your instances.
+1
+Generate SSH key pair
+Open a Terminal window and enter the following command: `ssh-keygen -t rsa`. This starts the key generation process. When you execute this command, the `ssh-keygen` utility prompts you to indicate where to store the key.Press the **ENTER** key to accept the default location. The `ssh-keygen` utility prompts you for a passphrase. Type in a passphrase. You can also hit the ENTER key to accept the default (no passphrase). However, this is not recommended. You will need to enter the passphrase a second time to continue.After you confirm the passphrase, the system generates the key pair.
+Example terminal response
+
+```
+Your identification has been saved in /Users/myname/.ssh/id_rsa.
+Your public key has been saved in /Users/myname/.ssh/id_rsa.pub.
+The key fingerprint is:
+ae:89:72:0b:85:da:5a:f4:7c:1f:c2:43:fd:c6:44:38 user@my-name.local
+The key's randomart image is:
++--[ RSA 2048]----+
+|                 |
+|         .       |
+|        E .      |
+|   .   . o       |
+|  o . . S .      |
+| + + o . +       |
+|. + o = o +      |
+| o...o * o       |
+|.  oo.o .        |
++-----------------+
+
+```
+
+Your private key is saved to the `id_rsa` file in the `.ssh` directory. **Never share your private key with anyone.** Your public key is saved to the `id_rsa.pub` file and is the key you upload to your Latitude.sh account. You can save this key to the clipboard by running this:
+
+```
+pbcopy < ~/.ssh/id_rsa.pub
+
+```
+
+Now continue to SSH Key Access to learn how to import your recently generated SSH key to Latitude.sh.
+## 
+[​](https://www.latitude.sh/docs/servers/ssh-keys#adding-your-ssh-key)
+Adding your SSH Key
+If you already have an SSH key pair, you can use it to import it into Latitude.sh. ![SSH keys management page](https://mintcdn.com/latitudesh/ZWurrjun6MJRTyC0/images/product/7.Docs25Q4.SSHkeys.png?fit=max&auto=format&n=ZWurrjun6MJRTyC0&q=85&s=36e10643988239d9af154067f84f6d0f)
+1
+Add your SSH key to Latitude.sh
+Go to the [Latitude.sh dashboard](https://www.latitude.sh/dashboard), select a project, and navigate to **Compute > SSH keys** in the sidebar. Click on **Add SSH Key** , paste your Public SSH Key, and choose a name for it. The name is only used to help you easily identify the key afterward.It’s recommended you use your e-mail as part of the key name as all users of your team will have access to the imported keys.Click **Add** and the key will be ready to use when deploying or reinstalling a server.
+There’s no limit to the number of keys you can add and use with your servers.
+## 
+[​](https://www.latitude.sh/docs/servers/ssh-keys#project-and-team-scope)
+Project and Team scope
+When you create an SSH key, you can choose whether to make it available across all projects in your team or scope it to a specific project. ![SSH keys scope on creation](https://mintcdn.com/latitudesh/h9AEAyEtiVGR6o52/images/product/SSHkeys.Scope.png?fit=max&auto=format&n=h9AEAyEtiVGR6o52&q=85&s=d424dd8474b5c20065187e6c31c90e71)
+  * **Team** : Available across all projects in your team. This is the default scope.
+  * **Project** : Only available within the current project.
+
+The SSH keys page shows these as two separate tabs. When selecting SSH keys during deployment or reinstallation, your keys will be grouped by scope, with project-scoped keys appearing first, then team-scoped keys. ![SSH keys selector](https://mintcdn.com/latitudesh/h9AEAyEtiVGR6o52/images/product/SSHkeys.Selector.png?fit=max&auto=format&n=h9AEAyEtiVGR6o52&q=85&s=b5f85552348c862c3d4afb2f6ac3edde)
+## 
+[​](https://www.latitude.sh/docs/servers/ssh-keys#using-your-ssh-key)
+Using your SSH key
+When deploying or reinstalling servers, you can select from your existing SSH keys or create new ones. You can use as many keys as you want for each server. If you need to add a new SSH key during deployment or reinstallation, you can create it directly in the workflow. When creating a key, choose whether it should be scoped to the current project or available across all projects in your team. When you deploy with an SSH key, Latitude.sh _does not_ disable password login.
+Was this page helpful?
+YesNo
+[ Operating systems Previous ](https://www.latitude.sh/docs/servers/operating-systems)[ Custom disk layout Next ](https://www.latitude.sh/docs/servers/custom-disk-layout)
+[x](https://www.x.com/latitudesh)[github](https://www.github.com/latitudesh)[linkedin](https://www.linkedin.com/company/latitude-sh)
+[Powered byThis documentation is built and hosted on Mintlify, a developer documentation platform](https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=latitudesh)

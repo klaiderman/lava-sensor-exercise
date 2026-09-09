@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"lava.sh/sensor/internal/scan"
+	"lava-sensor-exercise/sensor/internal/scan"
 )
 
 // TestMachineProfileA covers the host-shaped profile: DMI present, NVMe, real

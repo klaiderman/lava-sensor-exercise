@@ -115,3 +115,26 @@ func signalOf(err error) string {
 
 // devNull is the read end every child gets as stdin.
 const devNull = os.DevNull
+
+// getxattr reads an extended attribute without following the final symlink.
+func getxattr(path, attr string) ([]byte, error) {
+	sz, err := syscall.Getxattr(path, attr, nil)
+	if err != nil {
+		return nil, err
+	}
+	if sz <= 0 {
+		return nil, nil
+	}
+	if sz > 64<<10 {
+		sz = 64 << 10
+	}
+	buf := make([]byte, sz)
+	n, err := syscall.Getxattr(path, attr, buf)
+	if err != nil {
+		return nil, err
+	}
+	if n > len(buf) {
+		n = len(buf)
+	}
+	return buf[:n], nil
+}

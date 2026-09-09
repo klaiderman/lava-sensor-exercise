@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"lava.sh/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/probe"
 )
 
 // Check is one registered posture question. Every registered check emits

@@ -1,0 +1,226 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: [/docs/llms.txt](https://www.latitude.sh/docs/llms.txt)
+> Use this file to discover all available pages before exploring further.
+[Skip to main content](https://www.latitude.sh/docs/servers/user-data#content-area)
+[Latitude.sh Docs home page![light logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/dark.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=efad591085db2784ff1a0d7ca22dbefc)![dark logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/light.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=1d247b0f651e131bd726c634f9a4d660)](https://www.latitude.sh/docs)
+Search...
+Ctrl K
+  * [Website](https://www.latitude.sh)
+  * [Support](https://www.latitude.sh/support)
+  * [Dashboard](https://www.latitude.sh/dashboard)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+
+
+Search...
+Navigation
+Server configuration
+User data
+[Docs](https://www.latitude.sh/docs)[Guides](https://www.latitude.sh/docs/guides)[API reference](https://www.latitude.sh/docs/api-reference/summary)[Developer resources](https://www.latitude.sh/docs/development)
+### Docs
+  * [Overview](https://www.latitude.sh/docs)
+
+
+### Getting started
+  * [Setting up your account](https://www.latitude.sh/docs/account-setup/sign-up)
+  * [Verifying your account](https://www.latitude.sh/docs/account-setup/verify-account)
+  * [Dashboard](https://www.latitude.sh/docs/dashboard/overview)
+  * [Command menu](https://www.latitude.sh/docs/dashboard/command-menu)
+  * [Regions & Locations](https://www.latitude.sh/docs/regions-locations)
+  * [Referral program](https://www.latitude.sh/docs/referral-program)
+
+
+### Compute
+  * Bare metal
+    * Server deployment
+    * Server configuration
+      * [Operating systems](https://www.latitude.sh/docs/servers/operating-systems)
+      * [SSH keys](https://www.latitude.sh/docs/servers/ssh-keys)
+      * [Custom disk layout](https://www.latitude.sh/docs/servers/custom-disk-layout)
+      * [Custom images](https://www.latitude.sh/docs/servers/custom-images)
+      * [User data](https://www.latitude.sh/docs/servers/user-data)
+      * [ Instance metadata serviceNew ](https://www.latitude.sh/docs/servers/metadata-service)
+    * Server actions
+    * [Waitlist](https://www.latitude.sh/docs/dashboard/server-waitlist)
+  * Virtual machines
+  * KubernetesPreview
+
+
+### Storage & data
+  * [Object storage](https://www.latitude.sh/docs/storage/object-storage)
+  * [Block storage](https://www.latitude.sh/docs/storage/block-storage)
+  * [File storage](https://www.latitude.sh/docs/storage/filesystem)
+  * [Egress](https://www.latitude.sh/docs/storage/egress)
+  * Managed Databases
+
+
+### Networking
+  * [Private networks](https://www.latitude.sh/docs/networking/private-networks)
+  * [ Public networksNew ](https://www.latitude.sh/docs/networking/public-networks)
+  * IP addresses
+  * [DDoS protection](https://www.latitude.sh/docs/networking/ddos-protection)
+  * [Firewall](https://www.latitude.sh/docs/networking/firewall)
+  * Interconnection
+
+
+### Resource management
+  * [Projects](https://www.latitude.sh/docs/projects)
+  * [Tags](https://www.latitude.sh/docs/tags)
+  * [Filters and views](https://www.latitude.sh/docs/dashboard/filters-and-views)
+  * [Activity logs](https://www.latitude.sh/docs/events)
+
+
+### Platform settings
+  * Team management
+  * Account security
+
+
+### Usage & billing
+  * [Bandwidth usage](https://www.latitude.sh/docs/usage/bandwidth)
+  * Billing
+
+
+### Support
+  * [Contact support](https://www.latitude.sh/docs/support/contact-support)
+  * [Support access](https://www.latitude.sh/docs/support/support-access)
+
+
+### Legal
+  * [Service Schedules](https://www.megaport.com/legal/service-schedules/)
+
+
+close
+## On this page
+  * [Compatibility](https://www.latitude.sh/docs/servers/user-data#compatibility)
+  * [File format](https://www.latitude.sh/docs/servers/user-data#file-format)
+    * [UNIX-like systems](https://www.latitude.sh/docs/servers/user-data#unix-like-systems)
+    * [Windows systems](https://www.latitude.sh/docs/servers/user-data#windows-systems)
+  * [Creating a user data](https://www.latitude.sh/docs/servers/user-data#creating-a-user-data)
+    * [From scratch](https://www.latitude.sh/docs/servers/user-data#from-scratch)
+    * [From a template](https://www.latitude.sh/docs/servers/user-data#from-a-template)
+  * [Project and Team scope](https://www.latitude.sh/docs/servers/user-data#project-and-team-scope)
+  * [Variables](https://www.latitude.sh/docs/servers/user-data#variables)
+  * [Examples](https://www.latitude.sh/docs/servers/user-data#examples)
+
+
+Server configuration
+# User data
+Copy pageCopy page
+Copy pageCopy page
+User data are scripts that use the `cloud-config` format, designed to be run by the cloud-init process. These scripts are generally used for the initial configuration of a server and run on the first boot. Deploying a server with user data allows you to run arbitrary commands and change several aspects of the server during provisioning. Here are a few examples of what you can do with user data scripts:
+  * Change user passwords
+  * Server hardening
+  * Notify people or systems that a new device has been deployed
+  * Install packages and dependencies
+
+![User data management page](https://mintcdn.com/latitudesh/2hRUs1WyztyTmUj8/images/product/UserData.Create.Template.png?fit=max&auto=format&n=2hRUs1WyztyTmUj8&q=85&s=1b5c3118783c1474642ae75b20c7c374)
+## 
+[​](https://www.latitude.sh/docs/servers/user-data#compatibility)
+Compatibility
+Here are the operating systems that currently support setting user data and the directive you should use when writing your scripts.  
+| Distro  | OS  | Directive  | Language  |  
+| --- | --- | --- | --- |  
+| Linux  | - Ubuntu 16.04 LTS and newer   
+- CentOS 7.4 and newer  
+- Rocky Linux  
+- Debian 10 and newer   
+- RedHat Enterprise Linux  | `#cloud-config`  | YAML  |  
+| Windows  | - All Windows images  | `# ps1_sysnative`  | PowerShell  |  
+## 
+[​](https://www.latitude.sh/docs/servers/user-data#file-format)
+File format
+### 
+[​](https://www.latitude.sh/docs/servers/user-data#unix-like-systems)
+UNIX-like systems
+If you’re using a UNIX-like OS like Linux, your scripts must be written using the YAML file format, which uses whitespace and new lines to delimit lists, associative arrays, and values. Here’s an example of a user data script that uses the `{{ PASSWORD }}` variable to change the root password and allow for root logins.
+
+```
+#cloud-config
+user: root
+chpasswd: { expire: false }
+password: { { PASSWORD } }
+disable_root: false
+ssh_pwauth: true
+runcmd:
+  - echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+  - systemctl restart ssh
+
+```
+
+These files are generally fairly intuitive and easy to understand, but there are a few things you need to keep in mind when using them. Here is a good [getting started guide](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) that can help.
+Always validate your YAML code. Google ‘YAML validator’ if you don’t have a linter on your IDE, but remember never to add sensitive data to these services.
+### 
+[​](https://www.latitude.sh/docs/servers/user-data#windows-systems)
+Windows systems
+For Windows, you’ll have to use the `cloud-baseinit` convention. This is just a fancy way of saying that your user data will have to be written as if you were using Powershell. Here’s a straightforward example:
+
+```
+#ps1_sysnative
+mkdir c:/test
+New-Item c:/test/test.txt
+Set-Content c:/test/test.txt 'Hello World'
+
+```
+
+## 
+[​](https://www.latitude.sh/docs/servers/user-data#creating-a-user-data)
+Creating a user data
+Before creating a user data script, make sure you’re using the [correct directive and programming language](https://www.latitude.sh/docs/servers/user-data#compatibility) for the operating system you’ll be using it with.
+### 
+[​](https://www.latitude.sh/docs/servers/user-data#from-scratch)
+From scratch
+1
+Create user data from scratch
+Go to the [dashboard](https://www.latitude.sh/dashboard), select a project, and navigate to **Compute > User data** in the sidebar. Click **Create user data…** and choose **From scratch**.![User data creation page](https://mintcdn.com/latitudesh/2hRUs1WyztyTmUj8/images/product/UserData.Create.Select.png?fit=max&auto=format&n=2hRUs1WyztyTmUj8&q=85&s=6de1b4863a0501e7cb71ba1231a3383f)
+2
+Choose scope
+Select whether to make this user data available across all projects (**Team**) or only within the current project (**Project**).![User data creation page](https://mintcdn.com/latitudesh/2hRUs1WyztyTmUj8/images/product/UserData.Create.Scope.png?fit=max&auto=format&n=2hRUs1WyztyTmUj8&q=85&s=2c8673beb2aa9710b846817c2960cb91)
+3
+Add content
+Write your user data script using the [correct directive and language](https://www.latitude.sh/docs/servers/user-data#compatibility) for your operating system.
+### 
+[​](https://www.latitude.sh/docs/servers/user-data#from-a-template)
+From a template
+You can start with user data scripts by choosing one of the provided templates. From package updates to notifying Slack on deploys, templates are available for different use cases.
+1
+Create user data from template
+Go to the [dashboard](https://www.latitude.sh/dashboard), select a project, and navigate to **Compute > User data** in the sidebar, click **Create user data…** and choose **From template**.![User data creation page](https://mintcdn.com/latitudesh/2hRUs1WyztyTmUj8/images/product/UserData.Create.Select.png?fit=max&auto=format&n=2hRUs1WyztyTmUj8&q=85&s=6de1b4863a0501e7cb71ba1231a3383f)
+2
+Select template and scope
+Choose the template you want to use. Select whether to make this user data available to all projects (**Team**) or only the current project (**Project**).![User data creation page](https://mintcdn.com/latitudesh/2hRUs1WyztyTmUj8/images/product/UserData.Create.Template.png?fit=max&auto=format&n=2hRUs1WyztyTmUj8&q=85&s=1b5c3118783c1474642ae75b20c7c374)
+3
+Customize and save
+Click **Use this template** , then edit the content as needed.
+## 
+[​](https://www.latitude.sh/docs/servers/user-data#project-and-team-scope)
+Project and Team scope
+When you create a user data script, you can choose whether to make it available across all projects in your team or scope it to a specific project.
+  * **Team** : Available across all projects in your team. This is the default scope.
+  * **Project** : Only available within the current project. Useful for project-specific server configuration.
+
+The user data page shows two tabs for managing these scopes. ![User data management page](https://mintcdn.com/latitudesh/2hRUs1WyztyTmUj8/images/product/UserData.List.Tabs.png?fit=max&auto=format&n=2hRUs1WyztyTmUj8&q=85&s=82efb668c9697db0cbd0fc177d75a6db) When selecting user data during deployment or reinstallation, your scripts will be grouped by scope, with project-scoped scripts appearing first, then team-scoped scripts. ![User data management page](https://mintcdn.com/latitudesh/2hRUs1WyztyTmUj8/images/product/UserData.List.Select.png?fit=max&auto=format&n=2hRUs1WyztyTmUj8&q=85&s=978fbdec9131a9e3ee712d6b81bf6b11)
+## 
+[​](https://www.latitude.sh/docs/servers/user-data#variables)
+Variables
+To make development easier, variables are provided that can be used in your user data script so you can access data that is only available during or right after a deployment. Variables are wrapped in double curly brackets (`{{ VAR }}`). Here are the available variables that can be used by any user data script.  
+| Variable  | Value  |  
+| --- | --- |  
+| `{{ HOSTNAME }}`  | The normalized hostname.  |  
+| `{{ PASSWORD }}`  | Root password of the deployed server.  |  
+| `{{ USER_DISTRO }}`  | Distro username. Examples: ubuntu, centos, Admin.  |  
+| `{{ MAC_ADDRESS }}`  | MAC Address.  |  
+| `{{ PUBLIC_IPV4 }}`  | Public IPv4 address.  |  
+| `{{ SSH_KEYS }}`  | An array of the SSH keys you chose to deploy your server with, if any.  |  
+| `{{ SERIAL }}`  | Windows serial (only available for Windows systems).  |  
+## 
+[​](https://www.latitude.sh/docs/servers/user-data#examples)
+Examples
+  * [Examples repository](https://github.com/latitudesh/examples)
+  * [cloud-init’s docs](https://cloudinit.readthedocs.io/en/latest/topics/examples.html).
+
+
+Was this page helpful?
+YesNo
+[ Custom images Previous ](https://www.latitude.sh/docs/servers/custom-images)[ Instance metadata service Next ](https://www.latitude.sh/docs/servers/metadata-service)
+[x](https://www.x.com/latitudesh)[github](https://www.github.com/latitudesh)[linkedin](https://www.linkedin.com/company/latitude-sh)
+[Powered byThis documentation is built and hosted on Mintlify, a developer documentation platform](https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=latitudesh)

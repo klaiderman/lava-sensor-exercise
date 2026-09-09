@@ -249,7 +249,8 @@ type StorageDevice struct {
 	ModelSource       string      `json:"model_source"`
 	SizeSource        string      `json:"size_source"`
 	Transport         string      `json:"transport,omitempty"`
-	Rotational        string      `json:"rotational,omitempty"`
+	Rotational        *bool       `json:"rotational,omitempty"`
+	Removable         *bool       `json:"removable,omitempty"`
 	LogicalBlockSize  int64       `json:"logical_block_size,omitempty"`
 	PhysicalBlockSize int64       `json:"physical_block_size,omitempty"`
 	WWID              string      `json:"wwid,omitempty"`

@@ -32,7 +32,7 @@ echo "remote sha256: $REMOTE_SHA"
 
 echo "== run the documented command as the unprivileged user =="
 # The exact one command Lava will run (from sensor/README.md): ./sensor scan --out findings.json
-ssh "${SSH_OPTS[@]}" "$DEST" "cd $REMOTE_DIR && id -un && rm -f findings.json && /usr/bin/time -f 'wall=%es maxrss=%MkB' ./sensor scan --out findings.json 2> sensor.stderr; echo exit=\$? >> sensor.stderr; tail -5 sensor.stderr; sha256sum findings.json | cut -d' ' -f1" | tee "$OUT/run.log.$TS"
+ssh "${SSH_OPTS[@]}" "$DEST" "cd $REMOTE_DIR && id -un && rm -f findings.json && s=\$(date +%s%N); ./sensor scan --out findings.json 2> sensor.stderr; rc=\$?; e=\$(date +%s%N); echo exit=\$rc >> sensor.stderr; echo wall_ms=\$(( (e - s) / 1000000 )) >> sensor.stderr; tail -5 sensor.stderr; sha256sum findings.json | cut -d' ' -f1" | tee "$OUT/run.log.$TS"
 REMOTE_FSHA="$(tail -1 "$OUT/run.log.$TS")"
 
 echo "== fetch results =="

@@ -22,3 +22,7 @@
 {"event":"PHASE_END","phase":"15-implementation-prompt","ts":"2026-09-09T00:38:06Z"}
 {"event":"PHASE","phase":"16-vertical-slice","ts":"2026-09-09T00:38:06Z","budget_min":30,"note":"implementation-author (opus) stops after the slice for lead schema validation"}
 {"event":"MILESTONE","milestone":"vertical-slice","ts":"2026-09-09T01:21:40Z","note":"sensor/ slice: 4122 prod + 2276 test Go lines; 94 tests pass under WSL uid1000; findings.wsl.json lead-validated: schema PASS (format assertion on), only expected U8 category-count rule fails with 1 finding"}
+{"event":"MILESTONE","milestone":"all-26-checks-implemented","ts":"2026-09-09T01:40:55Z"}
+{"event":"MILESTONE","milestone":"implementation-complete","ts":"2026-09-09T01:57:15Z","note":"26 checks; 153 tests WSL; Docker A/B/C; validator PASS"}
+{"event":"PHASE_END","phase":"17-implementation","ts":"2026-09-09T01:57:15Z"}
+{"event":"PHASE","phase":"19-20-review-and-witness","ts":"2026-09-09T01:57:15Z","budget_min":30}

@@ -1,6 +1,6 @@
 # Usage & Cost Report — lava-sensor-exercise
 
-Generated: 2026-09-08T22:03:48.122630+00:00
+Generated: 2026-09-09T01:44:13.767298+00:00
 Session: `573ece1e-5ae9-41c9-9d84-e625d280bc3a`
 
 Produced by `tooling/measure_usage.py`, a stdlib-only script that walks the main Claude Code session transcript and every sub-agent task-output file, sums real `message.usage` token fields (deduped by `message.id`), and prices them against Pech's rate card. Re-run with:
@@ -8,15 +8,6 @@ Produced by `tooling/measure_usage.py`, a stdlib-only script that walks the main
 ```
 python tooling/measure_usage.py
 ```
-
-## AUTHORITATIVE cost snapshots (Claude Code Usage panel, reported by the user)
-
-| snapshot time (UTC) | source | value | covers | status |
-|---|---|---|---|---|
-| 2026-09-09T00:21:05Z | Claude Code Usage panel (user-reported) | **$263.46** | Claude Code usage for this exercise as displayed by the panel at that moment: main session 573ece1e… (21:00–22:30Z), its fork b64b46f1… (22:30Z→), and all sub-agents they spawned (bootstrap ×2, TCI builder, indexers, 6 Wixie lifecycles, 5 research workers, synthesizer, Grill-Me, Ponytail, check-registry drafter, usage measurer, Lich fixer, IMPL lifecycle in progress). Scope is as the panel defines it; the lead cannot independently verify its session boundary. | mid-run snapshot — REFRESH ONCE AT THE END for the final total |
-| (end of exercise) | Claude Code Usage panel | (pending) | same | to be filled at packaging time |
-
-Precedence: the Claude Code Usage panel figure is the authoritative aggregate cost. Pech (`session_init/observe/finalize`) and `tooling/measure_usage.py` (transcript `message.usage` sums) are SECONDARY token evidence only: they establish per-agent token attribution and served-model identity, not the billed total (their cost column stays null because Pech's rate card lacks the Claude 5 model ids).
 
 ## Method
 
@@ -44,27 +35,28 @@ Rate-card loading notes (from `load_rate_card.py`, imported read-only):
 
 | tokens: input | output | cache_creation | cache_read | messages | cost_usd |
 |---:|---:|---:|---:|---:|---:|
-| 934 | 285,110 | 1,448,753 | 9,107,102 | 90 | null |
+| 1,496 | 404,233 | 2,047,710 | 26,286,455 | 184 | null |
 
-- sum of cost_usd over 0 priced row(s); 13 row(s) have cost_usd=null and are excluded from the cost sum (of which 10 are zero-token best-effort placeholder rows for non-transcript files, contributing no tokens either); all measured token counts are still included in the token totals above
+- sum of cost_usd over 0 priced row(s); 14 row(s) have cost_usd=null and are excluded from the cost sum (of which 10 are zero-token best-effort placeholder rows for non-transcript files, contributing no tokens either); all measured token counts are still included in the token totals above
 
 ## Per-agent / per-session rows (measured, authoritative + best-effort)
 
 | scope | id / role | model (verbatim from transcript) | input | output | cache_creation | cache_read | messages | cost_usd | attribution |
 |---|---|---|---:|---:|---:|---:|---:|---:|---|
-| session | main-session | `claude-fable-5-1` | 824 | 203,232 | 1,188,482 | 5,955,280 | 35 | null | authoritative |
+| session | main-session | `claude-fable-5-1` | 1,240 | 225,989 | 1,230,514 | 13,981,539 | 56 | null | authoritative |
+| agent | UNATTRIBUTED:a3e87d651985f4c6a | `claude-sonnet-5` | 146 | 96,366 | 556,925 | 9,153,094 | 73 | null | authoritative |
 | agent | workbench bootstrap: deep-research@a0d67e9, Trafilatura, Crawl4AI, Crawlee, Staticcheck | `claude-sonnet-5` | 72 | 33,142 | 158,252 | 2,147,879 | 36 | null | authoritative |
 | agent | workbench bootstrap: Wixie, Vis, Emu, Pech, Hydra@e56edc52, Lich@df30343d, Ponytail | `claude-sonnet-5` | 38 | 48,736 | 102,019 | 1,003,943 | 19 | null | authoritative |
 | agent | UNATTRIBUTED:b0ldwn3la | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:b9zruypt3 | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:ba8zr1nfd | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
-| agent | UNATTRIBUTED:bbjagjic1 | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:bk8fghqnf | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:bkpc18rs6 | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:bl5h5uv7b | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:bska0khlt | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:buhsoefrr | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 | agent | UNATTRIBUTED:bvdfti7ry | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
+| agent | UNATTRIBUTED:bzjpp3flg | `unknown` | 0 | 0 | 0 | 0 | 0 | null | best_effort |
 
 Full cost_source / source_file per row: see `state/usage.jsonl`.
 
@@ -72,7 +64,7 @@ Full cost_source / source_file per row: see `state/usage.jsonl`.
 
 - a00b5ca7b621bcfb3.output: empty (0 bytes) — skipped, no row emitted
 - a00e1fcf73912d67f.output: empty (0 bytes) — skipped, no row emitted
-- a3e87d651985f4c6a.output: empty (0 bytes) — skipped, no row emitted
+- a3e87d651985f4c6a.output: valid Claude Code JSONL transcript, role=UNATTRIBUTED:a3e87d651985f4c6a, 73 unique messages (from 149 assistant records — 76 streamed duplicates deduped), models=['claude-sonnet-5']
 - a4c8ceddf3d292e7a.output: empty (0 bytes) — skipped, no row emitted
 - a563175a04614583d.output: empty (0 bytes) — skipped, no row emitted
 - a580e0d340b31ca78.output: empty (0 bytes) — skipped, no row emitted
@@ -92,13 +84,13 @@ Full cost_source / source_file per row: see `state/usage.jsonl`.
 - b0ldwn3la.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=9, json_parse_errors=9, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:b0ldwn3la
 - b9zruypt3.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=126, json_parse_errors=126, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:b9zruypt3
 - ba8zr1nfd.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=391, json_parse_errors=391, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:ba8zr1nfd
-- bbjagjic1.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=1, json_parse_errors=1, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:bbjagjic1
 - bk8fghqnf.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=38, json_parse_errors=38, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:bk8fghqnf
 - bkpc18rs6.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=49, json_parse_errors=49, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:bkpc18rs6
 - bl5h5uv7b.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=2, json_parse_errors=2, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:bl5h5uv7b
 - bska0khlt.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=638, json_parse_errors=638, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:bska0khlt
 - buhsoefrr.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=400, json_parse_errors=400, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:buhsoefrr
 - bvdfti7ry.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=55, json_parse_errors=55, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:bvdfti7ry
+- bzjpp3flg.output: file is not a Claude Code assistant-transcript JSONL with usage data (total_lines=242, json_parse_errors=242, assistant_entries=0); zero tokens attributed, role=UNATTRIBUTED:bzjpp3flg
 
 ## Agents logged in agents.jsonl with NO measured transcript at all
 
@@ -109,13 +101,26 @@ These agent_ids have no `harness_agent_id`, so no `tasks/*.output` file could be
 | contract-indexer | mechanical normalization: TASK_CONTRACT.md -> task_contract.json + TASK_INDEX.md | haiku | completed | 48,980 |
 | tool-ledger-seeder | mechanical: seed state/TOOL_USAGE.md from bootstrap reports | haiku | running | n/a (not ended / no usage reported) |
 | tci-builder | focused implementation: Tiny Custom Investigator (probe registry + trusted executor + tests) | sonnet | completed | 190,898 |
-| wixie-prompt-engineer-R1 | Wixie full lifecycle for R1 research prompt | sonnet | running | n/a (not ended / no usage reported) |
-| wixie-prompt-engineer-R2 | Wixie full lifecycle for R2 research prompt | sonnet | running | n/a (not ended / no usage reported) |
-| wixie-prompt-engineer-R3 | Wixie full lifecycle for R3 research prompt | sonnet | running | n/a (not ended / no usage reported) |
-| wixie-prompt-engineer-R4 | Wixie full lifecycle for R4 research prompt | sonnet | running | n/a (not ended / no usage reported) |
-| wixie-prompt-engineer-R5 | Wixie full lifecycle for R5 research prompt | sonnet | running | n/a (not ended / no usage reported) |
-| usage-measurer | Pech-based usage/cost measurement + reusable script | sonnet | running | n/a (not ended / no usage reported) |
+| wixie-prompt-engineer-R1 | Wixie full lifecycle for R1 research prompt | sonnet | completed | 200,418 |
+| wixie-prompt-engineer-R2 | Wixie full lifecycle for R2 research prompt | sonnet | completed | 193,521 |
+| wixie-prompt-engineer-R3 | Wixie full lifecycle for R3 research prompt | sonnet | completed | 231,216 |
+| wixie-prompt-engineer-R4 | Wixie full lifecycle for R4 research prompt | sonnet | completed | 281,063 |
+| wixie-prompt-engineer-R5 | Wixie full lifecycle for R5 research prompt | sonnet | completed | 345,031 |
+| usage-measurer | Pech-based usage/cost measurement + reusable script | sonnet | completed | 147,447 |
 | lich-fixer | fix Lich WSL bridge kwarg bug; assess Go witness path | sonnet | completed | 116,974 |
+| main | n/a | n/a | n/a | n/a (not ended / no usage reported) |
+| r1-build-vs-buy | research worker R1 (approved prompts/R1/prompt.md; deep-research a0d67e9 + Vis overlay; no SSH) | opus | completed | 232,235 |
+| r2-lava-context | research worker R2 (approved prompts/R2/prompt.md; deep-research a0d67e9 + Vis overlay; no SSH) | sonnet | completed | 227,803 |
+| r3-sensor-evidence | research worker R3 (approved prompts/R3/prompt.md; deep-research a0d67e9 + Vis overlay; no SSH) | opus | completed | 271,419 |
+| r4-host-investigation | research worker R4 (approved prompts/R4/prompt.md; deep-research a0d67e9 + Vis overlay; no SSH) | opus | completed | 269,911 |
+| r5-go-architecture | research worker R5 (approved prompts/R5/prompt.md; deep-research a0d67e9 + Vis overlay; no SSH) | opus | completed | 219,640 |
+| wixie-prompt-engineer-GRILL | Wixie full lifecycle for the architecture-challenger (Grill-Me) prompt | sonnet | completed | 201,804 |
+| research-synthesizer | n/a | n/a | completed | 421,220 |
+| architecture-challenger | Grill-Me: four architecture options + adversarial attacks + scorecard (approved prompts/GRILL/prompt.md) | opus | completed | 138,886 |
+| check-registry-drafter | draft concrete check registry (machine spec + ~20 checks x PASS/FAIL/UNKNOWN + fixtures + coverage) from the KB under lead decisions LD-1..LD-8 | opus | completed | 192,927 |
+| ponytail-reviewer-pass1 | Ponytail YAGNI/accidental-complexity attack on the four architecture candidates | opus | completed | 97,980 |
+| wixie-prompt-engineer-IMPL | Wixie full lifecycle for the implementation prompt (target claude-opus-5) | sonnet | completed | 284,447 |
+| implementation-author | Go sensor implementation (approved prompts/IMPL/prompt.md): vertical slice first, then Tier 1/Tier 2 on resume | opus | running | n/a (not ended / no usage reported) |
 
 ## Model-id caveats (report verbatim transcript models; do not assume)
 
@@ -131,7 +136,7 @@ These agent_ids have no `harness_agent_id`, so no `tasks/*.output` file could be
 
 ## Caveats
 
-- Of 29 file(s) under `tasks/*.output`: 2 are real Claude Code sub-agent JSONL transcripts with usage data (adc6dc5f512c03f11, aff21ef893da2ba7b); 10 are non-empty but **not** JSONL assistant-transcripts (every line fails `json.loads`) — (b0ldwn3la, b9zruypt3, ba8zr1nfd, bbjagjic1, bk8fghqnf, bkpc18rs6, bl5h5uv7b, bska0khlt, buhsoefrr, bvdfti7ry) — they contribute zero measured tokens and are flagged `best_effort` with an explanatory `cost_source`, not silently dropped; 17 more are 0 bytes and skipped entirely (no row emitted); 0 could not be opened.
+- Of 29 file(s) under `tasks/*.output`: 3 are real Claude Code sub-agent JSONL transcripts with usage data (a3e87d651985f4c6a, adc6dc5f512c03f11, aff21ef893da2ba7b); 10 are non-empty but **not** JSONL assistant-transcripts (every line fails `json.loads`) — (b0ldwn3la, b9zruypt3, ba8zr1nfd, bk8fghqnf, bkpc18rs6, bl5h5uv7b, bska0khlt, buhsoefrr, bvdfti7ry, bzjpp3flg) — they contribute zero measured tokens and are flagged `best_effort` with an explanatory `cost_source`, not silently dropped; 16 more are 0 bytes and skipped entirely (no row emitted); 0 could not be opened.
 - Cost figures use Pech's own cache-write/cache-read modifier formula (1.25x / 0.10x of the input rate), not a naive flat per-token rate.
 - This report reflects only what is present on disk at generation time; re-running after more agents finish will pick up their task-output files automatically (if they get a `harness_agent_id` in agents.jsonl) or fall back to `UNATTRIBUTED:<file stem>` if not.
 

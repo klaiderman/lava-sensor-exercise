@@ -1,0 +1,2 @@
+internal\lab\support_test.go:37:7: const labTestdata is unused (U1000)
+internal\lab\support_test.go:137:6: func buildLabFixture is unused (U1000)

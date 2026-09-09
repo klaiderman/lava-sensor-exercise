@@ -1,0 +1,55 @@
+## 3xx and 4xx Series SSD Part Numbering System
+
+**SSD Part Numbering System**
+
+**Micron Technology Production Status**
+
+**Drive Interface**
+
+**Mark Value**
+
+**Drive Form Factor Blank Blank**
+
+**Hardware Feature Set**
+
+**Drive Form Factor Blank Blank**
+
+**Drive Density**
+
+The part numbering system is available at www.micron.com/numbering MT FD D A C 128 M x x1 G 1 2 x x xx ES Blank = Production Flash Drive (SSD) ES = Engineering sample MS = Mechanical sample A = SATA 1.5 Gb/s Operating Temperature Range B = SATA 3.0 Gb/s Blank = Commercial (0°C to +70°C) D = SATA 6.0 Gb/s G = PCIe Gen 2 AA = 1.8-inch, 5mm, Micro SATA connector AA Contact factory AC = 2.5-inch, 9.5mm AB Contact factory AG = Full height, full length x8 AC Contact factory AH = Full height, half length x8 AK = 2.5-inch, 7mm Security Feature Set AR = half height, half length x8 Blank = Null AT = mSATA 1 = Contact Factory 2 = SED (Self Encrypting Drive) 001 = 1GB BOM Revision 002 = 2GB Production: 004 = 4GB 1 = 1st Generation 008 = 8GB 2 = 2nd Generation 014 = 14GB 3 = 3rd Generation 016 = 16GB etc.
+
+## = 25GB A = 1st Generation
+
+030 = 30GB B = 2nd Generation
+
+032 = 32GB C = 3rd Generation 050 = 50GB etc.
+
+## = 60GB
+
+064 = 64GB NAND Component
+
+**Sector Size**
+
+**Product Family**
+
+100 = 100GB A = 4Gb, SLC, x8, 3.3V, (72nm) 120 120GB B 8Gb SLC 8 3 3V (50)120 = 120GB B = 8Gb, SLC, x8, 3.3V (50nm) 128 = 128GB C = 16Gb, MLC, x8, 3.3V (50nm) 175 = 175GB D = 4Gb, SLC, x8, 3.3V (50nm) 200 = 200GB E = 16Gb, MLC, x8, 3.3V (34nm) 256 = 256GB F = 32Gb, MLC, x8, 3.3V (34nm) 350 = 350GB G = 32Gb, MLC, x8, 3.3V, (34nm) 400 = 400GB H = 8Gb, SLC, x8, 3.3V, (50nm) 512 = 512GB J = 32Gb, MLC, x8, 3.3V, (25nm) 700 = 700GB K = 64Gb, MLC, x8, 3.3V, (25nm) L = 4Gb, SLC, x8, 3.3V (34nm) NAND Type M = 8Gb, SLC, x8, 3.3V (34nm) S = SLC N = 16Gb, SLC, x8, 3.3V (34nm)S = SLC N = 16Gb, SLC, x8, 3.3V (34nm) M = MLC 1 = 512 byte AE = C200/P200 AF = eUSB AG = C300 AJ = e230 AL = P300 AH = P320 AM = C400 Rev. 03/03/14 ©2013 Micron Technology, Inc.©2013 Micron Technology, Inc.
+
+Micron and the Micron logo are trademarks of Micron Technology, Inc. Products and specifications are subject to change without notice. Dates are estimates only.
+
+## 420 and 5xx Series SSD Part Numbering System
+
+**SSD Part Numbering System**
+
+**Micron Technology Production Status**
+
+**Drive Interface**
+
+**Drive Density**
+
+**Product Family**
+
+The part numbering system is available at www.micron.com/numbering MT FD D A K 120 M A V1 AE 1 2 A B YY ES Blank = Production Flash Drive (SSD) ES = Engineering sample MS = Mechanical sample B = SATA 3.0 Gb/s Customer Designator D = SATA 6.0 Gb/s YY = Standard E = SAS 6.0 Gb/s F = PCIe Gen 1 Additional Features G = PCIe Gen 2 AB = Standard AF = Contact factoryAF = Contact factory Drive Form Factor AI = Automotive AA = 1.8-inch, 5 mm, Micro SATA connector IT = Industrial AC = 2.5-inch, 9.5 mm AG = Full height, full length x8 Extended Firmware Features AH = Full height, half length x8 Z = Blank AK = 2.5-inch, 7 mm 1 = Contact Factory AR = Half height, half length x8 2 = SED (Self Encrypting Drive) AT = mSATA 6 = SED (TCG Enterprise Encryption) AV = M.2, 80 mm x 22 mm x 3.50 mm AW = 2.5-inch, 5 mm Sector Size 1 = 512 bytey 050 = 50 GB NAND Component 060 = 60 GB AA = 32 Gb, SLC, x8, 3.3V (25 nm) 064 = 64 GB AB = 64 Gb, MLC, x8, 3.3V (25 nm) 100 = 100 GB AC = 64 Gb, MLC, x8, 3.3V (20 nm) 120 = 120 GB AD = 64 Gb, MLC, x8, 3.3V (20 nm) 128 = 128 GB AE = 128 Gb, MLC, x8, 3.3V (20 nm) 175 = 175 GB AF = 32 Gb, MLC, x8, 3.3V (34 nm) 200 = 200 GB AG = 32 Gb, MLC, x8, 3.3V (25 nm) 240 = 240 GB AH = 64 Gb, MLC, x8, 3.3V (20 nm) 256 = 256 GB AJ = 64 Gb, SLC, x8, 3.3V (20 nm) 350 350 GB AK 128 Gb MLC 8 3 3V (20)350 = 350 GB AK = 128 Gb, MLC, x8, 3.3V (20 nm) 400 = 400 GB 480 = 480 GB BOM Revision 500 = 500 GB Production: 512 = 512 GB 1 = 1st Generation 700 = 700 GB 2 = 2nd Generation 800 = 800 GB 3 = 3rd Generation 960 = 960 GB ES: 1T0 = 1024 GB A = 1st Generation (P420m only) NAND Type B = 2nd Generation S = SLC C = 3rd GenerationS = SLC C = 3rd Generation M = MLC AV = M500 AY = M550 AX = P420m AZ = M510 BB = M500DC BD = M500IT BP = M510DC Operating Temperature Range = Commercial (0°C to +70°C) applies to all SSDs Rev. 11/11/15Rev.
+
+burmilla1 11/11/15 ©2015 Micron Technology, Inc.
+
+Micron and the Micron logo are trademarks of Micron Technology, Inc. Products and specifications are subject to change without notice. Dates are estimates only.

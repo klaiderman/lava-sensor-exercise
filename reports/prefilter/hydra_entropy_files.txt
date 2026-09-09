@@ -1,0 +1,246 @@
+### sensor/cmd/sensor/main.go
+[]
+### sensor/cmd/sensor/main_test.go
+[]
+### sensor/internal/checks/bmc.go
+[]
+### sensor/internal/checks/bootchain.go
+[]
+### sensor/internal/checks/document_test.go
+[]
+### sensor/internal/checks/fixture_test.go
+[]
+### sensor/internal/checks/machine.go
+[]
+### sensor/internal/checks/machine_test.go
+[]
+### sensor/internal/checks/registry.go
+[]
+### sensor/internal/checks/remote_access.go
+[]
+### sensor/internal/checks/secrets.go
+[]
+### sensor/internal/checks/ssh_root_login.go
+[]
+### sensor/internal/checks/ssh_root_login_test.go
+[]
+### sensor/internal/checks/sshdconfig.go
+[]
+### sensor/internal/checks/storage.go
+[]
+### sensor/internal/checks/testdata/profileA/_dirs.txt
+[]
+### sensor/internal/checks/testdata/profileA/_modes.txt
+[]
+### sensor/internal/checks/testdata/profileA/_symlinks.txt
+[]
+### sensor/internal/checks/testdata/profileA/etc/machine-id
+[]
+### sensor/internal/checks/testdata/profileA/etc/ssh/sshd_config
+[]
+### sensor/internal/checks/testdata/profileA/etc/ssh/sshd_config.d/00-latitude-instant-deploy.conf
+[]
+### sensor/internal/checks/testdata/profileA/proc/cpuinfo
+[]
+### sensor/internal/checks/testdata/profileA/proc/meminfo
+[]
+### sensor/internal/checks/testdata/profileA/proc/self/mountinfo
+[]
+### sensor/internal/checks/testdata/profileA/proc/sys/kernel/hostname
+[]
+### sensor/internal/checks/testdata/profileA/proc/sys/kernel/osrelease
+[]
+### sensor/internal/checks/testdata/profileA/run/cloud-init/cloud-id
+[]
+### sensor/internal/checks/testdata/profileA/run/udev/data/b259%3A0
+[]
+### sensor/internal/checks/testdata/profileA/run/udev/data/b259%3A1
+[]
+### sensor/internal/checks/testdata/profileA/run/udev/data/b259%3A2
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/bios_date
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/bios_vendor
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/bios_version
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/board_asset_tag
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/board_name
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/board_vendor
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/board_version
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/chassis_asset_tag
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/chassis_type
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/product_family
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/product_name
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/product_serial
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/product_sku
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/dmi/id/sys_vendor
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/nvme/nvme0/firmware_rev
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/nvme/nvme0/model
+[]
+### sensor/internal/checks/testdata/profileA/sys/class/nvme/nvme0/state
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/loop0/dev
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/loop0/size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/dev
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/nvme0n1p1/dev
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/nvme0n1p1/partition
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/nvme0n1p1/size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/nvme0n1p2/dev
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/nvme0n1p2/partition
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/nvme0n1p2/size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/queue/logical_block_size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/queue/physical_block_size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/queue/rotational
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/queue/scheduler
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/queue/write_cache
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme0n1/wwid
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme1n1/dev
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme1n1/queue/logical_block_size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme1n1/queue/rotational
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme1n1/size
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/nvme1n1/wwid
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu0/topology/core_id
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu0/topology/physical_package_id
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu1/topology/core_id
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu1/topology/physical_package_id
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu2/topology/core_id
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu2/topology/physical_package_id
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu3/topology/core_id
+[]
+### sensor/internal/checks/testdata/profileA/sys/devices/system/cpu/cpu3/topology/physical_package_id
+[]
+### sensor/internal/checks/testdata/profileA/usr/lib/os-release
+[]
+### sensor/internal/checks/testdata/profileA/usr/sbin/sshd
+[]
+### sensor/internal/checks/testdata/profileB/_dirs.txt
+[]
+### sensor/internal/checks/testdata/profileB/_symlinks.txt
+[]
+### sensor/internal/checks/testdata/profileB/etc/os-release
+[]
+### sensor/internal/checks/testdata/profileB/proc/cpuinfo
+[]
+### sensor/internal/checks/testdata/profileB/proc/meminfo
+[]
+### sensor/internal/checks/testdata/profileB/proc/self/mountinfo
+[]
+### sensor/internal/checks/testdata/profileB/proc/sys/kernel/hostname
+[]
+### sensor/internal/checks/testdata/profileB/proc/sys/kernel/osrelease
+[]
+### sensor/internal/checks/testdata/profileB/sys/class/net/eth0/addr_assign_type
+[]
+### sensor/internal/checks/testdata/profileB/sys/class/net/eth0/address
+[]
+### sensor/internal/checks/testdata/profileB/sys/devices/vda/dev
+[]
+### sensor/internal/checks/testdata/profileB/sys/devices/vda/queue/logical_block_size
+[]
+### sensor/internal/checks/testdata/profileB/sys/devices/vda/queue/rotational
+[]
+### sensor/internal/checks/testdata/profileB/sys/devices/vda/size
+[]
+### sensor/internal/checks/testdata/profileC/.dockerenv
+[]
+### sensor/internal/checks/testdata/profileC/_dirs.txt
+[]
+### sensor/internal/checks/testdata/profileC/_modes.txt
+[]
+### sensor/internal/checks/testdata/profileC/etc/os-release
+[]
+### sensor/internal/checks/testdata/profileC/etc/ssh/sshd_config
+[]
+### sensor/internal/checks/testdata/profileC/proc/cpuinfo
+[]
+### sensor/internal/checks/testdata/profileC/proc/meminfo
+[]
+### sensor/internal/checks/testdata/profileC/proc/self/mountinfo
+[]
+### sensor/internal/checks/testdata/profileC/proc/sys/kernel/hostname
+[]
+### sensor/internal/checks/testdata/profileC/proc/sys/kernel/osrelease
+[]
+### sensor/internal/checks/testdata/profileC/usr/sbin/sshd
+[]
+### sensor/internal/probe/acl.go
+[]
+### sensor/internal/probe/exec.go
+[]
+### sensor/internal/probe/exec_test.go
+[]
+### sensor/internal/probe/fifo_other_test.go
+[]
+### sensor/internal/probe/fifo_unix_test.go
+[]
+### sensor/internal/probe/observation.go
+[]
+### sensor/internal/probe/oob.go
+[]
+### sensor/internal/probe/read.go
+[]
+### sensor/internal/probe/read_test.go
+[]
+### sensor/internal/probe/sysdep_other.go
+[]
+### sensor/internal/probe/sysdep_unix.go
+[]
+### sensor/internal/probe/walk.go
+[]
+### sensor/internal/scan/check.go
+[]
+### sensor/internal/scan/document.go
+[]
+### sensor/internal/scan/engine.go
+[]
+### sensor/internal/scan/engine_test.go
+[]
+### sensor/internal/scan/finalize.go
+[]
+### sensor/internal/scan/output.go
+[]
+### sensor/internal/scan/output_test.go
+[]
+### sensor/testdata/finding.schema.json
+[]

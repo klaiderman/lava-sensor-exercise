@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"lava.sh/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/probe"
 )
 
 // stubCheck lets the engine be tested without any host access at all.

@@ -66,6 +66,8 @@ type Files interface {
 	ReadDir(p string, max int) ([]fs.DirEntry, Observation)
 	ReadDirNames(p string, max int) ([]string, Observation)
 	ReadLinkBase(p string) (string, Observation)
+	ReadACL(p string) (ACL, Observation)
+	Walk(root string, b WalkBudget, visit func(path string, d fs.DirEntry)) (WalkResult, Observation)
 	Exists(p string) bool
 }
 
@@ -440,3 +442,20 @@ func (r *Reader) Base() string { return r.base }
 
 // JoinPath joins an absolute host path with further components.
 func JoinPath(elem ...string) string { return path.Join(elem...) }
+
+// ModTime returns a path's modification time. It is a second stat rather than a
+// field on every Observation, because only a few checks compare times and the
+// evidence model does not carry mtime for the rest.
+func (r *Reader) ModTime(p string) (time.Time, bool) {
+	if root, rel := r.rootFor(p); root != nil {
+		if fi, err := root.Lstat(rel); err == nil {
+			return fi.ModTime(), true
+		}
+		return time.Time{}, false
+	}
+	fi, err := os.Lstat(r.full(p))
+	if err != nil {
+		return time.Time{}, false
+	}
+	return fi.ModTime(), true
+}

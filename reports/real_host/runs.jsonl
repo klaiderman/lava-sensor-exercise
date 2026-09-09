@@ -1,0 +1,1 @@
+{"ts":"2026-09-09T01:58:37Z","binary_sha256":"9c8358182e3395930ca3ca7962c6a948768ae419522f59dcb6c35cbf5964e3cf","findings_sha256":"e7e8bca1e55a68bd906124911c5a807f581790f7051039987f49cb856e151889","remote_dir":"~/sensor","command":"./sensor scan --out findings.json","user":"(target user, not printed)"}

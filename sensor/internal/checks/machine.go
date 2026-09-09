@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"lava.sh/sensor/internal/probe"
-	"lava.sh/sensor/internal/scan"
+	"lava-sensor-exercise/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/scan"
 )
 
 // hostIDLabel keys the host_id derivation. /etc/machine-id is declared
@@ -638,7 +638,9 @@ func describeBlockDevice(f probe.Files, mounts *scan.MountTable, n string) scan.
 		d.Model, d.ModelSource = scan.UnknownString, "none"
 	}
 
-	readInto(f, base+"/queue/rotational", &d.Rotational)
+	// Typed facts get typed JSON: a rotational flag is a boolean, not "1".
+	d.Rotational = readBool(f, base+"/queue/rotational")
+	d.Removable = readBool(f, base+"/removable")
 	readInto(f, base+"/wwid", &d.WWID)
 	readInto(f, base+"/device/firmware_rev", &d.FirmwareRev)
 	readInto(f, base+"/device/state", &d.State)
@@ -702,6 +704,24 @@ func readInto(f probe.Files, path string, dst *string) bool {
 		return true
 	}
 	return false
+}
+
+// readBool reads a sysfs 0/1 flag. A missing or unparseable flag is nil, never
+// a defaulted false.
+func readBool(f probe.Files, path string) *bool {
+	v, obs := f.ReadTrimmed(path, probe.Tiny)
+	if obs.Status != probe.StatusOK {
+		return nil
+	}
+	switch v {
+	case "0":
+		b := false
+		return &b
+	case "1":
+		b := true
+		return &b
+	}
+	return nil
 }
 
 func readInt(f probe.Files, path string) int64 {

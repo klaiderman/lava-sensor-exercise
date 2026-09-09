@@ -1,0 +1,71 @@
+1
+
+The Micron 7450 SSD: The world's most advanced Micron G7 NAND data center SSD1 Sub-2ms QoS latencies with extensive capacity and deployment options MICRON® 7450 NVMe™ SSD NVMe™ PCIe® Gen4 E1.S / M.2
+
+The Micron® 7450 NVMe™ SSD enables a wide variety of workloads for flexible deployment in hyperscale, cloud, data center, OEM and system integrator designs. It is the SSD for the infrastructure you are building right now—and for the infrastructure you will build tomorrow. This SSD offers an exceptionally broad range of PCIe® Gen4 form factors and enables multiple mainstream storage use cases, including boot, cache, and main data storage. It also features the Micron Secure Execution Environment2 to help keep your data secure. Designed as a mainstream solution, the Micron 7450 SSD balances performance and density, including PCIe Gen4, E1.S, M.2, 22x110mm, and M.2 22x80mm form factors and capacities ranging from 400GB to 7.68TB3 that delivers the capacity for demanding workloads—all with power-loss protection.
+
+1. Statement based on similar use NVMe SSDs available on the open market as of the date of this document’s initial publication. 2. An isolated security processor within the SSD controller. No hardware, software, or system can provide absolute security under all conditions. Micron assumes no liability for lost, stolen, or corrupted data arising from the use of any Micron products, including those products that incorporate any of the mentioned security features. 3. Unformatted. 1GB = 1 billion bytes. Formatted capacity is less. 4. Micron G7 NAND and Micron 176-layer NAND refer to the same NAND. See https://www.micron.com/about/blog/memory/nand/micron-delivers-the-worlds-most-advanced-176-layer-nand for additional information on Micron G7 (176-layer) NAND. Faster read and write based on comparison to Micron 7400 SSD with NVMe. 5. Up to queue depth = 32 for 4KB, 100% random, 70% read workload.
+
+Micron 7450 SSD: Key Benefits Micron G7 NAND improves storage performance for data center workloads.4 Micron G7 NAND, coupled with Micron CMOS-under-array (CuA) technology and PCIe Gen4, enables the 7450 SSD to yield faster read and write speeds, up to 1 million IOPS, enabling faster booting and application responsiveness.
+
+2ms and below QoS latency enables impressive responsiveness in data center workloads. The 7450 SSD delivers 2ms and below 99.9999% read latency.5 This low and consistent latency can improve performance in latency-sensitive data center applications, including databases like SQL Server, Oracle, MySQL, RocksDB, Cassandra, and Aerospike, among others.
+
+Capacity, form factor, and security options fit a wide variety of data center workloads. The 7450 SSD delivers an impressive array of capacities, from 400GB to 7.68TB, and has a broad variety of form factors, including M.2 and E1.S. These capacity and form factor choices help meet rapidly evolving power and thermal needs in your data center. Security features like the Micron-unique Secure Execution Environment, self-encrypting drives (SEDs), and Microsoft eDrive options tailor security to deployment requirements and help improve your data security.
+
+micron.com/7450
+
+E1.S: 5.9mm, 15mm, and 25mm height M.2: 22x110mm and 22x80mm Images are for illustration purposes only and may not be to scale.
+
+2
+
+MICRON® 7450 NVMe SSD NVMe™ PCIe® Gen4 E1.S / M.2 QoS latency and performance that data centers demand The Micron 7450 SSD delivers 2ms and below QoS read latency of 99.9999% for small IO (4KB), mixed, random workloads—an imperative for data centers to help improve latency-sensitive workloads like transaction processing, multi-tenant hosting, real-time analytics, social media, resource planning, virtualization, broad database deployments, video on demand and other random, small IO focused workloads. Micron G7 NAND features Benefit Simplified read algorithm Improved 99.9999% QoS read latency for small (4KB), mixed, random workloads. Metal control gate Enables faster NAND programming for improved SSD write speed.
+
+_[Table 1: Micron G7 NAND features]_
+
+Form factors, capacities, and features for diverse deployments
+
+The Micron 7450 SSD is optimized for mainstream workloads, including cloud and object storage, SQL Server and NoSQL databases, block and object stores, VDI, and server virtualization. Micron 7450 SSD features Benefit E1.S (5.9mm, 15mm, and 25mm) Enterprise data center SSD form factor (EDSFF) optimized for 1U platforms. Multiple z-height options to balance density and airflow. M.2 (22 x 80mm, 22 x 100mm) Ultracompact M.2 form factors, well-suited for boot devices. A PCIe Gen4 M.2 22x80mm SSD with power-loss protection, specifically designed for server boot use. Power-loss protection SSD power holdup mechanism helps ensure data in flight is properly written when SSD power is lost. Data path protection Helps protect against bit errors as data travels from the PHY to the NAND and back. Up to 128 NVMe namespaces Enables up to 128 isolated storage areas on the SSD, enhancing multitenancy and shared access via non interfering I/O. Wide capacity range From 400GB to 7.68TB, supports boot and mainstream workload storage. Multiple-sector-size support Support for 512- and 4096-byte sectors. Easily satisfies multiple platform needs, operating systems, and workloads. TAA-compliant options Compliance with the Trade Agreements Act (TAA) helps ease procurement in US Federal Government-regulated programs.
+
+_[Table 2: Data center benefits]_
+
+Multi-faceted protection for a wide variety of threats
+
+The Micron 7450 SSD offers a robust complement of proven security features built over generations of Micron data center SSDs. It offers critical security features that help address emerging threats as data and data -driven applications are virtualized, moved to the cloud, or containerized. Micron 7450 SSD Feature Benefit Secure execution environment Includes dedicated, isolated security processing hardware for security-related functions. Physical isolation helps protect against attacks. Security flexibility SED and non-SED options are available to help meet varied security deployment options. Industry standard security TCG Opal 2.01 and IEEE 1667 options available; FIPS 140-3 Level 2 certification eases adoption to existing security deployments. Asymmetric roots of trust Easily revoke previously authenticated root keys (in immutable ROM) to meet changing needs. Strong asymmetric key support Uses standard, National Institute of Standards and Technology (NIST)-approved algorithms with 2048-bit/3072-bit RSA keys for standardized, strong key support. RSA delegation key support Enables customers to maintain ownership of RSA keys, helping keep ownership within customer boundaries. Secure boot Helps ensure firmware integrity on a running platform and defends against malware. Key-based firmware update Validates firmware using public key-based authentication prior to firmware update (malware protection). Key-based privileged access Helps protect against unauthorized privileged SSD function execution with public key-based authorization. Helps guard against unauthorized changes.
+
+_[Table 3: Micron 7450 SSD security features]_
+
+3
+
+MICRON® 7450 NVMe SSD NVMe™ PCIe® Gen4 E1.S / M.2 Micron 7450 SSD key specifications E1.S 7450 PRO: E1.S Read-Intensive, 1 Drive Write per Day
+
+_[7450 MAX: E1.S]_
+
+Mixed-Use, 3 Drive Writes per Day
+
+Capacity 960GB 1.92TB 3.84TB 7.68TB 800GB 1.6TB 3.2TB 6.4TB Performance6 Seq. Read (MB/s) 6,800 6,800 6,800 6,800 6,800 6,800 6,800 6,800 Seq. Write (MB/s) 1,400 2,600 5,000 5,600 1,400 2,600 5,000 5,600 Rand. Read (IOPS)7 530,000 800,000 1,000,000 1,000,000 530,000 800,000 1,000,000 1,000,000 Rand. Write (IOPS) 85,000 120,000 180,000 215,000 145,000 250,000 390,000 400,000 70/30 Rand. Read/Write (IOPS) 110,000 190,000 300,000 415,000 165,000 290,000 500,000 645,000 Latency (TYP, µs)8 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) Endurance (total bytes written in TB)9 1,700 3,650 7,300 14,000 4,300 8,700 17,500 35,000 M.2 7450 PRO: M.2 Read-Intensive, 1 Drive Write per Day
+
+_[7450 MAX: M.2]_
+
+Mixed-Use, 3 Drive Writes per Day
+
+Capacity 480GB 960GB 1.92TB 3.84TB 400GB 800GB 1.6TB 3.2TB Performance Seq. Read (MB/s) 5,000 5,000 5,000 5,000 5,000 5,000 5,000 5,000 Seq. Write (MB/s) 700 1,400 2,400 2,500 700 1,400 2,400 2,500 Rand. Read (IOPS) 280,000 520,000 735,000 735,000 280,000 520,000 735,000 735,000 Rand. Write (IOPS) 40,000 82,000 120,000 160,000 65,000 156,000 250,000 300,000 70/30 Rand. Read/Write (IOPS) 50,000 110,000 185,000 300,000 78,000 165,000 270,000 450,000 Latency (TYP, µs) 80 (read) 30 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) 80 (read) 15 (write) Endurance (total bytes written in TB) 800 1,700 3,650 7,300 2,100 4,300 8,700 17,500 Micron 7450 SSD: Common Features Basic Attributes Interface PCIe Gen4 1x4 NVMe (v1.4) NAND Micron G7 3D TLC NAND Reliability MTBF 2 million device hours UBER <1 sector per 1017 bits read Warranty 5 years Environmental Characteristics Power Sequential read (maximum of average RMS values by form factor): E1.S: 12.0W / M.2: 8W Sequential write (maximum of average RMS values by form factor): E1.S: 14W / M.2: 7.9W Operating temp. 0-70°C
+
+6. Performance measured under the following conditions: Steady state as defined by SNIA Solid State Storage Performance Test Specification Enterprise v1.1; Drive write cache enabled; NVMe power state 0; Sequential workloads measured using FIO with a queue depth of 32; Random read workloads measured using FIO with a queue depth of 256; Random write workloads measured using FIO with a queue depth of 128; E1.S measured in 20W slot. 7. 1 million IOPS value measured using 4K sector size. 8. Latency values measured with random workloads using FIO, 4KB transfers, queue depth = 1; TYP = median, 50th percentile. 9. Actual lifetime will vary by workload. Total bytes written calculated assuming drive is 100% full (user capacity) with workload of 100% random aligned 4KB. Notes: All values provided are for reference only and are not warranted values. For warranty information, visit https://www.micron.com/support/sales-support/returns-and-warranties/enterprise-ssd-warranty or contact your Micron sales representative. Values represent the theoretical maximum endurance for the given transfer size and type. Actual lifetime will vary by workload. Refer to the percentage used in the SMART/Health information (log Identifier 02h) to check the device life used. E1.S 3.84TB, 7.68TB performance measured at 20W.
+
+4
+
+MICRON® 7450 NVMe SSD NVMe™ PCIe® Gen4 E1.S / M.2 Micron 7450 SSD part numbers Micron 7450 SSD part number information is provided below for configuration -dependent values (shown in bold). Other part number values in the example part number are fixed. See the parts catalog at micron.com/7450 for more information.
+
+micron.com/7450
+
+© 2022 Micron Technology, Inc. All rights reserved. All information herein is provided on an "AS IS" basis without warranties of any kind. Products are warranted only to meet Micron’s production data sheet specifications. Products, programs and specifications are subject to change without notice. Micron Technology, Inc. is not responsible for omissions or errors in typography or photography. Micron, the Micron logo and all other Micron trademarks are the property of Micron Technology, Inc. All other trademarks are the property of their respective owners. Rev. C 02/2026 CCM004-676576390-11596 Drive Form Factor BZ = E1.S 5.9mm (bare board) CE = E1.S 15mm (incl. enclosure) BU = E1.S 25mm (incl. enclosure) BG = M.2 22 x 110mm BA = M.2 22 x 80mm
+
+Sector Size 1 = 512 bytes 4 = 4096 bytes
+
+Product Family FR = PRO FS = MAX
+
+Security Features D = OCP 1.0a + Opal 2.01 E = OCP 1.0a + Opal 2.01 + IEEE-1667 Z = Non-SED 2 = SED Opal 2.01 + IEEE-1667 5 = SED Opal 2.01
+
+MT FD K BU 7T6 T FR 1 BC 4 Z AB YY
+
+Drive Capacity PRO MAX 480 = 480GB 400 = 400GB 960 = 960GB 800 = 800GB 1T9 = 1.92TB 1T6 = 1.6TB 3T8 = 3.84TB 3T2 = 3.2TB 7T6 = 7.68TB 6T4 = 6.4TB

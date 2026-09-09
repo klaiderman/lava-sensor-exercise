@@ -24,9 +24,9 @@ import (
 	"os"
 	"time"
 
-	"lava.sh/sensor/internal/checks"
-	"lava.sh/sensor/internal/probe"
-	"lava.sh/sensor/internal/scan"
+	"lava-sensor-exercise/sensor/internal/checks"
+	"lava-sensor-exercise/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/scan"
 )
 
 // version is overridable at build time with -ldflags "-X main.version=...".

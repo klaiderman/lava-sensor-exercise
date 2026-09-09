@@ -1,0 +1,136 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: [/docs/llms.txt](https://www.latitude.sh/docs/llms.txt)
+> Use this file to discover all available pages before exploring further.
+[Skip to main content](https://www.latitude.sh/docs/servers/custom-images#content-area)
+[Latitude.sh Docs home page![light logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/dark.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=efad591085db2784ff1a0d7ca22dbefc)![dark logo](https://mintcdn.com/latitudesh/U3ne8BNzQ-V8A9Uc/logo/light.svg?fit=max&auto=format&n=U3ne8BNzQ-V8A9Uc&q=85&s=1d247b0f651e131bd726c634f9a4d660)](https://www.latitude.sh/docs)
+Search...
+Ctrl K
+  * [Website](https://www.latitude.sh)
+  * [Support](https://www.latitude.sh/support)
+  * [Dashboard](https://www.latitude.sh/dashboard)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+  * [Sign up](https://www.latitude.sh/dashboard/signup)
+
+
+Search...
+Navigation
+Server configuration
+Custom images
+[Docs](https://www.latitude.sh/docs)[Guides](https://www.latitude.sh/docs/guides)[API reference](https://www.latitude.sh/docs/api-reference/summary)[Developer resources](https://www.latitude.sh/docs/development)
+### Docs
+  * [Overview](https://www.latitude.sh/docs)
+
+
+### Getting started
+  * [Setting up your account](https://www.latitude.sh/docs/account-setup/sign-up)
+  * [Verifying your account](https://www.latitude.sh/docs/account-setup/verify-account)
+  * [Dashboard](https://www.latitude.sh/docs/dashboard/overview)
+  * [Command menu](https://www.latitude.sh/docs/dashboard/command-menu)
+  * [Regions & Locations](https://www.latitude.sh/docs/regions-locations)
+  * [Referral program](https://www.latitude.sh/docs/referral-program)
+
+
+### Compute
+  * Bare metal
+    * Server deployment
+    * Server configuration
+      * [Operating systems](https://www.latitude.sh/docs/servers/operating-systems)
+      * [SSH keys](https://www.latitude.sh/docs/servers/ssh-keys)
+      * [Custom disk layout](https://www.latitude.sh/docs/servers/custom-disk-layout)
+      * [Custom images](https://www.latitude.sh/docs/servers/custom-images)
+      * [User data](https://www.latitude.sh/docs/servers/user-data)
+      * [ Instance metadata serviceNew ](https://www.latitude.sh/docs/servers/metadata-service)
+    * Server actions
+    * [Waitlist](https://www.latitude.sh/docs/dashboard/server-waitlist)
+  * Virtual machines
+  * KubernetesPreview
+
+
+### Storage & data
+  * [Object storage](https://www.latitude.sh/docs/storage/object-storage)
+  * [Block storage](https://www.latitude.sh/docs/storage/block-storage)
+  * [File storage](https://www.latitude.sh/docs/storage/filesystem)
+  * [Egress](https://www.latitude.sh/docs/storage/egress)
+  * Managed Databases
+
+
+### Networking
+  * [Private networks](https://www.latitude.sh/docs/networking/private-networks)
+  * [ Public networksNew ](https://www.latitude.sh/docs/networking/public-networks)
+  * IP addresses
+  * [DDoS protection](https://www.latitude.sh/docs/networking/ddos-protection)
+  * [Firewall](https://www.latitude.sh/docs/networking/firewall)
+  * Interconnection
+
+
+### Resource management
+  * [Projects](https://www.latitude.sh/docs/projects)
+  * [Tags](https://www.latitude.sh/docs/tags)
+  * [Filters and views](https://www.latitude.sh/docs/dashboard/filters-and-views)
+  * [Activity logs](https://www.latitude.sh/docs/events)
+
+
+### Platform settings
+  * Team management
+  * Account security
+
+
+### Usage & billing
+  * [Bandwidth usage](https://www.latitude.sh/docs/usage/bandwidth)
+  * Billing
+
+
+### Support
+  * [Contact support](https://www.latitude.sh/docs/support/contact-support)
+  * [Support access](https://www.latitude.sh/docs/support/support-access)
+
+
+### Legal
+  * [Service Schedules](https://www.megaport.com/legal/service-schedules/)
+
+
+close
+## On this page
+  * [What is an iPXE script](https://www.latitude.sh/docs/servers/custom-images#what-is-an-ipxe-script)
+  * [DHCP](https://www.latitude.sh/docs/servers/custom-images#dhcp)
+  * [How to deploy a custom image](https://www.latitude.sh/docs/servers/custom-images#how-to-deploy-a-custom-image)
+  * [Caveats](https://www.latitude.sh/docs/servers/custom-images#caveats)
+  * [Alternative deployment methods](https://www.latitude.sh/docs/servers/custom-images#alternative-deployment-methods)
+
+
+Server configuration
+# Custom images
+Copy pageCopy page
+Copy pageCopy page
+Custom images allow you to use iPXE scripts to boot into your operating system of choice. Using an iPXE script to deploy a custom image gives you more flexibility and control over deployments, as you can customize an operating system to your needs and requirements. You must set a valid public URL where your iPXE script is stored. Your script should follow [iPXE standards](https://ipxe.org/scripting).
+## 
+[​](https://www.latitude.sh/docs/servers/custom-images#what-is-an-ipxe-script)
+What is an iPXE script
+The iPXE script contains a set of instructions that specify how the network boot process should be performed. This can include loading an operating system image from a remote server, setting up network configurations, and executing custom scripts or commands. [Learn more about iPXE](https://ipxe.org/)
+## 
+[​](https://www.latitude.sh/docs/servers/custom-images#dhcp)
+DHCP
+Custom images use DHCP to automatically assign an IP address during boot, so you don’t need to manually configure network settings.
+## 
+[​](https://www.latitude.sh/docs/servers/custom-images#how-to-deploy-a-custom-image)
+How to deploy a custom image
+  1. For the Operating System option on the server create page, paste your iPXE script under **Custom images** or select one of the examples from the right.
+
+![Custom image selection on the Latitude.sh dashboard](https://mintcdn.com/latitudesh/ZWurrjun6MJRTyC0/images/product/9.Docs25Q4.CustomImages.png?fit=max&auto=format&n=ZWurrjun6MJRTyC0&q=85&s=41915dc9cb156b21e6d9e05e92706105)
+  1. Finish filling out the rest of the server create form as usual, including selecting the server type, location, and any other options you need.
+  2. When ready, click the **Deploy** button at the bottom of the page. Latitude.sh will begin deploying your server using your iPXE script, and you should see status updates on the server’s progress in your account dashboard.
+
+Custom images take between 10 and 30 minutes to deploy, depending on the size of the image you are deploying.
+## 
+[​](https://www.latitude.sh/docs/servers/custom-images#caveats)
+Caveats
+When deploying with a custom image, the server will report as active and show the **On** status in the dashboard. That doesn’t mean your image has finished installing. You will need to access the server console via [Remote access](https://www.latitude.sh/docs/servers/remote-access) to follow the installation process and make prompt selections, if applicable.
+## 
+[​](https://www.latitude.sh/docs/servers/custom-images#alternative-deployment-methods)
+Alternative deployment methods
+If iPXE scripts don’t meet your needs, you can also deploy custom operating systems using IPMI virtual media. See our [Custom OS via IPMI deployment guide](https://www.latitude.sh/docs/guides/ipmi-custom-os-deployment) for detailed instructions.
+Was this page helpful?
+YesNo
+[ Custom disk layout Previous ](https://www.latitude.sh/docs/servers/custom-disk-layout)[ User data Next ](https://www.latitude.sh/docs/servers/user-data)
+[x](https://www.x.com/latitudesh)[github](https://www.github.com/latitudesh)[linkedin](https://www.linkedin.com/company/latitude-sh)
+[Powered byThis documentation is built and hosted on Mintlify, a developer documentation platform](https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=latitudesh)

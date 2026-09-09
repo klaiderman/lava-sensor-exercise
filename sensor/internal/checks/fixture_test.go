@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"lava.sh/sensor/internal/probe"
-	"lava.sh/sensor/internal/scan"
+	"lava-sensor-exercise/sensor/internal/probe"
+	"lava-sensor-exercise/sensor/internal/scan"
 )
 
 // Fixture profiles are committed as plain files under testdata/ and

@@ -106,7 +106,7 @@ func TestScanWritesAValidArtifactAndExitsZero(t *testing.T) {
 // production sources rather than shelling out to the toolchain, so it also
 // holds when the tests run on a machine without a Go installation.
 func TestShippedBinaryHasNoThirdPartyImports(t *testing.T) {
-	const modulePrefix = "lava.sh/sensor/"
+	const modulePrefix = "lava-sensor-exercise/sensor/"
 	fset := token.NewFileSet()
 	err := filepath.WalkDir("../..", func(p string, d os.DirEntry, err error) error {
 		if err != nil || d.IsDir() {
