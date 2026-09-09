@@ -52,3 +52,6 @@ reports/panel/*.test
 
 # compiled Go test binaries anywhere
 *.test
+
+# local send bundle (tarball, repo zip, audit reports) - never committed
+_send/

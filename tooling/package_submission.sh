@@ -33,9 +33,15 @@ if grep -rIlE 'C:\\\\Users\\\\|/c/Users/|~/\.claude/|C:/Users/' "$STAGE" --inclu
 wc -w "$STAGE/NOTES.md" | awk '{ if ($1 > 760) { print "NOTES.md too long: " $1 " words"; exit 1 } else print "NOTES words: " $1 }'
 # validate the shipped findings against the shipped schema
 "$HOME/.lava-workbench/venv/Scripts/python.exe" tooling/validate_findings.py "$STAGE/findings.json" --schema "$STAGE/finding.schema.json" | tail -1
-# manifest + tarball
-( cd "$STAGE" && find . -type f | sort | xargs sha256sum > MANIFEST.sha256 )
+# modes: the stage is copied from a Windows filesystem, which carries no exec bit, so the
+# shipped binary would untar as 0644 and the one documented run command would fail.
+find "$STAGE" -type d -exec chmod 755 {} + ; find "$STAGE" -type f -exec chmod 644 {} +
+chmod 755 "$STAGE/sensor/bin/sensor"
+for f in "$STAGE"/sensor/internal/checks/testdata*/profile*/usr/sbin/sshd; do [ -f "$f" ] && chmod 755 "$f"; done
+# manifest + tarball. The manifest never hashes itself (that entry can never verify).
+( cd "$STAGE" && find . -type f ! -name MANIFEST.sha256 | sort | xargs sha256sum > MANIFEST.sha256 && chmod 644 MANIFEST.sha256 )
 OUTTAR="submission/lava-sensor-exercise-${TS}.tar.gz"
 tar -czf "$OUTTAR" -C "$STAGE" .
 echo "tarball: $OUTTAR ($(stat -c %s "$OUTTAR") bytes) sha256=$(sha256sum "$OUTTAR" | awk '{print $1}')"
+tar -tvzf "$OUTTAR" | grep -q "^-rwx.*\./sensor/bin/sensor$" || { echo "FATAL: sensor/bin/sensor is not executable inside the tarball"; exit 4; }
 tar -tzf "$OUTTAR" | grep -vE '^\./sensor/(internal|cmd)/|^\./transcripts/subagents/' | sort | head -40

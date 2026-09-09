@@ -24,7 +24,7 @@ Tests: `cd sensor && go test ./...` (Linux-only tests are skipped on other platf
 | `NOTES.md` | One page: assumptions, ambiguities, custom categories, another day, what Claude got wrong |
 | `sensor/` | Go source, tests and fixtures; `sensor/README.md` explains the architecture, every check, and the PASS/FAIL/UNKNOWN and severity rules |
 | `finding.schema.json`, `SCHEMA_PROVENANCE.md` | The output contract transcribed from the brief (no separate schema file was in the material we received) — the file `findings.json` was validated against |
-| `transcripts/` | The native Claude Code session transcripts (two files: the session forked) and the sub-agent transcripts, with a manifest; one API-key value is redacted, count disclosed in `TRANSCRIPT_MANIFEST.json` |
+| `transcripts/` | The native Claude Code session transcripts (two files: the session forked) and the sub-agent transcripts, with a manifest; two API-key occurrences in one sub-agent transcript are redacted; both native session files are byte-identical to their originals, per `TRANSCRIPT_MANIFEST.json` |
 | `MANIFEST.sha256` | Hashes of every file in this tarball |
 
 ## Reading `findings.json`
