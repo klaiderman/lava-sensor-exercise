@@ -1,0 +1,232 @@
+=== RUN   TestR3C_OwnerIsNotAnotherReaderOfItsOwnFile
+--- PASS: TestR3C_OwnerIsNotAnotherReaderOfItsOwnFile (0.03s)
+=== RUN   TestR3B_UndeterminedGroupModelIsUnknownNotFail
+--- PASS: TestR3B_UndeterminedGroupModelIsUnknownNotFail (0.01s)
+=== RUN   TestR3A_GroupTraversableAncestorIsNotProtection
+--- PASS: TestR3A_GroupTraversableAncestorIsNotProtection (0.01s)
+=== RUN   TestR3I_ProtectedSecretStoreIsPassNotPermanentUnknown
+--- PASS: TestR3I_ProtectedSecretStoreIsPassNotPermanentUnknown (0.00s)
+=== RUN   TestR3E_UnreadableMountTableCannotHideAFoundKey
+--- PASS: TestR3E_UnreadableMountTableCannotHideAFoundKey (0.00s)
+=== RUN   TestR3G_SymlinkedWalkRootIsFollowedOnce
+--- PASS: TestR3G_SymlinkedWalkRootIsFollowedOnce (0.00s)
+=== RUN   TestR3F_NetworkRootRefusalIsNotABudgetExhaustion
+--- PASS: TestR3F_NetworkRootRefusalIsNotABudgetExhaustion (0.01s)
+=== RUN   TestR3H_AbsenceProseIsRejectedHoweverItIsWorded
+--- PASS: TestR3H_AbsenceProseIsRejectedHoweverItIsWorded (0.00s)
+=== RUN   TestR2A_UnreadableGroupReadableKeyStillFails
+--- PASS: TestR2A_UnreadableGroupReadableKeyStillFails (0.00s)
+=== RUN   TestR2D2_StockSudoersDDoesNotFail
+--- PASS: TestR2D2_StockSudoersDDoesNotFail (0.00s)
+=== RUN   TestR3D_RootDir0550IsStillProtection
+--- PASS: TestR3D_RootDir0550IsStillProtection (0.01s)
+=== RUN   TestADV_SSHPolicyInForce_SameSecondIsNotAFail
+    zz_r1_adv_test.go:34: calls=["mokutil --sb-state" "/usr/sbin/sshd -G" "systemctl show ssh.service -p ActiveEnterTimestamp -p ActiveEnterTimestampMonotonic -p ExecMainStartTimestampMonotonic -p ActiveState -p FragmentPath" "systemctl show sshd.service -p ActiveEnterTimestamp -p ActiveEnterTimestampMonotonic -p ExecMainStartTimestampMonotonic -p ActiveState -p FragmentPath" "systemctl show ssh.socket -p ListenStream -p ActiveState" "ss -tulnH" "systemctl is-active ufw" "systemctl is-active firewalld" "systemctl is-active nftables" "systemctl is-active iptables" "systemctl is-active netfilter-persistent" "nft list ruleset" "iptables -S" "iptables-nft -S"]
+    zz_r1_adv_test.go:35: status=unknown reason=UTILITY_MISSING detail=whether the running daemon loaded the configuration on disk could not be established: the sshd unit's properties could not be read (UTILITY_MISSING)
+--- PASS: TestADV_SSHPolicyInForce_SameSecondIsNotAFail (0.00s)
+=== RUN   TestADV_Provisioning_DefaultCloudInitLayoutIsNotAFail
+    zz_r1_adv_test.go:60: status=pass reason= detail=each provisioning payload artifact the search reached is restricted to root (6 inspected, 0 shielded by an ancestor an unprivileged account cannot traverse); the readable ones are what cloud-init publishes that way by design, with their sensitive keys redacted
+--- PASS: TestADV_Provisioning_DefaultCloudInitLayoutIsNotAFail (0.00s)
+=== RUN   TestADV_PrivateKey_UnreadableRootIsNotClean
+    zz_r1_adv_test.go:81: status=pass reason= detail=each private-key-class candidate the search reached is restricted to its owner (1 candidate(s) across 1 searched root(s), 1 root(s) or subtree(s) shielded by an ancestor an unprivileged account cannot traverse)
+    zz_r1_adv_test.go:83: OVER-CLAIM: pass while a scan root (/root) was unreadable; detail claims 'every enumeration completed'
+--- FAIL: TestADV_PrivateKey_UnreadableRootIsNotClean (0.00s)
+=== RUN   TestADV_SSHAuth_MatchFlipsDirective
+    zz_r1_adv_test.go:95: status=unknown reason=CONTESTED detail=a Match block scopes passwordauthentication, so no host-wide statement about the accepted authentication methods is valid; the block is in evidence [in-force caveat: systemd is not booted, so no unit can be asked when the daemon started; whether it loaded the files on disk is unknown; see SSH_POLICY_IN_FORCE]
+    zz_r1_adv_test.go:100: root-login status=pass reason=
+--- PASS: TestADV_SSHAuth_MatchFlipsDirective (0.01s)
+=== RUN   TestADV_Machine_MissingSizeIsMarkedUnknown
+    zz_r1_adv_test.go:118: storage={"host_id":"2db3c0461b73a523ecf0fd19aeb7323fa51d2afcac88af24980fe09edf8dc0f9","host_id_source":"machine-id (keyed hash)","host_id_caveat":"stable across reboots; regenerated on re-image; clone-vulnerable","hostname":"h","hostname_source":"/proc/sys/kernel/hostname","owner":"unknown","owner_source":"none (all sources placeholder, absent or denied)","owner_candidates":[],"asset_tags":[{"field":"chassis_asset_tag","value":"unknown","source":"/sys/class/dmi/id/chassis_asset_tag","errno":"ENOENT"},{"field":"board_asset_tag","value":"unknown","source":"/sys/class/dmi/id/board_asset_tag","errno":"ENOENT"},{"field":"product_sku","value":"unknown","source":"/sys/class/dmi/id/product_sku","errno":"ENOENT"},{"field":"product_family","value":"unknown","source":"/sys/class/dmi/id/product_family","errno":"ENOENT"},{"field":"product_serial","value":"unknown","source":"/sys/class/dmi/id/product_serial",
+--- PASS: TestADV_Machine_MissingSizeIsMarkedUnknown (0.00s)
+=== RUN   TestADV_Firewall_UfwUnitActiveButDisabledInConf
+    zz_r1_adv_test.go:149: status=fail reason=POLICY detail=a host firewall is installed but switched off in its own configuration: ufw (/etc/ufw/ufw.conf says ENABLED=no, while the ufw unit reports active) — the unit running is not the same as rules being loaded
+--- PASS: TestADV_Firewall_UfwUnitActiveButDisabledInConf (0.00s)
+=== RUN   TestZR3A_GroupTraversableAncestorIsNotProtection
+    zz_r3a_test.go:32: R3-A PRIVATE_KEY_MATERIAL_EXPOSURE -> unknown reason="EACCES" viol=false
+              detail=the search could not cover everything it was pointed at: 1 directory/ies under /etc/ssl could not be read (/etc/ssl/private); exposed key material there can neither be confirmed nor excluded
+    zz_r3a_test.go:34:       scan_roots_protected=<nil>
+    zz_r3a_test.go:39: R3-A SYSTEM_SECRET_STORE_PROTECTION -> unknown reason="EACCES" viol=false
+              detail=the permissions of 1 system secret store(s) could not be established from this account (/etc/ssl/private listing (the ancestor /etc/ssl/private (mode 010) does not shield what is behind it: the 1 effective member(s) of group sslcert other than the owner can traverse it (postgres))); reporting that boundary is the point
+--- PASS: TestZR3A_GroupTraversableAncestorIsNotProtection (0.01s)
+=== RUN   TestR3B_GroupModelUndeterminedMustBeUnknownNotFail
+    zz_r3a_test.go:59: R3-B(/etc/passwd denied) SYSTEM_SECRET_STORE_PROTECTION -> unknown reason="EACCES" viol=false
+              detail=the permissions of 1 system secret store(s) could not be established from this account (/etc/shadow (undetermined: the file is group-readable and the account model is unavailable (/etc/passwd EACCES))); reporting that boundary is the point
+    zz_r3a_test.go:74: R3-B(/etc/passwd denied) PRIVATE_KEY_MATERIAL_EXPOSURE -> unknown reason="ENOENT" viol=false
+              detail=who can read 1 of the key-material candidates could not be established: /etc/ssh/ssh_host_ed25519_key (undetermined: the file is group-readable and the account model is unavailable (/etc/passwd EACCES))
+    zz_r3a_test.go:59: R3-B(/etc/group denied) SYSTEM_SECRET_STORE_PROTECTION -> unknown reason="EACCES" viol=false
+              detail=the permissions of 1 system secret store(s) could not be established from this account (/etc/shadow (undetermined: the file is group-readable and the account model is unavailable (/etc/group EACCES))); reporting that boundary is the point
+    zz_r3a_test.go:74: R3-B(/etc/group denied) PRIVATE_KEY_MATERIAL_EXPOSURE -> unknown reason="ENOENT" viol=false
+              detail=who can read 1 of the key-material candidates could not be established: /etc/ssh/ssh_host_ed25519_key (undetermined: the file is group-readable and the account model is unavailable (/etc/group EACCES))
+--- PASS: TestR3B_GroupModelUndeterminedMustBeUnknownNotFail (0.01s)
+=== RUN   TestR3C_OwnerIsNotAnotherReader_Sudoers0440
+    zz_r3b_test.go:23: R3-C SYSTEM_SECRET_STORE_PROTECTION -> pass reason="" viol=false
+              detail=each system secret store the search reached keeps its expected restrictive permissions (3 inspected, 0 shielded by an unreadable ancestor)
+    zz_r3b_test.go:34: R3-C PRIVATE_KEY_MATERIAL_EXPOSURE -> pass reason="" viol=false
+              detail=each private-key-class candidate the search reached is restricted to its owner (1 candidate(s) across 1 searched root(s), 0 root(s) or subtree(s) shielded by an ancestor an unprivileged account cannot traverse)
+--- PASS: TestR3C_OwnerIsNotAnotherReader_Sudoers0440 (0.01s)
+=== RUN   TestZR3D_RootDir0550IsStillProtection
+    zz_r3b_test.go:52: R3-D PROVISIONING_DATA_PROTECTION -> pass reason="" viol=false
+              detail=this machine carries no provisioning artifact at any cloud-init, Ignition or kickstart location
+    zz_r3b_test.go:57: R3-D CREDENTIAL_FILE_EXPOSURE -> pass reason="" viol=false
+              detail=each credential file the search reached satisfies the permission rule its own software documents (11 inspected across 2 home directory/ies; 11 shielded by an ancestor an unprivileged account cannot traverse)
+--- PASS: TestZR3D_RootDir0550IsStillProtection (0.01s)
+=== RUN   TestR3E_UnreadableMountinfoMustNotHideAFoundKey
+    zz_r3b_test.go:76: R3-E PRIVATE_KEY_MATERIAL_EXPOSURE -> fail reason="POLICY" viol=false
+              detail=private key material is readable beyond its owner: /etc/ssh/ssh_host_rsa_key (any local user can read it (mode 0644))
+--- PASS: TestR3E_UnreadableMountinfoMustNotHideAFoundKey (0.00s)
+=== RUN   TestR3F_NetworkRootRefusedWithHonestReason
+    zz_r3b_test.go:96: R3-F PRIVATE_KEY_MATERIAL_EXPOSURE -> unknown reason="NOT_ATTEMPTED" viol=false
+              detail=the search could not cover everything it was pointed at: /home is on a nfs4 mount and was not walked; exposed key material there can neither be confirmed nor excluded
+    zz_r3b_test.go:98:       on_network=[/home (nfs4)]
+    zz_r3b_test.go:109: R3-F(nfsroot) PRIVATE_KEY_MATERIAL_EXPOSURE -> unknown reason="NOT_ATTEMPTED" viol=false
+              detail=the search could not cover everything it was pointed at: /etc/ssh is on a nfs4 mount and was not walked; exposed key material there can neither be confirmed nor excluded
+--- PASS: TestR3F_NetworkRootRefusedWithHonestReason (0.01s)
+=== RUN   TestR3G_SymlinkedWalkRoot
+    zz_r3c_test.go:28: R3-G PRIVATE_KEY_MATERIAL_EXPOSURE -> fail reason="POLICY" viol=false
+              detail=private key material is readable beyond its owner: /data/homes/alice/.ssh/id_rsa (any local user can read it (mode 0644))
+--- PASS: TestR3G_SymlinkedWalkRoot (0.00s)
+=== RUN   TestR3H_ProseSmuggle
+    zz_r3c_test.go:60: R3-H SMUGGLER -> unknown reason="PARSE_ERROR" viol=true
+              detail=the search did not find any exposed key; 0 candidates, every root covered [engine: this detail claims "did not find", which its own observations do not support — 1 of 1 load-bearing observations succeeded, but 1 search(es) were refused and then excused: /root (EACCES, excused: background) — an absence is not provable across a search that did not run]
+--- PASS: TestR3H_ProseSmuggle (0.00s)
+=== RUN   TestR3I_SecretStoreProtectedDirIsPassNotPermanentUnknown
+    zz_r3c_test.go:79: R3-I SYSTEM_SECRET_STORE_PROTECTION -> pass reason="" viol=false
+              detail=each system secret store the search reached keeps its expected restrictive permissions (2 inspected, 1 shielded by an unreadable ancestor)
+    zz_r3c_test.go:81:       protected_by_ancestor=1 boundaries=<nil>
+--- PASS: TestR3I_SecretStoreProtectedDirIsPassNotPermanentUnknown (0.00s)
+=== RUN   TestR2A_UnreadableGroupReadableKey
+    zz_r3d_test.go:23: R2-A PRIVATE_KEY_MATERIAL_EXPOSURE -> fail reason="POLICY" viol=false
+              detail=private key material is readable beyond its owner: /etc/ssl/app.key (the 2 effective member(s) of group sslcert other than the owner can read it (a, b))
+--- PASS: TestR2A_UnreadableGroupReadableKey (0.00s)
+=== RUN   TestR2B_PrimaryGidMember
+    zz_r3d_test.go:39: R2-B PRIVATE_KEY_MATERIAL_EXPOSURE -> fail reason="POLICY" viol=false
+              detail=private key material is readable beyond its owner: /etc/ssh/ssh_host_ed25519_key (the 1 effective member(s) of group secret other than the owner can read it (mallory))
+--- PASS: TestR2B_PrimaryGidMember (0.00s)
+=== RUN   TestR2C_SSHConfig0644
+    zz_r3d_test.go:53: R2-C CREDENTIAL_FILE_EXPOSURE -> pass reason="" viol=false
+              detail=each credential file the search reached satisfies the permission rule its own software documents (1 inspected across 2 home directory/ies; 0 shielded by an ancestor an unprivileged account cannot traverse)
+--- PASS: TestR2C_SSHConfig0644 (0.00s)
+=== RUN   TestR2D2_StockSudoersD
+    zz_r3d_test.go:70: R2-D2 SYSTEM_SECRET_STORE_PROTECTION -> pass reason="" viol=false
+              detail=each system secret store the search reached keeps its expected restrictive permissions (3 inspected, 0 shielded by an unreadable ancestor)
+--- PASS: TestR2D2_StockSudoersD (0.00s)
+=== RUN   TestR2E_CommentDropIn
+    zz_r3d_test.go:85: R2-E PROVISIONING_DATA_PROTECTION -> pass reason="" viol=false
+              detail=each provisioning payload artifact the search reached is restricted to root (1 inspected, 0 shielded by an ancestor an unprivileged account cannot traverse); the readable ones are what cloud-init publishes that way by design, with their sensitive keys redacted
+--- PASS: TestR2E_CommentDropIn (0.00s)
+=== RUN   TestR2E2_Root0700
+    zz_r3d_test.go:100: R2-E2 PROVISIONING_DATA_PROTECTION -> pass reason="" viol=false
+              detail=this machine carries no provisioning artifact at any cloud-init, Ignition or kickstart location
+--- PASS: TestR2E2_Root0700 (0.00s)
+=== RUN   TestR2F_TruncatedTelnet
+    zz_r3d_test.go:109: R2-F REMOTE_LISTENING_SURFACE -> fail reason="POLICY" viol=false
+              detail=a remote-access path other than SSH is listening on a non-loopback address: tcp/23 (telnet); an outbound reverse tunnel (Cloudflare Tunnel, ngrok, frp, ssh -R) creates no listener and is structurally invisible to this check
+--- PASS: TestR2F_TruncatedTelnet (0.03s)
+=== RUN   TestR2G_UnlistedProse
+    zz_r3d_test.go:131: R2-G R2_FAKE -> unknown reason="EACCES" viol=true
+              detail=no exposed key material was found anywhere on this machine [engine: this detail claims "no exposed key material was found", which its own observations do not support — 0 of 1 load-bearing observations succeeded; not observed: /root (EACCES) — an absence is not provable from this]
+--- PASS: TestR2G_UnlistedProse (0.00s)
+=== RUN   TestR2H_IncludeInsideMatch
+    zz_r3d_test.go:145: R2-H SSH_ROOT_LOGIN_POLICY -> unknown reason="CONTESTED" viol=false
+              detail=global permitrootlogin no is overridden to yes for `Match Address 10.0.0.0/8` at /etc/ssh/sshd_config.d/10-lan.conf:1; a host-wide verdict would be wrong in both directions [in-force caveat: systemd is not booted, so no unit can be asked when the daemon started; whether it loaded the files on disk is unknown; see SSH_POLICY_IN_FORCE]
+--- PASS: TestR2H_IncludeInsideMatch (0.00s)
+=== RUN   TestR2I_NoBMC
+    zz_r3d_test.go:154: R2-I BMC_DEVICE_NODE_ACCESS -> pass reason="" viol=false
+              detail=none of the three BMC device node paths resolves to a node, so no local user has an in-band path to a management controller
+--- PASS: TestR2I_NoBMC (0.00s)
+=== RUN   TestR4_NISCompatPlusLineMakesRootAReaderOfSudoers
+    zz_r4_test.go:63: R4-1 Readers(0440, root:root) with NIS plus line: determined=true beyond=true owner="+" members=[root] desc="the 1 effective member(s) of group root other than the owner can read it (root)"
+    zz_r4_test.go:65: FALSE EXPOSURE: /etc/sudoers 0440 root:root is owner-only; a NIS compat plus line must not make root another reader
+    zz_r4_test.go:72: R4-1b Readers(0440, root:root) with plus line in group: determined=true beyond=false group="+" members=[] desc="the owner only: group + has no effective member besides root"
+--- FAIL: TestR4_NISCompatPlusLineMakesRootAReaderOfSudoers (0.00s)
+=== RUN   TestR4_DuplicateUidAliasMakesOwnerAReader
+    zz_r4_test.go:86: R4-2 Readers(0440, uid0:gid0) with root+toor both uid 0: beyond=true owner="toor" members=[root] desc="the 1 effective member(s) of group root other than the owner can read it (root)"
+    zz_r4_test.go:88: FALSE EXPOSURE: both names are the same kernel identity (uid 0); neither is beyond the owner
+--- FAIL: TestR4_DuplicateUidAliasMakesOwnerAReader (0.00s)
+=== RUN   TestR4_ACLTraverseOnAncestorIsCountedAsProtection
+    zz_r4_test.go:105:       after ACL: /tmp/TestR4_ACLTraverseOnAncestorIsCountedAsProtection3521059335/001/home/alice mode=0010
+    zz_r4_test.go:107: R4-3a PRIVATE_KEY_MATERIAL_EXPOSURE -> pass reason="" viol=false
+              detail=each private-key-class candidate the search reached is restricted to its owner (0 candidate(s) across 1 searched root(s), 1 root(s) or subtree(s) shielded by an ancestor an unprivileged account cannot traverse)
+              completeness=13 of 13 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:109:       scan_roots_protected=[/home/alice (the ancestor /home/alice (mode 010) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)]
+    zz_r4_test.go:111: FALSE PASS: uid 1500 has --x on /home/alice via ACL and the key inside is 0644
+    zz_r4_test.go:121:       after ACL: /tmp/TestR4_ACLTraverseOnAncestorIsCountedAsProtection3521059335/002/etc/ssl/private mode=0010
+    zz_r4_test.go:123: R4-3b SYSTEM_SECRET_STORE_PROTECTION -> pass reason="" viol=false
+              detail=each system secret store the search reached keeps its expected restrictive permissions (1 inspected, 1 shielded by an unreadable ancestor)
+              completeness=9 of 9 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:125:       protected_by_ancestor=1
+    zz_r4_test.go:127: FALSE PASS: /etc/ssl/private is traversable by uid 1500 via ACL; the 0644 key inside is readable by it
+    zz_r4_test.go:141:       after ACL: /tmp/TestR4_ACLTraverseOnAncestorIsCountedAsProtection3521059335/003/root mode=0010
+    zz_r4_test.go:144: R4-3c PRIVATE_KEY_MATERIAL_EXPOSURE -> pass reason="" viol=false
+              detail=each private-key-class candidate the search reached is restricted to its owner (0 candidate(s) across 0 searched root(s), 1 root(s) or subtree(s) shielded by an ancestor an unprivileged account cannot traverse)
+              completeness=12 of 12 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:146: FALSE PASS (PRIVATE_KEY_MATERIAL_EXPOSURE): /root has an ACL granting uid 1500 traverse; the files inside are 0644
+    zz_r4_test.go:144: R4-3c PROVISIONING_DATA_PROTECTION -> pass reason="" viol=false
+              detail=this machine carries no provisioning artifact at any cloud-init, Ignition or kickstart location
+              completeness=20 of 20 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:146: FALSE PASS (PROVISIONING_DATA_PROTECTION): /root has an ACL granting uid 1500 traverse; the files inside are 0644
+    zz_r4_test.go:144: R4-3c CREDENTIAL_FILE_EXPOSURE -> pass reason="" viol=false
+              detail=each credential file the search reached satisfies the permission rule its own software documents (11 inspected across 3 home directory/ies; 11 shielded by an ancestor an unprivileged account cannot traverse)
+              completeness=34 of 34 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:146: FALSE PASS (CREDENTIAL_FILE_EXPOSURE): /root has an ACL granting uid 1500 traverse; the files inside are 0644
+--- FAIL: TestR4_ACLTraverseOnAncestorIsCountedAsProtection (0.02s)
+=== RUN   TestR4_StatDeniedCandidateIsSilentlyDropped
+    zz_r4_test.go:162: R4-4 PRIVATE_KEY_MATERIAL_EXPOSURE -> pass reason="" viol=false
+              detail=each private-key-class candidate the search reached is restricted to its owner (0 candidate(s) across 1 searched root(s), 0 root(s) or subtree(s) shielded by an ancestor an unprivileged account cannot traverse)
+              completeness=13 of 13 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:164:       non_regular_skipped=1 boundaries=<nil> private_key_files=<nil>
+    zz_r4_test.go:166: FALSE PASS: mallory can traverse /etc/ssh (group x) and read the 0644 host key; the sensor dropped the candidate as non-regular
+--- FAIL: TestR4_StatDeniedCandidateIsSilentlyDropped (0.00s)
+=== RUN   TestR4_SymlinkRootRefusalReasonClass
+    zz_r4_test.go:183: R4-5 PRIVATE_KEY_MATERIAL_EXPOSURE -> unknown reason="BUDGET_EXHAUSTED" viol=true
+              detail=the search could not cover everything it was pointed at: /home was not enumerated (root is a symlink to a target writable by other accounts); exposed key material there can neither be confirmed nor excluded [engine: this detail claims "enumerated", which its own observations do not support — 12 of 13 load-bearing observations succeeded; not observed: /home (NOT_ATTEMPTED) — an absence is not provable from this]
+              completeness=12 of 13 load-bearing observations succeeded; not observed: /home (NOT_ATTEMPTED) — an absence is not provable from this
+    zz_r4_test.go:185:       scan_roots_not_enumerated=[/home: root is a symlink to a target writable by other accounts] boundaries=[/home was not enumerated (root is a symlink to a target writable by other accounts)]
+    zz_r4_test.go:187: WRONG REASON CLASS: a refusal to follow a symlinked root is NOT_ATTEMPTED, not BUDGET_EXHAUSTED
+    zz_r4_test.go:194: R4-5b(dangling) PRIVATE_KEY_MATERIAL_EXPOSURE -> unknown reason="BUDGET_EXHAUSTED" viol=true
+              detail=the search could not cover everything it was pointed at: /home was not enumerated (root is a symlink whose target is unresolvable); exposed key material there can neither be confirmed nor excluded [engine: this detail claims "enumerated", which its own observations do not support — 12 of 13 load-bearing observations succeeded; not observed: /home (NOT_ATTEMPTED) — an absence is not provable from this]
+              completeness=12 of 13 load-bearing observations succeeded; not observed: /home (NOT_ATTEMPTED) — an absence is not provable from this
+    zz_r4_test.go:196:       scan_roots_not_enumerated=[/home: root is a symlink whose target is unresolvable] scan_roots_absent=[/etc/ssl /etc/pki /etc/kubernetes /etc/docker /etc/nginx /etc/apache2 /etc/httpd /opt /srv /root]
+--- FAIL: TestR4_SymlinkRootRefusalReasonClass (0.01s)
+=== RUN   TestR4_SymlinkAncestorBasisText
+    zz_r4_test.go:213: R4-6 SYSTEM_SECRET_STORE_PROTECTION -> fail reason="POLICY" viol=false
+              detail=a system secret store is reachable beyond its owner: /etc/ssl/private is other-writable
+              completeness=10 of 10 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:215:       observation_boundaries=[/etc/ssl/private listing (the ancestor /etc/ssl/private (mode 0777) does not shield what is behind it: any local user can traverse it (mode 0777))] protected=0
+--- PASS: TestR4_SymlinkAncestorBasisText (0.00s)
+=== RUN   TestR4_UndeterminedModelDoesNotHideAWorldReadableKey
+    zz_r4_test.go:229: R4-7 PRIVATE_KEY_MATERIAL_EXPOSURE -> fail reason="POLICY" viol=false
+              detail=private key material is readable beyond its owner: /etc/ssh/ssh_host_rsa_key (any local user can read it (mode 0644))
+              completeness=11 of 11 load-bearing observations succeeded, so an absence found by them is evidence
+--- PASS: TestR4_UndeterminedModelDoesNotHideAWorldReadableKey (0.00s)
+=== RUN   TestR4_LavaShapeSecretStore
+    zz_r4_test.go:256: R4-8 SYSTEM_SECRET_STORE_PROTECTION -> pass reason="" viol=false
+              detail=each system secret store the search reached keeps its expected restrictive permissions (6 inspected, 2 shielded by an unreadable ancestor)
+              completeness=14 of 14 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:258:       protected_by_ancestor=2 boundaries=<nil>
+--- PASS: TestR4_LavaShapeSecretStore (0.00s)
+=== RUN   TestR4_AllRootsProtectedPassBasis
+    zz_r4_test.go:275: R4-9 PRIVATE_KEY_MATERIAL_EXPOSURE -> pass reason="" viol=false
+              detail=each private-key-class candidate the search reached is restricted to its owner (0 candidate(s) across 0 searched root(s), 1 root(s) or subtree(s) shielded by an ancestor an unprivileged account cannot traverse)
+              completeness=12 of 12 load-bearing observations succeeded, so an absence found by them is evidence
+    zz_r4_test.go:277:       obs /proc/self/mountinfo status=OK lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/ssh status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/ssl status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/pki status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/kubernetes status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/docker status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/nginx status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/apache2 status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /etc/httpd status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /opt status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /srv status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /home status=ENOENT lb=true optout=""
+    zz_r4_test.go:277:       obs /root status=OK lb=false optout="protection (ancestor /root mode 0000, readers beyond owner: none)"
+--- PASS: TestR4_AllRootsProtectedPassBasis (0.00s)
+=== RUN   TestR4_FileACLMaskIsNotOverTrusted
+    zz_r4_test.go:290:       after ACL: /tmp/TestR4_FileACLMaskIsNotOverTrusted442340081/001/etc/ssh/ssh_host_rsa_key mode=0640
+    zz_r4_test.go:292: R4-10 PRIVATE_KEY_MATERIAL_EXPOSURE -> fail reason="POLICY" viol=false
+              detail=private key material is readable beyond its owner: /etc/ssh/ssh_host_rsa_key (the owner only: group testgroup has no effective member besides ubuntu; an ACL grants a non-owner principal read)
+              completeness=11 of 11 load-bearing observations succeeded, so an absence found by them is evidence
+--- PASS: TestR4_FileACLMaskIsNotOverTrusted (0.00s)
+FAIL

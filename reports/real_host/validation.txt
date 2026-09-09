@@ -10,15 +10,15 @@
   "STORAGE_POSTURE": 4
  },
  "statuses": {
-  "pass": 10,
-  "fail": 11,
-  "unknown": 5
+  "pass": 12,
+  "unknown": 4,
+  "fail": 10
  },
  "severities": {
-  "info": 10,
+  "info": 13,
   "low": 2,
-  "medium": 9,
-  "high": 4,
+  "medium": 7,
+  "high": 3,
   "critical": 1
  },
  "violations": 0
