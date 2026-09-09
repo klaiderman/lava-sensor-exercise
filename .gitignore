@@ -40,8 +40,6 @@ submission/*.tar.gz
 # external review inputs supplied by the user and derived transcript renderings (local only)
 Claude outputs/
 ai/transcripts/normalized/
-reports/claude-transcript.html
-reports/claude-transcript-data.json
 
 # reviewer scratch: module copies and compiled test binaries (logs stay in history)
 reports/review*/sensorcopy/
