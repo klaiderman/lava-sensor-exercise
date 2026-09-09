@@ -162,6 +162,7 @@ type ObsEvidence struct {
 	DurationMS      int64    `json:"duration_ms"`
 	LoadBearing     bool     `json:"load_bearing,omitempty"`
 	AbsenceProven   bool     `json:"absence_proven,omitempty"`
+	OptOut          string   `json:"not_load_bearing_because,omitempty"`
 	Detail          string   `json:"detail,omitempty"`
 	Command         []string `json:"command,omitempty"`
 	BinaryPath      string   `json:"binary_resolved_path,omitempty"`

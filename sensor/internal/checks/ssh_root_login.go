@@ -36,14 +36,15 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 	// Evidence first, verdict after: the observation is recorded whatever the
 	// verdict turns out to be.
 	oracleObs := oracle.Obs
-	oracleObs.LoadBearing = oracleOK
+	if !oracleOK {
+		oracleObs.OptOut = "the daemon's own answer was not obtained; the verdict is taken from the configuration chain instead"
+	}
 	r.Add(oracleObs)
-	for i, obs := range cfg.Observations {
-		// Only the root config read can be load-bearing, and only when the
-		// walker is the source of the verdict. Marking a failed fallback
-		// load-bearing while the oracle answered would manufacture an unknown.
-		if i == 0 && !oracleOK && res.Found {
-			obs.LoadBearing = true
+	for _, obs := range cfg.Observations {
+		if oracleOK {
+			// The daemon answered, so the chain is provenance rather than the
+			// basis of the verdict.
+			obs.OptOut = "the verdict comes from the daemon's own effective configuration; this file is read for provenance and cross-checking"
 		}
 		r.Add(obs)
 	}
@@ -130,8 +131,8 @@ func (c sshRootLoginPolicy) Run(ctx context.Context, env *scan.Env) scan.Result 
 	}
 }
 
-const noDaemonDetail = "no sshd binary and no sshd configuration were found, so there is no root-login policy to report; " +
-	"note that the absence of an SSH listener is not the absence of remote access to the machine"
+const noDaemonDetail = "this machine has neither an sshd binary at any standard path nor a readable sshd configuration, " +
+	"so there is no root-login policy to report; note that a machine without an SSH listener may still be reachable by other means"
 
 // keyPathVerdict is the per-path evidence row of the key-material question.
 type keyPathVerdict struct {
@@ -228,7 +229,7 @@ func (c sshRootLoginPolicy) keyBasedRootLogin(env *scan.Env, r *scan.Result, eff
 		}
 		return finish(scan.Unknown(reason,
 			policyNote+" and at least one candidate AuthorizedKeysFile path could not be resolved ("+reason+
-				"), so root key material can neither be confirmed nor excluded; denied is not absent"))
+				"), so root key material can neither be confirmed nor excluded; a denial is not the same fact as an empty directory"))
 	case !akcNone || !tucaNone:
 		what := "authorizedkeyscommand " + renderDirective(akc, akcKnown)
 		if !tucaNone {
@@ -239,7 +240,7 @@ func (c sshRootLoginPolicy) keyBasedRootLogin(env *scan.Env, r *scan.Result, eff
 				" can supply root keys from outside the filesystem paths we checked"))
 	default:
 		return finish(scan.Pass(policyNote + ", but root has no key material it could use: " + akfSource +
-			" resolves to " + strings.Join(paths, ", ") + ", each proven absent by a successful listing of its parent, " +
+			" resolves to " + strings.Join(paths, ", ") + ", the listing of each parent directory succeeded and carries no such file, " +
 			"authorizedkeyscommand is none and trustedusercakeys is none, so no remote party can authenticate as root over SSH"))
 	}
 }

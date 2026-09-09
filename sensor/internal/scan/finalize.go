@@ -56,6 +56,17 @@ func finalize(c Check, r Result, env *Env, start time.Time, elapsed time.Duratio
 		}
 	}
 
+	// A conclusion with nothing behind it is not a conclusion. A pass or a fail
+	// needs at least one observation that both underwrites it and succeeded.
+	if (r.Status == StatusPass || r.Status == StatusFail) && comp.LoadBearingOK == 0 {
+		violation = true
+		was := r.Status
+		r.Status = StatusUnknown
+		r.Reason = ReasonNoEvidence
+		r.Detail = strings.TrimSpace(r.Detail + " [engine: downgraded from " + string(was) +
+			" — no successful load-bearing observation underwrites it: " + comp.Statement + "]")
+	}
+
 	// A fail or an unknown without a reason is a bug; make it visible rather
 	// than emitting a schema-invalid finding.
 	if r.Status != StatusPass && strings.TrimSpace(r.Reason) == "" {
@@ -106,12 +117,10 @@ func entailmentReason(obs []probe.Observation) string {
 // prefix never supports a pass (L05, L12).
 func firstUnclean(obs []probe.Observation) (probe.Observation, bool) {
 	for _, o := range obs {
-		if !o.LoadBearing {
+		if !bearing(o) || clean(o) {
 			continue
 		}
-		if !clean(o) {
-			return o, true
-		}
+		return o, true
 	}
 	return probe.Observation{}, false
 }
@@ -149,7 +158,8 @@ func renderObservation(o probe.Observation) ObsEvidence {
 		Truncated:       o.Truncated,
 		Bytes:           o.Bytes,
 		DurationMS:      o.Elapsed.Milliseconds(),
-		LoadBearing:     o.LoadBearing,
+		LoadBearing:     bearing(o),
+		OptOut:          o.OptOut,
 		AbsenceProven:   o.AbsenceProven,
 		Detail:          o.Detail,
 	}

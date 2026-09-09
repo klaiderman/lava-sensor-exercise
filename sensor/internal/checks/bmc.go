@@ -94,9 +94,11 @@ func (c bmcInbandInterfacePresent) Run(ctx context.Context, env *scan.Env) scan.
 			unseen = append(unseen, l.path+" ("+l.obs.Reason()+")")
 		}
 	}
-	// Only an absence claim rests on all three listings having worked.
-	r.LoadBearingIf(len(evidence) == 0,
-		"/sys/firmware/dmi/entries", "/sys/bus/acpi/devices", "/sys/devices/platform")
+	// A declaration we FOUND stands on that positive observation; the other
+	// listings did not have to succeed for it to be true.
+	r.OptOut(len(evidence) > 0,
+		"a management-controller declaration was observed directly, so this listing does not underwrite the verdict",
+		"/sys/bus/acpi/devices", "/sys/devices/platform")
 
 	switch {
 	case len(evidence) > 0:
@@ -109,7 +111,7 @@ func (c bmcInbandInterfacePresent) Run(ctx context.Context, env *scan.Env) scan.
 				"), so a declaration can neither be found nor ruled out; a kernel that does not expose SMBIOS entries is not a machine without a BMC"))
 	default:
 		return finish(scan.Pass(
-			"no management-controller interface is declared in the SMBIOS entry directory, the ACPI device list or the platform device list"))
+			"the SMBIOS entry directory, the ACPI device list and the platform device list carry no management-controller declaration"))
 	}
 }
 
@@ -275,6 +277,9 @@ func (c bmcDeviceNodeAccess) Run(ctx context.Context, env *scan.Env) scan.Result
 	for _, p := range ipmiNodes {
 		st := env.Files.Stat(p)
 		st.Detail = "BMC device node metadata; the node is never opened, not even O_RDONLY|O_NONBLOCK"
+		// ENOENT from a stat that resolved the path IS the answer to "is there
+		// a node here", not a gap in it.
+		st.AbsenceProven = st.Status == probe.StatusENOENT
 		r.Add(st)
 		n := deviceNode{Path: p, Errno: st.Reason()}
 		if st.Status != probe.StatusOK {
@@ -349,8 +354,10 @@ func (c bmcDeviceNodeAccess) Run(ctx context.Context, env *scan.Env) scan.Result
 	}
 	r.Field("udev_or_modprobe_rules_matching_ipmi", relaxing)
 
-	// "No node exists" rests on all three stats; a node we found does not.
-	r.LoadBearingIf(len(adverse) == 0 && len(undetermined) == 0 && !found, ipmiNodes...)
+	// A node we found to be reachable stands on that stat alone.
+	r.OptOut(len(adverse) > 0,
+		"a reachable BMC device node was observed directly, so the other node paths do not underwrite the verdict",
+		ipmiNodes...)
 
 	switch {
 	case len(adverse) > 0:
@@ -373,7 +380,7 @@ func (c bmcDeviceNodeAccess) Run(ctx context.Context, env *scan.Env) scan.Result
 				"an IPMI interface is present but no /dev/ipmi* node exists in any of its three spellings, which means ipmi_devintf is not loaded — not that there is no BMC"))
 		}
 		return finish(scan.Pass(
-			"no in-band BMC device node exists in any of its three spellings, so no local user has an in-band path to a management controller"))
+			"none of the three BMC device node paths resolves to a node, so no local user has an in-band path to a management controller"))
 	default:
 		return finish(scan.Pass(
 			"the BMC device node is reachable by root only, and the restriction is the devtmpfs file mode rather than a capability check in the driver's open path"))
@@ -425,6 +432,7 @@ func (c bmcClientToolingInventory) Run(ctx context.Context, env *scan.Env) scan.
 	r.Field("executed", false)
 
 	var scanned, unreadable []string
+	var dirStats []probe.Observation
 	for _, d := range pathDirs {
 		st := env.Files.Stat(d)
 		st.Detail = "binary search path directory; scanned regardless of the caller's PATH, which often omits the sbin directories"
@@ -432,6 +440,7 @@ func (c bmcClientToolingInventory) Run(ctx context.Context, env *scan.Env) scan.
 		// could not read is.
 		st.LoadBearing = st.Status == probe.StatusOK
 		st.AbsenceProven = st.Status == probe.StatusENOENT
+		dirStats = append(dirStats, st)
 		r.Add(st)
 		switch st.Status {
 		case probe.StatusOK:
@@ -467,13 +476,17 @@ func (c bmcClientToolingInventory) Run(ctx context.Context, env *scan.Env) scan.
 	r.Field("inventory_note", "the absence of a client tool says nothing about whether a management controller exists or answers; it never sets another check to unknown")
 
 	if len(scanned) == 0 {
-		return finish(scan.Unknown(scan.ReasonEACCES,
-			"no directory in the standard binary search path could be listed ("+strings.Join(unreadable, ", ")+
+		where := strings.Join(unreadable, ", ")
+		if where == "" {
+			where = "every candidate directory is absent: " + strings.Join(pathDirs, ", ")
+		}
+		return finish(scan.Unknown(reasonOf(dirStats...),
+			"no directory in the standard binary search path could be inspected ("+where+
 				"), so which IPMI client tooling is installed is unknown"))
 	}
 	if len(installed) == 0 {
-		return finish(scan.Pass("no IPMI client tooling is installed: every candidate name was looked for in " +
-			itoa(int64(len(scanned))) + " binary directories and none was found, and none was executed"))
+		return finish(scan.Pass("this machine carries no IPMI client tooling in its " +
+			itoa(int64(len(scanned))) + " binary directories, and nothing was executed"))
 	}
 	return finish(scan.Pass("IPMI client tooling is installed: " + strings.Join(installed, ", ") +
 		" — inventory only; none was executed, and whether it could reach the controller is decided by BMC_DEVICE_NODE_ACCESS"))
@@ -597,9 +610,10 @@ func (c bmcHostInterfaceExposure) Run(ctx context.Context, env *scan.Env) scan.R
 	}
 	r.Field("interfaces", ifaces)
 
-	// The absence branch is the only one that needs both listings.
-	r.LoadBearingIf(len(live) == 0 && len(latent) == 0 && !undetermined,
-		"/sys/firmware/dmi/entries", "/sys/class/net")
+	// A host interface we found stands on the interface observation itself.
+	r.OptOut(len(live) > 0 || len(latent) > 0,
+		"a management-controller host interface was observed directly, so the firmware entry listing does not underwrite the verdict",
+		"/sys/firmware/dmi/entries")
 
 	switch {
 	case len(live) > 0:
@@ -622,6 +636,6 @@ func (c bmcHostInterfaceExposure) Run(ctx context.Context, env *scan.Env) scan.R
 				"), so a firmware-declared host interface can neither be found nor ruled out. "+oobBlindSpot))
 	default:
 		return finish(scan.Pass(
-			"no management-controller host interface is observable in the SMBIOS entry list or the network interface list. " + oobBlindSpot))
+			"the SMBIOS entry list and the network interface list carry no management-controller host interface. " + oobBlindSpot))
 	}
 }

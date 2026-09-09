@@ -79,7 +79,7 @@ func buildLabDocument(t *testing.T, profile string, runner *fakeRunner) (*scan.D
 func sshdRunnerFor(profile string) *fakeRunner {
 	switch profile {
 	case "profileA":
-		return newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("prohibit-password"))
+		return profileARunner()
 	case "profileC":
 		return newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("no"))
 	default:
@@ -226,7 +226,7 @@ var volatileField = regexp.MustCompile(`"(duration_ms|elapsed_ms|entries_scanned
 func TestSchema_DeterministicAcrossTwoRuns(t *testing.T) {
 	root := buildAuthorProfile(t, "profileA")
 	build := func() []byte {
-		env := newLabEnv(t, root, newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("prohibit-password")))
+		env := newLabEnv(t, root, profileARunner())
 		roster := checks.All()
 		findings, _ := scan.Run(context.Background(), roster, env)
 		doc := &scan.Document{

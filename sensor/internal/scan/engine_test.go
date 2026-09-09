@@ -31,6 +31,15 @@ func newStub(id string, impact string, fn func(context.Context, *Env) Result) st
 	return stubCheck{id: id, category: "TEST_CATEGORY", title: "stub " + id, impact: impact, fn: fn}
 }
 
+// witnessed returns a result with one successful observation behind it. A
+// verdict with nothing behind it is downgraded to NO_EVIDENCE, so a stub that
+// only wants to exercise severity or isolation still has to have looked at
+// something.
+func witnessed(r Result) Result {
+	r.Add(probe.Observation{Source: "/test/witness", Kind: probe.KindFileRead, Status: probe.StatusOK, Value: "x"})
+	return r
+}
+
 func testEnv() *Env {
 	fixed := time.Date(2026, 9, 9, 12, 0, 0, 0, time.UTC)
 	return NewEnv(nil, nil, func() time.Time { return fixed }, time.Time{}, 1000)
@@ -41,7 +50,7 @@ func testEnv() *Env {
 func TestPanicIsolation(t *testing.T) {
 	roster := []Check{
 		newStub("PANICS", SeverityHigh, func(context.Context, *Env) Result { panic("boom in a check") }),
-		newStub("SURVIVES", SeverityLow, func(context.Context, *Env) Result { return Pass("fine") }),
+		newStub("SURVIVES", SeverityLow, func(context.Context, *Env) Result { return witnessed(Pass("fine")) }),
 	}
 	findings, _ := Run(context.Background(), roster, testEnv())
 	if len(findings) != 2 {
@@ -100,10 +109,10 @@ func TestSeverityRule(t *testing.T) {
 		observational bool
 		want          string
 	}{
-		{"pass is info", Pass("ok"), SeverityCritical, false, SeverityInfo},
-		{"fail takes the impact", Fail(ReasonPolicy, "bad"), SeverityHigh, false, SeverityHigh},
+		{"pass is info", witnessed(Pass("ok")), SeverityCritical, false, SeverityInfo},
+		{"fail takes the impact", witnessed(Fail(ReasonPolicy, "bad")), SeverityHigh, false, SeverityHigh},
 		{"unknown takes the impact too", Unknown(ReasonEACCES, "denied"), SeverityHigh, false, SeverityHigh},
-		{"observational is always info", Fail(ReasonPolicy, "bad"), SeverityHigh, true, SeverityInfo},
+		{"observational is always info", witnessed(Fail(ReasonPolicy, "bad")), SeverityHigh, true, SeverityInfo},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -125,7 +134,7 @@ func TestLoadBearingDowngrade(t *testing.T) {
 		Status: probe.StatusEACCES, Errno: "EACCES", LoadBearing: true,
 	}
 	c := newStub("DOWNGRADE", SeverityMedium, func(context.Context, *Env) Result {
-		r := Pass("claims everything is fine")
+		r := witnessed(Pass("this is fine"))
 		r.Add(denied)
 		return r
 	})
@@ -143,7 +152,7 @@ func TestLoadBearingDowngrade(t *testing.T) {
 	// A truncated read is a prefix, and a prefix never supports a pass either.
 	trunc := probe.Observation{Source: "/etc/big", Status: probe.StatusOK, Truncated: true, LoadBearing: true}
 	c2 := newStub("TRUNC", SeverityMedium, func(context.Context, *Env) Result {
-		r := Pass("read the whole thing, honest")
+		r := witnessed(Pass("read the whole thing, honest"))
 		r.Add(trunc)
 		return r
 	})
@@ -152,12 +161,13 @@ func TestLoadBearingDowngrade(t *testing.T) {
 		t.Errorf("truncated: %s/%s, want unknown/BUDGET_EXHAUSTED", f2[0].Status, f2[0].Reason)
 	}
 
-	// A failed observation that is NOT load-bearing must not downgrade
-	// anything: over-claiming unknown is a bug too (L36).
+	// An observation the check explicitly opted out of, WITH a recorded reason,
+	// must not downgrade anything: over-claiming unknown is a bug too (L36).
+	// Opting out is now the deliberate act, not the default.
 	notBearing := denied
-	notBearing.LoadBearing = false
+	notBearing.OptOut = "the verdict rests on a directly observed fact, not on this read"
 	c3 := newStub("KEEPS", SeverityMedium, func(context.Context, *Env) Result {
-		r := Pass("the verdict rests on something else")
+		r := witnessed(Pass("the verdict rests on something else"))
 		r.Add(notBearing)
 		return r
 	})
@@ -182,7 +192,7 @@ func TestReasonIsAlwaysPresentOnNonPass(t *testing.T) {
 func TestFindingsAreSorted(t *testing.T) {
 	mk := func(cat, id string) Check {
 		return stubCheck{id: id, category: cat, title: "t", impact: SeverityLow,
-			fn: func(context.Context, *Env) Result { return Pass("ok") }}
+			fn: func(context.Context, *Env) Result { return witnessed(Pass("ok")) }}
 	}
 	roster := []Check{mk("ZED", "B"), mk("ALPHA", "Z"), mk("ALPHA", "A")}
 	findings, _ := Run(context.Background(), roster, testEnv())

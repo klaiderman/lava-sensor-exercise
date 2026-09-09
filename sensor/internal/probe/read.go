@@ -167,6 +167,9 @@ func (r *Reader) Read(p string, pol Policy) Observation {
 		obs.Status, obs.Errno = Classify(err)
 		obs.Elapsed = time.Since(start)
 		obs.Detail = shortErr(err)
+		if obs.Status == StatusENOENT {
+			obs.AbsenceProven = r.absenceProven(p)
+		}
 		if resolved != "" {
 			obs.Meta = &Meta{ResolvedPath: resolved}
 		}
@@ -286,6 +289,7 @@ func (r *Reader) Stat(p string) Observation {
 		no := false
 		if obs.Status == StatusENOENT {
 			obs.Meta = &Meta{Exists: &no}
+			obs.AbsenceProven = r.absenceProven(p)
 		}
 		return obs
 	}
@@ -327,6 +331,9 @@ func (r *Reader) ReadDir(p string, max int) ([]fs.DirEntry, Observation) {
 		obs.Status, obs.Errno = Classify(err)
 		obs.Elapsed = time.Since(start)
 		obs.Detail = shortErr(err)
+		if obs.Status == StatusENOENT {
+			obs.AbsenceProven = r.absenceProven(p)
+		}
 		return nil, obs
 	}
 	defer f.Close()
@@ -443,4 +450,37 @@ func (r *Reader) ModTime(p string) (time.Time, bool) {
 		return time.Time{}, false
 	}
 	return fi.ModTime(), true
+}
+
+// absenceProven answers whether an ENOENT is the ANSWER or a gap in it.
+//
+// "Absence is only provable from a successful listing" — so the listing is
+// performed: walk up to the nearest ancestor that stats, and if one does, the
+// path genuinely is not there. If the walk is stopped by a denial instead, the
+// absence is not established and the ENOENT stays a gap.
+func (r *Reader) absenceProven(p string) bool {
+	for dir := parentOf(p); ; dir = parentOf(dir) {
+		var err error
+		if root, rel := r.rootFor(dir); root != nil {
+			_, err = root.Lstat(rel)
+		} else {
+			_, err = os.Lstat(r.full(dir))
+		}
+		if err == nil {
+			return true
+		}
+		if status, _ := Classify(err); status != StatusENOENT {
+			return false
+		}
+		if dir == "/" || dir == "." || dir == "" {
+			return false
+		}
+	}
+}
+
+func parentOf(p string) string {
+	if i := strings.LastIndexByte(p, '/'); i > 0 {
+		return p[:i]
+	}
+	return "/"
 }

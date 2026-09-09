@@ -106,7 +106,7 @@ func (c secureBootEnabled) Run(ctx context.Context, env *scan.Env) scan.Result {
 	case !present:
 		r.Field("applicable", false)
 		return finish(scan.Unknown(scan.ReasonENOENT,
-			"this platform exposes no EFI firmware interface, so Secure Boot is not applicable here; an absent efivars tree is not a disabled Secure Boot"))
+			"this platform exposes no EFI firmware interface, so Secure Boot does not apply here; a machine without efivars is not a machine with Secure Boot switched off"))
 	default:
 		r.Field("applicable", true)
 		return finish(scan.Unknown(obs.Reason(),
@@ -167,7 +167,7 @@ func (c uefiPlatformSetupMode) Run(ctx context.Context, env *scan.Env) scan.Resu
 	case !present:
 		r.Field("applicable", false)
 		return finish(scan.Unknown(scan.ReasonENOENT,
-			"this platform exposes no EFI firmware interface, so platform Setup Mode is not applicable here"))
+			"this platform exposes no EFI firmware interface, so platform Setup Mode does not apply here"))
 	default:
 		r.Field("applicable", true)
 		return finish(scan.Unknown(obs.Reason(),
@@ -221,7 +221,7 @@ func (c kernelLockdownMode) Run(ctx context.Context, env *scan.Env) scan.Result 
 		case obs.Status == probe.StatusENOENT:
 			r.Field("applicable", false)
 			return finish(scan.Unknown(scan.ReasonENOENT,
-				"securityfs is mounted but exposes no lockdown attribute, so the Lockdown LSM is not built into this kernel and the control does not exist to be evaluated"))
+				"securityfs is mounted but exposes no lockdown attribute, so the Lockdown LSM is not built into this kernel and there is no control here to evaluate"))
 		default:
 			r.Field("applicable", true)
 			return finish(scan.Unknown(obs.Reason(),
@@ -385,7 +385,7 @@ func (c unsignedOrOutOfTreeModules) Run(ctx context.Context, env *scan.Env) scan
 
 	if !outOfTree && !unsigned {
 		return finish(scan.Pass(
-			"the kernel taint mask has neither bit 12 (out-of-tree) nor bit 13 (unsigned) set, so no out-of-tree or unsigned module is loaded"))
+			"the kernel taint mask has neither bit 12 (out-of-tree) nor bit 13 (unsigned) set, so the running kernel carries only in-tree signed modules"))
 	}
 	var which []string
 	if outOfTree {
@@ -402,9 +402,9 @@ func (c unsignedOrOutOfTreeModules) Run(ctx context.Context, env *scan.Env) scan
 		}
 		detail += ", attributed to " + strings.Join(named, ", ")
 	} else if attributionGap {
-		detail += ", but /sys/module could not be enumerated, so which module is responsible is unknown"
+		detail += ", while /sys/module could not be listed, so which module is responsible is unknown"
 	} else {
-		detail += ", but no currently loaded module reports a per-module taint, so the tainting module has since been unloaded"
+		detail += ", while no currently loaded module reports a per-module taint, so whatever tainted the kernel has since been unloaded"
 	}
 	return finish(scan.Fail(scan.ReasonPolicy, detail))
 }
@@ -458,7 +458,7 @@ func (c tpmPresence) Run(ctx context.Context, env *scan.Env) scan.Result {
 	if len(names) == 0 {
 		r.Field("tpm_present", false)
 		return finish(scan.Pass(
-			"no TPM is present: /sys/class/tpm was listed successfully and is empty, which is a proven negative rather than an absence of evidence"))
+			"this kernel exposes the TPM subsystem and /sys/class/tpm is empty, so this machine has no TPM device"))
 	}
 	dev := names[0]
 	version, vObs := env.Files.ReadTrimmed("/sys/class/tpm/"+dev+"/tpm_version_major", probe.Tiny)
@@ -504,7 +504,7 @@ func (c bootArtifactReadability) Run(ctx context.Context, env *scan.Env) scan.Re
 	case probe.StatusENOENT:
 		r.Field("boot_directory_present", false)
 		return finish(scan.Pass(
-			"this system exposes no /boot directory, so there are no kernel, initramfs or boot loader artifacts on it for a local user to read"))
+			"this system exposes no /boot directory, so it carries no kernel, initramfs or boot loader artifact for a local user to read"))
 	default:
 		return finish(scan.Unknown(obs.Reason(),
 			"/boot could not be listed ("+obs.Reason()+"), so who can read the kernel, initramfs and boot loader configuration is unknown"))
@@ -619,7 +619,7 @@ func (c bootArtifactReadability) Run(ctx context.Context, env *scan.Env) scan.Re
 			"the mount table could not be read, so whether the EFI system partition is mounted with a world-readable mask is unknown"))
 	default:
 		return finish(scan.Pass(
-			"every boot artifact in /boot that could carry injected provisioning material is restricted from other users (" +
+			"each boot artifact in /boot that could carry injected provisioning material is restricted from other users (" +
 				itoa(int64(len(artifacts))) + " inspected)"))
 	}
 }
@@ -717,7 +717,7 @@ func (c bootKernelDrift) Run(ctx context.Context, env *scan.Env) scan.Result {
 			"the running kernel version could not be read ("+runObs.Reason()+"), so drift against the installed kernels cannot be evaluated"))
 	case len(all) == 0:
 		return finish(scan.Unknown(reasonOf(bootObs, modObs),
-			"no installed kernel could be enumerated from /boot or the module directories ("+
+			"neither /boot nor the module directories yielded an installed kernel version ("+
 				string(bootObs.Status)+" / "+string(modObs.Status)+"), so whether the running kernel is the newest installed one is unknown"))
 	}
 

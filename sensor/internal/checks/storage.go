@@ -144,7 +144,7 @@ func (c diskEncryptionAtRest) Run(ctx context.Context, env *scan.Env) scan.Resul
 			"dm-crypt/LUKS mappings exist on this machine but the root filesystem's backing chain does not pass through one, so the root filesystem is not protected by block-level encryption the kernel can see"))
 	default:
 		return finish(scan.Fail(scan.ReasonPolicy,
-			"the device-mapper and block device listings both completed and contain no CRYPT- mapping, so dm-crypt/LUKS is provably not in use for any mounted filesystem; this statement is scoped to dm-crypt/LUKS and does not assert that the media is unencrypted — the named blind spots in the evidence say what remains unknown"))
+			"neither the device-mapper listing nor the block device listing contains a CRYPT- mapping, so dm-crypt/LUKS is not in use for any mounted filesystem; this statement is scoped to dm-crypt/LUKS and does not assert that the media is unencrypted — the blind spots in the evidence say what remains outside this scope"))
 	}
 }
 
@@ -384,7 +384,7 @@ func (c rootFilesystemRedundancy) Run(ctx context.Context, env *scan.Env) scan.R
 			" layer reporting zero degraded members, so it survives the loss of a single device"))
 	case blockObs.Status != probe.StatusOK || mdstat.Status != probe.StatusOK:
 		return finish(scan.Unknown(reasonOf(blockObs, mdstat),
-			"the redundancy enumerations did not all complete, so a single-device root cannot be asserted"))
+			"the redundancy listings did not all succeed, so a single-device root cannot be asserted"))
 	case physical == 0:
 		// No local block device backs / at all: a network, overlay or otherwise
 		// virtual root. Whatever redundancy it has lives on the other side of
@@ -396,7 +396,7 @@ func (c rootFilesystemRedundancy) Run(ctx context.Context, env *scan.Env) scan.R
 				"(a network server, a hypervisor or an overlay's lower layers) and is not observable from this operating system"))
 	case physical == 1:
 		msg := "the root filesystem resolves to a single physical device (" + strings.Join(backing, " -> ") +
-			") and every redundancy enumeration completed without finding an md array, a dm-raid target or a multi-device pool, so the loss of that device loses the root filesystem"
+			"); the md, dm-raid and multi-device pool listings contain nothing that backs it, so the loss of that device loses the root filesystem"
 		if len(spares) > 0 {
 			msg += "; " + itoa(int64(len(spares))) + " attached device(s) (" + strings.Join(spares, ", ") +
 				") are idle and could provide redundancy. A single-device root may be a deliberate rebuild-on-failure choice"
@@ -545,11 +545,11 @@ func (c unusedAttachedBlockDevices) Run(ctx context.Context, env *scan.Env) scan
 	case len(idle) > 0:
 		return finish(scan.Fail(scan.ReasonPolicy,
 			"attached but unaccounted for: "+strings.Join(idle, ", ")+
-				" — no partition table and no filesystem signature known to udev, no holder, no mount and no swap entry. "+
+				" — the device carries no partition table and no filesystem signature known to udev, and has no holder, mount or swap entry. "+
 				"Whether prior-tenant data remains on it is "+remanenceStatement))
 	default:
 		return finish(scan.Pass(
-			"every attached physical block device is accounted for by a partition, a mount, a holder relationship, a swap entry or a udev filesystem signature (" +
+			"each attached physical block device is accounted for by a partition, a mount, a holder relationship, a swap entry or a udev filesystem signature (" +
 				itoa(int64(len(devices))) + " device(s))"))
 	}
 }

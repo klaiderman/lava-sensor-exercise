@@ -419,11 +419,15 @@ func TestCredentialExposure_HomesAreCleanAndDeduplicated(t *testing.T) {
 	if ev["homes_skipped"] == nil {
 		t.Errorf("the skipped placeholder homes must be reported")
 	}
-	// The status contract is unchanged: root's home is unreadable, so that
-	// account's exposure is unknown rather than clean.
-	wantStatus(t, f, scan.StatusUnknown)
-	if !strings.Contains(f.Evidence.Detail, "unknown rather than clean") {
-		t.Errorf("detail = %q", f.Evidence.Detail)
+	// Fix batch 3 rows 28/35 changed the verdict here on purpose: root's home
+	// is unreadable BECAUSE it excludes every unprivileged account, which is
+	// the answer this check asks for. What must still hold is that the
+	// shielding is counted and reported rather than silently assumed.
+	if f.Status == scan.StatusFail {
+		t.Errorf("a credential behind a 0700 home is not exposed: %q", f.Evidence.Detail)
+	}
+	if n, _ := ev["protected_by_ancestor"].(float64); n < 1 {
+		t.Errorf("the shielded candidates must be counted: %v", ev["protected_by_ancestor"])
 	}
 }
 

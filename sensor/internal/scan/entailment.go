@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -40,10 +41,18 @@ type Completeness struct {
 	Statement       string `json:"statement"`
 }
 
-// completenessClaims are phrases that assert an enumeration finished or that
-// something is provably absent. A check may use one only when the observations
-// entail it; the test at the bottom of this file enforces that over the whole
-// roster.
+// absenceProse matches any sentence that asserts an enumeration finished or
+// that something is not there.
+//
+// The first version of this gate was a list of fixed phrases, which a check
+// could walk straight past by wording its claim differently: "no exposed key
+// material was found anywhere on this machine" matched nothing and shipped as a
+// pass. Completeness and absence sentences are now GENERATED, and any
+// check-authored detail that makes one is rejected on sight.
+var absenceProse = regexp.MustCompile(`(?i)\b(enumerat\w*|proven|provably|absent|none found|nothing (?:was )?found|no [a-z ]{0,30}(?:found|exists|present)|every [a-z ]{0,30}(?:completed|succeeded)|all [a-z ]{0,30}completed)\b`)
+
+// completenessClaims are the original fixed phrases, kept so the regexp has a
+// readable specification next to it and so AuditEntailment can name what it saw.
 var completenessClaims = []string{
 	"enumerated successfully",
 	"were all enumerated",
@@ -67,16 +76,30 @@ var completenessClaims = []string{
 	"all three listings",
 }
 
-// claimsCompleteness reports the first completeness claim a detail makes.
+// claimsCompleteness reports the completeness or absence claim a detail makes.
 func claimsCompleteness(detail string) (string, bool) {
+	// The engine's own annotations are generated and exempt.
+	if i := strings.Index(detail, " [engine: "); i >= 0 {
+		detail = detail[:i]
+	}
+	if i := strings.Index(detail, " [downgraded from "); i >= 0 {
+		detail = detail[:i]
+	}
 	d := strings.ToLower(detail)
 	for _, c := range completenessClaims {
 		if strings.Contains(d, c) {
 			return c, true
 		}
 	}
+	if m := absenceProse.FindString(detail); m != "" {
+		return m, true
+	}
 	return "", false
 }
+
+// bearing reports whether an observation underwrites the verdict. Everything
+// does, unless the check recorded a reason why not.
+func bearing(o probe.Observation) bool { return o.OptOut == "" }
 
 // clean reports whether an observation answered its question in full.
 //
@@ -102,7 +125,7 @@ func completenessOf(obs []probe.Observation) Completeness {
 		if clean(o) {
 			c.ObservationsOK++
 		}
-		if o.LoadBearing {
+		if bearing(o) {
 			c.LoadBearingTotal++
 			if clean(o) {
 				c.LoadBearingOK++
@@ -165,6 +188,7 @@ func AuditEntailment(body []byte) []string {
 					Status        string `json:"status"`
 					Truncated     bool   `json:"truncated"`
 					LoadBearing   bool   `json:"load_bearing"`
+					OptOut        string `json:"not_load_bearing_because"`
 					AbsenceProven bool   `json:"absence_proven"`
 				} `json:"observations"`
 			} `json:"evidence"`
@@ -180,7 +204,7 @@ func AuditEntailment(body []byte) []string {
 		lbTotal, lbOK := 0, 0
 		var notOK []string
 		for _, o := range f.Evidence.Observations {
-			if !o.LoadBearing {
+			if o.OptOut != "" {
 				continue
 			}
 			lbTotal++
@@ -194,6 +218,9 @@ func AuditEntailment(body []byte) []string {
 
 		if f.EntailmentViolation {
 			out = append(out, f.CheckID+": the engine recorded an entailment violation")
+		}
+		if (f.Status == "pass" || f.Status == "fail") && lbTotal == 0 {
+			out = append(out, f.CheckID+": status "+f.Status+" with no load-bearing observation behind it")
 		}
 		if f.Status == "pass" && lbTotal > 0 && lbOK != lbTotal {
 			out = append(out, f.CheckID+": status pass while load-bearing observations failed: "+strings.Join(notOK, ", "))

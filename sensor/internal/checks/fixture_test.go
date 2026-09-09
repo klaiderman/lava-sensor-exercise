@@ -217,3 +217,14 @@ func requireLinux(t *testing.T) {
 
 // mkfifoForTest creates a FIFO where the platform supports one.
 func mkfifoForTest(p string) error { return mkfifoPlatform(p) }
+
+// ownGroupLine describes the group the test process creates files under, so a
+// fixture's mode bits mean what the test intends rather than resolving against
+// a gid the fixture never declared.
+func ownGroupLine() string {
+	gid := os.Getgid()
+	if gid < 0 {
+		gid = 0
+	}
+	return "testgroup:x:" + strconv.Itoa(gid) + ":\n"
+}

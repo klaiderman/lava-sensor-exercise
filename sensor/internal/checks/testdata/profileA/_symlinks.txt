@@ -7,3 +7,5 @@ sys/devices/nvme0n1/device -> ../../class/nvme/nvme0
 sys/devices/nvme1n1/device -> ../../class/nvme/nvme0
 sys/class/nvme/nvme0/subsystem -> ../../../class/nvme
 boot/vmlinuz -> vmlinuz-7.0.0-31-generic
+sys/devices/usbbmc/1-1/1-1.2/driver -> rndis_host
+sys/class/net/enxbe3af2b6059f/device -> ../../../devices/usbbmc/1-1/1-1.2

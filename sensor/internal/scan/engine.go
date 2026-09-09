@@ -12,6 +12,11 @@ import (
 // DefaultCheckBudget bounds one check that does not declare its own budget.
 const DefaultCheckBudget = 8 * time.Second
 
+// abandonGrace is the slack between a check's own deadline and the point the
+// engine stops waiting for it. A check that honours its context returns inside
+// this window; one that cannot is abandoned.
+const abandonGrace = 250 * time.Millisecond
+
 // DefaultScanDeadline bounds the whole scan. It bounds scheduling and output,
 // never a stuck read: the output is written without waiting on an abandoned
 // goroutine (L14, F17).
@@ -100,22 +105,46 @@ func runOne(parent context.Context, c Check, env *Env) (f Finding, budgetCut boo
 		}
 	}
 
-	var res Result
-	func() {
-		// The result is defaulted to unknown before the deferred recover runs,
-		// so a panic still yields a complete, schema-valid finding.
-		res = Unknown(ReasonInternal, "internal error")
+	// The check runs in its own goroutine and is ABANDONED on overrun.
+	//
+	// A context deadline only helps a check that consults it. A D-state read of
+	// a hung NFS home returns to nobody: no cancellation, no close, no timeout
+	// gets control back. Calling c.Run inline means one such check takes the
+	// whole scan with it and the artifact is never written at all. So the
+	// result arrives on a buffered channel the abandoned goroutine can always
+	// finish sending to, the engine stops waiting at the deadline, and the scan
+	// carries on with the honest answer for that check.
+	done := make(chan Result, 1)
+	ctx, cancel := context.WithTimeout(parent, budget)
+	defer cancel()
+	go func() {
+		res := Unknown(ReasonInternal, "internal error")
 		defer func() {
 			if p := recover(); p != nil {
 				res = Unknown(ReasonInternal, "internal error")
 				res.Field("panic", fmt.Sprintf("%T: %v", p, p))
 				res.Field("stack_head", headOfStack(2048))
 			}
+			done <- res
 		}()
-		ctx, cancel := context.WithTimeout(parent, budget)
-		defer cancel()
 		res = c.Run(ctx, env)
 	}()
+
+	// The wall clock, not env.Now: a fixed test clock must not disable the
+	// abandonment, and the abandonment must not depend on the check.
+	timer := time.NewTimer(budget + abandonGrace)
+	defer timer.Stop()
+
+	var res Result
+	select {
+	case res = <-done:
+	case <-timer.C:
+		res = Unknown(ReasonTimeout,
+			"the check did not return within its "+budget.String()+" budget and was abandoned; "+
+				"it may be blocked in a syscall that cannot be interrupted, so the goroutine is left running rather than waited on and the scan continues")
+		res.Field("abandoned", true)
+		res.Field("budget_ms", budget.Milliseconds())
+	}
 
 	elapsed := env.Now().Sub(start)
 	return finalize(c, res, env, start, elapsed), false

@@ -369,7 +369,7 @@ func TestSSHRootLogin_NoDaemonAtAll_IsUtilityMissing(t *testing.T) {
 	if f.Reason != scan.ReasonUtilMiss {
 		t.Errorf("reason = %q, want UTILITY_MISSING", f.Reason)
 	}
-	if !strings.Contains(f.Evidence.Detail, "not the absence of remote access") {
+	if !strings.Contains(f.Evidence.Detail, "may still be reachable by other means") {
 		t.Errorf("the blind spot must be named: %q", f.Evidence.Detail)
 	}
 }

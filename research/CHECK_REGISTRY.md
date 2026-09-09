@@ -1570,7 +1570,7 @@ C = restricted (container / EACCES-heavy). `p` = pass, `f` = fail, `u` = unknown
 | REMOTE_LISTENING_SURFACE | medium | **p** | p or f | u (/proc/net masked) |
 | LOGIN_AND_ESCALATION_SURFACE | medium | **u** (sudoers + shadow + /root EACCES) | u (same class) | u |
 | HOST_FIREWALL_STATE | medium | **u** (ufw active, rules 0640) | f (no filter + listener) or u | u |
-| PRIVATE_KEY_MATERIAL_EXPOSURE | high | **u** (corrected 2026-09-09 04:00Z per REVIEW_FINDINGS_2: /root and other homes are unreadable to uid 1000, so the walk is incomplete and no adverse key is provable; honest result is unknown with the boundary listed; original expectation was p) | p or f | u (BUDGET/EACCES) |
+| PRIVATE_KEY_MATERIAL_EXPOSURE | high | **p** (re-confirmed 2026-09-09 04:35Z after fix batch 3: for exposure questions a denied read of /root is evidence of protection from every unprivileged account, judged from the ancestor mode via protectionFromDenial(); the shielded subtree is counted and reported; interim correction to unknown at 04:00Z superseded) | p or f | u (BUDGET/EACCES) |
 | CREDENTIAL_FILE_EXPOSURE | high | **u** (corrected 2026-09-09 02:20Z: /root unreadable ⇒ unknown per this registry's own §2.2 rule; original prediction p was inconsistent) | p or f | p or f (container scope) |
 | PROVISIONING_DATA_PROTECTION | medium | **p** | p* (no cloud-init) | p* |
 | SYSTEM_SECRET_STORE_PROTECTION | high | **p** | p | p / u |

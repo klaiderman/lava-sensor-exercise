@@ -20,6 +20,16 @@ const (
 // are synthetic, enormous, or device-backed.
 var prunedPrefixes = []string{"/proc", "/sys", "/dev", "/run", "/snap", "/var/lib/docker", "/var/lib/containers"}
 
+// NetworkFSTypes are filesystems whose server can stop answering. A read of one
+// in that state is uninterruptible: no context, no deadline and no close gets
+// control back. The walk refuses to START on one - refusing to CROSS into one
+// was never enough, because a scan root can be on it already.
+var NetworkFSTypes = map[string]bool{
+	"nfs": true, "nfs4": true, "cifs": true, "smb3": true, "smbfs": true,
+	"fuse.sshfs": true, "fuse.s3fs": true, "afs": true, "9p": true,
+	"ceph": true, "glusterfs": true, "lustre": true, "coda": true, "ncpfs": true,
+}
+
 // WalkBudget bounds one enumeration.
 type WalkBudget struct {
 	MaxDepth   int
@@ -27,6 +37,12 @@ type WalkBudget struct {
 	MaxTime    time.Duration
 	// Deadline, when non-zero, caps MaxTime from the caller's context.
 	Deadline time.Time
+	// NetworkFSMounts maps a mount point to its filesystem type. A root under
+	// one of them is skipped with the skip recorded, unless AllowNetworkFS.
+	NetworkFSMounts map[string]string
+	// AllowNetworkFS lets a check that explicitly targets network storage walk
+	// it anyway.
+	AllowNetworkFS bool
 }
 
 // WalkResult is the boundary of an enumeration. It is mandatory evidence: a
@@ -45,6 +61,9 @@ type WalkResult struct {
 	CrossedMounts       bool   `json:"crossed_mounts"`
 	BudgetExhausted     string `json:"budget_exhausted"`
 	Errno               string `json:"errno,omitempty"`
+	// SkippedFSType names the network filesystem this root sits on, when the
+	// walk declined to start.
+	SkippedFSType string `json:"skipped_network_fstype,omitempty"`
 }
 
 // Complete reports whether the enumeration finished, which is the only state in
@@ -106,6 +125,21 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 	deadline := start.Add(b.MaxTime)
 	if !b.Deadline.IsZero() && b.Deadline.Before(deadline) {
 		deadline = b.Deadline
+	}
+
+	if !b.AllowNetworkFS {
+		if fstype, on := networkFSFor(root, b.NetworkFSMounts); on {
+			res.SkippedFSType = fstype
+			res.BudgetExhausted = "network-filesystem"
+			obs.Status = StatusUnsupported
+			obs.Errno = "ENOTSUP"
+			obs.Truncated = true
+			obs.Elapsed = time.Since(start)
+			obs.Detail = "not walked: " + root + " is on a " + fstype +
+				" mount, whose server can stop answering in a way no deadline can interrupt"
+			obs.Meta = &Meta{Root: root, BudgetExhausted: res.BudgetExhausted}
+			return res, obs
+		}
 	}
 
 	base := r.full(root)
@@ -206,4 +240,22 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 func depth(root, path string) int {
 	rel := strings.TrimPrefix(path, root)
 	return strings.Count(strings.Trim(rel, "/"), "/")
+}
+
+// networkFSFor reports whether a path lies under a network-filesystem mount,
+// choosing the longest matching mount point.
+func networkFSFor(path string, mounts map[string]string) (string, bool) {
+	best, bestType := "", ""
+	for mp, fstype := range mounts {
+		if !NetworkFSTypes[fstype] {
+			continue
+		}
+		if path == mp || (mp == "/" && strings.HasPrefix(path, "/")) ||
+			strings.HasPrefix(path, strings.TrimSuffix(mp, "/")+"/") {
+			if len(mp) > len(best) {
+				best, bestType = mp, fstype
+			}
+		}
+	}
+	return bestType, best != ""
 }

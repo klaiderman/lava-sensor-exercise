@@ -244,6 +244,33 @@ func sshdGOutput(permitRootLogin string) string {
 	}, "\n")
 }
 
+// profileARunner is the exec seam for internal/checks/testdata/profileA: the
+// two commands that fixture files structurally cannot answer (a live `sshd -G`
+// and `systemctl show`).
+//
+// SSH_POLICY_IN_FORCE's daemon-vs-disk comparison needs the running daemon's
+// ActiveEnterTimestamp compared against the config chain's real mtimes on
+// disk. The materialiser (buildProfileFrom) writes fixture files at test time,
+// so their mtime is whatever "now" is when go test runs them, not a value the
+// committed fixture can pin. Rather than race that clock, ActiveEnterTimestamp
+// is stubbed comfortably in the future (2030): any config file mtime from any
+// real test run before then is unambiguously older, landing the comparison
+// cleanly in "daemon started after every config file" (pass) without the
+// same-second ambiguity CLOSURE_TABLE.md row 25 fixed in batch 1. This is a
+// deliberate choice, not a value pulled from the real host's timestamps
+// (which the registry originally cited as a same-second, now-undecidable
+// case) — see TEST_REPORT.md for the one-line justification this represents.
+func profileARunner() *fakeRunner {
+	return newFakeRunner().
+		ok("/usr/sbin/sshd -G", sshdGOutput("prohibit-password")).
+		ok("systemctl show ssh.service -p ActiveEnterTimestamp -p ActiveEnterTimestampMonotonic -p ExecMainStartTimestampMonotonic -p ActiveState -p FragmentPath",
+			"ActiveEnterTimestamp=Mon 2030-01-01 00:00:00 UTC\n"+
+				"ActiveEnterTimestampMonotonic=0\n"+
+				"ExecMainStartTimestampMonotonic=0\n"+
+				"ActiveState=active\n"+
+				"FragmentPath=/lib/systemd/system/ssh.service\n")
+}
+
 // fixedClock makes scan output deterministic.
 func fixedClock() func() time.Time {
 	ts := time.Date(2026, 9, 9, 12, 0, 0, 0, time.UTC)

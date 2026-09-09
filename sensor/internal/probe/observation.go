@@ -80,7 +80,13 @@ type Observation struct {
 	// distinction "the file is not present" and "we could not look" collapse
 	// into one status, which is the failure the evidence model exists to stop.
 	AbsenceProven bool
-	// LoadBearing marks an observation the check's verdict depends on. A
+	// OptOut, when set, is the RECORDED REASON this observation does not
+	// underwrite the verdict. Observations are load-bearing by default: opting
+	// in was the wrong polarity, because the observations a check forgets to
+	// mark are exactly the ones it has not thought about.
+	OptOut string
+	// LoadBearing is retained for readability at call sites; the engine treats
+	// every observation without an OptOut as load-bearing regardless. A
 	// pass/fail whose load-bearing observations are not OK is downgraded to
 	// unknown centrally in scan.finalize (L07/L39).
 	LoadBearing bool
@@ -146,6 +152,11 @@ func Classify(err error) (ObsStatus, string) {
 	}
 	if errors.Is(err, errSymlinkEscape) {
 		return StatusUnsupported, "EXDEV"
+	}
+	if errors.Is(err, errSymlinkDenied) {
+		// A symlink this read policy will not follow. Classified so the reason
+		// stays inside the closed vocabulary instead of leaking "UNSUPPORTED".
+		return StatusUnsupported, "ELOOP"
 	}
 	name, ok := errnoName(err)
 	if !ok {

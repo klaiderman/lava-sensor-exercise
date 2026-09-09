@@ -59,14 +59,22 @@ func (c sshAuthMethodsPolicy) Run(ctx context.Context, env *scan.Env) scan.Resul
 	cfg := walkSSHDConfig(env.Files, sshdRootPath(env.Files))
 
 	obs := oracle.Obs
-	obs.LoadBearing = oracle.OK()
+	if !oracle.OK() {
+		obs.OptOut = "the daemon's own answer was not obtained; the verdict is taken from the configuration chain instead"
+	}
 	r.Add(obs)
-	r.Add(cfg.Observations...)
+	for _, o := range cfg.Observations {
+		if oracle.OK() {
+			o.OptOut = "the verdict comes from the daemon's own effective configuration; this file is read for provenance and cross-checking"
+		}
+		r.Add(o)
+	}
 
 	// PAM is recorded because kbdinteractive can serve passwords through it
 	// even when passwordauthentication is no — the classic false pass.
 	pam := env.Files.Stat("/etc/pam.d/sshd")
 	pam.Detail = "PAM stack for sshd; its presence is why kbdinteractiveauthentication matters"
+	pam.OptOut = "recorded as context for the kbdinteractive result; no verdict here rests on it"
 	r.Add(pam)
 	r.Field("pam_sshd", renderMeta(pam))
 
@@ -237,6 +245,7 @@ func (c sshPolicyInForce) Run(ctx context.Context, env *scan.Env) scan.Result {
 	r.Field("daemon_state", state)
 
 	sock := env.SystemdShow(ctx, "ssh.socket", "ListenStream", "ActiveState")
+	sock.OptOut = "socket activation is recorded as context; the verdict compares the configuration chain with the daemon's start time"
 	r.Add(sock)
 	sockProps := parseSystemctlShow(sock.Value)
 	if sockProps["ActiveState"] == "active" {
@@ -545,6 +554,7 @@ func (c remoteListeningSurface) Run(ctx context.Context, env *scan.Env) scan.Res
 	}
 
 	var all []listener
+	var truncatedTables []string
 	readAny := false
 	for _, src := range []struct{ path, proto string }{
 		{"/proc/net/tcp", "tcp"}, {"/proc/net/tcp6", "tcp6"},
@@ -552,15 +562,25 @@ func (c remoteListeningSurface) Run(ctx context.Context, env *scan.Env) scan.Res
 	} {
 		obs := env.Files.Read(src.path, probe.Large)
 		obs.Detail = "socket table: the only source that is identical on every distribution"
-		// Load-bearing only where it succeeded: an absent /proc/net/tcp6 on an
-		// IPv6-less kernel must not downgrade a verdict the IPv4 table supports.
-		obs.LoadBearing = obs.Status == probe.StatusOK && strings.HasPrefix(src.proto, "tcp")
+		// An absent /proc/net/tcp6 on an IPv6-less kernel is not a gap in the
+		// answer the IPv4 table gives.
+		if obs.Status == probe.StatusENOENT {
+			obs.AbsenceProven = true
+		}
+		if !strings.HasPrefix(src.proto, "tcp") {
+			obs.OptOut = "UDP sockets are reported for completeness; the verdict is about TCP listeners"
+		}
 		r.Add(obs)
 		if obs.Status != probe.StatusOK {
 			continue
 		}
 		readAny = true
-		all = append(all, parseProcNet(obs.Value, src.proto)...)
+		rows := parseProcNet(obs.Value, src.proto)
+		if obs.Truncated {
+			truncatedTables = append(truncatedTables,
+				src.path+" (read "+itoa(int64(len(rows)))+" row(s) before the byte cap)")
+		}
+		all = append(all, rows...)
 	}
 
 	if !readAny {
@@ -619,14 +639,25 @@ func (c remoteListeningSurface) Run(ctx context.Context, env *scan.Env) scan.Res
 		}
 	}
 	r.Field("listeners", all)
+	r.Field("truncated_tables", truncatedTables)
 	r.Field("global_scope_listeners", global)
 	r.Field("attribution_gaps", gaps)
+
+	// A listener we SAW is a positive observation: a table that was cut short
+	// after it still showed it.
+	r.OptOut(len(adverse) > 0,
+		"an adverse listener was observed directly in the rows that were read, so the completeness of the socket table does not underwrite the verdict",
+		"/proc/net/tcp", "/proc/net/tcp6")
 
 	switch {
 	case len(adverse) > 0:
 		return finish(scan.Fail(scan.ReasonPolicy,
 			"a remote-access path other than SSH is listening on a non-loopback address: "+strings.Join(adverse, ", ")+
 				"; "+outboundBlindSpot))
+	case len(truncatedTables) > 0:
+		return finish(scan.Unknown(scan.ReasonBudget,
+			"the socket table was cut short at its byte cap ("+strings.Join(truncatedTables, "; ")+
+				"), so the listeners in the rows that were read are reported as partial evidence and a listener past the cut cannot be ruled out"))
 	case len(gaps) > 0:
 		return finish(scan.Unknown(scan.ReasonEACCES,
 			"the socket tables were read completely, but "+itoa(int64(len(gaps)))+
@@ -939,6 +970,7 @@ func (c loginAndEscalationSurface) Run(ctx context.Context, env *scan.Env) scan.
 	self := env.Runner.Run(ctx, probe.Spec{Name: "passwd", Args: []string{"-S"}, Budget: 3 * time.Second,
 		Purpose: "password state of the calling account only"})
 	self.Detail = "passwd -S reports the caller only; it is never generalised to other accounts"
+	self.OptOut = "the password state of the calling account is context; the verdict is about accounts, groups and policy files"
 	r.Add(self)
 	r.Field("password_state_self", strings.TrimSpace(self.Value))
 
@@ -1216,6 +1248,21 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 	}
 	r.Field("global_scope_listener_present", hasGlobalListener(env))
 
+	// A firewall switched off in its own readable configuration is a positive
+	// observation; the ruleset tool's absence does not soften it.
+	if len(disabledByConfig) > 0 {
+		r.OptOut(true,
+			"the subsystem's own configuration was read and says it is disabled; that is a direct observation, and nothing else here underwrites the verdict")
+		// The configuration read that carries the verdict stays load-bearing.
+		for i := range r.Observations {
+			if strings.HasSuffix(r.Observations[i].Source, "/ufw.conf") ||
+				strings.HasSuffix(r.Observations[i].Source, "/firewalld.conf") ||
+				strings.HasSuffix(r.Observations[i].Source, "/nftables.conf") {
+				r.Observations[i].OptOut = ""
+			}
+		}
+	}
+
 	switch {
 	case len(disabledByConfig) > 0:
 		// The implementation is installed and its own configuration says it is
@@ -1233,20 +1280,20 @@ func (c hostFirewallState) Run(ctx context.Context, env *scan.Env) scan.Result {
 		return finish(scan.Unknown(rulesetErr,
 			"the effective packet-filter ruleset is not readable by this account ("+rulesetErr+
 				"), so whether this host is filtered is unknown; the readable configuration and unit states are in evidence, "+
-				"and an unreadable ruleset is never reported as an absent one"))
+				"and a ruleset this account may not read is never reported as a ruleset that does not exist"))
 	case anyActive:
 		return finish(scan.Unknown(scan.ReasonUtilMiss,
-			"a filtering unit reports active but no tool that can print the effective ruleset is installed, "+
-				"so what it loaded is unknown; a unit's state is not proof that rules exist"))
+			"a filtering unit reports active but this account has no tool that can print the effective ruleset, "+
+				"so what it loaded is unknown; a unit's state does not establish that rules exist"))
 	default:
 		// Rules can be loaded by something outside any candidate unit: an
 		// iptables-restore ExecStartPre, rc.local, a config-management run, a
 		// provider's own unit. Not finding a unit we know about is not finding
 		// that the host is unfiltered.
 		return finish(scan.Unknown(scan.ReasonUtilMiss,
-			"no filtering implementation this sensor recognises reported active, and no tool that can print the effective "+
-				"ruleset is installed; rules loaded by an unrecognised mechanism would be invisible here, so whether this "+
-				"host is filtered is unknown"))
+			"no filtering implementation this sensor recognises reported active, and this account has no tool that can "+
+				"print the effective ruleset; rules loaded by a mechanism outside the candidate list would be invisible "+
+				"here, so whether this host is filtered is unknown"))
 	}
 }
 

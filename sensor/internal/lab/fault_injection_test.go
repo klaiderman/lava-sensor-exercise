@@ -111,7 +111,7 @@ func (p panickingCheck) Run(context.Context, *scan.Env) scan.Result {
 // finding — the failure never propagates and never doubles up.
 func TestFaultInjection_PanicInFullRosterIsolatesOnlyTheOffender(t *testing.T) {
 	root := buildAuthorProfile(t, "profileA")
-	env := newLabEnv(t, root, newFakeRunner().ok("/usr/sbin/sshd -G", sshdGOutput("prohibit-password")))
+	env := newLabEnv(t, root, profileARunner())
 
 	roster := append(append([]scan.Check{}, checks.All()...), panickingCheck{id: "LAB_INJECTED_PANIC"})
 	findings, _ := scan.Run(context.Background(), roster, env)

@@ -50,8 +50,11 @@ were made, how many were load-bearing, which of those did not succeed, and
 whether an absence is provable from them. Checks do not write that sentence
 themselves — the engine derives it from the observations.
 
-A check that claims an enumeration finished while one of its load-bearing
-observations failed is downgraded to `unknown` and marked with
+Observations are load-bearing by default: a check that wants one exempted has to
+record why, and the reason ships in the evidence as
+`not_load_bearing_because`. A check that claims an enumeration finished while a
+load-bearing observation failed — or that reaches a verdict with no successful
+observation at all — is downgraded to `unknown` and marked with
 `entailment_violation`, and the test suite fails the build on any such claim.
 The same rule can be pointed at an artifact after the fact, so a findings.json
 from a container or from a real host can be audited without re-running anything.
@@ -104,6 +107,7 @@ it:
 | `EXECUTION_ERROR` | A tool ran and failed for its own reasons. |
 | `CONTESTED` | Two observations disagree. Both are recorded; neither is silently preferred. |
 | `TIMESTAMP_RESOLUTION` | Two events were observed with a timestamp too coarse to order them. Nothing disagrees; the instrument does not resolve the question. |
+| `NO_EVIDENCE` | The check reached a verdict with no successful observation behind it. A conclusion with nothing under it is not a conclusion. |
 | `NOT_ATTEMPTED` | The observation was reachable and the sensor declined to make it, by design — it never opens a device node. Not a denial, and not an absence. |
 | `POLICY` | The control was observed and is not in the state the check asks about. This is the reason on a `fail`. |
 | `INTERNAL_ERROR` | The check itself panicked. The panic is in the evidence and no other check is affected. |
@@ -133,7 +137,7 @@ GOOS=linux GOARCH=amd64 go test -c -o bin/probe.test ./internal/probe
 wsl -e bash -lc "cd internal/probe && ../../bin/probe.test -test.v"
 ```
 
-The full suite is 202 test cases: 19 in `internal/probe`, 32 in
+The full suite is 220 test cases: 19 in `internal/probe`, 32 in
 `internal/scan`, 92 in `internal/checks` and 10 in `cmd/sensor`.
 
 Fixture profiles live under `internal/checks/testdata/` (A: host-shaped bare

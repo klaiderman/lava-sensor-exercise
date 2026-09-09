@@ -44,16 +44,17 @@ func (r *Result) Add(obs ...probe.Observation) { r.Observations = append(r.Obser
 // Field appends an ordered evidence extra.
 func (r *Result) Field(key string, value any) { r.Fields = append(r.Fields, F(key, value)) }
 
-// LoadBearingIf marks already-recorded observations as load-bearing when the
-// verdict turns out to rest on them.
+// OptOut records that some already-gathered observations do not underwrite the
+// verdict, and WHY.
 //
-// Whether an observation is load-bearing depends on the branch taken, not on
-// the order the observations were gathered in: a check that FOUND something
-// stands on that positive observation, while a check about to say it found
-// nothing stands on every listing having succeeded. Marking unconditionally
-// would manufacture unknowns out of positive findings.
-func (r *Result) LoadBearingIf(cond bool, sources ...string) {
-	if !cond {
+// Observations are load-bearing by default. Whether one underwrites the answer
+// depends on the branch taken, not on the order things were gathered in: a
+// check that FOUND something stands on that positive observation, while a check
+// about to say it found nothing stands on every listing having succeeded. The
+// reason is recorded in the evidence so the exemption is auditable rather than
+// silent.
+func (r *Result) OptOut(cond bool, reason string, sources ...string) {
+	if !cond || reason == "" {
 		return
 	}
 	want := map[string]bool{}
@@ -62,7 +63,9 @@ func (r *Result) LoadBearingIf(cond bool, sources ...string) {
 	}
 	for i := range r.Observations {
 		if len(want) == 0 || want[r.Observations[i].Source] {
-			r.Observations[i].LoadBearing = true
+			if r.Observations[i].OptOut == "" {
+				r.Observations[i].OptOut = reason
+			}
 		}
 	}
 }
@@ -105,6 +108,10 @@ const (
 	// refused) and from ENOENT (there was nothing there): the limit is the
 	// sensor's own read-only contract, and saying so is the honest answer.
 	ReasonNotAttempted = "NOT_ATTEMPTED"
+	// ReasonNoEvidence means the check reached a verdict without a single
+	// successful observation underwriting it. A conclusion with nothing behind
+	// it is not a conclusion.
+	ReasonNoEvidence = "NO_EVIDENCE"
 )
 
 // Env is the read-once shared state for a whole scan: the probe handles, a
@@ -441,12 +448,52 @@ type Group struct {
 }
 
 // GroupDB is the local group database plus the observation that produced it.
-// Its caveat: nsswitch may route group lookups elsewhere, so an empty member
-// list here is "empty in files", not "empty" (F73).
+//
+// Membership of a group is NOT just field 4 of /etc/group. An account whose
+// PRIMARY gid (field 4 of /etc/passwd) is the group's gid is a member of it and
+// reads every file that group can read, while appearing in no member list. A
+// model that counts only the explicit list reports "the group is empty, so this
+// is owner-only" about a file a real account can open.
+//
+// Its caveat: nsswitch may route lookups elsewhere, so this is "as the local
+// files describe it", not "as the system resolves it" (F73).
 type GroupDB struct {
-	Obs    probe.Observation
-	Groups []Group
-	byName map[string]Group
+	Obs       probe.Observation
+	PasswdObs probe.Observation
+	Groups    []Group
+	byName    map[string]Group
+	byGID     map[int64]Group
+}
+
+// Determined reports whether the group model could be built at all. A database
+// that could not be read is an unknown, never an empty set: treating an
+// unreadable /etc/group as "every group is empty" turns a group-readable secret
+// into a pass.
+func (g *GroupDB) Determined() bool {
+	return g != nil && g.Obs.Status == probe.StatusOK && g.PasswdObs.Status == probe.StatusOK
+}
+
+// Reason names why the group model is unavailable.
+func (g *GroupDB) Reason() string {
+	if g == nil {
+		return ReasonInternal
+	}
+	if g.Obs.Status != probe.StatusOK {
+		return "/etc/group " + g.Obs.Reason()
+	}
+	if g.PasswdObs.Status != probe.StatusOK {
+		return "/etc/passwd " + g.PasswdObs.Reason()
+	}
+	return ""
+}
+
+// ByGID returns the group with that gid, including its effective members.
+func (g *GroupDB) ByGID(gid int64) (Group, bool) {
+	if g == nil || g.byGID == nil {
+		return Group{}, false
+	}
+	v, ok := g.byGID[gid]
+	return v, ok
 }
 
 // Lookup returns a group by name.
@@ -458,31 +505,153 @@ func (g *GroupDB) Lookup(name string) (Group, bool) {
 	return v, ok
 }
 
-// Groups reads /etc/group once per scan.
+// Groups reads /etc/group and /etc/passwd once per scan and builds the
+// EFFECTIVE membership of every group: the explicit member list plus every
+// account whose primary gid is that group.
 func (e *Env) Groups() *GroupDB {
 	e.onceGroup.Do(func() {
-		g := &GroupDB{byName: map[string]Group{}}
+		g := &GroupDB{byName: map[string]Group{}, byGID: map[int64]Group{}}
 		g.Obs = e.Files.Read("/etc/group", probe.Large)
+		g.PasswdObs = e.Files.Read("/etc/passwd", probe.Large)
+
+		primary := map[int64][]string{}
+		if g.PasswdObs.Status == probe.StatusOK {
+			for _, ln := range strings.Split(g.PasswdObs.Value, "\n") {
+				f := strings.Split(strings.TrimSpace(ln), ":")
+				if len(f) < 4 || f[0] == "" {
+					continue
+				}
+				gid := atoi64(f[3])
+				primary[gid] = append(primary[gid], f[0])
+			}
+		}
 		if g.Obs.Status == probe.StatusOK {
 			for _, ln := range strings.Split(g.Obs.Value, "\n") {
 				f := strings.Split(strings.TrimSpace(ln), ":")
 				if len(f) < 4 || f[0] == "" {
 					continue
 				}
-				var members []string
+				members := []string{}
 				if f[3] != "" {
 					members = strings.Split(f[3], ",")
-				} else {
-					members = []string{}
 				}
-				grp := Group{Name: f[0], GID: atoi64(f[2]), Members: members}
+				gid := atoi64(f[2])
+				seen := map[string]bool{}
+				for _, m := range members {
+					seen[m] = true
+				}
+				for _, m := range primary[gid] {
+					if !seen[m] {
+						seen[m] = true
+						members = append(members, m)
+					}
+				}
+				grp := Group{Name: f[0], GID: gid, Members: members}
 				g.Groups = append(g.Groups, grp)
 				g.byName[grp.Name] = grp
+				g.byGID[gid] = grp
 			}
 		}
 		e.groups = g
 	})
 	return e.groups
+}
+
+// Readers is the answer to "who can read this object", from its metadata and
+// the group model.
+type Readers struct {
+	Determined  bool     `json:"determined"`
+	Reason      string   `json:"reason,omitempty"`
+	OtherRead   bool     `json:"other_readable"`
+	OtherWrite  bool     `json:"other_writable"`
+	GroupRead   bool     `json:"group_readable"`
+	GroupWrite  bool     `json:"group_writable"`
+	GroupName   string   `json:"group_name,omitempty"`
+	GroupMember []string `json:"group_effective_members,omitempty"`
+	// BeyondOwner is true when a principal other than the owner can read it.
+	BeyondOwner bool   `json:"readable_beyond_owner"`
+	Description string `json:"description"`
+}
+
+// Readers answers who can read an object. It is the one place the question is
+// decided, so secrets, BMC device nodes and drive nodes cannot disagree.
+func (e *Env) Readers(mode, gid *int64) Readers {
+	if mode == nil {
+		return Readers{Description: "unknown (mode not readable)", Reason: ReasonEACCES}
+	}
+	m := *mode
+	r := Readers{
+		Determined: true,
+		OtherRead:  m&0o004 != 0,
+		OtherWrite: m&0o002 != 0,
+		GroupRead:  m&0o040 != 0,
+		GroupWrite: m&0o020 != 0,
+	}
+	if r.OtherRead {
+		r.BeyondOwner = true
+		r.Description = "any local user (other-readable)"
+		return r
+	}
+	if !r.GroupRead {
+		r.Description = "the owner only"
+		return r
+	}
+	// Group-readable: whether that means anything depends on who is in the
+	// group, and that question needs both databases.
+	db := e.Groups()
+	if !db.Determined() {
+		r.Determined = false
+		r.Reason = db.Reason()
+		r.BeyondOwner = true // conservative: unknown readers are not no readers
+		r.Description = "unknown: the file is group-readable and the group model is unavailable (" + db.Reason() + ")"
+		return r
+	}
+	if gid == nil {
+		r.Determined = false
+		r.Reason = ReasonEACCES
+		r.BeyondOwner = true
+		r.Description = "unknown: the file is group-readable and its gid could not be read"
+		return r
+	}
+	grp, ok := db.ByGID(*gid)
+	if !ok {
+		r.Determined = false
+		r.Reason = ReasonENOENT
+		r.BeyondOwner = true
+		r.Description = "unknown: the file is group-readable and gid " + itoa64(*gid) + " is in neither database"
+		return r
+	}
+	r.GroupName, r.GroupMember = grp.Name, grp.Members
+	if len(grp.Members) == 0 {
+		r.Description = "group " + grp.Name + " has no members by list or primary gid, so this is owner-only in practice"
+		return r
+	}
+	r.BeyondOwner = true
+	r.Description = "the " + itoa64(int64(len(grp.Members))) + " effective member(s) of group " + grp.Name +
+		" (" + strings.Join(grp.Members, ", ") + ")"
+	return r
+}
+
+func itoa64(n int64) string {
+	if n == 0 {
+		return "0"
+	}
+	neg := n < 0
+	if neg {
+		n = -n
+	}
+	var b [20]byte
+	i := len(b)
+	for n > 0 {
+		i--
+		b[i] = byte('0' + n%10)
+		n /= 10
+	}
+	if neg {
+		i--
+		b[i] = '-'
+	}
+	return string(b[i:])
 }
 
 func atoi64(s string) int64 {

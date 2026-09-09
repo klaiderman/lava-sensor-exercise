@@ -1,1 +1,3 @@
 etc/ssh/sshd_config 0000
+boot/initrd.img-6.8.0-139-generic 0600
+root 0000

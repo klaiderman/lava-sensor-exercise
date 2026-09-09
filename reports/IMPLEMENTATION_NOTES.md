@@ -533,6 +533,147 @@ is unreachable in anything that ships. The deliverable is a single static
 against the cross-compiled binaries under WSL as uid 1000 rather than being
 skipped and forgotten.
 
+## Fix batch 3 (second adversarial review: DO-NOT-SHIP, 4 Critical / 4 High / 6 Medium)
+
+The whole batch turns on one distinction the code had been getting backwards.
+
+**An EXPOSURE question and an EXISTENCE question read a denial in opposite
+directions.** When the question is "who can read this", being refused is
+EVIDENCE, and it points towards protection: if this unprivileged account cannot
+reach the object, no other unprivileged account with the same standing can
+either. When the question is "does this exist" or "what is this set to", the same
+refusal is a gap and the answer is unknown. The sensor had been treating every
+denial as a gap, which made it drop a candidate it could not read
+(`PRIVATE_KEY_MATERIAL_EXPOSURE` passed with "0 candidates classified" over a
+group-readable key), and made it return `unknown` on every host with a 0700
+`/root` (`PROVISIONING_DATA_PROTECTION`). `protectionFromDenial()` in
+`secrets.go` is that reading: it walks up to the nearest stat-able ancestor and
+asks whether that ancestor's own mode excludes other unprivileged accounts.
+Where it does, the candidate is kept, counted as protected, and the denial is
+opted out of the load-bearing set with the reason recorded — because the denial
+answered the question rather than leaving it open.
+
+### Rows 29, 33 — who is actually in a group
+
+Membership was read from field 4 of `/etc/group` alone. An account whose PRIMARY
+gid (field 4 of `/etc/passwd`) is the file's group is a member of it, reads
+every file that group can read, and appears in no member list. So a 0640 key
+owned by an "empty" group passed. `scan.Env.Groups()` now parses both databases
+and builds the effective member set, `Env.Readers()` is the single place "who
+can read this" is decided (secrets, BMC nodes and drive nodes all go through
+it), and an unreadable `/etc/group` or `/etc/passwd` makes group reasoning
+UNKNOWN rather than "every group is empty".
+
+Tests: `TestEffectiveReaders_PrimaryGidCounts`, `TestGroupDBDenied_IsUnknownNotEmpty`.
+
+### Row 30 — a listable directory is not exposure
+
+`/etc/sudoers.d` ships `drwxr-xr-x` with 0440 files on stock Debian and Ubuntu.
+Judging the directory's traverse bit failed every such machine at severity high.
+The check now judges the FILES inside: it lists the directory and inspects each
+child, fails only on a readable secret or an other-WRITABLE directory, and treats
+a denied listing as protection or as a boundary depending on the ancestor.
+
+Tests: `TestSecretStore_StockSudoersDIsNotExposure` (stock layout must not fail;
+a 0644 drop-in inside the same directory must).
+
+### Row 31 — the predicate is the rule that was cited
+
+The rule text said "not group- or world-writable" for `~/.ssh/config` and the
+code tested the READ bits, so the 0644 default every distribution ships failed.
+`ruleKind` now generates both the sentence and the predicate from one
+declaration, so they cannot drift apart: StrictModes objects to writability,
+libpq to readability.
+
+Tests: `TestCredentialRules_PredicateMatchesRuleText`.
+
+### Row 32 — the gate was a phrase blacklist with an opt-in
+
+Two holes. `LoadBearingIf` was opt-in, so the observations a check forgot to
+mark — exactly the ones it had not thought about — carried no weight; and the
+prose check matched fixed phrases, so "no exposed key material was found
+anywhere on this machine" walked straight past it. Now: observations are
+**load-bearing by default** and opting out requires a recorded reason that ships
+in the evidence (`not_load_bearing_because`); a `pass` or `fail` with no
+successful load-bearing observation behind it is downgraded to
+`unknown`/**`NO_EVIDENCE`**; and absence prose is matched by regexp over the
+whole class of enumeration and absence assertions, with the completeness
+sentence generated instead.
+
+The polarity flip is the substantive change in this batch. It forced every check
+to state, in writing, which of its observations do not underwrite its verdict —
+and it caught a real bug on the way: `nvmeController("nvme0n1")` searched
+forward for "n", hit the one in "nvme", and returned the name unchanged, so
+every NVMe controller lookup had been silently missing.
+
+Tests: `TestEntailment_UnlistedAbsenceProseIsCaught`,
+`TestEntailment_VerdictWithoutEvidenceIsNoEvidence`,
+`TestEntailment_OptOutRequiresARecordedReason`, and the roster-wide
+`TestEvidenceEntailsVerdict`.
+
+### Row 34 (not in the batch) and the absence primitive
+
+`probe.Reader` now answers "is this ENOENT the answer or a gap in it" itself: on
+ENOENT it walks up to the nearest ancestor that stats and marks
+`AbsenceProven` when one does. "Absence is only provable from a successful
+listing" — so the listing is performed rather than assumed.
+
+### Rows 36, 37, 38 — three narrower reversals
+
+A truncated `/proc/net/tcp` no longer hides a telnet listener that was inside the
+rows actually read: a listener SEEN is a positive observation, the table's
+completeness is opted out when one is found, and a truncation with nothing
+adverse is `unknown` naming how many rows were read. A `/dev/ipmi*` ENOENT after
+a listable `/dev` is `AbsenceProven`, so a machine with no BMC stops reporting
+"no node exists [downgraded from pass ... ENOENT]". And the cloud-init drop-in
+matcher strips comments and matches YAML keys at line start, so a comment saying
+"no password is set here" no longer promotes a public config file to payload.
+
+Tests: `TestListeners_TruncatedTableKeepsPartialEvidence`,
+`TestListeners_TruncationWithoutAdverseIsUnknown`,
+`TestBMCNode_ProvenAbsenceIsAnAnswer`,
+`TestProvisioning_CommentIsNotACredentialKey`, `TestDeclaredKeys`.
+
+### Row 40 — a check that cannot be interrupted must not take the scan with it
+
+A context deadline only helps a check that consults it. A D-state read of a hung
+NFS home returns to nobody, so calling `c.Run` inline meant one such check took
+the whole scan and the artifact was never written at all. Each check now runs in
+its own goroutine and is ABANDONED at its deadline, exactly as `ReadOOB` already
+did: the result arrives on a buffered channel the abandoned goroutine can always
+finish sending to, the engine stops waiting, that check reports
+`unknown`/`TIMEOUT` saying it was abandoned, and the scan carries on and writes
+its output. Separately, walks now refuse to START on a network filesystem —
+refusing to CROSS into one was never enough, because a scan root can be on one
+already — with the skipped root and its fstype recorded.
+
+Tests: `TestEngine_StuckCheckIsAbandonedAndOutputIsStillProduced` (a check that
+sleeps 30 s ignoring its context, followed by another check that must still
+report), `TestWalk_RefusesToStartOnNetworkStorage`.
+
+### Row 41 and the Lows
+
+`BMC_CLIENT_TOOLING_INVENTORY` derives its reason from the directory stats
+instead of a hard-coded EACCES, and names the directories rather than printing
+an empty list (`TestBMCTooling_ReasonComesFromTheStats`). L1: a symlink refused
+by read policy is classified `ELOOP` instead of leaking "UNSUPPORTED" outside
+the closed vocabulary (`TestSymlinkRefusalIsInTheClosedVocabulary`). L2: `passwd
+-S` is the one setuid-root binary the sensor executes; it is read-only, reports
+the calling account only, and its result is opted out of the load-bearing set —
+documented here rather than removed, because the alternative (reading
+`/etc/shadow`) is exactly the thing the sensor must not do. L3 belongs to the
+lab package and its owner.
+
+### Two batch-2 expectations that batch 3 supersedes, on purpose
+
+`TestPrivateKey_UnreadableSubtreeIsUnknown` and the `/root` case in
+`TestCredentialExposure_HomesAreCleanAndDeduplicated` asserted `unknown` for a
+subtree this account cannot enter. Rows 28 and 35 reverse that for exposure
+questions: a 0700 `/root` hides its contents from every unprivileged account,
+which is the answer, not a gap. The tests are renamed and now assert what still
+must hold — that the shielding is COUNTED and REPORTED rather than silently
+assumed, and that the two secrets checks agree about the same directory.
+
 ## Where it has been run
 
 | environment | invocation | result |
