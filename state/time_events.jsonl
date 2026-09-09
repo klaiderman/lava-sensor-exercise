@@ -17,3 +17,7 @@
 {"event":"DECISION","ts":"2026-09-08T23:59:44Z","ids":["LD-9 architecture Option 1.5 (flat Fixed Registry + load-bearing downgrade + classify + Env; 3 packages)"],"file":"research/DECISIONS.md","note":"CLAUDE.md architecture frozen"}
 {"event":"PHASE_END","phase":"14-grill-me-architecture","ts":"2026-09-09T00:08:07Z","note":"LD-9 Option 1.5 frozen; CHECK_REGISTRY 25+1 checks; IMPL intent complete"}
 {"event":"PHASE","phase":"15-implementation-prompt","ts":"2026-09-09T00:08:07Z","budget_min":20}
+{"event":"APPROVAL","item":"prompts/IMPL/prompt.md","decision":"another Wixie pass: complete remaining mandatory hardening cases only; no score optimization; patch only real weaknesses","ts":"2026-09-09T00:31:27Z"}
+{"event":"APPROVAL","item":"prompts/IMPL/prompt.md","decision":"approved after hardening-only pass","ts":"2026-09-09T00:38:06Z"}
+{"event":"PHASE_END","phase":"15-implementation-prompt","ts":"2026-09-09T00:38:06Z"}
+{"event":"PHASE","phase":"16-vertical-slice","ts":"2026-09-09T00:38:06Z","budget_min":30,"note":"implementation-author (opus) stops after the slice for lead schema validation"}

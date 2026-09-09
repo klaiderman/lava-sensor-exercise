@@ -1,0 +1,19 @@
+{
+  "source_model": "claude-opus-5",
+  "target_model": "claude-opus-5",
+  "note": "No source->target model change: the prompt was authored directly in Claude 5.x XML format for claude-opus-5 in step 3 (craft), so 'translation' here is the target-model-adaptation pass only — applying the registry's claude-opus-5 key_constraint ('tends to longer output + self-verification: add conciseness + scope-discipline instructions') on top of the already-hardened prompt. adapter.md's score-delta schema names axes (clarity/specificity/structure/robustness/completeness) that do not match this project's actual scorer (shared/scripts/self-eval.py: Clarity/Completeness/Efficiency/Model Fit/Failure Resilience); axes below use the real scorer's names for honesty rather than fabricating adapter.md's five.",
+  "axes": {
+    "clarity":             { "before": 8.2,  "after": 8.2 },
+    "completeness":        { "before": 7.5,  "after": 7.5 },
+    "efficiency":          { "before": 8.5,  "after": 8.5 },
+    "model_fit":           { "before": 9.0,  "after": 9.0 },
+    "failure_resilience":  { "before": 10.0, "after": 10.0 }
+  },
+  "sigma": { "before": 0.838, "after": 0.836, "floor": 0.75 },
+  "overall_before": 8.64,
+  "overall_after": 8.64,
+  "verdict": "HOLD",
+  "changes_applied": [
+    "Added a one-sentence scope-discipline/conciseness instruction to <role> directly targeting the claude-opus-5 registry key_constraint (longer-output + self-verification tendency): move at normal pace once the load-bearing primitives and vertical slice are validated, do not re-verify passing tests, do not restate settled reasoning."
+  ]
+}

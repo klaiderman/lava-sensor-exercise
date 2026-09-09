@@ -2,47 +2,77 @@
   "track": "IMPL",
   "role": "implementation-author",
   "target_model": "claude-opus-5",
+  "wixie_commit": "cb90bc4f7eb04e6479f13cec4f0cb2c46a8dafb9",
   "task_domain": "coding",
   "format": "xml",
-  "wixie_commit": "cb90bc4f7eb04e6479f13cec4f0cb2c46a8dafb9",
-  "mode": "create",
-  "techniques": ["direction-lock-verbatim-invariants", "xml-structured-sections", "role-assignment", "think-thoroughly-on-load-bearing-primitives", "ordered-work-plan", "structured-output-contract"],
-  "techniques_avoided": ["chain-of-thought-step-by-step (Claude 4.x/5.x anti-pattern)", "aggressive-MUST/NEVER language (overtriggers on Claude 4.6+)", "few-shot-code-examples (would bias implementation toward a specific shape rather than the spec)"],
-  "tokens": {
-    "estimated": 3900,
-    "context_window": 1000000,
-    "usage_percent": 0.4
-  },
+  "versions": [
+    "prompt.v1.md — initial craft (Direction Lock taken verbatim from prompts/raw/IMPL.intent.md; Claude 5.x XML sections)",
+    "prompt.v2.md — manual refine (markdown headers alongside XML tags, split run-on semicolon sentences) + convergence.py (4 iterations, PLATEAU, heuristic HOLD, see learnings.md) + manual grammar cleanup of the mechanical splits",
+    "prompt.md (v3, hardening pass 1) — v2 plus the harden patch (broadened injection-defense clause, anti-persona-switch line, session-persistence reminder) plus the claude-opus-5 model-fit tuning line (scope-discipline/conciseness per registry key_constraint)",
+    "prompt.md (final, hardening pass 2) — lead-requested hardening-only follow-up: ran the 2 previously-SKIPPED attacks (payload_splitting, language_switching) and re-evaluated the 3 previously-NOT_APPLICABLE attacks (data_extraction, output_manipulation, refusal_bypass) as applicable. 4 minimal in-place patches inside the existing <context> and <invariants> preamble (no lines added/removed): broadened the paste-prohibition to any file the worker writes (data_extraction), made the data-not-instructions rule cover fragments assembled across files/reads (payload_splitting), added 'translated into another language' to the disguise list (language_switching), added an explicit check_id-renaming ban (output_manipulation). refusal_bypass was found already fully RESISTANT, no patch. No score-optimization edits."
+  ],
   "scores": {
-    "clarity": 8.18,
-    "completeness": 7.5,
-    "efficiency": 8.5,
-    "model_fit": 9.0,
-    "failure_resilience": 10.0,
-    "overall": 8.64
+    "axes": {
+      "clarity": 8.23,
+      "completeness": 7.5,
+      "efficiency": 8.5,
+      "model_fit": 9.0,
+      "failure_resilience": 10.0
+    },
+    "sigma": 0.833,
+    "sigma_floor_used": 0.75,
+    "overall": 8.65
   },
-  "sigma": 0.838,
-  "sigma_floor": 0.75,
   "sat": {
     "has_role": true,
     "has_task": true,
     "has_format": true,
     "has_constraints": true,
     "has_edge_cases": true,
-    "no_hedges": true,
+    "no_hedge_words": true,
     "no_filler": true,
     "has_structure": true
   },
-  "status": "needs_improvement",
   "verdict": "HOLD",
-  "version": 2,
-  "config": {
-    "temperature": 1.0,
-    "max_tokens": 4000,
-    "stop_sequences": [],
-    "system_prompt": false
+  "verdict_rationale": "8/8 SAT pass and all 5 axes >= 7.0, but overall 8.65 < the 9.0 DEPLOY floor and sigma 0.833 exceeds the dynamic floor of 0.75 for a >2000-word prompt (self-eval.py dynamic_sigma_floor). Per the honest-numbers contract this is HOLD, not DEPLOY, regardless of the strong axis scores. Convergence plateaued after 4 iterations (see learnings.md); a further heuristic-score push would require rewriting the Invariants list into materially shorter sentences, which risks losing the precision the invariants are graded on — judged not worth the tradeoff within the time budget. The hardening-only pass 2 requested by the lead deliberately did not chase score (scores moved by +0.01, noise from the 4 patches' text) — every edit in pass 2 was attack-driven, not score-driven, per explicit instruction.",
+  "stages_completed": [
+    "direction_lock (taken from intent file, per agent instructions — not re-opened with the lead)",
+    "craft (prompt.v1.md)",
+    "refine (prompt.v2.md, manual)",
+    "converge (convergence.py, 4 iterations, PLATEAU/HOLD; self-eval.py + convergence.py used — output-eval.py not applicable, it scores a completed *output* against a reference, not the prompt itself)",
+    "structural_test (tests.json + test-results.json, Layer-1 self-simulation, 4/5 pass)",
+    "output_test (output-test.py --dry-run, then one real bounded call)",
+    "harden (12-attack red-team, audit.json, 2 fixes applied, re-scored)",
+    "translate / target-model adaptation (score-delta.json — no format change needed since the prompt was authored directly for claude-opus-5; applied the registry's opus-5-specific conciseness/scope-discipline tuning)",
+    "contract_check (CONTRACT_CHECK.md, PASS)",
+    "harden_pass_2 (lead-requested, hardening-only: ran the 2 SKIPPED attacks + re-evaluated the 3 NOT_APPLICABLE attacks as applicable; 4 minimal patches; audit.json now has 12/12 real results, 0 remaining SKIPPED/NOT_APPLICABLE; contract re-checked PASS; re-scored once)"
+  ],
+  "output_test": {
+    "ran": true,
+    "dry_run_ran": true,
+    "model_requested": "claude-opus-5",
+    "model_could_be_targeted_exactly": "unconfirmed — output-test.py's MODEL_MAP has no entry for claude-opus-5 so it passed the literal string 'claude-opus-5' to the API unresolved; the call was accepted and billed, so the API recognized *some* model by that id, but there is no independent confirmation it is the same claude-opus-5 the registry describes",
+    "max_tokens_config": 4000,
+    "tokens_reported": 4000,
+    "cost_usd": 0.292,
+    "duration_sec": 55,
+    "result": "FAIL (evaluator overall 2.0/10) — the real completion came back as 0 visible words; claude-opus-5's adaptive extended thinking (on by default per the registry) appears to have consumed the entire 4000-token max_tokens budget before emitting visible text",
+    "interpretation": "This is very likely an artifact of the single-shot test harness's small max_tokens, not a defect in the prompt: the real worker is a Claude Code sub-agent running an open agentic session (many tool-call turns, no 4000-token single-response ceiling), which is not subject to the same constraint. Recorded honestly per the no-inflation contract rather than treated as a prompt fix target."
   },
-  "research_claims": null,
-  "research_freshness": null,
-  "triangulation_score": null
+  "harden": {
+    "pass_1": {"attacks_run": 12, "resistant": 6, "not_applicable_or_skipped": 4, "vulnerable_before_fix": 2, "patched": true},
+    "pass_2": {"attacks_run": 12, "resistant": 8, "fixed_this_pass": 4, "skipped_or_not_applicable_remaining": 0, "patched": true},
+    "final": {"resistant": 8, "fixed_cumulative": 4, "vulnerable": 0, "skipped_or_not_applicable": 0},
+    "audit_file": "audit.json (rewritten in pass 2 with all 12 rows carrying real results)"
+  },
+  "translation": {
+    "from": "claude-opus-5 (Claude 5.x XML, authored directly in step 3 — no source model to translate from)",
+    "to": "claude-opus-5",
+    "score_before": 8.64,
+    "score_after": 8.64,
+    "note": "True translation was a no-op (same format, same model); the adaptation pass applied the opus-5 registry key_constraint (conciseness/scope-discipline instruction). See score-delta.json. Unaffected by hardening pass 2."
+  },
+  "contract_check": "PASS (re-verified after hardening pass 2 — all 4 patches were in-place edits inside existing lines 10 and 63, no lines added/removed, see CONTRACT_CHECK.md)",
+  "model_profile_gap_noted": "wixie/shared/references/model-profiles.md has no dedicated 'Claude 5.x' section; §1 'Claude 4.x' was used as the closest documented profile, per instruction and logged in LIFECYCLE_LOG.md.",
+  "generated_at": "2026-09-09T00:00:00Z"
 }
