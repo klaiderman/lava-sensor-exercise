@@ -64,6 +64,26 @@ type WalkResult struct {
 	// SkippedFSType names the network filesystem this root sits on, when the
 	// walk declined to start.
 	SkippedFSType string `json:"skipped_network_fstype,omitempty"`
+	// SymlinkTarget is set when the root was a symlink the walk followed; the
+	// enumeration below is of the target.
+	SymlinkTarget string `json:"root_symlink_target,omitempty"`
+	// SkipReason, when set, says in one closed-vocabulary phrase why the walk
+	// did not start. Every value it can take is listed in walkSkipReasons.
+	SkipReason string `json:"root_skip_reason,omitempty"`
+}
+
+// WalkSkipReasons is the closed set of phrases Walk uses when it declines to
+// start. A reason outside it is a defect: an internal token such as ENOTREG
+// reaching a finding tells a reader nothing they can act on.
+// TestWalkSkipReasonsAreInTheClosedVocabulary drives every refusal path and
+// holds each one to this set.
+var WalkSkipReasons = map[string]bool{
+	"root is on network storage":                               true,
+	"root is not a directory":                                  true,
+	"root is a symlink to a non-directory":                     true,
+	"root is a symlink whose target is unresolvable":           true,
+	"root is a symlink onto network storage":                   true,
+	"root is a symlink to a target writable by other accounts": true,
 }
 
 // Complete reports whether the enumeration finished, which is the only state in
@@ -133,6 +153,7 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 			res.BudgetExhausted = "network-filesystem"
 			obs.Status = StatusUnsupported
 			obs.Errno = "ENOTSUP"
+			obs.Refused = true
 			obs.Truncated = true
 			obs.Elapsed = time.Since(start)
 			obs.Detail = "not walked: " + root + " is on a " + fstype +
@@ -151,11 +172,36 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 		res.Errno = obs.Errno
 		return res, obs
 	}
+	// A distribution that moves /home to another filesystem leaves /home as a
+	// symlink. Refusing to walk it would report "no keys" for every account on
+	// the machine, so the symlink is followed ONCE - but only to somewhere this
+	// sensor is willing to go: a local directory that no other unprivileged
+	// account can rewrite underneath us.
+	if rootInfo.Mode()&os.ModeSymlink != 0 {
+		target, targetInfo, reason := r.resolveWalkRoot(base, b)
+		if reason != "" {
+			res.SkipReason = reason
+			res.BudgetExhausted = "root-not-walkable"
+			obs.Status = StatusUnsupported
+			obs.Errno = "ENOTSUP"
+			obs.Refused = true
+			obs.Truncated = true
+			obs.Elapsed = time.Since(start)
+			obs.Detail = "not walked: " + reason + " (" + root + ")"
+			obs.Meta = &Meta{Root: root, BudgetExhausted: res.BudgetExhausted}
+			return res, obs
+		}
+		res.SymlinkTarget = r.unbase(target)
+		base, rootInfo = target, targetInfo
+	}
 	if !rootInfo.IsDir() {
 		obs.Status, obs.Errno = Classify(errNotRegular)
-		obs.Detail = "walk root is not a directory"
+		obs.Detail = "not walked: walk root is not a directory"
 		obs.Elapsed = time.Since(start)
+		obs.Status = StatusUnsupported
 		res.Errno = "ENOTDIR"
+		res.SkipReason = "root is not a directory"
+		res.BudgetExhausted = "root-not-walkable"
 		return res, obs
 	}
 	_, _, rootDev, _, haveDev := ownerOf(rootInfo)
@@ -235,6 +281,35 @@ func (r *Reader) Walk(root string, b WalkBudget, visit func(path string, d fs.Di
 		obs.Detail = "enumeration did not complete: " + res.Boundary() + "; absence is not provable from it"
 	}
 	return res, obs
+}
+
+// resolveWalkRoot follows a symlinked walk root exactly one hop and decides
+// whether this sensor is willing to enumerate what is on the other side. It
+// returns the resolved base path, or a closed-vocabulary reason not to walk.
+func (r *Reader) resolveWalkRoot(base string, b WalkBudget) (string, os.FileInfo, string) {
+	target, err := filepath.EvalSymlinks(base)
+	if err != nil {
+		return "", nil, "root is a symlink whose target is unresolvable"
+	}
+	info, err := os.Stat(target)
+	if err != nil {
+		return "", nil, "root is a symlink whose target is unresolvable"
+	}
+	if !info.IsDir() {
+		return "", nil, "root is a symlink to a non-directory"
+	}
+	if !b.AllowNetworkFS {
+		if _, on := networkFSFor(r.unbase(target), b.NetworkFSMounts); on {
+			return "", nil, "root is a symlink onto network storage"
+		}
+	}
+	// A target another unprivileged account can write is a target it can
+	// replace: what we would enumerate would be that account's choice, not the
+	// machine's state.
+	if info.Mode().Perm()&0o022 != 0 {
+		return "", nil, "root is a symlink to a target writable by other accounts"
+	}
+	return target, info, ""
 }
 
 func depth(root, path string) int {

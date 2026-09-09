@@ -2,6 +2,7 @@ package scan
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -113,6 +114,37 @@ const (
 	// it is not a conclusion.
 	ReasonNoEvidence = "NO_EVIDENCE"
 )
+
+// ReasonVocabulary is the CLOSED set of values that may appear in a finding's
+// reason field. Anything a probe produced that is not in it - ENOTREG, ENOTDIR,
+// ENOTSUP, ELOOP and the rest of errno - is an internal token and is mapped by
+// NormalizeReason before it can reach an artifact.
+var ReasonVocabulary = map[string]bool{
+	ReasonEACCES: true, ReasonEPERM: true, ReasonENOENT: true, ReasonEINVAL: true,
+	ReasonTimeout: true, ReasonUtilMiss: true, ReasonBudget: true, ReasonParse: true,
+	ReasonExecError: true, ReasonContested: true, ReasonPolicy: true, ReasonInternal: true,
+	ReasonTimestampRes: true, ReasonNotAttempted: true, ReasonNoEvidence: true,
+}
+
+// NormalizeReason maps anything a probe can report onto the closed vocabulary.
+// An errno that says "the object is not the kind of thing this question needs"
+// - a symlink where a directory was wanted, a socket where a file was wanted -
+// is EINVAL: the request was not valid for what is there.
+func NormalizeReason(reason string) string {
+	if reason == "" || ReasonVocabulary[reason] {
+		return reason
+	}
+	switch reason {
+	case "ENOTDIR", "ENOTREG", "ENOTSUP", "EOPNOTSUPP", "ELOOP", "EISDIR",
+		"ENXIO", "ENODEV", "ENODATA", "ERANGE", "EIO", "EAGAIN", "EMFILE", "ENFILE", "EBUSY":
+		return ReasonEINVAL
+	case "ENOMEM", "EFAULT":
+		return ReasonInternal
+	}
+	// An unrecognised token is a defect in this sensor, not a fact about the
+	// host, and it says so rather than inventing a plausible errno.
+	return ReasonInternal
+}
 
 // Env is the read-once shared state for a whole scan: the probe handles, a
 // fixed clock, and the three observations more than one check needs. Everything
@@ -463,6 +495,7 @@ type GroupDB struct {
 	Groups    []Group
 	byName    map[string]Group
 	byGID     map[int64]Group
+	byUID     map[int64]string
 }
 
 // Determined reports whether the group model could be built at all. A database
@@ -485,6 +518,15 @@ func (g *GroupDB) Reason() string {
 		return "/etc/passwd " + g.PasswdObs.Reason()
 	}
 	return ""
+}
+
+// OwnerName returns the account name of a uid, where the files describe one.
+func (g *GroupDB) OwnerName(uid int64) (string, bool) {
+	if g == nil || g.byUID == nil {
+		return "", false
+	}
+	n, ok := g.byUID[uid]
+	return n, ok
 }
 
 // ByGID returns the group with that gid, including its effective members.
@@ -510,7 +552,7 @@ func (g *GroupDB) Lookup(name string) (Group, bool) {
 // account whose primary gid is that group.
 func (e *Env) Groups() *GroupDB {
 	e.onceGroup.Do(func() {
-		g := &GroupDB{byName: map[string]Group{}, byGID: map[int64]Group{}}
+		g := &GroupDB{byName: map[string]Group{}, byGID: map[int64]Group{}, byUID: map[int64]string{}}
 		g.Obs = e.Files.Read("/etc/group", probe.Large)
 		g.PasswdObs = e.Files.Read("/etc/passwd", probe.Large)
 
@@ -523,6 +565,7 @@ func (e *Env) Groups() *GroupDB {
 				}
 				gid := atoi64(f[3])
 				primary[gid] = append(primary[gid], f[0])
+				g.byUID[atoi64(f[2])] = f[0]
 			}
 		}
 		if g.Obs.Status == probe.StatusOK {
@@ -557,25 +600,33 @@ func (e *Env) Groups() *GroupDB {
 	return e.groups
 }
 
-// Readers is the answer to "who can read this object", from its metadata and
-// the group model.
+// Readers is the answer to "who OTHER THAN THE OWNER can reach this object".
+//
+// The owner is not another reader of its own file. Counting it as one made
+// /etc/sudoers at 0440 root:root - the mode every Debian, Ubuntu and RHEL host
+// ships, including the target - read as "reachable beyond its owner (group
+// root)". Root is the owner; root being in group root says nothing.
 type Readers struct {
-	Determined  bool     `json:"determined"`
-	Reason      string   `json:"reason,omitempty"`
-	OtherRead   bool     `json:"other_readable"`
-	OtherWrite  bool     `json:"other_writable"`
-	GroupRead   bool     `json:"group_readable"`
-	GroupWrite  bool     `json:"group_writable"`
-	GroupName   string   `json:"group_name,omitempty"`
-	GroupMember []string `json:"group_effective_members,omitempty"`
-	// BeyondOwner is true when a principal other than the owner can read it.
-	BeyondOwner bool   `json:"readable_beyond_owner"`
-	Description string `json:"description"`
+	Determined bool   `json:"determined"`
+	Reason     string `json:"reason,omitempty"`
+	OtherRead  bool   `json:"other_readable"`
+	OtherWrite bool   `json:"other_writable"`
+	GroupRead  bool   `json:"group_readable"`
+	GroupWrite bool   `json:"group_writable"`
+	GroupName  string `json:"group_name,omitempty"`
+	OwnerName  string `json:"owner_name,omitempty"`
+	// GroupMember lists the effective members of the object's group EXCLUDING
+	// the owner account.
+	GroupMember []string `json:"group_effective_members_beyond_owner,omitempty"`
+	BeyondOwner bool     `json:"reachable_beyond_owner"`
+	Description string   `json:"description"`
 }
 
-// Readers answers who can read an object. It is the one place the question is
-// decided, so secrets, BMC device nodes and drive nodes cannot disagree.
-func (e *Env) Readers(mode, gid *int64) Readers {
+// beyondOwner is the single implementation behind Readers, Traversers and
+// Accessors. Only the permission bits and the verb differ; the account model -
+// subtract the owner, and refuse to guess when the databases cannot answer - is
+// written once so no two checks can disagree about the same file.
+func (e *Env) beyondOwner(mode, uid, gid *int64, otherBits, groupBits int64, verb, adj, noun string) Readers {
 	if mode == nil {
 		return Readers{Description: "unknown (mode not readable)", Reason: ReasonEACCES}
 	}
@@ -587,49 +638,91 @@ func (e *Env) Readers(mode, gid *int64) Readers {
 		GroupRead:  m&0o040 != 0,
 		GroupWrite: m&0o020 != 0,
 	}
-	if r.OtherRead {
+	db := e.Groups()
+	if uid != nil {
+		if n, ok := db.OwnerName(*uid); ok {
+			r.OwnerName = n
+		}
+	}
+	if m&otherBits != 0 {
 		r.BeyondOwner = true
-		r.Description = "any local user (other-readable)"
+		r.Description = "any local user can " + verb + " it (mode " + octalOf(m) + ")"
 		return r
 	}
-	if !r.GroupRead {
+	if m&groupBits == 0 {
 		r.Description = "the owner only"
 		return r
 	}
-	// Group-readable: whether that means anything depends on who is in the
-	// group, and that question needs both databases.
-	db := e.Groups()
+	// Group-permitted: whether that means anything depends on who is in the
+	// group BESIDES the owner, and that question needs both databases.
 	if !db.Determined() {
 		r.Determined = false
 		r.Reason = db.Reason()
-		r.BeyondOwner = true // conservative: unknown readers are not no readers
-		r.Description = "unknown: the file is group-readable and the group model is unavailable (" + db.Reason() + ")"
+		r.Description = "undetermined: the " + noun + " is group-" + adj + " and the account model is unavailable (" + db.Reason() + ")"
 		return r
 	}
 	if gid == nil {
 		r.Determined = false
 		r.Reason = ReasonEACCES
-		r.BeyondOwner = true
-		r.Description = "unknown: the file is group-readable and its gid could not be read"
+		r.Description = "undetermined: the " + noun + " is group-" + adj + " and its gid could not be read"
 		return r
 	}
 	grp, ok := db.ByGID(*gid)
 	if !ok {
+		// A gid served by SSSD or LDAP is not in the files. We cannot say who
+		// is in it, which is not the same as saying nobody is.
 		r.Determined = false
 		r.Reason = ReasonENOENT
-		r.BeyondOwner = true
-		r.Description = "unknown: the file is group-readable and gid " + itoa64(*gid) + " is in neither database"
+		r.Description = "undetermined: the " + noun + " is group-" + adj + " and gid " + itoa64(*gid) +
+			" is in neither /etc/group nor /etc/passwd, so it may be served by a directory service this sensor cannot query"
 		return r
 	}
-	r.GroupName, r.GroupMember = grp.Name, grp.Members
-	if len(grp.Members) == 0 {
-		r.Description = "group " + grp.Name + " has no members by list or primary gid, so this is owner-only in practice"
+	r.GroupName = grp.Name
+	for _, name := range grp.Members {
+		if r.OwnerName != "" && name == r.OwnerName {
+			continue
+		}
+		r.GroupMember = append(r.GroupMember, name)
+	}
+	if len(r.GroupMember) == 0 {
+		owner := r.OwnerName
+		if owner == "" {
+			owner = "its owner"
+		}
+		r.Description = "the owner only: group " + grp.Name + " has no effective member besides " + owner
 		return r
 	}
 	r.BeyondOwner = true
-	r.Description = "the " + itoa64(int64(len(grp.Members))) + " effective member(s) of group " + grp.Name +
-		" (" + strings.Join(grp.Members, ", ") + ")"
+	r.Description = "the " + itoa64(int64(len(r.GroupMember))) + " effective member(s) of group " + grp.Name +
+		" other than the owner can " + verb + " it (" + strings.Join(r.GroupMember, ", ") + ")"
 	return r
+}
+
+// Readers answers who beyond the owner can READ an object. It is the one place
+// the question is decided, so secrets, BMC device nodes and drive nodes cannot
+// disagree about the same file.
+func (e *Env) Readers(mode, uid, gid *int64) Readers {
+	return e.beyondOwner(mode, uid, gid, 0o004, 0o040, "read", "readable", "file")
+}
+
+// Traversers answers who beyond the owner can pass THROUGH a directory.
+//
+// Traversal, not readability, is what decides whether anything behind a
+// directory is reachable: 0710 root:ssl-cert has no group-read bit at all, yet
+// every member of ssl-cert can walk into it and open a 0640 key inside.
+func (e *Env) Traversers(mode, uid, gid *int64) Readers {
+	return e.beyondOwner(mode, uid, gid, 0o001, 0o010, "traverse", "traversable", "directory")
+}
+
+// Accessors answers who beyond the owner can OPEN an object for reading or
+// writing. Device nodes are the case that needs it: a 0620 node grants nothing
+// to a reader and everything to a writer.
+func (e *Env) Accessors(mode, uid, gid *int64) Readers {
+	return e.beyondOwner(mode, uid, gid, 0o006, 0o060, "access", "accessible", "node")
+}
+
+func octalOf(m int64) string {
+	return "0" + strconv.FormatInt(m&0o7777, 8)
 }
 
 func itoa64(n int64) string {

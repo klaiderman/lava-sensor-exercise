@@ -99,7 +99,7 @@ it:
 | `EACCES` | The object exists; this uid may not read it. **Denied is not absent.** |
 | `EPERM` | A kernel capability gate refused the operation — a different problem from a mode bit. |
 | `ENOENT` | The path does not exist, proven by a successful listing of its parent. |
-| `EINVAL` / `ENODEV` / `EOPNOTSUPP` | The attribute exists but the operation is not supported here. |
+| `EINVAL` | The object is not the kind of thing the question needs — a symlink where a directory was wanted, an attribute the filesystem does not support. Every errno of that shape (`ENOTDIR`, `ENOTREG`, `ENOTSUP`, `ELOOP`, `EISDIR`, `ENXIO`, `ENODATA`) maps here through `scan.NormalizeReason`, so no internal token reaches an artifact. |
 | `TIMEOUT` | The probe was attempted and did not finish inside its budget. Never a failure of the control. |
 | `UTILITY_MISSING` | A helper binary is not installed. **Never** "the capability is absent". |
 | `BUDGET_EXHAUSTED` | A walk, read or scan hit its cap before completing, so absence is not provable. |
@@ -108,9 +108,13 @@ it:
 | `CONTESTED` | Two observations disagree. Both are recorded; neither is silently preferred. |
 | `TIMESTAMP_RESOLUTION` | Two events were observed with a timestamp too coarse to order them. Nothing disagrees; the instrument does not resolve the question. |
 | `NO_EVIDENCE` | The check reached a verdict with no successful observation behind it. A conclusion with nothing under it is not a conclusion. |
-| `NOT_ATTEMPTED` | The observation was reachable and the sensor declined to make it, by design — it never opens a device node. Not a denial, and not an absence. |
+| `NOT_ATTEMPTED` | The observation was reachable and the sensor declined to make it, by design — it never opens a device node, and it never walks a directory on network storage or behind a symlink it cannot trust. Not a denial, and not an absence. |
 | `POLICY` | The control was observed and is not in the state the check asks about. This is the reason on a `fail`. |
-| `INTERNAL_ERROR` | The check itself panicked. The panic is in the evidence and no other check is affected. |
+| `INTERNAL_ERROR` | The check itself panicked, or produced a reason outside this table. Either is a defect in the sensor rather than a fact about the host, and it says so instead of inventing a plausible errno. |
+
+The vocabulary is closed in code (`scan.ReasonVocabulary`) and enforced at one
+point in `finalize`, and `TestEveryFindingReasonIsInTheClosedVocabulary` runs the
+whole roster over a tree built to provoke the awkward cases.
 
 An `unknown` is reported at the check's declared impact, not downgraded: an
 unverifiable control is an assurance gap of the same weight as a failing one.

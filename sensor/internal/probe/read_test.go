@@ -324,3 +324,69 @@ func TestNoRootOverrideInProduction(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// Row 47: a walk root this sensor declines to enumerate is reported in words a
+// reader of a finding can act on. Every refusal path is driven here, and each
+// reason it produces has to be one of the phrases WalkSkipReasons declares.
+func TestWalkSkipReasonsAreInTheClosedVocabulary(t *testing.T) {
+	linuxOnly(t)
+	notRoot(t)
+	base := t.TempDir()
+	mk := func(rel string) string {
+		p := filepath.Join(base, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		return p
+	}
+	// A symlink to a regular file.
+	f := mk("target.txt")
+	if err := os.WriteFile(f, []byte("x\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(f, mk("to_file")); err != nil {
+		t.Skip(err)
+	}
+	// A symlink whose target does not exist.
+	if err := os.Symlink(filepath.Join(base, "missing"), mk("dangling")); err != nil {
+		t.Skip(err)
+	}
+	// A symlink to a directory any account may rewrite.
+	if err := os.MkdirAll(mk("open_dir"), 0o777); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chmod(mk("open_dir"), 0o777); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(mk("open_dir"), mk("to_open_dir")); err != nil {
+		t.Skip(err)
+	}
+	// A plain regular file as the root.
+	r := NewRootedReader(base)
+	for _, root := range []string{"/to_file", "/dangling", "/to_open_dir", "/target.txt"} {
+		res, obs := r.Walk(root, WalkBudget{}, func(string, os.DirEntry) {})
+		if res.SkipReason == "" {
+			t.Errorf("%s: the walk did not start and said nothing about why (errno %q)", root, res.Errno)
+			continue
+		}
+		if !WalkSkipReasons[res.SkipReason] {
+			t.Errorf("%s: skip reason %q is outside the closed vocabulary", root, res.SkipReason)
+		}
+		if !obs.Refused && obs.Errno == "" {
+			t.Errorf("%s: a refusal must be marked as one or carry an errno", root)
+		}
+	}
+	// A symlink onto network storage is refused for the same reason a direct
+	// network root is: its server can stop answering in a way no deadline can
+	// interrupt.
+	if err := os.MkdirAll(mk("nfsdir"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(mk("nfsdir"), mk("to_nfs")); err != nil {
+		t.Skip(err)
+	}
+	res, _ := r.Walk("/to_nfs", WalkBudget{NetworkFSMounts: map[string]string{"/nfsdir": "nfs4"}}, func(string, os.DirEntry) {})
+	if res.SkipReason != "root is a symlink onto network storage" {
+		t.Errorf("symlink onto nfs4: skip reason = %q", res.SkipReason)
+	}
+}

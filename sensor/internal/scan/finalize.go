@@ -78,6 +78,8 @@ func finalize(c Check, r Result, env *Env, start time.Time, elapsed time.Duratio
 	if r.Status == StatusPass {
 		r.Reason = ""
 	}
+	// One choke point: no internal errno token can reach an artifact.
+	r.Reason = NormalizeReason(r.Reason)
 
 	// (b) severity rule LD-2, applied centrally, never by a check.
 	severity := SeverityInfo

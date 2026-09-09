@@ -1,0 +1,131 @@
+=== RUN   TestFaultInjection_TimeoutRealSleepingChildLeavesNoDescendants
+--- PASS: TestFaultInjection_TimeoutRealSleepingChildLeavesNoDescendants (1.45s)
+=== RUN   TestFaultInjection_PanicInFullRosterIsolatesOnlyTheOffender
+--- PASS: TestFaultInjection_PanicInFullRosterIsolatesOnlyTheOffender (0.01s)
+=== RUN   TestFaultInjection_BudgetCutMidScan_EveryCheckStillEmitsOneFinding
+--- PASS: TestFaultInjection_BudgetCutMidScan_EveryCheckStillEmitsOneFinding (0.00s)
+=== RUN   TestFaultInjection_SizeLyingRead_CapRespected
+--- PASS: TestFaultInjection_SizeLyingRead_CapRespected (0.00s)
+=== RUN   TestFaultInjection_SymlinkIntoUserWritableTreeNotFollowed
+--- PASS: TestFaultInjection_SymlinkIntoUserWritableTreeNotFollowed (0.00s)
+=== RUN   TestFaultInjection_SysfsInRootSymlinksAreFollowed
+--- PASS: TestFaultInjection_SysfsInRootSymlinksAreFollowed (0.00s)
+=== RUN   TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict
+=== RUN   TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/utility_missing_no_binary_no_config
+=== RUN   TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/timeout
+=== RUN   TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/non_zero_exit
+=== RUN   TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/malformed_output_no_keyword_lines
+=== RUN   TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/partial_truncated_output_still_has_a_directive
+--- PASS: TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict (0.01s)
+    --- PASS: TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/utility_missing_no_binary_no_config (0.00s)
+    --- PASS: TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/timeout (0.00s)
+    --- PASS: TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/non_zero_exit (0.00s)
+    --- PASS: TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/malformed_output_no_keyword_lines (0.00s)
+    --- PASS: TestFaultInjection_SSHOracleFaultsNeverProduceAFalseVerdict/partial_truncated_output_still_has_a_directive (0.00s)
+=== RUN   TestFaultInjection_ContradictoryObservationsAreContested
+--- PASS: TestFaultInjection_ContradictoryObservationsAreContested (0.00s)
+=== RUN   TestFaultInjection_EmptyEvidenceStillProducesAWellShapedObject
+--- PASS: TestFaultInjection_EmptyEvidenceStillProducesAWellShapedObject (0.00s)
+=== RUN   TestFaultInjection_UnderClaim_UdevFallbackEstablishesModel
+--- PASS: TestFaultInjection_UnderClaim_UdevFallbackEstablishesModel (0.00s)
+=== RUN   TestProfileMatrix_ProfileA_HardGate
+    profile_matrix_test.go:148: UEFI_PLATFORM_SETUP_MODE: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="ENOENT", detail="this platform exposes no EFI firmware interface, so platform Setup Mode is not applicable here")
+    profile_matrix_test.go:148: KERNEL_LOCKDOWN_MODE: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="EINVAL", detail="securityfs is not mounted at /sys/kernel/security, so the kernel lockdown state is not observable here")
+    profile_matrix_test.go:148: BOOT_KERNEL_DRIFT: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="ENOENT", detail="no installed kernel could be enumerated from /boot or the module directories (OK / ENOENT), so whether the running kernel is the newest installed one is unknown")
+    profile_matrix_test.go:148: SSH_POLICY_IN_FORCE: research/CHECK_REGISTRY.md §5.3 (profile A) requires pass, observed unknown (reason="EINVAL", detail="whether the running daemon loaded the configuration on disk could not be established: systemd is not booted, so no unit can be asked when the daemon started; whether it loaded the ")
+    profile_matrix_test.go:148: REMOTE_LISTENING_SURFACE: research/CHECK_REGISTRY.md §5.3 (profile A) requires pass, observed unknown (reason="UTILITY_MISSING", detail="the socket tables under /proc/net are unreadable and no fallback tool produced a listing, so what is listening on this machine is unknown")
+    profile_matrix_test.go:148: BMC_RESPONDS_IN_BAND: research/CHECK_REGISTRY.md §5.3 (profile A) requires pass, observed unknown (reason="ENOENT", detail="no /sys/devices/platform/ipmi_bmc.* directory exists and no IPMI driver is loaded, so whether a management controller would answer over the in-band interface is unknown")
+    profile_matrix_test.go:148: BMC_DEVICE_NODE_ACCESS: research/CHECK_REGISTRY.md §5.3 (profile A) requires pass, observed unknown (reason="ENOENT", detail="no in-band BMC device node exists in any of its three spellings, so no local user has an in-band path to a management controller [downgraded from pass: a load-bearing observation d")
+    profile_matrix_test.go:148: ROOT_FILESYSTEM_REDUNDANCY: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="ENOENT", detail="the redundancy enumerations did not all complete, so a single-device root cannot be asserted")
+    profile_matrix_test.go:148: TPM_PRESENCE: research/CHECK_REGISTRY.md §5.3 (profile A) requires pass, observed unknown (reason="EINVAL", detail="this kernel or namespace exposes no TPM subsystem at /sys/class/tpm, so whether the machine has a hardware root of trust is not observable here")
+    profile_matrix_test.go:148: BMC_HOST_INTERFACE_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile A) requires pass, observed unknown (reason="ENOENT", detail="the network interface list could not be read (ENOENT), so whether a management-controller host interface exists is unknown; out-of-band LAN exposure is unknown by construction: the")
+    profile_matrix_test.go:148: UNUSED_ATTACHED_BLOCK_DEVICES: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="ENOENT", detail="the mount table or the swap list could not be read, so whether every attached device is accounted for is unknown")
+    profile_matrix_test.go:148: SECURE_BOOT_ENABLED: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="ENOENT", detail="this platform exposes no EFI firmware interface, so Secure Boot is not applicable here; an absent efivars tree is not a disabled Secure Boot")
+    profile_matrix_test.go:148: BOOT_ARTIFACT_READABILITY: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="ENOENT", detail="/boot was listed successfully but contains no initramfs matching the running kernel 6.8.0-139-generic, so the permissions of the image this machine actually booted from are not est")
+    profile_matrix_test.go:148: UNSIGNED_OR_OUT_OF_TREE_MODULES: research/CHECK_REGISTRY.md §5.3 (profile A) requires fail, observed unknown (reason="ENOENT", detail="/proc/sys/kernel/tainted could not be read (ENOENT), so whether unsigned or out-of-tree code is running in the kernel is unknown")
+    profile_matrix_test.go:148: BMC_INBAND_INTERFACE_PRESENT: research/CHECK_REGISTRY.md §5.3 (profile A) requires pass, observed unknown (reason="ENOENT", detail="a source that would carry a management-controller declaration could not be read (/sys/firmware/dmi/entries (ENOENT), /sys/bus/acpi/devices (ENOENT), /sys/devices/platform (ENOENT))")
+    profile_matrix_test.go:152: profile A observed distribution: 5 pass / 1 fail / 20 unknown (target: 12/9/5)
+--- FAIL: TestProfileMatrix_ProfileA_HardGate (0.00s)
+=== RUN   TestProfileMatrix_ProfilesBC_HardGate
+=== RUN   TestProfileMatrix_ProfilesBC_HardGate/profileB
+    profile_matrix_test.go:185: BMC_RESPONDS_IN_BAND: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass], observed unknown (reason="ENOENT", detail="no /sys/devices/platform/ipmi_bmc.* directory exists and no IPMI driver is loaded, so whether a management controller would answer over the ")
+    profile_matrix_test.go:185: BMC_CLIENT_TOOLING_INVENTORY: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass], observed unknown (reason="EACCES", detail="no directory in the standard binary search path could be listed (), so which IPMI client tooling is installed is unknown")
+    profile_matrix_test.go:185: UNSIGNED_OR_OUT_OF_TREE_MODULES: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass fail], observed unknown (reason="ENOENT", detail="/proc/sys/kernel/tainted could not be read (ENOENT), so whether unsigned or out-of-tree code is running in the kernel is unknown")
+    profile_matrix_test.go:185: SSH_ROOT_LOGIN_POLICY: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [fail pass], observed unknown (reason="UTILITY_MISSING", detail="no sshd binary and no sshd configuration were found, so there is no root-login policy to report; note that the absence of an SSH listener is")
+    profile_matrix_test.go:185: REMOTE_LISTENING_SURFACE: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass fail], observed unknown (reason="UTILITY_MISSING", detail="the socket tables under /proc/net are unreadable and no fallback tool produced a listing, so what is listening on this machine is unknown")
+    profile_matrix_test.go:185: CREDENTIAL_FILE_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass fail], observed unknown (reason="ENOENT", detail="/etc/passwd could not be read (ENOENT), so the set of home directories to inspect is unknown")
+    profile_matrix_test.go:185: BMC_DEVICE_NODE_ACCESS: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass], observed unknown (reason="ENOENT", detail="no in-band BMC device node exists in any of its three spellings, so no local user has an in-band path to a management controller [downgraded")
+    profile_matrix_test.go:185: ROOT_FILESYSTEM_REDUNDANCY: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [fail], observed unknown (reason="ENOENT", detail="the redundancy enumerations did not all complete, so a single-device root cannot be asserted")
+    profile_matrix_test.go:185: UNUSED_ATTACHED_BLOCK_DEVICES: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass], observed unknown (reason="ENOENT", detail="the mount table or the swap list could not be read, so whether every attached device is accounted for is unknown")
+    profile_matrix_test.go:185: PRIVATE_KEY_MATERIAL_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass fail], observed unknown (reason="ENOENT", detail="no candidate scan root for key material exists on this machine, so nothing was searched and the absence of exposed key material is not estab")
+    profile_matrix_test.go:185: BMC_INBAND_INTERFACE_PRESENT: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass], observed unknown (reason="ENOENT", detail="a source that would carry a management-controller declaration could not be read (/sys/firmware/dmi/entries (ENOENT), /sys/bus/acpi/devices (")
+    profile_matrix_test.go:185: BMC_HOST_INTERFACE_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass], observed unknown (reason="ENOENT", detail="the SMBIOS entry list could not be read (ENOENT), so a firmware-declared host interface can neither be found nor ruled out. out-of-band LAN ")
+    profile_matrix_test.go:185: TPM_PRESENCE: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass], observed unknown (reason="EINVAL", detail="this kernel or namespace exposes no TPM subsystem at /sys/class/tpm, so whether the machine has a hardware root of trust is not observable h")
+    profile_matrix_test.go:185: SSH_AUTH_METHODS_POLICY: research/CHECK_REGISTRY.md §5.3 (profile profileB) requires one of [pass fail], observed unknown (reason="UTILITY_MISSING", detail="no sshd binary and no sshd configuration were found, so there is no root-login policy to report; note that the absence of an SSH listener is")
+=== RUN   TestProfileMatrix_ProfilesBC_HardGate/profileC
+    profile_matrix_test.go:185: SSH_ROOT_LOGIN_POLICY: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [unknown], observed pass (reason="", detail="the running policy refuses root logins over SSH outright (permitrootlogin no, per sshd -G (effective configuration as sshd would load it fro")
+    profile_matrix_test.go:185: CREDENTIAL_FILE_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [pass fail], observed unknown (reason="ENOENT", detail="/etc/passwd could not be read (ENOENT), so the set of home directories to inspect is unknown")
+    profile_matrix_test.go:185: PRIVATE_KEY_MATERIAL_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [unknown], observed pass (reason="", detail="each private-key-class file the search found is readable by its owner only (0 candidate(s) classified across 1 root(s))")
+    profile_matrix_test.go:185: SSH_AUTH_METHODS_POLICY: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [unknown], observed pass (reason="", detail="the running policy accepts public keys only: passwordauthentication no, kbdinteractiveauthentication no, permitemptypasswords no, pubkeyauth")
+--- FAIL: TestProfileMatrix_ProfilesBC_HardGate (0.00s)
+    --- FAIL: TestProfileMatrix_ProfilesBC_HardGate/profileB (0.00s)
+    --- FAIL: TestProfileMatrix_ProfilesBC_HardGate/profileC (0.00s)
+=== RUN   TestProfileBIsGenericNoHostAssumptions
+--- PASS: TestProfileBIsGenericNoHostAssumptions (0.00s)
+=== RUN   TestProfileCNeverPassesOrFailsWhatItCannotObserve
+--- PASS: TestProfileCNeverPassesOrFailsWhatItCannotObserve (0.00s)
+=== RUN   TestSchema_AllProfilesValidateIndependently
+    schema_test.go:97: authoritative schema not readable at ../../../task/derived/finding.schema.json: open ../../../task/derived/finding.schema.json: no such file or directory
+--- FAIL: TestSchema_AllProfilesValidateIndependently (0.00s)
+=== RUN   TestSchema_CheckIDUniquenessAndRFC3339Everywhere
+=== RUN   TestSchema_CheckIDUniquenessAndRFC3339Everywhere/profileA
+=== RUN   TestSchema_CheckIDUniquenessAndRFC3339Everywhere/profileB
+=== RUN   TestSchema_CheckIDUniquenessAndRFC3339Everywhere/profileC
+--- PASS: TestSchema_CheckIDUniquenessAndRFC3339Everywhere (0.02s)
+    --- PASS: TestSchema_CheckIDUniquenessAndRFC3339Everywhere/profileA (0.01s)
+    --- PASS: TestSchema_CheckIDUniquenessAndRFC3339Everywhere/profileB (0.00s)
+    --- PASS: TestSchema_CheckIDUniquenessAndRFC3339Everywhere/profileC (0.00s)
+=== RUN   TestSchema_NoEmptyStringInMachine
+=== RUN   TestSchema_NoEmptyStringInMachine/profileA
+=== RUN   TestSchema_NoEmptyStringInMachine/profileB
+=== RUN   TestSchema_NoEmptyStringInMachine/profileC
+--- PASS: TestSchema_NoEmptyStringInMachine (0.01s)
+    --- PASS: TestSchema_NoEmptyStringInMachine/profileA (0.01s)
+    --- PASS: TestSchema_NoEmptyStringInMachine/profileB (0.00s)
+    --- PASS: TestSchema_NoEmptyStringInMachine/profileC (0.00s)
+=== RUN   TestSchema_NoSecretShapedStrings
+=== RUN   TestSchema_NoSecretShapedStrings/profileA
+=== RUN   TestSchema_NoSecretShapedStrings/profileB
+=== RUN   TestSchema_NoSecretShapedStrings/profileC
+--- PASS: TestSchema_NoSecretShapedStrings (0.02s)
+    --- PASS: TestSchema_NoSecretShapedStrings/profileA (0.01s)
+    --- PASS: TestSchema_NoSecretShapedStrings/profileB (0.00s)
+    --- PASS: TestSchema_NoSecretShapedStrings/profileC (0.00s)
+=== RUN   TestSchema_DeterministicAcrossTwoRuns
+--- PASS: TestSchema_DeterministicAcrossTwoRuns (0.01s)
+=== RUN   TestStorageMatrix_PlainBlockDeviceSingleDiskFails
+--- PASS: TestStorageMatrix_PlainBlockDeviceSingleDiskFails (0.00s)
+=== RUN   TestStorageMatrix_NVMeStyleModelFallback
+--- PASS: TestStorageMatrix_NVMeStyleModelFallback (0.00s)
+=== RUN   TestStorageMatrix_DMCryptLUKS2RootPasses
+--- PASS: TestStorageMatrix_DMCryptLUKS2RootPasses (0.00s)
+=== RUN   TestStorageMatrix_DMLVMNonCryptRootFails
+--- PASS: TestStorageMatrix_DMLVMNonCryptRootFails (0.00s)
+=== RUN   TestStorageMatrix_MDRaid1HealthyPasses
+--- PASS: TestStorageMatrix_MDRaid1HealthyPasses (0.00s)
+=== RUN   TestStorageMatrix_MDRaid1DegradedFails
+--- PASS: TestStorageMatrix_MDRaid1DegradedFails (0.00s)
+=== RUN   TestStorageMatrix_NFSRootHasNoLocalBackingDevice
+    storage_matrix_test.go:174: NFS root observed: status=unknown reason=EINVAL detail=the root filesystem is nfs4 backed by "192.0.2.10:/export/root", which resolves to no local block device: redundancy for it is provided on the other side of that boundary (a network server, a hypervisor or an overlay's lower layers) and is not observable from this operating system
+--- PASS: TestStorageMatrix_NFSRootHasNoLocalBackingDevice (0.00s)
+=== RUN   TestStorageMatrix_ISCSIStyleDeviceIdleFails
+--- PASS: TestStorageMatrix_ISCSIStyleDeviceIdleFails (0.00s)
+=== RUN   TestStorageMatrix_MissingUtilityIsUnknownNotFail
+--- PASS: TestStorageMatrix_MissingUtilityIsUnknownNotFail (0.00s)
+=== RUN   TestStorageMatrix_SysBlockEACCES_IsUnknownEverywhere
+--- PASS: TestStorageMatrix_SysBlockEACCES_IsUnknownEverywhere (0.00s)
+=== RUN   TestStorageMatrix_PartialSysfsSubtreeStillEnumeratesTheDevice
+--- PASS: TestStorageMatrix_PartialSysfsSubtreeStillEnumeratesTheDevice (0.00s)
+=== RUN   TestStorageMatrix_NoBlockDevicesAtAllIsAProvenNegative
+--- PASS: TestStorageMatrix_NoBlockDevicesAtAllIsAProvenNegative (0.00s)
+FAIL

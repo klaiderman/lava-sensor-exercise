@@ -1,0 +1,40 @@
+=== RUN   TestExecTimeoutKillsTheWholeProcessGroup
+--- PASS: TestExecTimeoutKillsTheWholeProcessGroup (1.80s)
+=== RUN   TestExecWaitDelayBoundsAHeldPipe
+--- PASS: TestExecWaitDelayBoundsAHeldPipe (2.00s)
+=== RUN   TestExecOutputCapAndKillOnOverflow
+--- PASS: TestExecOutputCapAndKillOnOverflow (0.00s)
+=== RUN   TestExecMissingUtility
+--- PASS: TestExecMissingUtility (0.00s)
+=== RUN   TestExecRecordsTheChildsOwnExitCode
+--- PASS: TestExecRecordsTheChildsOwnExitCode (0.00s)
+=== RUN   TestExecEnvironmentIsMinimalAndStdinIsClosed
+--- PASS: TestExecEnvironmentIsMinimalAndStdinIsClosed (0.01s)
+=== RUN   TestFourFailureClassesStayDistinct
+    exec_test.go:190: failure classes: map[denied:EACCES failed:EXECUTION_ERROR missing:UTILITY_MISSING timeout:TIMEOUT]
+--- PASS: TestFourFailureClassesStayDistinct (0.20s)
+=== RUN   TestNoPrivilegeEscalationAnywhere
+--- PASS: TestNoPrivilegeEscalationAnywhere (0.01s)
+=== RUN   TestOnlyOneExecCmdConstructionSite
+--- PASS: TestOnlyOneExecCmdConstructionSite (0.00s)
+=== RUN   TestReadCapAndTruncationDetection
+--- PASS: TestReadCapAndTruncationDetection (0.00s)
+=== RUN   TestZeroStatSizePseudoFile
+--- PASS: TestZeroStatSizePseudoFile (0.00s)
+=== RUN   TestNonRegularFilesAreRefused
+--- PASS: TestNonRegularFilesAreRefused (0.00s)
+=== RUN   TestSymlinkPolicy
+--- PASS: TestSymlinkPolicy (0.00s)
+=== RUN   TestSysRootFollowsInRootSymlinksAndRefusesEscapes
+--- PASS: TestSysRootFollowsInRootSymlinksAndRefusesEscapes (0.00s)
+=== RUN   TestDeniedIsNotAbsent
+--- PASS: TestDeniedIsNotAbsent (0.00s)
+=== RUN   TestStatIsMetadataOnly
+--- PASS: TestStatIsMetadataOnly (0.00s)
+=== RUN   TestReadDirBudgetIsRecorded
+--- PASS: TestReadDirBudgetIsRecorded (0.00s)
+=== RUN   TestReadOOBReturnsOnDeadline
+--- PASS: TestReadOOBReturnsOnDeadline (0.00s)
+=== RUN   TestNoRootOverrideInProduction
+--- PASS: TestNoRootOverrideInProduction (0.00s)
+PASS

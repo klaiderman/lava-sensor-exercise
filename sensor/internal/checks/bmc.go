@@ -246,18 +246,19 @@ type bmcDeviceNodeAccess struct{ meta }
 var ipmiNodes = []string{"/dev/ipmi0", "/dev/ipmi/0", "/dev/ipmidev/0"}
 
 type deviceNode struct {
-	Path             string     `json:"path"`
-	Exists           bool       `json:"exists"`
-	FileType         string     `json:"file_type,omitempty"`
-	Mode             *int64     `json:"mode,omitempty"`
-	UID              *int64     `json:"uid,omitempty"`
-	GID              *int64     `json:"gid,omitempty"`
-	GroupName        string     `json:"group_name,omitempty"`
-	GroupMembers     int64      `json:"group_member_count"`
-	AccessPermitted  string     `json:"access_permitted"`
-	ACL              *probe.ACL `json:"acl,omitempty"`
-	Errno            string     `json:"errno,omitempty"`
-	RestrictionBasis string     `json:"restriction_basis,omitempty"`
+	Path                  string     `json:"path"`
+	Exists                bool       `json:"exists"`
+	FileType              string     `json:"file_type,omitempty"`
+	Mode                  *int64     `json:"mode,omitempty"`
+	UID                   *int64     `json:"uid,omitempty"`
+	GID                   *int64     `json:"gid,omitempty"`
+	GroupName             string     `json:"group_name,omitempty"`
+	GroupMembers          int64      `json:"group_members,omitempty"`
+	PrincipalsBeyondOwner []string   `json:"principals_beyond_owner,omitempty"`
+	AccessPermitted       string     `json:"access_permitted"`
+	ACL                   *probe.ACL `json:"acl,omitempty"`
+	Errno                 string     `json:"errno,omitempty"`
+	RestrictionBasis      string     `json:"restriction_basis,omitempty"`
 }
 
 func (c bmcDeviceNodeAccess) Run(ctx context.Context, env *scan.Env) scan.Result {
@@ -304,21 +305,22 @@ func (c bmcDeviceNodeAccess) Run(ctx context.Context, env *scan.Env) scan.Result
 		if n.Mode != nil {
 			mode = *n.Mode
 		}
-		if n.GID != nil {
-			for _, g := range env.Groups().Groups {
-				if g.GID == *n.GID {
-					n.GroupName, n.GroupMembers = g.Name, int64(len(g.Members))
-					break
-				}
-			}
-		}
+		// One account model for the whole roster: the owner is not another
+		// principal on its own node, and an unresolvable gid is an open
+		// question rather than an exposure.
+		who := env.Accessors(n.Mode, n.UID, n.GID)
+		n.GroupName, n.GroupMembers = who.GroupName, int64(len(who.GroupMember))
+		n.PrincipalsBeyondOwner = who.GroupMember
 		switch {
 		case mode&0o006 != 0:
 			n.AccessPermitted = "any local user"
 			adverse = append(adverse, p+" is other-accessible (mode "+octal(mode)+")")
-		case mode&0o060 != 0 && n.GroupMembers > 0:
-			n.AccessPermitted = "members of group " + n.GroupName
-			adverse = append(adverse, p+" is accessible to the "+itoa(n.GroupMembers)+" member(s) of group "+n.GroupName)
+		case !who.Determined:
+			n.AccessPermitted = "unknown (" + who.Reason + ")"
+			undetermined = append(undetermined, p+" ("+who.Description+")")
+		case who.BeyondOwner:
+			n.AccessPermitted = "members of group " + n.GroupName + " beyond the owner"
+			adverse = append(adverse, p+" is accessible to "+who.Description)
 		case acl.Determined && acl.GrantsNonOwner:
 			n.AccessPermitted = "a named ACL principal"
 			adverse = append(adverse, p+" has an ACL granting a non-owner principal access")

@@ -1,0 +1,15 @@
+VET_EXIT=0
+ok  	lava-sensor-exercise/sensor/cmd/sensor	1.821s
+ok  	lava-sensor-exercise/sensor/internal/checks	27.281s
+--- FAIL: TestProfileMatrix_ProfilesBC_HardGate (0.04s)
+    --- FAIL: TestProfileMatrix_ProfilesBC_HardGate/profileC (0.03s)
+        profile_matrix_test.go:185: SSH_ROOT_LOGIN_POLICY: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [unknown], observed pass (reason="", detail="the running policy refuses root logins over SSH outright (permitrootlogin no, per sshd -G (effective configuration as sshd would load it fro")
+        profile_matrix_test.go:185: PRIVATE_KEY_MATERIAL_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [unknown], observed pass (reason="", detail="each private-key-class file the search found is readable by its owner only (0 candidate(s) classified across 1 root(s))")
+        profile_matrix_test.go:185: SSH_AUTH_METHODS_POLICY: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [unknown], observed pass (reason="", detail="the running policy accepts public keys only: passwordauthentication no, kbdinteractiveauthentication no, permitemptypasswords no, pubkeyauth")
+        profile_matrix_test.go:185: CREDENTIAL_FILE_EXPOSURE: research/CHECK_REGISTRY.md §5.3 (profile profileC) requires one of [pass fail], observed unknown (reason="ENOENT", detail="/etc/passwd could not be read (ENOENT), so the set of home directories to inspect is unknown")
+FAIL
+FAIL	lava-sensor-exercise/sensor/internal/lab	3.587s
+ok  	lava-sensor-exercise/sensor/internal/probe	1.422s
+ok  	lava-sensor-exercise/sensor/internal/scan	1.339s
+FAIL
+TEST_EXIT=1

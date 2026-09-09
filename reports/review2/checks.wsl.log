@@ -1,0 +1,286 @@
+=== RUN   TestTitlesAreStatusNeutral
+--- PASS: TestTitlesAreStatusNeutral (0.00s)
+=== RUN   TestSSHAuthMethods_KeyOnlyPasses
+--- PASS: TestSSHAuthMethods_KeyOnlyPasses (0.00s)
+=== RUN   TestSSHAuthMethods_KbdInteractiveReachesPAM
+--- PASS: TestSSHAuthMethods_KbdInteractiveReachesPAM (0.00s)
+=== RUN   TestSSHAuthMethods_EmptyPasswordsFail
+--- PASS: TestSSHAuthMethods_EmptyPasswordsFail (0.00s)
+=== RUN   TestSSHAuthMethods_ContextDirectivesAreMarked
+--- PASS: TestSSHAuthMethods_ContextDirectivesAreMarked (0.00s)
+=== RUN   TestSSHPolicyInForce_NoSystemdIsUnknownNotFail
+--- PASS: TestSSHPolicyInForce_NoSystemdIsUnknownNotFail (0.00s)
+=== RUN   TestSSHPolicyInForce_ConfigNewerThanServiceStartFails
+--- PASS: TestSSHPolicyInForce_ConfigNewerThanServiceStartFails (0.00s)
+=== RUN   TestSSHPolicyInForce_ServiceStartedAfterConfigPasses
+--- PASS: TestSSHPolicyInForce_ServiceStartedAfterConfigPasses (0.00s)
+=== RUN   TestRemoteListeningSurface_SSHOnlyPasses
+--- PASS: TestRemoteListeningSurface_SSHOnlyPasses (0.00s)
+=== RUN   TestRemoteListeningSurface_TelnetFails
+--- PASS: TestRemoteListeningSurface_TelnetFails (0.00s)
+=== RUN   TestRemoteListeningSurface_LoopbackIsNotExposure
+--- PASS: TestRemoteListeningSurface_LoopbackIsNotExposure (0.00s)
+=== RUN   TestRemoteListeningSurface_ProcNetUnreadableDoesNotTrustSS
+--- PASS: TestRemoteListeningSurface_ProcNetUnreadableDoesNotTrustSS (0.00s)
+=== RUN   TestLoginSurface_DockerGroupMemberIsRootEquivalent
+--- PASS: TestLoginSurface_DockerGroupMemberIsRootEquivalent (0.00s)
+=== RUN   TestLoginSurface_UnreadableShadowIsUnknownNotPassword
+--- PASS: TestLoginSurface_UnreadableShadowIsUnknownNotPassword (0.00s)
+=== RUN   TestLoginSurface_EmptyPrivilegedGroupIsRootOnly
+--- PASS: TestLoginSurface_EmptyPrivilegedGroupIsRootOnly (0.00s)
+=== RUN   TestLoginSurface_NologinAccountsAreNotLoginCapable
+--- PASS: TestLoginSurface_NologinAccountsAreNotLoginCapable (0.00s)
+=== RUN   TestFirewall_ActiveButUnreadableRulesIsUnknown
+--- PASS: TestFirewall_ActiveButUnreadableRulesIsUnknown (0.00s)
+=== RUN   TestFirewall_MissingNftIsNotNoRules
+--- PASS: TestFirewall_MissingNftIsNotNoRules (0.00s)
+=== RUN   TestFirewall_UnknownImplementationIsUnknown
+--- PASS: TestFirewall_UnknownImplementationIsUnknown (0.00s)
+=== RUN   TestPrivateKeyExposure_WorldReadableKeyFails
+--- PASS: TestPrivateKeyExposure_WorldReadableKeyFails (0.00s)
+=== RUN   TestPrivateKeyExposure_CertificateIsNotAKey
+--- PASS: TestPrivateKeyExposure_CertificateIsNotAKey (0.00s)
+=== RUN   TestPrivateKeyExposure_EmptyGroupIsNotExposure
+--- PASS: TestPrivateKeyExposure_EmptyGroupIsNotExposure (0.00s)
+=== RUN   TestCredentialExposure_PgpassRuleIsCited
+--- PASS: TestCredentialExposure_PgpassRuleIsCited (0.00s)
+=== RUN   TestCredentialExposure_CorrectlyRestrictedPasses
+--- PASS: TestCredentialExposure_CorrectlyRestrictedPasses (0.00s)
+=== RUN   TestProvisioningData_WorldReadableUserDataFails
+--- PASS: TestProvisioningData_WorldReadableUserDataFails (0.00s)
+=== RUN   TestProvisioningData_ProvenAbsenceIsAPass
+--- PASS: TestProvisioningData_ProvenAbsenceIsAPass (0.00s)
+=== RUN   TestSystemSecretStores_WorldReadableShadowFails
+--- PASS: TestSystemSecretStores_WorldReadableShadowFails (0.00s)
+=== RUN   TestSystemSecretStores_EmptyShadowGroupIsNotAFailure
+--- PASS: TestSystemSecretStores_EmptyShadowGroupIsNotAFailure (0.00s)
+=== RUN   TestBMC_InterfaceDeclaredFromSMBIOS
+--- PASS: TestBMC_InterfaceDeclaredFromSMBIOS (0.00s)
+=== RUN   TestBMC_ProvenAbsenceIsAPass
+--- PASS: TestBMC_ProvenAbsenceIsAPass (0.00s)
+=== RUN   TestBMC_RespondsWhenIdentityAttributeReads
+--- PASS: TestBMC_RespondsWhenIdentityAttributeReads (0.00s)
+=== RUN   TestBMC_DriverLoadedWithoutIdentityIsUnknown
+--- PASS: TestBMC_DriverLoadedWithoutIdentityIsUnknown (0.00s)
+=== RUN   TestBMC_RootOnlyNodePassesWithThePreciseReason
+--- PASS: TestBMC_RootOnlyNodePassesWithThePreciseReason (0.00s)
+=== RUN   TestBMC_WorldAccessibleNodeFails
+--- PASS: TestBMC_WorldAccessibleNodeFails (0.00s)
+=== RUN   TestBMC_MissingToolingDoesNotAffectOtherChecks
+--- PASS: TestBMC_MissingToolingDoesNotAffectOtherChecks (0.00s)
+=== RUN   TestBMC_HostInterfaceDownIsALatentPass
+--- PASS: TestBMC_HostInterfaceDownIsALatentPass (0.00s)
+=== RUN   TestDiskEncryption_NoDMIsScopedNotUnencrypted
+--- PASS: TestDiskEncryption_NoDMIsScopedNotUnencrypted (0.00s)
+=== RUN   TestDiskEncryption_LUKSMappingPasses
+--- PASS: TestDiskEncryption_LUKSMappingPasses (0.00s)
+=== RUN   TestUnusedDevices_IdleDiskFailsWithoutOpeningIt
+--- PASS: TestUnusedDevices_IdleDiskFailsWithoutOpeningIt (0.00s)
+=== RUN   TestRootRedundancy_SingleDeviceFails
+--- PASS: TestRootRedundancy_SingleDeviceFails (0.00s)
+=== RUN   TestRootRedundancy_HealthyRaid1Passes
+--- PASS: TestRootRedundancy_HealthyRaid1Passes (0.00s)
+=== RUN   TestMediaHealth_SmartDeniedKeepsPartialEvidence
+--- PASS: TestMediaHealth_SmartDeniedKeepsPartialEvidence (0.00s)
+=== RUN   TestMediaHealth_ExtErrorCounterFails
+--- PASS: TestMediaHealth_ExtErrorCounterFails (0.00s)
+=== RUN   TestSecureBoot_ReadsByteFourNotByteZero
+--- PASS: TestSecureBoot_ReadsByteFourNotByteZero (0.00s)
+=== RUN   TestSecureBoot_DisabledFails
+--- PASS: TestSecureBoot_DisabledFails (0.00s)
+=== RUN   TestSecureBoot_NoEFIIsNotApplicableNotFail
+--- PASS: TestSecureBoot_NoEFIIsNotApplicableNotFail (0.00s)
+=== RUN   TestSetupMode_NoPlatformKeyIsCritical
+--- PASS: TestSetupMode_NoPlatformKeyIsCritical (0.00s)
+=== RUN   TestLockdown_ParsesTheBracketedSelection
+--- PASS: TestLockdown_ParsesTheBracketedSelection (0.00s)
+=== RUN   TestLockdown_IntegrityPasses
+--- PASS: TestLockdown_IntegrityPasses (0.00s)
+=== RUN   TestLockdown_UnmountedSecurityfsIsItsOwnReason
+--- PASS: TestLockdown_UnmountedSecurityfsIsItsOwnReason (0.00s)
+=== RUN   TestTaint_DecodesBitsAndAttributesTheModule
+--- PASS: TestTaint_DecodesBitsAndAttributesTheModule (0.00s)
+=== RUN   TestTaint_CleanKernelPasses
+--- PASS: TestTaint_CleanKernelPasses (0.00s)
+=== RUN   TestTPM_PresenceIsNotUse
+--- PASS: TestTPM_PresenceIsNotUse (0.00s)
+=== RUN   TestTPM_EmptyClassDirIsAProvenNegative
+--- PASS: TestTPM_EmptyClassDirIsAProvenNegative (0.00s)
+=== RUN   TestBootArtifacts_WorldReadableInitramfsFails
+--- PASS: TestBootArtifacts_WorldReadableInitramfsFails (0.00s)
+=== RUN   TestBootArtifacts_RestrictedPasses
+--- PASS: TestBootArtifacts_RestrictedPasses (0.00s)
+=== RUN   TestKernelDrift_NewerInstalledKernelFails
+--- PASS: TestKernelDrift_NewerInstalledKernelFails (0.00s)
+=== RUN   TestKernelDrift_RunningNewestPasses
+--- PASS: TestKernelDrift_RunningNewestPasses (0.00s)
+=== RUN   TestKernelVersionOrdering
+--- PASS: TestKernelVersionOrdering (0.00s)
+=== RUN   TestShippedSchemaMatchesTheAuthoritativeOne
+    document_test.go:56: authoritative schema not present in this checkout: open ../../../task/derived/finding.schema.json: no such file or directory
+--- SKIP: TestShippedSchemaMatchesTheAuthoritativeOne (0.00s)
+=== RUN   TestDocumentValidatesAgainstSchema
+=== RUN   TestDocumentValidatesAgainstSchema/profileA
+=== RUN   TestDocumentValidatesAgainstSchema/profileB
+=== RUN   TestDocumentValidatesAgainstSchema/profileC
+--- PASS: TestDocumentValidatesAgainstSchema (0.02s)
+    --- PASS: TestDocumentValidatesAgainstSchema/profileA (0.01s)
+    --- PASS: TestDocumentValidatesAgainstSchema/profileB (0.01s)
+    --- PASS: TestDocumentValidatesAgainstSchema/profileC (0.01s)
+=== RUN   TestNoSecretValuesInOutput
+--- PASS: TestNoSecretValuesInOutput (0.01s)
+=== RUN   TestTwoRunsDifferOnlyInMeasuredDurations
+--- PASS: TestTwoRunsDifferOnlyInMeasuredDurations (0.01s)
+=== RUN   TestEveryFindingHasActionableEvidence
+--- PASS: TestEveryFindingHasActionableEvidence (0.01s)
+=== RUN   TestNoBehaviourBranchesOnPrivilege
+--- PASS: TestNoBehaviourBranchesOnPrivilege (0.00s)
+=== RUN   TestNoIdentityGatingInCheckLogic
+--- PASS: TestNoIdentityGatingInCheckLogic (0.00s)
+=== RUN   TestRootRedundancy_NetworkRootIsUnknownNotSingleDevice
+--- PASS: TestRootRedundancy_NetworkRootIsUnknownNotSingleDevice (0.00s)
+=== RUN   TestRootRedundancy_OverlayRootIsUnknownButRealSingleDiskStillFails
+--- PASS: TestRootRedundancy_OverlayRootIsUnknownButRealSingleDiskStillFails (0.00s)
+=== RUN   TestSSHPolicyInForce_SameSecondIsUndecidable
+=== RUN   TestSSHPolicyInForce_SameSecondIsUndecidable/config_291_ms_after_the_unit_start
+=== RUN   TestSSHPolicyInForce_SameSecondIsUndecidable/config_exactly_at_the_unit_start
+=== RUN   TestSSHPolicyInForce_SameSecondIsUndecidable/config_4_s_after_the_unit_start
+=== RUN   TestSSHPolicyInForce_SameSecondIsUndecidable/config_4_s_before_the_unit_start
+--- PASS: TestSSHPolicyInForce_SameSecondIsUndecidable (0.00s)
+    --- PASS: TestSSHPolicyInForce_SameSecondIsUndecidable/config_291_ms_after_the_unit_start (0.00s)
+    --- PASS: TestSSHPolicyInForce_SameSecondIsUndecidable/config_exactly_at_the_unit_start (0.00s)
+    --- PASS: TestSSHPolicyInForce_SameSecondIsUndecidable/config_4_s_after_the_unit_start (0.00s)
+    --- PASS: TestSSHPolicyInForce_SameSecondIsUndecidable/config_4_s_before_the_unit_start (0.00s)
+=== RUN   TestSSHPolicyInForce_ClearlyNewerConfigStillFails
+--- PASS: TestSSHPolicyInForce_ClearlyNewerConfigStillFails (0.00s)
+=== RUN   TestSSHPolicyInForce_MonotonicSourceIsUsedWhenOffered
+--- PASS: TestSSHPolicyInForce_MonotonicSourceIsUsedWhenOffered (0.00s)
+=== RUN   TestSSHPolicyInForce_SocketActivationNoteIsKept
+--- PASS: TestSSHPolicyInForce_SocketActivationNoteIsKept (0.00s)
+=== RUN   TestProvisioning_PublicByDesignArtifactsAreNotExposure
+--- PASS: TestProvisioning_PublicByDesignArtifactsAreNotExposure (0.00s)
+=== RUN   TestProvisioning_ReadablePayloadStillFails
+--- PASS: TestProvisioning_ReadablePayloadStillFails (0.00s)
+=== RUN   TestProvisioning_InstanceDirectoryPayloadIsFoundByName
+--- PASS: TestProvisioning_InstanceDirectoryPayloadIsFoundByName (0.00s)
+=== RUN   TestProvisioning_DropInDeclaringCredentialKeysIsPayload
+--- PASS: TestProvisioning_DropInDeclaringCredentialKeysIsPayload (0.00s)
+=== RUN   TestCloudNameFrom
+--- PASS: TestCloudNameFrom (0.00s)
+=== RUN   TestCredentialHomes_SkipsSystemDirsAndDeduplicates
+--- PASS: TestCredentialHomes_SkipsSystemDirsAndDeduplicates (0.00s)
+=== RUN   TestCredentialExposure_HomesAreCleanAndDeduplicated
+--- PASS: TestCredentialExposure_HomesAreCleanAndDeduplicated (0.00s)
+=== RUN   TestEvidenceEntailsVerdict
+=== RUN   TestEvidenceEntailsVerdict/adv-all-denied
+=== RUN   TestEvidenceEntailsVerdict/adv-empty
+=== RUN   TestEvidenceEntailsVerdict/profileA
+=== RUN   TestEvidenceEntailsVerdict/profileB
+=== RUN   TestEvidenceEntailsVerdict/profileC
+--- PASS: TestEvidenceEntailsVerdict (0.02s)
+    --- PASS: TestEvidenceEntailsVerdict/adv-all-denied (0.00s)
+    --- PASS: TestEvidenceEntailsVerdict/adv-empty (0.00s)
+    --- PASS: TestEvidenceEntailsVerdict/profileA (0.01s)
+    --- PASS: TestEvidenceEntailsVerdict/profileB (0.00s)
+    --- PASS: TestEvidenceEntailsVerdict/profileC (0.00s)
+=== RUN   TestEntailmentAuditorOnShippedArtifacts
+    fixbatch2_test.go:97: audited 0 artifact(s) in data mode
+--- PASS: TestEntailmentAuditorOnShippedArtifacts (0.00s)
+=== RUN   TestEntailmentGateDowngradesAnOverclaim
+--- PASS: TestEntailmentGateDowngradesAnOverclaim (0.00s)
+=== RUN   TestPrivateKey_UnreadableSubtreeIsUnknown
+--- PASS: TestPrivateKey_UnreadableSubtreeIsUnknown (0.00s)
+=== RUN   TestPrivateKey_AdverseFindingSurvivesAnIncompleteWalk
+--- PASS: TestPrivateKey_AdverseFindingSurvivesAnIncompleteWalk (0.00s)
+=== RUN   TestPrivateKey_ZeroWalksIsNotPass
+--- PASS: TestPrivateKey_ZeroWalksIsNotPass (0.00s)
+=== RUN   TestPrivateKey_SymlinksAreNotCandidates
+--- PASS: TestPrivateKey_SymlinksAreNotCandidates (0.00s)
+=== RUN   TestWalkBoundaryCountersSurviveEvidenceCap
+--- PASS: TestWalkBoundaryCountersSurviveEvidenceCap (0.00s)
+=== RUN   TestWalkSetsCrossedMounts
+--- PASS: TestWalkSetsCrossedMounts (0.00s)
+=== RUN   TestFirewall_DeniedRulesetIsUnknown
+--- PASS: TestFirewall_DeniedRulesetIsUnknown (0.00s)
+=== RUN   TestExecPrivilegeDenialIsClassifiedAsEACCES
+--- PASS: TestExecPrivilegeDenialIsClassifiedAsEACCES (0.00s)
+=== RUN   TestFirewall_UfwDisabledIsFail
+--- PASS: TestFirewall_UfwDisabledIsFail (0.00s)
+=== RUN   TestBMC_ENOENTNotOverclaimed
+--- PASS: TestBMC_ENOENTNotOverclaimed (0.00s)
+=== RUN   TestBMC_DeniedPathIsNotAbsent
+--- PASS: TestBMC_DeniedPathIsNotAbsent (0.00s)
+=== RUN   TestSSHPolicy_SourceLabelIsOnDisk
+--- PASS: TestSSHPolicy_SourceLabelIsOnDisk (0.00s)
+=== RUN   TestSSHPolicy_StaleConfigDowngradesPolicyVerdict
+--- PASS: TestSSHPolicy_StaleConfigDowngradesPolicyVerdict (0.00s)
+=== RUN   TestSSHPolicy_UndecidableOrderKeepsVerdictWithCaveat
+--- PASS: TestSSHPolicy_UndecidableOrderKeepsVerdictWithCaveat (0.00s)
+=== RUN   TestInForce_ResolutionIsMeasuredNotAssumed
+--- PASS: TestInForce_ResolutionIsMeasuredNotAssumed (0.00s)
+=== RUN   TestSSHDConfig_IncludeInsideMatchStaysConditional
+--- PASS: TestSSHDConfig_IncludeInsideMatchStaysConditional (0.00s)
+=== RUN   TestSSHDConfig_TruncatedGlobIsLoadBearing
+--- PASS: TestSSHDConfig_TruncatedGlobIsLoadBearing (0.01s)
+=== RUN   TestSocketOwners_BudgetIsEnforcedAndVisible
+--- PASS: TestSocketOwners_BudgetIsEnforcedAndVisible (0.15s)
+=== RUN   TestScanDeadline_DominatesPerCheckBudgets
+    fixbatch2_test.go:622: three checks declaring 1h each finished in 150.503948ms under a 150 ms deadline (2 never started)
+--- PASS: TestScanDeadline_DominatesPerCheckBudgets (0.15s)
+=== RUN   TestResolveBinary_IgnoresPATH
+--- PASS: TestResolveBinary_IgnoresPATH (0.00s)
+=== RUN   TestReadACL_DoesNotFollowFinalSymlink
+--- PASS: TestReadACL_DoesNotFollowFinalSymlink (0.00s)
+=== RUN   TestMediaHealth_NoDeviceOpeningChildren
+--- PASS: TestMediaHealth_NoDeviceOpeningChildren (0.00s)
+=== RUN   TestMediaHealth_ReasonDerivedFromObservations
+--- PASS: TestMediaHealth_ReasonDerivedFromObservations (0.00s)
+=== RUN   TestOOBGoroutinePanicDoesNotKillProcess
+--- PASS: TestOOBGoroutinePanicDoesNotKillProcess (0.00s)
+=== RUN   TestMachineProfileA
+--- PASS: TestMachineProfileA (0.01s)
+=== RUN   TestMachineProfileB
+--- PASS: TestMachineProfileB (0.00s)
+=== RUN   TestMachineProfileC
+--- PASS: TestMachineProfileC (0.00s)
+=== RUN   TestNoEmptyStringsInMachine
+=== RUN   TestNoEmptyStringsInMachine/profileA
+=== RUN   TestNoEmptyStringsInMachine/profileB
+=== RUN   TestNoEmptyStringsInMachine/profileC
+--- PASS: TestNoEmptyStringsInMachine (0.01s)
+    --- PASS: TestNoEmptyStringsInMachine/profileA (0.00s)
+    --- PASS: TestNoEmptyStringsInMachine/profileB (0.00s)
+    --- PASS: TestNoEmptyStringsInMachine/profileC (0.00s)
+=== RUN   TestDMIDeniedIsNotAbsent
+--- PASS: TestDMIDeniedIsNotAbsent (0.00s)
+=== RUN   TestPlaceholderDetection
+--- PASS: TestPlaceholderDetection (0.00s)
+=== RUN   TestSSHRootLogin_OracleSaysNo_Passes
+--- PASS: TestSSHRootLogin_OracleSaysNo_Passes (0.00s)
+=== RUN   TestSSHRootLogin_OracleSaysYes_Fails
+--- PASS: TestSSHRootLogin_OracleSaysYes_Fails (0.00s)
+=== RUN   TestSSHRootLogin_ProhibitPasswordWithDeniedRootSSH_IsUnknown
+--- PASS: TestSSHRootLogin_ProhibitPasswordWithDeniedRootSSH_IsUnknown (0.00s)
+=== RUN   TestSSHRootLogin_ProhibitPasswordWithReadableRootKey_Fails
+--- PASS: TestSSHRootLogin_ProhibitPasswordWithReadableRootKey_Fails (0.00s)
+=== RUN   TestSSHRootLogin_OracleAndWalkerDisagree_IsContested
+--- PASS: TestSSHRootLogin_OracleAndWalkerDisagree_IsContested (0.00s)
+=== RUN   TestSSHRootLogin_NoSSHDBinary_FallsBackToWalker
+--- PASS: TestSSHRootLogin_NoSSHDBinary_FallsBackToWalker (0.00s)
+=== RUN   TestSSHRootLogin_IncludePositionDecides
+--- PASS: TestSSHRootLogin_IncludePositionDecides (0.00s)
+=== RUN   TestSSHRootLogin_MatchBlockIsNotABarePass
+--- PASS: TestSSHRootLogin_MatchBlockIsNotABarePass (0.00s)
+=== RUN   TestSSHRootLogin_OracleTimeout_IsUnknownTimeout
+--- PASS: TestSSHRootLogin_OracleTimeout_IsUnknownTimeout (0.00s)
+=== RUN   TestSSHRootLogin_UnknownDistroNoConfig_IsUnknown
+--- PASS: TestSSHRootLogin_UnknownDistroNoConfig_IsUnknown (0.00s)
+=== RUN   TestSSHRootLogin_KnownDistroDefaultIsCited
+--- PASS: TestSSHRootLogin_KnownDistroDefaultIsCited (0.00s)
+=== RUN   TestRosterEmitsExactlyOneFindingPerCheck
+--- PASS: TestRosterEmitsExactlyOneFindingPerCheck (0.00s)
+=== RUN   TestSSHRootLogin_NoDaemonAtAll_IsUtilityMissing
+--- PASS: TestSSHRootLogin_NoDaemonAtAll_IsUtilityMissing (0.00s)
+=== RUN   TestSSHDMinusTIsNeverInvoked
+--- PASS: TestSSHDMinusTIsNeverInvoked (0.00s)
+PASS

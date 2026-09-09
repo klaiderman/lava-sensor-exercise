@@ -270,9 +270,24 @@ func (c sshPolicyInForce) Run(ctx context.Context, env *scan.Env) scan.Result {
 		return finish(scan.Unknown(scan.ReasonTimestampRes,
 			state.Note+"; this is the normal shape of a provisioning run that rewrote the configuration and restarted the daemon, but it is not proof of one"))
 	default:
-		return finish(scan.Unknown(scan.ReasonEINVAL,
+		// The reason has to name the same failure the detail names: reporting
+		// EINVAL while the detail says the unit properties were unreadable
+		// sends a reader looking for a malformed value that does not exist.
+		return finish(scan.Unknown(reasonOfFailure(stateObs, scan.ReasonEINVAL),
 			"whether the running daemon loaded the configuration on disk could not be established: "+state.Note))
 	}
+}
+
+// reasonOfFailure returns the reason of the first observation that did not
+// succeed, so a finding's reason field always names something that actually
+// happened during this run.
+func reasonOfFailure(obs []probe.Observation, fallback string) string {
+	for _, o := range obs {
+		if o.Status != probe.StatusOK && o.Reason() != "" {
+			return scan.NormalizeReason(o.Reason())
+		}
+	}
+	return fallback
 }
 
 // serviceStartTime resolves the unit's start instant, and the resolution that

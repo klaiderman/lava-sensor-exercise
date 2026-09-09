@@ -1,0 +1,65 @@
+=== RUN   TestPanicIsolation
+--- PASS: TestPanicIsolation (0.00s)
+=== RUN   TestScanDeadlineCutStillEmitsEveryFinding
+--- PASS: TestScanDeadlineCutStillEmitsEveryFinding (0.00s)
+=== RUN   TestSeverityRule
+=== RUN   TestSeverityRule/pass_is_info
+=== RUN   TestSeverityRule/fail_takes_the_impact
+=== RUN   TestSeverityRule/unknown_takes_the_impact_too
+=== RUN   TestSeverityRule/observational_is_always_info
+--- PASS: TestSeverityRule (0.00s)
+    --- PASS: TestSeverityRule/pass_is_info (0.00s)
+    --- PASS: TestSeverityRule/fail_takes_the_impact (0.00s)
+    --- PASS: TestSeverityRule/unknown_takes_the_impact_too (0.00s)
+    --- PASS: TestSeverityRule/observational_is_always_info (0.00s)
+=== RUN   TestLoadBearingDowngrade
+--- PASS: TestLoadBearingDowngrade (0.00s)
+=== RUN   TestReasonIsAlwaysPresentOnNonPass
+--- PASS: TestReasonIsAlwaysPresentOnNonPass (0.00s)
+=== RUN   TestFindingsAreSorted
+--- PASS: TestFindingsAreSorted (0.00s)
+=== RUN   TestValidateRosterRejectsDuplicatesAndBadIDs
+--- PASS: TestValidateRosterRejectsDuplicatesAndBadIDs (0.00s)
+=== RUN   TestMountInfoParsingWithPropagationFields
+--- PASS: TestMountInfoParsingWithPropagationFields (0.00s)
+=== RUN   TestSSHDGParsing
+--- PASS: TestSSHDGParsing (0.00s)
+=== RUN   TestSelfCheckAcceptsAValidDocument
+--- PASS: TestSelfCheckAcceptsAValidDocument (0.00s)
+=== RUN   TestSelfCheckCatchesEachContractViolation
+=== RUN   TestSelfCheckCatchesEachContractViolation/missing_reason_on_fail
+=== RUN   TestSelfCheckCatchesEachContractViolation/missing_reason_on_unknown
+=== RUN   TestSelfCheckCatchesEachContractViolation/bad_status
+=== RUN   TestSelfCheckCatchesEachContractViolation/bad_severity
+=== RUN   TestSelfCheckCatchesEachContractViolation/lowercase_category
+=== RUN   TestSelfCheckCatchesEachContractViolation/empty_title
+=== RUN   TestSelfCheckCatchesEachContractViolation/bad_timestamp
+=== RUN   TestSelfCheckCatchesEachContractViolation/empty_machine_string
+=== RUN   TestSelfCheckCatchesEachContractViolation/zero_memory_without_an_unknowns_entry
+=== RUN   TestSelfCheckCatchesEachContractViolation/empty_storage_model
+=== RUN   TestSelfCheckCatchesEachContractViolation/wrong_schema_version
+=== RUN   TestSelfCheckCatchesEachContractViolation/duplicate_check_id
+--- PASS: TestSelfCheckCatchesEachContractViolation (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/missing_reason_on_fail (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/missing_reason_on_unknown (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/bad_status (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/bad_severity (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/lowercase_category (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/empty_title (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/bad_timestamp (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/empty_machine_string (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/zero_memory_without_an_unknowns_entry (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/empty_storage_model (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/wrong_schema_version (0.00s)
+    --- PASS: TestSelfCheckCatchesEachContractViolation/duplicate_check_id (0.00s)
+=== RUN   TestZeroIntegerNeedsAnUnknownsEntry
+--- PASS: TestZeroIntegerNeedsAnUnknownsEntry (0.00s)
+=== RUN   TestEncodingIsDeterministic
+--- PASS: TestEncodingIsDeterministic (0.00s)
+=== RUN   TestEncodingDoesNotEscapeHTML
+--- PASS: TestEncodingDoesNotEscapeHTML (0.00s)
+=== RUN   TestUnknownsMarshalAsAnObject
+--- PASS: TestUnknownsMarshalAsAnObject (0.00s)
+=== RUN   TestEvidenceAlwaysHasAnObservationsArray
+--- PASS: TestEvidenceAlwaysHasAnObservationsArray (0.00s)
+PASS

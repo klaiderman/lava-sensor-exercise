@@ -1,0 +1,56 @@
+=== RUN   TestR2_PrivateKey_UnreadableGroupReadableKeyIsDropped
+    r2_adversarial_test.go:57: PRIVATE_KEY_MATERIAL_EXPOSURE -> pass reason="" entailment_violation=false
+          detail=each private-key-class file the search found is readable by its owner only (0 candidate(s) classified across 1 root(s))
+    r2_adversarial_test.go:59: FALSE PASS: group-readable key (0040, 2 group members) vanished because the sensor could not read its header
+--- FAIL: TestR2_PrivateKey_UnreadableGroupReadableKeyIsDropped (0.01s)
+=== RUN   TestR2_PrivateKey_PrimaryGroupMemberInvisible
+    r2_adversarial_test.go:72: PRIVATE_KEY_MATERIAL_EXPOSURE -> pass reason="" entailment_violation=false
+          detail=each private-key-class file the search found is readable by its owner only (1 candidate(s) classified across 1 root(s))
+    r2_adversarial_test.go:74: FALSE pass: primary-gid member can read the 0640 key; sensor calls it owner-only
+--- FAIL: TestR2_PrivateKey_PrimaryGroupMemberInvisible (0.01s)
+=== RUN   TestR2_Credential_SSHConfigWorldReadableIsNotAViolation
+    r2_adversarial_test.go:87: CREDENTIAL_FILE_EXPOSURE -> fail reason="POLICY" entailment_violation=false
+          detail=a credential file does not satisfy the permission rule its own software documents: /home/alice/.ssh/config is readable by any local user (other-readable) — OpenSSH StrictModes
+    r2_adversarial_test.go:89: FALSE FAIL: ~/.ssh/config 0644 satisfies the documented rule (not group/world-writable) yet the check fails it on the read bits
+--- FAIL: TestR2_Credential_SSHConfigWorldReadableIsNotAViolation (0.01s)
+=== RUN   TestR2_SystemStore_GroupDBUnreadableTreatedAsEmptyGroup
+    r2_adversarial_test.go:101: SYSTEM_SECRET_STORE_PROTECTION -> pass reason="" entailment_violation=false
+          detail=every system secret store present keeps its expected restrictive permissions (1 inspected)
+    r2_adversarial_test.go:103: FALSE PASS: /etc/group unreadable, membership of the group that can read /etc/shadow (0640) unknown, yet pass
+--- FAIL: TestR2_SystemStore_GroupDBUnreadableTreatedAsEmptyGroup (0.01s)
+=== RUN   TestR2_SystemStore_StockSudoersDirIsNotExposure
+    r2_adversarial_test.go:118: SYSTEM_SECRET_STORE_PROTECTION -> fail reason="POLICY" entailment_violation=false
+          detail=a system secret store is reachable beyond root: /etc/sudoers.d (other-traversable)
+    r2_adversarial_test.go:120: FALSE FAIL: the sudo package ships /etc/sudoers.d 0755 root:root with 0440 files; a listable directory exposes no policy
+--- FAIL: TestR2_SystemStore_StockSudoersDirIsNotExposure (0.01s)
+=== RUN   TestR2_Provisioning_CommentMentioningPasswordPromotesDropIn
+    r2_adversarial_test.go:134: PROVISIONING_DATA_PROTECTION -> fail reason="POLICY" entailment_violation=false
+          detail=provisioning payload that can carry injected credentials is readable beyond root: /etc/cloud/cloud.cfg.d/99-installer.cfg is readable by any local user (other-readable) and declares ssh_pwauth, password
+    r2_adversarial_test.go:136: FALSE FAIL: a comment that mentions ssh_pwauth/password is not a credential declaration
+--- FAIL: TestR2_Provisioning_CommentMentioningPasswordPromotesDropIn (0.01s)
+=== RUN   TestR2_Provisioning_RootDir0700MakesWholeCheckUnknown
+    r2_adversarial_test.go:152: PROVISIONING_DATA_PROTECTION -> unknown reason="EACCES" entailment_violation=false
+          detail=part of the provisioning surface could not be inspected (/root/anaconda-ks.cfg (EACCES)), so whether it exposes injected credentials is unknown
+    r2_adversarial_test.go:154: UNDER-CLAIM: a non-traversable /root proves its contents are not exposed beyond root; got unknown (EACCES)
+    testing.go:1464: TempDir RemoveAll cleanup: openfdat /tmp/TestR2_Provisioning_RootDir0700MakesWholeCheckUnknown874257915/001/root: permission denied
+--- FAIL: TestR2_Provisioning_RootDir0700MakesWholeCheckUnknown (0.01s)
+=== RUN   TestR2_Listeners_TruncatedTableHidesFoundTelnet
+    r2_adversarial_test.go:170: REMOTE_LISTENING_SURFACE -> unknown reason="BUDGET_EXHAUSTED" entailment_violation=false
+          detail=a remote-access path other than SSH is listening on a non-loopback address: tcp/23 (telnet); an outbound reverse tunnel (Cloudflare Tunnel, ngrok, frp, ssh -R) creates no listener and is structurally invisible to this check [downgraded from fail: a load-bearing observation hit its byte cap and is a prefix (/proc/net/tcp: OK)]
+    r2_adversarial_test.go:172: UNDER-CLAIM: telnet on 0.0.0.0:23 was in the prefix that was read; the truncated table is load-bearing so the positive finding became unknown (BUDGET_EXHAUSTED)
+--- FAIL: TestR2_Listeners_TruncatedTableHidesFoundTelnet (0.06s)
+=== RUN   TestR2_Engine_AbsenceProseWithoutListedPhrasePasses
+    r2_adversarial_test.go:188: R2_FAKE -> pass reason="" entailment_violation=false
+          detail=no exposed key material was found anywhere on this machine
+    r2_adversarial_test.go:190: GATE BYPASS: absence claim in unlisted words, zero load-bearing observations, EACCES in evidence -> pass, no violation flag
+--- FAIL: TestR2_Engine_AbsenceProseWithoutListedPhrasePasses (0.01s)
+=== RUN   TestR2_SSHRoot_IncludeInsideMatchIsScoped
+    r2_adversarial_test.go:205: SSH_ROOT_LOGIN_POLICY -> unknown reason="CONTESTED" entailment_violation=false
+          detail=global permitrootlogin no is overridden to yes for `Match Address 10.0.0.0/8` at /etc/ssh/sshd_config.d/10-lan.conf:1; a host-wide verdict would be wrong in both directions [in-force caveat: systemd is not booted, so no unit can be asked when the daemon started; whether it loaded the files on disk is unknown; see SSH_POLICY_IN_FORCE]
+--- PASS: TestR2_SSHRoot_IncludeInsideMatchIsScoped (0.01s)
+=== RUN   TestR2_BMCNode_ProvenAbsentIsDowngraded
+    r2_adversarial_test.go:222: BMC_DEVICE_NODE_ACCESS -> unknown reason="ENOENT" entailment_violation=false
+          detail=no in-band BMC device node exists in any of its three spellings, so no local user has an in-band path to a management controller [downgraded from pass: a load-bearing observation did not succeed (/dev/ipmi0: ENOENT)]
+    r2_adversarial_test.go:224: UNDER-CLAIM: /dev listable, all three spellings ENOENT, no ipmi class device; expected pass, got unknown (ENOENT)
+--- FAIL: TestR2_BMCNode_ProvenAbsentIsDowngraded (0.01s)
+FAIL

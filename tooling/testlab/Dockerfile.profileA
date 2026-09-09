@@ -5,16 +5,47 @@
 # the BMC, efivars, TPM or kernel state — those are covered by fixtures and by the final real-host run.
 # Absent on the host and therefore absent here: golang, ipmitool, smartmontools, dmidecode, acl (getfacl), nftables,
 # docker, lshw, jq, multipath-tools, open-iscsi, zfsutils, chrony, apparmor-utils.
+#
+# reports/REVIEW_FINDINGS_3.md found that omitting `sudo` and a populated ssl-cert-style
+# group made three green Docker gates miss a CRITICAL class of bug (C1/H2/H3, closure
+# rows 42/44/45): with no /etc/sudoers on the image, the "owner counted as a reader of
+# its own file" false-FAIL/false-protection class was structurally invisible here. Both
+# are added below — installed and configured exactly as their packages ship them, no
+# sudoers entry is ever granted and sudo is never invoked (CLAUDE.md: never sudo/su/doas).
 FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
       nvme-cli mdadm util-linux pciutils iproute2 ufw libcap2-bin openssh-server \
       python3 perl curl wget rsync gzip xz-utils tar mokutil e2fsprogs procps \
+      sudo ssl-cert \
     && rm -rf /var/lib/apt/lists/*
 # Host-shaped account: uid 1000 "ubuntu" (already exists in ubuntu:24.04 images), member of group sudo but WITHOUT
-# any sudoers entry and without the sudo binary being usable (we never escalate; the membership is evidence only).
+# any sudoers entry and without the sudo binary ever being invoked (we never escalate; the membership and the
+# package's stock /etc/sudoers (0440 root:root) and /etc/sudoers.d (0755 root:root as this package actually
+# ships it on Ubuntu 24.04 — verified by building this image, not assumed 0750 as CLOSURE_TABLE.md row 42's
+# prose guessed; the directory mode does not affect the C1/owner-as-reader scenario below, which is judged
+# from the FILE's own mode, not the directory's) are evidence only.
 RUN usermod -aG sudo ubuntu 2>/dev/null || true \
     && mkdir -p /home/ubuntu/sensor && chown -R ubuntu:ubuntu /home/ubuntu
+# A second, deliberately owner-only-class secret-store file inside the sudo package's own
+# /etc/sudoers.d: 0640 root:root, group=root, root the sole member of its own primary group.
+# This is the C1 contrast case — after the Readers() fix subtracts the owner from its own
+# group, this file must NOT be judged "reachable beyond its owner" the way the pre-fix code
+# judged /etc/sudoers 0440 root:root itself.
+RUN printf '# owner-only-class fixture for the sensor test lab; not a real sudo rule, never applied\n' \
+      > /etc/sudoers.d/99-lab-owner-only-fixture \
+    && chmod 0640 /etc/sudoers.d/99-lab-owner-only-fixture \
+    && chown root:root /etc/sudoers.d/99-lab-owner-only-fixture
+# The H2/H3 case: Ubuntu's ssl-cert package ships /etc/ssl/private 0710 root:ssl-cert, group-
+# traversable but not group-readable. A group-traversable ancestor is protection only when the
+# group has no non-owner member; give ssl-cert a real member (a postgres-like system account, the
+# ssl-cert group's actual real-world reason to exist) so it does not qualify, and place a
+# key-shaped 0640 root:ssl-cert file inside: its exposure must be judged from its own mode (fail,
+# reachable by the ssl-cert member), never treated as protected by the ancestor's traverse bit.
+RUN useradd --system --no-create-home --shell /usr/sbin/nologin --gid ssl-cert postgres \
+    && chown root:ssl-cert /etc/ssl/private && chmod 0710 /etc/ssl/private \
+    && printf -- '-----BEGIN PRIVATE KEY-----\n' > /etc/ssl/private/lab-dummy.key \
+    && chmod 0640 /etc/ssl/private/lab-dummy.key && chown root:ssl-cert /etc/ssl/private/lab-dummy.key
 # Host-shaped sshd configuration: Include first, one drop-in from the provider (values as observed).
 RUN mkdir -p /etc/ssh/sshd_config.d \
     && printf 'PasswordAuthentication no\nKbdInteractiveAuthentication no\n' > /etc/ssh/sshd_config.d/00-provider-instant-deploy.conf \

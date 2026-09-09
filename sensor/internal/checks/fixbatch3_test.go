@@ -69,9 +69,9 @@ func TestEffectiveReaders_PrimaryGidCounts(t *testing.T) {
 		t.Fatal(err)
 	}
 	env := newTestEnv(t, root, newFakeRunner())
-	gid := int64(900)
+	gid, uid := int64(900), int64(0)
 	mode := int64(0o640)
-	readers := env.Readers(&mode, &gid)
+	readers := env.Readers(&mode, &uid, &gid)
 	if !readers.BeyondOwner {
 		t.Errorf("an account whose primary gid is the file's group reads the file: %+v", readers)
 	}
@@ -94,14 +94,16 @@ func TestGroupDBDenied_IsUnknownNotEmpty(t *testing.T) {
 	if env.Groups().Determined() {
 		t.Fatalf("an unreadable /etc/group must not produce a determined group model")
 	}
-	gid := int64(42)
+	gid, uid := int64(42), int64(0)
 	mode := int64(0o640)
-	readers := env.Readers(&mode, &gid)
+	readers := env.Readers(&mode, &uid, &gid)
 	if readers.Determined {
 		t.Errorf("group-based reasoning must be unknown when the database is unreadable: %+v", readers)
 	}
-	if !readers.BeyondOwner {
-		t.Errorf("an unknown reader set is not an empty one: %+v", readers)
+	// Batch 4 row 43: an unknown reader set is not an empty one AND it is not
+	// an exposure either. It is an open question, and the consumer must say so.
+	if readers.BeyondOwner {
+		t.Errorf("an undetermined reader set must not be asserted as an exposure: %+v", readers)
 	}
 	f := runCheck(t, root, newFakeRunner(), "SYSTEM_SECRET_STORE_PROTECTION")
 	if f.Status == scan.StatusPass {

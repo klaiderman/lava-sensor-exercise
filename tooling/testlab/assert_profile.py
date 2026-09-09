@@ -132,6 +132,32 @@ _DOCKER_A_STRUCTURAL_UNKNOWNS = {
 EXPECTED_A_DOCKER = {cid: set(vals) for cid, vals in EXPECTED_A.items()}
 for cid in _DOCKER_A_STRUCTURAL_UNKNOWNS:
     EXPECTED_A_DOCKER[cid] |= {"unknown"}
+
+# reports/REVIEW_FINDINGS_3.md (DO-NOT-SHIP: C1/H1/H2/H3, CLOSURE_TABLE.md rows 42-45,
+# fix batch 4, not yet committed as of this edit) found that three green Docker gates
+# missed a CRITICAL because Dockerfile.profileA had no `sudo` package (no /etc/sudoers at
+# all) and no populated ssl-cert-style group — the exact conditions C1/H2/H3 need to be
+# observable. Dockerfile.profileA now installs `sudo` and `ssl-cert`, adds a real member
+# (postgres) to the ssl-cert group, and ships a key-shaped 0640 root:ssl-cert file inside
+# /etc/ssl/private (0710 root:ssl-cert). These two rows are the coordinator-directed
+# expected outcome ONCE BATCH 4 LANDS, overriding EXPECTED_A_DOCKER's Docker-specific
+# derivation above (this is a Docker-image-only fixture — the real Lava host's ssl-cert
+# group membership is unverified per REVIEW_FINDINGS_3's own "what I could not verify"
+# section, so this does NOT change EXPECTED_A, the raw Lava-host target):
+#   - SYSTEM_SECRET_STORE_PROTECTION => pass once C1 (owner-as-reader) and H3 (denial
+#     opted out of load-bearing when it is itself the protection) are both fixed: nothing
+#     in /etc/sudoers, /etc/sudoers.d, or the rest of systemStores is then readable beyond
+#     its owner.
+#   - PRIVATE_KEY_MATERIAL_EXPOSURE => fail: batch 4's H2 fix stops treating a group-
+#     traversable ancestor (the 0710 dir) as protection when the group has a real non-owner
+#     member (postgres), so lab-dummy.key's own mode (0640 root:ssl-cert, ssl-cert has a
+#     member) is what decides it — reachable beyond its owner, hence fail. NOT YET
+#     VERIFIED against real batch-4 behaviour (the coordinator's directed outcome, pending
+#     the actual rebuild+rerun in the next pass); TEST_REPORT.md will record what was
+#     actually observed and reconcile any difference before this comment is trusted blindly
+#     a second time.
+EXPECTED_A_DOCKER["SYSTEM_SECRET_STORE_PROTECTION"] = {"pass"}
+EXPECTED_A_DOCKER["PRIVATE_KEY_MATERIAL_EXPOSURE"] = {"fail"}
 # UNSIGNED_OR_OUT_OF_TREE_MODULES reads the container's REAL /proc/sys/kernel/tainted
 # (Docker Desktop's own backend kernel, not the Lava host's) — the sensor must report
 # whatever that real value honestly is, annotated as describing the container's

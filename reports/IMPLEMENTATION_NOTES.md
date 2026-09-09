@@ -674,11 +674,190 @@ which is the answer, not a gap. The tests are renamed and now assert what still
 must hold — that the shielding is COUNTED and REPORTED rather than silently
 assumed, and that the two secrets checks agree about the same directory.
 
+## Fix batch 4 (third adversarial review: DO-NOT-SHIP, 1 Critical / 3 High / 5 Medium / 6 Low)
+
+Every blocking item in `reports/REVIEW_FINDINGS_3.md` came out of one sentence
+the code had been getting wrong: **"who else can reach this?"**
+
+The sensor answered it by taking the file's group, listing that group's
+effective members, and calling the file exposed if the list was non-empty. On
+`/etc/sudoers`, 0440 `root:root` — the mode Debian, Ubuntu and RHEL all ship, and
+the mode on the Lava host — that list contains `root`, which is the file's owner.
+The owner is not somebody else. Three of the four blocking findings, and two of
+the five Mediums, are that one mistake seen from different checks.
+
+### Row 42 — the owner is not another reader of its own file
+
+`Env.Readers(mode, uid, gid)` now takes the owner's uid and subtracts the owner
+account from the effective member set: readers-beyond-owner is
+`(group members ∪ primary-gid holders) \ {owner}`. `GroupDB` gained a uid→name
+index so the subtraction can be made by name. 0440 `root:root` is owner-only;
+0440 `postgres:root` is not, because root is then a reader who is not the owner.
+
+The whole roster asks this one function. `Readers`, `Traversers` and `Accessors`
+are three thin wrappers over one `beyondOwner()` that differ only in which
+permission bits and which verb they use, so `secrets.go`, `bmc.go` and the
+credential and secret-store checks cannot disagree about the same file.
+
+### Row 43 — an account model we could not resolve is a question, not an answer
+
+When `/etc/passwd` or `/etc/group` is unreadable, or a gid is served by SSSD or
+LDAP and is in neither file, the reader set is UNDETERMINED. Batch 3 had made
+that force `BeyondOwner = true`, which asserted an exposure the sensor could not
+know: R3-B produced `fail`/`POLICY` four times over. Undetermined now sets
+`Determined = false` and asserts nothing, and every consumer branches on it.
+`PRIVATE_KEY_MATERIAL_EXPOSURE` collects the candidates whose reader set is
+unresolved and returns `unknown` naming them; `CREDENTIAL_FILE_EXPOSURE`,
+`PROVISIONING_DATA_PROTECTION` and `SYSTEM_SECRET_STORE_PROTECTION` do the same
+through their own boundary lists. Never a fail whose detail says unknown, and
+never a pass.
+
+### Row 44 — protection is decided by the traverse bit
+
+`protectionFromDenial()` asked whether an ancestor was READABLE beyond its
+owner. Ubuntu ships `/etc/ssl/private` as 0710 `root:ssl-cert`: there is no
+group-read bit at all, so the read test said "owner only" — while every member of
+`ssl-cert` can walk in and open a 0640 key inside. The question for a directory
+is TRAVERSAL, and `Env.Traversers()` asks it: an ancestor shields what is behind
+it only when nobody beyond its owner has `x` on it.
+
+### Row 45 — one routine turns a denial judged protection into evidence
+
+`SYSTEM_SECRET_STORE_PROTECTION` counted denials as protection in its verdict
+but never opted the denied observation out of the load-bearing set, so on every
+Ubuntu host it shipped `unknown`/`EACCES` "downgraded from pass" next to a detail
+saying it had passed. There is now exactly one place a protection judgement
+becomes evidence — `recordProtection()` — used by PRIVATE_KEY, CREDENTIAL_FILE,
+PROVISIONING and SYSTEM_SECRET_STORE. It records the ancestor stats that decided
+the question and stamps the denial with
+`not_load_bearing_because: protection (ancestor <path> mode <octal>, readers beyond owner: none)`.
+Because the text is generated in one place, a check cannot count a denial as
+protection while leaving it load-bearing. `/etc/ssl/private` 0000 is now `pass`
+with one store shielded, on WSL and on the expected host layout.
+
+### Row 46 — a key we found beats a search we could not finish
+
+Two ordering defects. The walk observation was copied into the result before the
+per-subtree protection pass could clear its `Truncated` flag, so a walk whose
+only unreadable subtree turned out to be shielded still downgraded the verdict
+with a wrong reason; it is now copied after the boundary decision is final. And
+the opt-out that keeps a FOUND exposure from being softened by incompleteness
+named only the walk sources, so an unreadable `/proc/self/mountinfo` still
+downgraded a world-readable key from `fail` to `unknown`. The opt-out now covers
+every completeness source including the mount table — and only those: the stats
+that PROVE the exposure stay load-bearing, which is what makes the `fail` legal
+under the entailment gate.
+
+### Row 47 — a symlinked scan root, and a closed reason vocabulary
+
+A distribution that moves `/home` onto another filesystem leaves `/home` as a
+symlink. The walk refused it and reported `ENOTREG`, which is both an under-claim
+(no account's keys were examined) and an internal token in a field with a closed
+vocabulary. `Walk` now follows a symlinked root exactly one hop, and only to a
+local directory that no other unprivileged account can rewrite — a target another
+account can replace would let that account choose what the sensor reports. What
+it followed is recorded as `root_symlink_followed`; what it declined is recorded
+as `scan_roots_not_enumerated` with one of the six phrases in
+`probe.WalkSkipReasons`, and `TestWalkSkipReasonsAreInTheClosedVocabulary` drives
+every refusal path against that set.
+
+Separately, `scan.NormalizeReason()` is a single choke point in `finalize`:
+`scan.ReasonVocabulary` is the closed set a finding may carry, every
+errno-shaped token outside it (`ENOTREG`, `ENOTDIR`, `ENOTSUP`, `ELOOP`,
+`EISDIR`, `ENXIO`, `ENODATA`) maps to `EINVAL`, and an unrecognised token maps to
+`INTERNAL_ERROR` rather than to a plausible-looking errno.
+`TestEveryFindingReasonIsInTheClosedVocabulary` runs the whole roster over a tree
+containing these shapes and holds every reason to the vocabulary.
+
+### Row 48 — the Lows
+
+- **L1 (NFS refusal reported as a budget).** Declining to touch storage whose
+  server can stop answering is a decision, not an exhausted budget.
+  `Observation.Refused` marks an observation this sensor chose not to make, and
+  `Reason()` reports `NOT_ATTEMPTED` for it. Both refusal paths in `Walk`
+  (network filesystem, unfollowable root) set it.
+- **L2 (absence-prose bypass).** Two changes, both defence in depth. The regexp
+  class gained `did not find`, `not found`, `0/zero/no candidates` and
+  `every … covered|walked|searched|scanned|checked`. More importantly the
+  STRUCTURAL gate was strengthened: a directory walk that was REFUSED and then
+  opted out no longer counts as excused for the purpose of an absence claim
+  (`Completeness.ExcusedEnumerationDenials`). A check may say an observation is
+  context; it may not say a hole in its own search is context. The single
+  exception is the generated protection opt-out, which is itself an answer to
+  the reachability question rather than a gap in it.
+- **L3 (SSH_POLICY_IN_FORCE reason vs detail).** The reason now follows the
+  first failing observation (`reasonOfFailure`), so the finding no longer says
+  `EINVAL` while its detail says the unit properties were `UTILITY_MISSING`.
+- **L4 (bmc.go and storage.go did not use the shared model).** `bmc.go` now asks
+  `Env.Accessors()` — the same account model, with the read/write bits a device
+  node needs — and branches on `Determined`. `storage.go`'s `openableByUs()` is
+  deliberately NOT changed: it answers a different question ("could THIS
+  identity open it", using our own supplementary groups), and collapsing the two
+  would make each answer the other's question badly. The row-29 claim in
+  CLOSURE_TABLE is corrected to say so.
+- **L5 (absent credential candidates dropped).** A candidate that is not there
+  is an observation of absence; the ENOENT stats are now recorded, so a pass
+  rests on the stats that proved it rather than on `/etc/passwd` alone.
+- **L6 (mode-bit rules judged by membership).** libpq refuses a 0640 `.pgpass`
+  whether or not the group has a member. Rules whose cited sentence is about
+  MODE BITS are now tested on the mode bits; only the writability rule, whose
+  text is about who can write, consults the account model.
+
+### Re-run of the reviewer's own fixtures
+
+`reports/review3/sensorcopy/internal/checks/zz_r3*_test.go` and
+`zz_r1_adv_test.go` were copied into the package unmodified and run under WSL
+Ubuntu as uid 1000 against the fixed code.
+
+| id | fixture | expected | observed after batch 4 |
+|---|---|---|---|
+| R3-A | ancestor 0010 (group x, member `postgres`), key 0640 | not protected | PRIVATE_KEY `unknown`/EACCES (the subtree is a real boundary); SECRET_STORE `unknown` naming "the 1 effective member(s) of group sslcert other than the owner can traverse it (postgres)"; `protected_by_ancestor` = 0 |
+| R3-B | `/etc/passwd` or `/etc/group` unreadable, 0640 secret/key | unknown | SECRET_STORE `unknown`/EACCES, PRIVATE_KEY `unknown`/ENOENT — both detail the undetermined account model; no fail, no pass |
+| R3-C | `/etc/sudoers` 0440, group's only member is the owner; 0640 key likewise | pass | SECRET_STORE `pass`, PRIVATE_KEY `pass` |
+| R3-D | `/root` 0050 (the 0550 RHEL analog) | pass | PROVISIONING `pass`, CREDENTIAL `pass` (11 shielded) |
+| R3-E | mountinfo 0000 + world-readable key | fail | `fail`/POLICY naming the key |
+| R3-F | `/home` on nfs4; and a diskless nfs4 root | unknown, honest reason | `unknown`/**NOT_ATTEMPTED** in both; the boundary names the mount; no entailment violation |
+| R3-G | `/home` symlink to `/data/homes`, key 0644 | fail | `fail`/POLICY naming `/data/homes/alice/.ssh/id_rsa` |
+| R3-H | prose smuggle + reasoned opt-out | flag | `unknown`, `entailment_violation = true`, statement names the excused refused search |
+| R3-I | `/etc/ssl/private` 0000 (stock) | pass, 1 shielded | `pass`, 1 shielded |
+| R2-A | key 0040, populated group, sniff EACCES | not pass | `fail` (2 effective members other than the owner) |
+| R2-B | key 0640, primary-gid member | fail | `fail` (mallory) |
+| R2-C | `~/.ssh/config` 0644 | pass | `pass` |
+| R2-D2 | `/etc/sudoers.d` 0755 + 0440 README | not fail | `pass` |
+| R2-E | comment mentioning `ssh_pwauth` | not fail | `pass` |
+| R2-E2 | `/root` 0700 | pass | `pass` |
+| R2-F | truncated `/proc/net/tcp` with telnet | fail | `fail` |
+| R2-G | unlisted absence prose, 0 load-bearing OK | violation | `unknown`, `entailment_violation = true` |
+| R2-H | `Include` inside `Match` | unknown/CONTESTED | `unknown`/CONTESTED |
+| R2-I | no BMC, `/dev` listable | pass | `pass` |
+| ADV-1 | same-second mtime vs unit start | not fail | `unknown`/UTILITY_MISSING — reason and detail now agree (L3) |
+| ADV-2 | default cloud-init layout | not fail | `pass` |
+| ADV-3 | `/root` 0000 hiding a 0644 key | (the reviewer's file asserts not-pass) | `pass`, 1 shielded — **the one assertion that still fails, on purpose.** Closure row 39 reversed it in batch 3, and the reviewer's own table records it as "by design since row 39": a directory no unprivileged account can enter hides what is inside it from all of them, which is the answer to an exposure question rather than a gap in it. |
+| ADV-4 | Match flips PasswordAuthentication | not pass | `unknown`/CONTESTED |
+| ADV-5 | sysfs disk without size | unknown marker, no raw machine-id | ok |
+| ADV-6 | ufw active + `ENABLED=no` | detail not "enabled" | `fail` citing `/etc/ufw/ufw.conf` |
+
+### Gates run after batch 4
+
+`gofmt` clean; `go vet ./...` clean natively and for `GOOS=linux`;
+`GOOS=linux staticcheck ./...` rc 0; `go test ./...` on Windows green; the four
+cross-compiled test binaries under WSL Ubuntu as uid 1000 — **244 passed, 0
+failed, 0 skipped** (each binary run from its own package directory, so the
+relative paths inside the tests mean what they mean under `go test`). The WSL
+scan writes a schema-valid artifact (`RESULT: PASS`, 0 violations) and
+`scan.AuditEntailment` reports no violation over the eight shipped artifacts.
+
+On WSL the batch flips `SYSTEM_SECRET_STORE_PROTECTION` from `unknown`/EACCES to
+`pass`, and `PRIVATE_KEY_MATERIAL_EXPOSURE` from `unknown` to `fail`. The latter
+is a true positive rather than a regression: the Go source tree in this
+account's home ships world-readable test PEMs
+(`crypto/tls/testdata/example-key.pem`, `crypto/x509/platform_root_key.pem`).
+
 ## Where it has been run
 
 | environment | invocation | result |
 |---|---|---|
-| WSL Ubuntu 26.04, uid 1000 | `./bin/sensor scan --out bin/findings.wsl.json` | 26 checks in 0.2 s, exit 0, self-check pass (batch 2) |
+| WSL Ubuntu 26.04, uid 1000 | `./bin/sensor scan --out bin/findings.wsl.json` | 26 checks in 0.17 s, exit 0 — 9 pass / 2 fail / 15 unknown, schema PASS, 0 entailment violations (batch 4) |
 | Docker profile A (Ubuntu 24.04 userspace, read-only rootfs, `--cap-drop ALL`, `--network none`, uid 1000) | `tooling/testlab/run_in_docker.sh A` | 26 checks in 200 ms, exit 0 |
 | Docker profile B (alpine 3.20 — busybox, no systemd, no sshd, no DMI) | `tooling/testlab/run_in_docker.sh B` | 26 checks, exit 0 — the portability proof: the same binary produces a schema-valid, honest output |
 | Docker profile C (profile A image with `PATH=/nonexistent`) | `tooling/testlab/run_in_docker.sh C` | 26 checks, exit 0 — every utility missing, and no check reports a capability as absent because of it |

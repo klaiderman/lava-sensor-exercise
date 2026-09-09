@@ -36,3 +36,19 @@ reports/review/*.test
 submission/transcripts/
 submission/stage/
 submission/*.tar.gz
+
+# external review inputs supplied by the user and derived transcript renderings (local only)
+Claude outputs/
+ai/transcripts/normalized/
+reports/claude-transcript.html
+reports/claude-transcript-data.json
+
+# reviewer scratch: module copies and compiled test binaries (logs stay in history)
+reports/review*/sensorcopy/
+reports/review*/*.test
+reports/review*/sensor.linux
+reports/panel/sensorcopy/
+reports/panel/*.test
+
+# compiled Go test binaries anywhere
+*.test

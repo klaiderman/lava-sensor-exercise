@@ -96,8 +96,8 @@ var privateKeyClasses = map[string]bool{
 // effectiveReaders is the one question "who can read this" is asked through.
 // It delegates the membership model to scan.Env so secrets, BMC nodes and drive
 // nodes cannot disagree about the same file.
-func effectiveReaders(env *scan.Env, mode *int64, gid *int64) (desc string, adverse bool, groupName string, members int64) {
-	r := env.Readers(mode, gid)
+func effectiveReaders(env *scan.Env, mode, uid, gid *int64) (desc string, adverse bool, groupName string, members int64) {
+	r := env.Readers(mode, uid, gid)
 	return r.Description, r.BeyondOwner, r.GroupName, int64(len(r.GroupMember))
 }
 
@@ -114,43 +114,90 @@ func effectiveReaders(env *scan.Env, mode *int64, gid *int64) (desc string, adve
 // IS stat-able decides, because a directory an unprivileged user cannot
 // traverse hides everything under it.
 type protection struct {
-	Protected bool   `json:"protected"`
-	Basis     string `json:"basis"`
-	Ancestor  string `json:"ancestor,omitempty"`
-	Mode      *int64 `json:"ancestor_mode,omitempty"`
+	Protected          bool     `json:"protected"`
+	Undetermined       bool     `json:"undetermined,omitempty"`
+	Reason             string   `json:"reason,omitempty"`
+	Basis              string   `json:"basis"`
+	Ancestor           string   `json:"ancestor,omitempty"`
+	Mode               *int64   `json:"ancestor_mode,omitempty"`
+	ReadersBeyondOwner []string `json:"readers_beyond_owner,omitempty"`
 }
 
 // protectionFromDenial walks up from a path we were refused and asks whether an
 // ancestor explains the refusal in a way that also excludes every other
 // unprivileged account.
-func protectionFromDenial(env *scan.Env, path string) protection {
+//
+// The question is TRAVERSAL, not readability. Ubuntu ships /etc/ssl/private as
+// 0710 root:ssl-cert: there is no group-read bit at all, so a read-bit test
+// says "owner only" - while every member of ssl-cert can walk into it and open
+// a 0640 key inside. An ancestor shields only when nobody beyond the owner can
+// pass through it.
+func protectionFromDenial(env *scan.Env, path string) (protection, []probe.Observation) {
+	var obs []probe.Observation
 	for dir := parentDir(path); dir != "/" && dir != "."; dir = parentDir(dir) {
 		st := env.Files.Stat(dir)
 		if st.Status != probe.StatusOK || st.Meta == nil || st.Meta.Mode == nil {
 			continue
 		}
 		m := *st.Meta.Mode
-		// Traversal is what matters for a directory: without o+x nothing below
-		// it is reachable by another unprivileged user.
-		if m&0o001 == 0 {
-			r := env.Readers(st.Meta.Mode, st.Meta.GID)
-			if !r.BeyondOwner || (m&0o010 == 0) {
-				return protection{
-					Protected: true,
-					Ancestor:  dir,
-					Mode:      st.Meta.Mode,
-					Basis: "the ancestor " + dir + " (mode " + octalMode(m) + ") is not traversable by other" +
-						", so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
-				}
-			}
+		trav := env.Traversers(st.Meta.Mode, st.Meta.UID, st.Meta.GID)
+		st.Detail = "ancestor of a denied candidate; traversal decides what is reachable behind it (" + trav.Description + ")"
+		// A protection decision is itself an observation, and it belongs in the
+		// evidence: a pass that says "N shielded" with no observation for the
+		// shield is a claim, not a finding.
+		obs = append(obs, st)
+
+		if !trav.Determined {
+			return protection{
+				Ancestor: dir, Mode: st.Meta.Mode,
+				Basis: "the ancestor " + dir + " (mode " + octalMode(m) + ") is group-traversable and the group model is unavailable (" +
+					trav.Reason + "), so whether it shields what is behind it is undetermined",
+				Undetermined: true, Reason: trav.Reason,
+			}, obs
+		}
+		if !trav.BeyondOwner {
+			return protection{
+				Protected: true, Ancestor: dir, Mode: st.Meta.Mode,
+				ReadersBeyondOwner: trav.GroupMember,
+				Basis: "the ancestor " + dir + " (mode " + octalMode(m) + ") cannot be traversed by anyone beyond its owner" +
+					", so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
+			}, obs
 		}
 		return protection{
-			Ancestor: dir,
-			Mode:     st.Meta.Mode,
-			Basis:    "the nearest stat-able ancestor " + dir + " (mode " + octalMode(m) + ") does not explain the denial",
-		}
+			Ancestor: dir, Mode: st.Meta.Mode, ReadersBeyondOwner: trav.GroupMember,
+			Basis: "the ancestor " + dir + " (mode " + octalMode(m) + ") does not shield what is behind it: " + trav.Description,
+		}, obs
 	}
-	return protection{Basis: "no stat-able ancestor explains the denial"}
+	return protection{Basis: "no stat-able ancestor explains the denial", Undetermined: true, Reason: scan.ReasonEACCES}, obs
+}
+
+// recordProtection is the ONE place a denial that was judged protection is
+// turned into evidence. Every exposure check goes through it, so none can
+// count a denial as protection while leaving it load-bearing - which is what
+// kept SYSTEM_SECRET_STORE_PROTECTION permanently unknown on Ubuntu while its
+// own detail said it had passed.
+func recordProtection(r *scan.Result, denied probe.Observation, prot protection, ancestors []probe.Observation) {
+	for _, a := range ancestors {
+		r.Add(a)
+	}
+	if !prot.Protected {
+		r.Add(denied)
+		return
+	}
+	beyond := "none"
+	if len(prot.ReadersBeyondOwner) > 0 {
+		beyond = strings.Join(prot.ReadersBeyondOwner, ", ")
+	}
+	denied.OptOut = scan.ProtectionOptOut + prot.Ancestor + " mode " + octalMode(derefMode(prot.Mode)) +
+		", readers beyond owner: " + beyond + ")"
+	r.Add(denied)
+}
+
+func derefMode(m *int64) int64 {
+	if m == nil {
+		return 0
+	}
+	return *m
 }
 
 func octalMode(m int64) string {
@@ -201,9 +248,13 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 	}
 	var walkSources []string
 	var skippedNetworkRoots []string
+	var followedRootSymlinks []string
+	var skippedRoots []string
+	networkSkipped := false
 	symlinksSkipped := int64(0)
 	nonRegularSkipped := int64(0)
 	aclUndetermined := 0
+	var undeterminedKeys []string
 	deadline, hasDeadline := ctx.Deadline()
 
 	for _, root := range keyWalkRoots {
@@ -227,11 +278,15 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 		// A root this account cannot enter hides its contents from every other
 		// unprivileged account too. For an exposure question that is an answer,
 		// not a gap.
-		if r2 := env.Readers(st.Meta.Mode, st.Meta.GID); st.Meta != nil && st.Meta.Mode != nil &&
-			*st.Meta.Mode&0o001 == 0 && !r2.BeyondOwner {
-			protectedRoots = append(protectedRoots, root+" (mode "+octalMode(*st.Meta.Mode)+
-				", not traversable by other, so nothing under it is reachable by an unprivileged account)")
-			continue
+		if st.Meta != nil && st.Meta.Mode != nil {
+			trav := env.Traversers(st.Meta.Mode, st.Meta.UID, st.Meta.GID)
+			if trav.Determined && !trav.BeyondOwner {
+				st.Detail = "scan root shielded from other unprivileged accounts: " + trav.Description
+				st.OptOut = scan.ProtectionOptOut + root + " mode " + octalMode(*st.Meta.Mode) + ", readers beyond owner: none)"
+				r.Add(st)
+				protectedRoots = append(protectedRoots, root+" (mode "+octalMode(*st.Meta.Mode)+"; "+trav.Description+")")
+				continue
+			}
 		}
 		rootsPresent = append(rootsPresent, root)
 
@@ -259,12 +314,28 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 		})
 		obs.Detail = "bounded key-material enumeration under " + root
 		walkSources = append(walkSources, obs.Source)
-		r.Add(obs)
 		if res.SkippedFSType != "" {
 			skippedNetworkRoots = append(skippedNetworkRoots, root+" ("+res.SkippedFSType+")")
 			boundaries = append(boundaries, root+" is on a "+res.SkippedFSType+" mount and was not walked")
+			networkSkipped = true
+			r.Add(obs)
 			walks = append(walks, res)
 			continue
+		}
+		if res.SkipReason != "" {
+			// A root this sensor declined to enumerate is a boundary stated in
+			// words, not an errno: "root is a symlink to a target writable by
+			// other accounts" is what a reader needs, and ENOTREG is not.
+			skippedRoots = append(skippedRoots, root+": "+res.SkipReason)
+			boundaries = append(boundaries, root+" was not enumerated ("+res.SkipReason+")")
+			r.Add(obs)
+			walks = append(walks, res)
+			continue
+		}
+		if res.SymlinkTarget != "" {
+			followedRootSymlinks = append(followedRootSymlinks, root+" -> "+res.SymlinkTarget)
+			obs.Detail += "; " + root + " is a symlink to the local, non-user-writable directory " +
+				res.SymlinkTarget + ", followed once"
 		}
 		walks = append(walks, res)
 		if !res.Complete() {
@@ -272,19 +343,29 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 			// excludes other users is protection, not a boundary.
 			realBoundaries := []string{}
 			for _, d := range res.UnreadableDirs {
-				if prot := protectionFromDenial(env, d+"/x"); prot.Protected {
+				prot, ancestors := protectionFromDenial(env, d+"/x")
+				for _, a := range ancestors {
+					a.OptOut = "recorded to show what decided the protection question for " + d
+					r.Add(a)
+				}
+				if prot.Protected {
 					protectedRoots = append(protectedRoots, d+" ("+prot.Basis+")")
 					continue
 				}
-				realBoundaries = append(realBoundaries, d)
+				realBoundaries = append(realBoundaries, d+" ("+prot.Basis+")")
 			}
 			if len(realBoundaries) > 0 || res.BudgetExhausted != "none" || res.CrossedMounts ||
 				res.UnreadableDirsCount > int64(len(res.UnreadableDirs)) {
 				boundaries = append(boundaries, res.Boundary())
 			} else {
+				// Every unreadable subtree turned out to be shielded, so the
+				// enumeration is not a prefix of a longer one: nothing beyond
+				// it is reachable by another unprivileged account either.
 				obs.Truncated = false
+				obs.Detail += "; every subtree it could not enter is shielded from other unprivileged accounts"
 			}
 		}
+		r.Add(obs)
 
 		for _, p := range candidates {
 			st := env.Files.Stat(p)
@@ -306,17 +387,25 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 				// the exposure verdict is taken from its mode.
 				hit.MagicClass = "unclassified (" + cObs.Reason() + ")"
 				hit.Errno = cObs.Reason()
-				prot := protectionFromDenial(env, p)
+				prot, ancestors := protectionFromDenial(env, p)
 				hit.Protection = &prot
 				cObs.OptOut = "the content was not read; the exposure verdict for this candidate is taken from its mode, owner and group"
-				r.Add(cObs)
+				recordProtection(&r, cObs, prot, ancestors)
 			} else if !privateKeyClasses[cls] {
 				continue // a certificate is not key material
 			}
 			acl, aclObs := env.Files.ReadACL(p)
 			hit.ACL = &acl
-			desc, adverse, gname, gmembers := effectiveReaders(env, hit.Mode, hit.GID)
-			hit.EffectiveReaders, hit.Adverse, hit.GroupName, hit.GroupMembers = desc, adverse, gname, gmembers
+			readers := env.Readers(hit.Mode, hit.UID, hit.GID)
+			hit.EffectiveReaders, hit.GroupName = readers.Description, readers.GroupName
+			hit.GroupMembers = int64(len(readers.GroupMember))
+			// Row 43: an account model we could not resolve is an open
+			// question about this candidate. Reporting it as an exposure
+			// invents a reader; reporting it as safe invents an absence.
+			hit.Adverse = readers.Determined && readers.BeyondOwner
+			if !readers.Determined {
+				undeterminedKeys = append(undeterminedKeys, p+" ("+readers.Description+")")
+			}
 			if acl.Determined && acl.GrantsNonOwner {
 				hit.Adverse = true
 				hit.EffectiveReaders += "; an ACL grants a non-owner principal read"
@@ -336,7 +425,10 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 	r.Field("scan_roots_absent", rootsAbsent)
 	r.Field("scan_roots_protected", protectedRoots)
 	r.Field("scan_roots_on_network_storage", skippedNetworkRoots)
+	r.Field("root_symlink_followed", followedRootSymlinks)
+	r.Field("scan_roots_not_enumerated", skippedRoots)
 	r.Field("boundaries", boundaries)
+	r.Field("candidates_with_an_unresolved_reader_set", undeterminedKeys)
 	r.Field("symlinks_skipped", symlinksSkipped)
 	r.Field("non_regular_skipped", nonRegularSkipped)
 	r.Field("private_key_files", hits)
@@ -350,9 +442,10 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 	}
 	// A key we FOUND is a positive observation and stands whether or not the
 	// rest of the search completed.
+	completenessSources := append(append([]string{}, walkSources...), "/proc/self/mountinfo")
 	r.OptOut(len(exposed) > 0,
-		"exposed key material was observed directly, so the completeness of the remaining walks does not underwrite the verdict",
-		walkSources...)
+		"exposed key material was observed directly, so how completely the rest of the machine was searched does not underwrite the verdict",
+		completenessSources...)
 
 	switch {
 	case len(exposed) > 0:
@@ -360,12 +453,21 @@ func (c privateKeyMaterialExposure) Run(ctx context.Context, env *scan.Env) scan
 		// the rest of the enumeration finished.
 		return finish(scan.Fail(scan.ReasonPolicy,
 			"private key material is readable beyond its owner: "+strings.Join(exposed, "; ")))
+	case len(undeterminedKeys) > 0:
+		return finish(scan.Unknown(scan.ReasonENOENT,
+			"who can read "+itoa(int64(len(undeterminedKeys)))+" of the key-material candidates could not be established: "+
+				strings.Join(undeterminedKeys, "; ")))
 	case len(rootsPresent) == 0 && len(protectedRoots) == 0:
 		return finish(scan.Unknown(scan.ReasonENOENT,
 			"this machine has none of the directories this check searches for key material, so nothing was searched"))
 	case len(boundaries) > 0:
 		reason := scan.ReasonEACCES
-		if aclUndetermined == 0 && !anyDenied(boundaries) {
+		switch {
+		case networkSkipped && !anyDenied(boundaries):
+			// Declining to touch storage whose server can stop answering is a
+			// decision, not an exhausted budget.
+			reason = scan.ReasonNotAttempted
+		case aclUndetermined == 0 && !anyDenied(boundaries):
 			reason = scan.ReasonBudget
 		}
 		return finish(scan.Unknown(reason,
@@ -420,7 +522,7 @@ func (k ruleKind) text() string {
 }
 
 // violated applies the rule to an object's metadata.
-func (k ruleKind) violated(env *scan.Env, mode, gid *int64) (bool, string) {
+func (k ruleKind) violated(env *scan.Env, mode, uid, gid *int64) (bool, string) {
 	if mode == nil {
 		return false, "unknown (mode not readable)"
 	}
@@ -431,16 +533,27 @@ func (k ruleKind) violated(env *scan.Env, mode, gid *int64) (bool, string) {
 			return true, "any local user can write it"
 		}
 		if m&0o020 != 0 {
-			r := env.Readers(mode, gid)
+			r := env.Readers(mode, uid, gid)
+			if !r.Determined {
+				return false, r.Description
+			}
 			if r.BeyondOwner {
 				return true, "writable by " + r.Description
 			}
-			return false, "group-writable but " + r.Description
+			return false, "group-writable, but " + r.Description
 		}
 		return false, "writable by the owner only"
 	default:
-		r := env.Readers(mode, gid)
-		return r.BeyondOwner, r.Description
+		// These rules are the software's own, and every one of them is
+		// written against the MODE BITS: libpq refuses a 0640 .pgpass whether
+		// or not the group has a member. Judging effective readers here would
+		// be a looser predicate than the sentence the finding cites.
+		m := *mode
+		if m&0o044 != 0 {
+			r := env.Readers(mode, uid, gid)
+			return true, "group- or world-readable (mode " + octalMode(m) + "); " + r.Description
+		}
+		return false, "readable by the owner only (mode " + octalMode(m) + ")"
 	}
 }
 
@@ -522,6 +635,8 @@ func (c credentialFileExposure) Run(ctx context.Context, env *scan.Env) scan.Res
 	for _, cand := range candidates {
 		st := env.Files.Stat(cand.path)
 		if st.Status == probe.StatusENOENT {
+			st.Detail = "credential file candidate; absent"
+			r.Add(st)
 			continue
 		}
 		hit := secretHit{Path: cand.path, Errno: st.Reason(), Rule: cand.rule.rule(), RuleSource: cand.rule.source}
@@ -529,12 +644,11 @@ func (c credentialFileExposure) Run(ctx context.Context, env *scan.Env) scan.Res
 			// A denial is evidence about protection, not a hole in the answer:
 			// if an ancestor keeps this account out, it keeps every other
 			// unprivileged account out too.
-			prot := protectionFromDenial(env, cand.path)
+			prot, ancestors := protectionFromDenial(env, cand.path)
 			hit.Protection = &prot
 			if prot.Protected {
 				hit.EffectiveReaders = "the owner only (" + prot.Basis + ")"
 				protectedByAncestor++
-				st.OptOut = "the denial itself answers the exposure question: " + prot.Basis
 			} else {
 				undetermined = true
 				hit.EffectiveReaders = "unknown (" + st.Reason() + ")"
@@ -543,7 +657,7 @@ func (c credentialFileExposure) Run(ctx context.Context, env *scan.Env) scan.Res
 					unreadableHomes = append(unreadableHomes, home)
 				}
 			}
-			r.Add(st)
+			recordProtection(&r, st, prot, ancestors)
 			hits = append(hits, hit)
 			continue
 		}
@@ -554,8 +668,8 @@ func (c credentialFileExposure) Run(ctx context.Context, env *scan.Env) scan.Res
 		}
 		acl, _ := env.Files.ReadACL(cand.path)
 		hit.ACL = &acl
-		violated, desc := cand.rule.kind.violated(env, hit.Mode, hit.GID)
-		_, _, hit.GroupName, hit.GroupMembers = effectiveReaders(env, hit.Mode, hit.GID)
+		violated, desc := cand.rule.kind.violated(env, hit.Mode, hit.UID, hit.GID)
+		_, _, hit.GroupName, hit.GroupMembers = effectiveReaders(env, hit.Mode, hit.UID, hit.GID)
 		hit.EffectiveReaders, hit.Adverse = desc, violated
 		if acl.Determined && acl.GrantsNonOwner && cand.rule.kind == kindNotReadableByOthers {
 			hit.Adverse = true
@@ -563,6 +677,11 @@ func (c credentialFileExposure) Run(ctx context.Context, env *scan.Env) scan.Res
 		}
 		if !acl.Determined && acl.Errno != "" && acl.Errno != "ENODATA" {
 			undetermined = true
+		}
+		if readers := env.Readers(hit.Mode, hit.UID, hit.GID); !readers.Determined {
+			undetermined = true
+			hit.Adverse = false
+			hit.EffectiveReaders = readers.Description
 		}
 		if hit.Adverse {
 			exposed = append(exposed, cand.path+" is "+desc+", against its own rule ("+cand.rule.rule()+") — "+cand.rule.source)
@@ -785,20 +904,19 @@ func (c provisioningDataProtection) Run(ctx context.Context, env *scan.Env) scan
 			// An artifact we were refused, behind an ancestor no unprivileged
 			// account can traverse, is protected - which is the question this
 			// check asks. /root at 0700 is the ordinary case on every host.
-			prot := protectionFromDenial(env, path)
+			prot, ancestors := protectionFromDenial(env, path)
 			if prot.Protected {
 				row.EffectiveReaders = "the owner only (" + prot.Basis + ")"
 				row.Note = "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
 				protectedCount++
-				// The denial IS the answer to "is this readable beyond root",
-				// so it does not leave the verdict unsupported.
-				st.OptOut = "the denial itself answers the exposure question: " + prot.Basis
-				r.Observations[len(r.Observations)-1] = st
 			} else {
 				undetermined = true
-				denied = append(denied, path+" ("+st.Reason()+")")
-				row.EffectiveReaders = "unknown"
+				denied = append(denied, path+" ("+prot.Basis+")")
+				row.EffectiveReaders = "undetermined"
 			}
+			// The stat was already recorded; replace it with the judged copy.
+			r.Observations = r.Observations[:len(r.Observations)-1]
+			recordProtection(&r, st, prot, ancestors)
 			rows = append(rows, row)
 			return len(rows) - 1
 		}
@@ -807,8 +925,13 @@ func (c provisioningDataProtection) Run(ctx context.Context, env *scan.Env) scan
 			row.FileType = st.Meta.FileType
 			row.Mode, row.UID, row.GID, row.Size = st.Meta.Mode, st.Meta.UID, st.Meta.GID, st.Meta.Size
 		}
-		desc, reachable, _, _ := effectiveReaders(env, row.Mode, row.GID)
+		desc, reachable, _, _ := effectiveReaders(env, row.Mode, row.UID, row.GID)
 		row.EffectiveReaders = desc
+		if readers := env.Readers(row.Mode, row.UID, row.GID); !readers.Determined {
+			undetermined = true
+			reachable = false
+			denied = append(denied, path+" ("+readers.Description+")")
+		}
 
 		switch {
 		case class == classPublic:
@@ -868,7 +991,7 @@ func (c provisioningDataProtection) Run(ctx context.Context, env *scan.Env) scan
 				rows[idx].Class = classPayload
 				rows[idx].InjectionKeys = found
 				rows[idx].Note = "declares credential-bearing key names, so it is treated as payload rather than public configuration"
-				if _, reachable, _, _ := effectiveReaders(env, rows[idx].Mode, rows[idx].GID); reachable {
+				if _, reachable, _, _ := effectiveReaders(env, rows[idx].Mode, rows[idx].UID, rows[idx].GID); reachable {
 					rows[idx].Adverse = true
 					exposed = append(exposed, p+" is readable by "+rows[idx].EffectiveReaders+" and declares "+strings.Join(found, ", "))
 				}
@@ -997,15 +1120,19 @@ func (c systemSecretStoreProtection) Run(ctx context.Context, env *scan.Env) sca
 		hit := secretHit{Path: path, Rule: expect, RuleSource: "distribution-shipped permission class"}
 		if st.Status != probe.StatusOK {
 			hit.Errno = st.Reason()
-			prot := protectionFromDenial(env, path)
+			prot, ancestors := protectionFromDenial(env, path)
 			hit.Protection = &prot
 			if prot.Protected {
 				hit.EffectiveReaders = "the owner only (" + prot.Basis + ")"
 				protectedCount++
 			} else {
-				hit.EffectiveReaders = "unknown (" + st.Reason() + ")"
-				boundaries = append(boundaries, path+" ("+st.Reason()+")")
+				hit.EffectiveReaders = "undetermined (" + prot.Basis + ")"
+				boundaries = append(boundaries, path+" ("+prot.Basis+")")
 			}
+			// The stat was recorded above; replace it with the judged copy so a
+			// denial that answered the question does not also downgrade it.
+			r.Observations = r.Observations[:len(r.Observations)-1]
+			recordProtection(&r, st, prot, ancestors)
 			hits = append(hits, hit)
 			return
 		}
@@ -1017,10 +1144,11 @@ func (c systemSecretStoreProtection) Run(ctx context.Context, env *scan.Env) sca
 		hit.ACL = &acl
 		r.Add(aclObs)
 
-		readers := env.Readers(hit.Mode, hit.GID)
+		readers := env.Readers(hit.Mode, hit.UID, hit.GID)
 		hit.EffectiveReaders, hit.GroupName = readers.Description, readers.GroupName
 		hit.GroupMembers = int64(len(readers.GroupMember))
-		hit.Adverse = readers.BeyondOwner
+		// An undetermined reader set is an open question, not an exposure.
+		hit.Adverse = readers.Determined && readers.BeyondOwner
 		if hit.Mode != nil && *hit.Mode&0o002 != 0 {
 			hit.Adverse = true
 			hit.EffectiveReaders += "; other-writable"
@@ -1030,7 +1158,7 @@ func (c systemSecretStoreProtection) Run(ctx context.Context, env *scan.Env) sca
 			hit.EffectiveReaders += "; an ACL grants a non-owner principal read"
 		}
 		if !readers.Determined {
-			boundaries = append(boundaries, path+" ("+readers.Reason+")")
+			boundaries = append(boundaries, path+" ("+readers.Description+")")
 		}
 		if !acl.Determined && acl.Errno != "" && acl.Errno != "ENODATA" {
 			boundaries = append(boundaries, path+" ACL ("+acl.Errno+")")
@@ -1059,7 +1187,7 @@ func (c systemSecretStoreProtection) Run(ctx context.Context, env *scan.Env) sca
 		if st.Meta != nil {
 			dirHit.Mode, dirHit.UID, dirHit.GID = st.Meta.Mode, st.Meta.UID, st.Meta.GID
 		}
-		if st.Meta != nil && st.Meta.Mode != nil && *st.Meta.Mode&0o002 != 0 {
+		if st.Status == probe.StatusOK && st.Meta != nil && st.Meta.Mode != nil && *st.Meta.Mode&0o002 != 0 {
 			dirHit.Adverse = true
 			dirHit.EffectiveReaders = "any local user can create or replace files in it (other-writable)"
 			exposed = append(exposed, store.path+" is other-writable")
@@ -1073,12 +1201,14 @@ func (c systemSecretStoreProtection) Run(ctx context.Context, env *scan.Env) sca
 		dirObs.AbsenceProven = dirObs.Status == probe.StatusENOENT
 		r.Add(dirObs)
 		if dirObs.Status != probe.StatusOK {
-			prot := protectionFromDenial(env, store.path+"/x")
+			prot, ancestors := protectionFromDenial(env, store.path+"/x")
 			if prot.Protected {
 				protectedCount++
 			} else {
-				boundaries = append(boundaries, store.path+" listing ("+dirObs.Reason()+")")
+				boundaries = append(boundaries, store.path+" listing ("+prot.Basis+")")
 			}
+			r.Observations = r.Observations[:len(r.Observations)-1]
+			recordProtection(&r, dirObs, prot, ancestors)
 			continue
 		}
 		for _, n := range names {

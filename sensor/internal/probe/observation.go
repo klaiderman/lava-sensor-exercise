@@ -75,6 +75,11 @@ type Observation struct {
 	Bytes int64
 	// Elapsed is how long the observation took.
 	Elapsed time.Duration
+	// Refused marks an observation this sensor DECIDED not to make: network
+	// storage it will not touch, a walk root it will not follow. It is not an
+	// error the host returned, and reporting it as one (ENOTSUP, or a budget
+	// that was never exhausted) misnames whose decision it was.
+	Refused bool
 	// AbsenceProven marks an ENOENT that IS the answer rather than a gap in
 	// it: a stat that resolved the path and found nothing there. Without this
 	// distinction "the file is not present" and "we could not look" collapse
@@ -195,6 +200,9 @@ func Classify(err error) (ObsStatus, string) {
 // R3/EVIDENCE_MODEL.md §7. The symbolic errno wins over the coarse status so
 // that EPERM, EINVAL and ENODEV survive into the finding.
 func (o Observation) Reason() string {
+	if o.Refused {
+		return "NOT_ATTEMPTED"
+	}
 	switch o.Status {
 	case StatusOK:
 		return ""

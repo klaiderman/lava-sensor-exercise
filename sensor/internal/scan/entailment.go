@@ -34,12 +34,24 @@ type Completeness struct {
 	LoadBearingTotal  int64    `json:"load_bearing_total"`
 	LoadBearingOK     int64    `json:"load_bearing_ok"`
 	NotOK             []string `json:"not_ok"`
+	// ExcusedEnumerationDenials names searches that were refused and then
+	// opted out of the verdict. They are listed separately because a check can
+	// excuse an observation but cannot excuse a hole in its own search.
+	ExcusedEnumerationDenials []string `json:"excused_enumeration_denials,omitempty"`
 	// AbsenceProvable is true only when every load-bearing observation
-	// succeeded in full. It is the precondition for any sentence that says
-	// something was not found.
+	// succeeded in full AND no enumeration was refused. It is the precondition
+	// for any sentence that says something was not found.
 	AbsenceProvable bool   `json:"absence_provable"`
 	Statement       string `json:"statement"`
 }
+
+// ProtectionOptOut is the prefix of the one opt-out that an absence claim may
+// rest on: a directory this account could not enter, which nobody beyond its
+// owner can enter either. That is an ANSWER to "who can reach what is inside",
+// not a gap in the search for it, and it is generated centrally rather than
+// written by a check. Every other excuse for a refused search leaves the
+// absence unprovable.
+const ProtectionOptOut = "protection (ancestor "
 
 // absenceProse matches any sentence that asserts an enumeration finished or
 // that something is not there.
@@ -49,7 +61,10 @@ type Completeness struct {
 // material was found anywhere on this machine" matched nothing and shipped as a
 // pass. Completeness and absence sentences are now GENERATED, and any
 // check-authored detail that makes one is rejected on sight.
-var absenceProse = regexp.MustCompile(`(?i)\b(enumerat\w*|proven|provably|absent|none found|nothing (?:was )?found|no [a-z ]{0,30}(?:found|exists|present)|every [a-z ]{0,30}(?:completed|succeeded)|all [a-z ]{0,30}completed)\b`)
+var absenceProse = regexp.MustCompile(`(?i)\b(enumerat\w*|proven|provably|absent|none found|nothing (?:was )?found|` +
+	`no [a-z ]{0,30}(?:found|exists|present)|did not find|not found|` +
+	`0 candidates?|zero candidates?|no candidates?|every [a-z ]{0,30}(?:covered|walked|searched|scanned|checked|completed|succeeded)|` +
+	`all [a-z ]{0,30}(?:covered|completed))\b`)
 
 // completenessClaims are the original fixed phrases, kept so the regexp has a
 // readable specification next to it and so AuditEntailment can name what it saw.
@@ -125,6 +140,10 @@ func completenessOf(obs []probe.Observation) Completeness {
 		if clean(o) {
 			c.ObservationsOK++
 		}
+		if excusedEnumerationDenial(o) {
+			c.ExcusedEnumerationDenials = append(c.ExcusedEnumerationDenials,
+				o.Source+" ("+notOKLabel(o)+", excused: "+o.OptOut+")")
+		}
 		if bearing(o) {
 			c.LoadBearingTotal++
 			if clean(o) {
@@ -135,9 +154,27 @@ func completenessOf(obs []probe.Observation) Completeness {
 		}
 	}
 	sort.Strings(c.NotOK)
-	c.AbsenceProvable = c.LoadBearingTotal > 0 && c.LoadBearingOK == c.LoadBearingTotal
+	sort.Strings(c.ExcusedEnumerationDenials)
+	c.AbsenceProvable = c.LoadBearingTotal > 0 && c.LoadBearingOK == c.LoadBearingTotal &&
+		len(c.ExcusedEnumerationDenials) == 0
 	c.Statement = completenessStatement(c)
 	return c
+}
+
+// excusedEnumerationDenial reports a search that did not complete and was then
+// opted out of the verdict by the check that ran it. Opting an observation out
+// is legitimate - it is how a check says "this is context, not the answer" -
+// but a directory listing or walk that was REFUSED is not context: it is the
+// part of the machine the check did not see, and no wording can make an
+// absence provable across it.
+func excusedEnumerationDenial(o probe.Observation) bool {
+	if o.OptOut == "" || clean(o) || o.AbsenceProven {
+		return false
+	}
+	if o.Kind != probe.KindDirWalk {
+		return false
+	}
+	return !strings.HasPrefix(o.OptOut, ProtectionOptOut)
 }
 
 func notOKLabel(o probe.Observation) string {
@@ -157,6 +194,10 @@ func completenessStatement(c Completeness) string {
 	case c.LoadBearingTotal == 0:
 		return fmt.Sprintf("%d of %d observations succeeded; no observation was marked load-bearing, so nothing here proves an absence",
 			c.ObservationsOK, c.ObservationsTotal)
+	case len(c.ExcusedEnumerationDenials) > 0:
+		return fmt.Sprintf("%d of %d load-bearing observations succeeded, but %d search(es) were refused and then excused: %s — an absence is not provable across a search that did not run",
+			c.LoadBearingOK, c.LoadBearingTotal, len(c.ExcusedEnumerationDenials),
+			strings.Join(c.ExcusedEnumerationDenials, ", "))
 	case c.AbsenceProvable:
 		return fmt.Sprintf("%d of %d load-bearing observations succeeded, so an absence found by them is evidence",
 			c.LoadBearingOK, c.LoadBearingTotal)

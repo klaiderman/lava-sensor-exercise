@@ -1,0 +1,6 @@
+ok  	lava-sensor-exercise/sensor/cmd/sensor	1.842s
+ok  	lava-sensor-exercise/sensor/internal/checks	33.411s
+ok  	lava-sensor-exercise/sensor/internal/lab	3.968s
+ok  	lava-sensor-exercise/sensor/internal/probe	1.351s
+ok  	lava-sensor-exercise/sensor/internal/scan	1.342s
+test rc=0

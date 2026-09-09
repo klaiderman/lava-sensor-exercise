@@ -1,0 +1,5 @@
+sensor 0.1.0-dev: 26 checks in 1924ms — 5 pass, 3 fail, 18 unknown — wrote /tmp/review2/findings.wsl.json
+
+real	0m1.928s
+user	0m0.165s
+sys	0m0.360s
