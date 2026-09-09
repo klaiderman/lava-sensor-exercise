@@ -1,0 +1,138 @@
+{
+ "index": [
+  [
+   "2026-09-09T00:05:06.780Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F3,LIT",
+   "queue-operation",
+   "-",
+   "{\"type\":\"queue-operation\",\"operation\":\"enqueue\",\"timestamp\":\"2026-09-09T00:05:06.780Z\",\"sessionId\":\"b64b46f1-8baf-4e2c-9e1a-4730b6251260\",\"content\":\"/btw Also recover the earlier /btw trail now.\\n\\nRead-only:\\n- inspect BOTH native session JSONL files\\n- find every user turn that was sent through /btw\\n- search both literal \\\"/btw\\\" and recognizable message content in case the command\\n  stores on",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:05:52.199Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F3,LIT",
+   "queue-operation",
+   "-",
+   "{\"type\":\"queue-operation\",\"operation\":\"remove\",\"timestamp\":\"2026-09-09T00:05:52.199Z\",\"sessionId\":\"b64b46f1-8baf-4e2c-9e1a-4730b6251260\",\"content\":\"/btw Also recover the earlier /btw trail now.\\n\\nRead-only:\\n- inspect BOTH native session JSONL files\\n- find every user turn that was sent through /btw\\n- search both literal \\\"/btw\\\" and recognizable message content in case the command\\n  stores onl",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:05:06.780Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F3,LIT",
+   "attachment",
+   "-",
+   "{\"parentUuid\":\"302db14e-56be-4407-9a08-3b68c9f3e23d\",\"isSidechain\":false,\"attachment\":{\"type\":\"queued_command\",\"prompt\":\"/btw Also recover the earlier /btw trail now.\\n\\nRead-only:\\n- inspect BOTH native session JSONL files\\n- find every user turn that was sent through /btw\\n- search both literal \\\"/btw\\\" and recognizable message content in case the command\\n  stores only its expanded text\\n- do n",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:06:21.712Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "LIT",
+   "assistant",
+   "-",
+   "{\"parentUuid\":\"1deec451-a922-4dfc-8194-f601084b9980\",\"isSidechain\":false,\"message\":{\"model\":\"claude-fable-5-1\",\"id\":\"msg_011CertXyqwX6rkjb8v37EMK\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"I'll proceed with the /btw recovery as a read-only pass without pausing the main work: first finalizing the remaining implementation-intent placeholders (the 26 checks, SSH_RO",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:06:54.963Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "LIT",
+   "assistant",
+   "-",
+   "{\"parentUuid\":\"7f6a1e74-c2cf-4f7a-aeb0-1f0a5dd84b56\",\"isSidechain\":false,\"message\":{\"model\":\"claude-fable-5-1\",\"id\":\"msg_011CertXyqwX6rkjb8v37EMK\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_01JgD3ZhrPp3xmoFXtgFPJvy\",\"name\":\"Bash\",\"input\":{\"command\":\"PYTHONIOENCODING=utf-8 python - <<'EOF'\\nimport json, re, glob, os, datetime\\nbase = os.path.expanduser(\\\"~/.claude",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:07:43.785Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F1,F2,F3,F4,LIT",
+   "queue-operation",
+   "-",
+   "{\"type\":\"queue-operation\",\"operation\":\"enqueue\",\"timestamp\":\"2026-09-09T00:07:43.785Z\",\"sessionId\":\"b64b46f1-8baf-4e2c-9e1a-4730b6251260\",\"content\":\"Run the /btw recovery pass now from the main context.\\n\\nRead-only only.\\n\\nInspect BOTH native Claude session files:\\n- ~/.claude/projects/C--lava-sensor-exercise/573ece1e-5ae9-41c9-9d84-e625d280bc3a.jsonl\\n- ~/.claude/projects/C--lava-sensor-exercis",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:07:19.974Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "LIT",
+   "assistant",
+   "-",
+   "{\"parentUuid\":\"a47ed06f-b705-43b5-a6bb-72232d551902\",\"isSidechain\":false,\"message\":{\"model\":\"claude-fable-5-1\",\"id\":\"msg_011Certd99vVvgDQ6i6AdPfz\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"I'll refine the /btw scan to flag entries where only a relay survives with MISSING_NATIVE marks, kick off the Wixie lifecycle for the completed implementation intent, and log ",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:07:38.607Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "LIT",
+   "assistant",
+   "-",
+   "{\"parentUuid\":\"1fe36c98-b8fd-4d45-94a8-88df6c8ecb9c\",\"isSidechain\":false,\"message\":{\"model\":\"claude-fable-5-1\",\"id\":\"msg_011Certd99vVvgDQ6i6AdPfz\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_01MadgsXXotybCYbammgR4mU\",\"name\":\"Bash\",\"input\":{\"command\":\"PYTHONIOENCODING=utf-8 python - <<'EOF'\\nimport json, re, os\\nbase = os.path.expanduser(\\\"~/.claude/projects/C--lav",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:08:07.814Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F1,F2,F3,F4,LIT",
+   "queue-operation",
+   "-",
+   "{\"type\":\"queue-operation\",\"operation\":\"remove\",\"timestamp\":\"2026-09-09T00:08:07.814Z\",\"sessionId\":\"b64b46f1-8baf-4e2c-9e1a-4730b6251260\",\"content\":\"Run the /btw recovery pass now from the main context.\\n\\nRead-only only.\\n\\nInspect BOTH native Claude session files:\\n- ~/.claude/projects/C--lava-sensor-exercise/573ece1e-5ae9-41c9-9d84-e625d280bc3a.jsonl\\n- ~/.claude/projects/C--lava-sensor-exercise",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:07:43.784Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F1,F2,F3,F4,LIT",
+   "attachment",
+   "-",
+   "{\"parentUuid\":\"e9802fdb-5479-4c00-9bd6-934ea9a2cc89\",\"isSidechain\":false,\"attachment\":{\"type\":\"queued_command\",\"prompt\":\"Run the /btw recovery pass now from the main context.\\n\\nRead-only only.\\n\\nInspect BOTH native Claude session files:\\n- ~/.claude/projects/C--lava-sensor-exercise/573ece1e-5ae9-41c9-9d84-e625d280bc3a.jsonl\\n- ~/.claude/projects/C--lava-sensor-exercise/b64b46f1-8baf-4e2c-9e1a-47",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:08:37.869Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "LIT",
+   "assistant",
+   "-",
+   "{\"parentUuid\":\"6a1de6ca-478a-46aa-b1aa-07672d830c36\",\"isSidechain\":false,\"message\":{\"model\":\"claude-fable-5-1\",\"id\":\"msg_011Certhx16NwdbHuyaKrPm9\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"No literal `/btw` or harness-marker matches turned up, so I'll dig deeper: grep both native files for the fragments, render user turns to a temp directory to see which fragmen",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:08:39.980Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F1,F2,F3,F4,LIT",
+   "assistant",
+   "-",
+   "{\"parentUuid\":\"d6a7b2e3-b1a8-4b7a-ac00-e1521581b2d9\",\"isSidechain\":false,\"message\":{\"model\":\"claude-fable-5-1\",\"id\":\"msg_011Certhx16NwdbHuyaKrPm9\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_01TbPFkVqQ6kBMWcethmwEUT\",\"name\":\"Bash\",\"input\":{\"command\":\"B=\\\"$HOME/.claude/projects/C--lava-sensor-exercise\\\"; F1=\\\"$B/573ece1e-5ae9-41c9-9d84-e625d280bc3a.jsonl\\\"; F2=\\\"$B",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:08:43.339Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F1,F2,F3,F4,LIT",
+   "user",
+   "tool_result record (+text)",
+   "{\"parentUuid\":\"3204efc2-7ef9-469d-96b0-55d19a81cc2e\",\"isSidechain\":false,\"promptId\":\"8b6088f6-75fb-449e-87d8-d0ff8512a681\",\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":[{\"tool_use_id\":\"toolu_01TbPFkVqQ6kBMWcethmwEUT\",\"type\":\"tool_result\",\"content\":\"2400751 /c/Users/KLDRM/.claude/projects/C--lava-sensor-exercise/573ece1e-5ae9-41c9-9d84-e625d280bc3a.jsonl\\n4465342 /c/Users/KLDRM/.claude/projects",
+   "no (embedded in a non-user-turn record)"
+  ],
+  [
+   "2026-09-09T00:08:56.635Z",
+   "b64b46f1-8baf-4e2c-9e1a-4730b6251260",
+   "F1,F2,F3,F4,LIT",
+   "assistant",
+   "-",
+   "{\"parentUuid\":\"973c8cb3-50e8-43bf-80a2-3e4afe17911e\",\"isSidechain\":false,\"message\":{\"model\":\"claude-fable-5-1\",\"id\":\"msg_011Certhx16NwdbHuyaKrPm9\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_017PQFBY5QzhxzgdyYhdPMNd\",\"name\":\"Bash\",\"input\":{\"command\":\"PYTHONIOENCODING=utf-8 python - <<'EOF'\\nimport json, re, os, datetime\\nbase = os.path.expanduser(\\\"~/.claude/proje",
+   "no (embedded in a non-user-turn record)"
+  ]
+ ],
+ "missing_native": [],
+ "frags": {
+  "F1": "the external research auditor says the run is healthy",
+  "F2": "External audit says the architecture pipeline is healthy",
+  "F3": "recover the earlier /btw trail now",
+  "F4": "Run the /btw recovery pass now",
+  "LIT": "/btw"
+ }
+}

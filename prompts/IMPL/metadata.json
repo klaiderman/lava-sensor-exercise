@@ -1,0 +1,48 @@
+{
+  "track": "IMPL",
+  "role": "implementation-author",
+  "target_model": "claude-opus-5",
+  "task_domain": "coding",
+  "format": "xml",
+  "wixie_commit": "cb90bc4f7eb04e6479f13cec4f0cb2c46a8dafb9",
+  "mode": "create",
+  "techniques": ["direction-lock-verbatim-invariants", "xml-structured-sections", "role-assignment", "think-thoroughly-on-load-bearing-primitives", "ordered-work-plan", "structured-output-contract"],
+  "techniques_avoided": ["chain-of-thought-step-by-step (Claude 4.x/5.x anti-pattern)", "aggressive-MUST/NEVER language (overtriggers on Claude 4.6+)", "few-shot-code-examples (would bias implementation toward a specific shape rather than the spec)"],
+  "tokens": {
+    "estimated": 3900,
+    "context_window": 1000000,
+    "usage_percent": 0.4
+  },
+  "scores": {
+    "clarity": 8.18,
+    "completeness": 7.5,
+    "efficiency": 8.5,
+    "model_fit": 9.0,
+    "failure_resilience": 10.0,
+    "overall": 8.64
+  },
+  "sigma": 0.838,
+  "sigma_floor": 0.75,
+  "sat": {
+    "has_role": true,
+    "has_task": true,
+    "has_format": true,
+    "has_constraints": true,
+    "has_edge_cases": true,
+    "no_hedges": true,
+    "no_filler": true,
+    "has_structure": true
+  },
+  "status": "needs_improvement",
+  "verdict": "HOLD",
+  "version": 2,
+  "config": {
+    "temperature": 1.0,
+    "max_tokens": 4000,
+    "stop_sequences": [],
+    "system_prompt": false
+  },
+  "research_claims": null,
+  "research_freshness": null,
+  "triangulation_score": null
+}

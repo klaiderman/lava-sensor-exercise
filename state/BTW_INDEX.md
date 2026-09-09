@@ -1,0 +1,26 @@
+# BTW_INDEX — mid-turn (/btw) user messages recovered from the native session files (read-only; 2026-09-09 00:10Z)
+
+Native files inspected (unmodified): `~/.claude/projects/C--lava-sensor-exercise/573ece1e-5ae9-41c9-9d84-e625d280bc3a.jsonl` and `.../b64b46f1-8baf-4e2c-9e1a-4730b6251260.jsonl` (the session forked at 22:30Z; both are required for a complete export).
+
+How /btw is stored: NOT as a `user` message turn. Each mid-turn message is persisted as an `attachment` record `{type: queued_command, prompt: <full text>}`, mirrored by `queue-operation` enqueue/remove records, and surfaced to the model inside the next `tool_result` as the text "The user sent a new message while you were working: …". A transcript export that renders user/assistant messages will therefore NOT show them as user turns; if the export includes tool results, the relayed text appears inside a tool-result block. The raw JSONL files preserve them fully.
+
+Note: 22 `queued_command` attachments exist across both files; 20 are harness-queued task notifications (not user messages) and are excluded below. The 2 remaining are the genuine mid-turn user messages.
+
+| timestamp (UTC) | session id | exact preserved text (full, key/IP-redacted) | native-visible | export-visible as a user turn | fragments |
+|---|---|---|---|---|---|
+| 2026-09-09T00:05:06.780Z | b64b46f1-8baf-4e2c-9e1a-4730b6251260 | /btw Also recover the earlier /btw trail now.<br><br>Read-only:<br>- inspect BOTH native session JSONL files<br>- find every user turn that was sent through /btw<br>- search both literal "/btw" and recognizable message content in case the command<br>  stores only its expanded text<br>- do not modify the native files<br>- do not print credentials<br><br>Create a small internal index with:<br>timestamp / session id / exact preserved text / native/export-visible yes/no<br><br>If an earlier /btw cannot be found natively, mark it MISSING_NATIVE rather than<br>reconstructing it silently.<br><br>Do not interrupt the current implementation flow beyond this quick recovery. | yes (attachment.queued_command + queue-operation + tool_result relay) | no (not a user turn; only inside tool-result text if the export includes tool results) | F3,literal /btw |
+| 2026-09-09T00:07:43.784Z | b64b46f1-8baf-4e2c-9e1a-4730b6251260 | Run the /btw recovery pass now from the main context.<br><br>Read-only only.<br><br>Inspect BOTH native Claude session files:<br>- ~/.claude/projects/C--lava-sensor-exercise/573ece1e-5ae9-41c9-9d84-e625d280bc3a.jsonl<br>- ~/.claude/projects/C--lava-sensor-exercise/b64b46f1-8baf-4e2c-9e1a-4730b6251260.jsonl<br><br>Find every earlier user turn sent through /btw.<br><br>Search both:<br>- literal "/btw"<br>- distinctive fragments from the known messages, in case Claude stores only expanded content<br><br>Known fragments include:<br>- "the external research auditor says the run is healthy"<br>- "External audit says the architecture pipeline is healthy"<br>- "recover the earlier /btw trail now"<br><br>Do not modify the native files.<br>Do not print any credential.<br><br>Create an internal index:<br>timestamp / session id / exact preserved text / native-visible / export-visible<br><br>Then make a safe temporary export outside the repo and verify whether those same<br>messages survive the normal export as user turns.<br><br>If a /btw message cannot be found natively, mark it MISSING_NATIVE.<br>Do not silently reconstruct it.<br><br>Tell me:<br>- total /btw messages found<br>- which session each belongs to<br>- whether full text survives<br>- whether Lava will see them in the normal export<br>- whether both session exports are required<br><br>Then continue the current implementation flow normally. | yes (attachment.queued_command + queue-operation + tool_result relay) | no (not a user turn; only inside tool-result text if the export includes tool results) | F1,F2,F3,F4,literal /btw |
+
+## Fragments that could not be found as standalone messages (MISSING_NATIVE)
+
+- **F1** "the external research auditor says the run is healthy" — occurs ONLY quoted inside the 00:07:43Z recovery request; no standalone queued_command/user record contains it in either file → **MISSING_NATIVE** (not reconstructed).
+- **F2** "External audit says the architecture pipeline is healthy" — occurs ONLY quoted inside the 00:07:43Z recovery request; no standalone queued_command/user record contains it in either file → **MISSING_NATIVE** (not reconstructed).
+
+## Other mid-turn or out-of-band messages known to the lead
+
+- Policy notes that reached the R2 prompt-engineer sub-agent (~22:17–22:18Z): original text not in either main-session file; only the sub-agent's relayed summary survives inside two task-notification tool results → MISSING_NATIVE (original wording).
+- Path-resolution audit (21:34Z) and the R5-approval instruction (22:31Z) were NORMAL user turns (visible as USER in an export).
+
+## Export check
+
+Temporary export preview (outside the repo): `C:\Users\KLDRM\AppData\Local\Temp\lava-export-check\user_turns_export_preview.txt` — 38 plain user turns rendered from both files; fragment survival as USER turns: {'F1': False, 'F2': False, 'F3': False, 'F4': False, 'literal /btw': False}.

@@ -9,6 +9,15 @@ Produced by `tooling/measure_usage.py`, a stdlib-only script that walks the main
 python tooling/measure_usage.py
 ```
 
+## AUTHORITATIVE cost snapshots (Claude Code Usage panel, reported by the user)
+
+| snapshot time (UTC) | source | value | covers | status |
+|---|---|---|---|---|
+| 2026-09-09T00:21:05Z | Claude Code Usage panel (user-reported) | **$263.46** | Claude Code usage for this exercise as displayed by the panel at that moment: main session 573ece1e… (21:00–22:30Z), its fork b64b46f1… (22:30Z→), and all sub-agents they spawned (bootstrap ×2, TCI builder, indexers, 6 Wixie lifecycles, 5 research workers, synthesizer, Grill-Me, Ponytail, check-registry drafter, usage measurer, Lich fixer, IMPL lifecycle in progress). Scope is as the panel defines it; the lead cannot independently verify its session boundary. | mid-run snapshot — REFRESH ONCE AT THE END for the final total |
+| (end of exercise) | Claude Code Usage panel | (pending) | same | to be filled at packaging time |
+
+Precedence: the Claude Code Usage panel figure is the authoritative aggregate cost. Pech (`session_init/observe/finalize`) and `tooling/measure_usage.py` (transcript `message.usage` sums) are SECONDARY token evidence only: they establish per-agent token attribution and served-model identity, not the billed total (their cost column stays null because Pech's rate card lacks the Claude 5 model ids).
+
 ## Method
 
 1. **Schema sampled, not printed**: transcript entries were parsed with `json.loads` and only key names / numeric `usage` fields / the `model` string were inspected — no message text or tool content was read into this report or into the measuring process's context.

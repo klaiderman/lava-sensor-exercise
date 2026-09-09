@@ -1,0 +1,132 @@
+{
+  "sessions": [
+    {
+      "timestamp": "2026-09-09T03:14:39.975131",
+      "iterations": 3,
+      "start_score": 8.1,
+      "end_score": 8.6,
+      "improved": true,
+      "delta": 0.5,
+      "entries": [
+        {
+          "iteration": 1,
+          "axis": "Completeness",
+          "hypothesis": "Fixing Completeness (currently 7.5/10) will improve overall from 8.1",
+          "reasoning": "Targeted Completeness (7.5/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "improved (8.1 \u2192 8.6)",
+          "delta": 0.5,
+          "start_score": 8.1,
+          "end_score": 8.6,
+          "axis_changes": {
+            "Clarity": -0.1,
+            "Failure Resilience": 2.5
+          },
+          "assertions_fixed": []
+        },
+        {
+          "iteration": 2,
+          "axis": "Completeness",
+          "hypothesis": "Fixing Completeness (currently 7.5/10) will improve overall from 8.6",
+          "reasoning": "Targeted Completeness (7.5/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (8.6 \u2192 8.6)",
+          "delta": 0.0,
+          "start_score": 8.6,
+          "end_score": 8.6,
+          "axis_changes": {},
+          "assertions_fixed": []
+        },
+        {
+          "iteration": 3,
+          "axis": "Completeness",
+          "hypothesis": "Fixing Completeness (currently 7.5/10) will improve overall from 8.6",
+          "reasoning": "Targeted Completeness (7.5/10) because it was the lowest axis.",
+          "result": "applied",
+          "outcome": "unchanged (8.6 \u2192 8.6)",
+          "delta": 0.0,
+          "start_score": 8.6,
+          "end_score": 8.6,
+          "axis_changes": {},
+          "assertions_fixed": []
+        }
+      ]
+    }
+  ],
+  "strategy_stats": {
+    "Completeness": {
+      "applied": 3,
+      "reverted": 0,
+      "total_delta": 0.5,
+      "best_delta": 0.5,
+      "worst_delta": 0.0,
+      "last_result": "applied",
+      "consecutive_failures": 0
+    }
+  },
+  "patterns": [
+    {
+      "type": "reliable",
+      "axis": "Completeness",
+      "confidence": "high",
+      "message": "Completeness: 3/3 succeeded, avg +0.2. Always try this first."
+    }
+  ],
+  "fix_history": [
+    {
+      "timestamp": "2026-09-09T03:14:39",
+      "axis": "Completeness",
+      "hypothesis": "Fixing Completeness (currently 7.5/10) will improve overall from 8.1",
+      "reasoning": "Targeted Completeness (7.5/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.5,
+      "score_before": 8.1,
+      "score_after": 8.6,
+      "axis_changes": {
+        "Clarity": -0.1,
+        "Failure Resilience": 2.5
+      },
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T03:14:39",
+      "axis": "Completeness",
+      "hypothesis": "Fixing Completeness (currently 7.5/10) will improve overall from 8.6",
+      "reasoning": "Targeted Completeness (7.5/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 8.6,
+      "score_after": 8.6,
+      "axis_changes": {},
+      "assertions_fixed": []
+    },
+    {
+      "timestamp": "2026-09-09T03:14:39",
+      "axis": "Completeness",
+      "hypothesis": "Fixing Completeness (currently 7.5/10) will improve overall from 8.6",
+      "reasoning": "Targeted Completeness (7.5/10) because it was the lowest axis.",
+      "result": "applied",
+      "delta": 0.0,
+      "score_before": 8.6,
+      "score_after": 8.6,
+      "axis_changes": {},
+      "assertions_fixed": []
+    }
+  ],
+  "negative_examples": [],
+  "weakness_profile": {},
+  "recommendations": [
+    "ADD examples \u2014 prompts over 1500 words without examples score lower on Completeness and Model Fit."
+  ],
+  "prompt_fingerprint": {
+    "words": 2938,
+    "lines": 146,
+    "sections": 21,
+    "has_examples": false,
+    "has_xml": true,
+    "has_markdown": true
+  },
+  "confidence_scores": {
+    "Completeness": 1.0
+  }
+}

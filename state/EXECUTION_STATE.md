@@ -30,6 +30,10 @@ Phase 14: Grill-Me done → Ponytail pass 1 running → lead architecture decisi
 ## Blockers
 - None.
 
+## Packaging-time checklist additions (do not forget)
+- Ask the user for the FINAL Claude Code Usage panel figure and refresh the authoritative row in state/USAGE_REPORT.md (mid-run snapshot $263.46 at 00:21Z); Pech / measure_usage.py stay secondary token evidence.
+- Ship BOTH native session JSONL files (573ece1e… + fork b64b46f1…); NOTES must say mid-turn (/btw) messages live in attachment records, not user turns (state/BTW_INDEX.md).
+
 ## Next 3 actions
 1. Ponytail pass 1 result → LD-9 → DECISIONS.md final → CLAUDE.md architecture freeze → checkpoint 7
 2. CHECK_REGISTRY.md → fill IMPL.intent.md placeholders → Wixie lifecycle (Sonnet engineer) → AskUserQuestion approval

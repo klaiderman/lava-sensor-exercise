@@ -15,3 +15,5 @@
 {"event":"DECISION","ts":"2026-09-08T23:46:41Z","ids":["LD-1 custom categories STORAGE_POSTURE + BOOT_CHAIN","LD-2 severity rule","LD-3 no IPMI commands","LD-4 host_id keyed hash + owner unknown","LD-5 sshd -G primary","LD-6 zero runtime deps","LD-7 bounded primitives","LD-8 implementation model opus-5"],"file":"research/DECISIONS.md"}
 {"event":"PHASE","phase":"14-grill-me-architecture","ts":"2026-09-08T23:53:11Z","budget_min":20,"note":"challenger done (Opt2 > Opt4 > Opt1 > Opt3 fatal); Ponytail pass 1 running; check registry drafting"}
 {"event":"DECISION","ts":"2026-09-08T23:59:44Z","ids":["LD-9 architecture Option 1.5 (flat Fixed Registry + load-bearing downgrade + classify + Env; 3 packages)"],"file":"research/DECISIONS.md","note":"CLAUDE.md architecture frozen"}
+{"event":"PHASE_END","phase":"14-grill-me-architecture","ts":"2026-09-09T00:08:07Z","note":"LD-9 Option 1.5 frozen; CHECK_REGISTRY 25+1 checks; IMPL intent complete"}
+{"event":"PHASE","phase":"15-implementation-prompt","ts":"2026-09-09T00:08:07Z","budget_min":20}
