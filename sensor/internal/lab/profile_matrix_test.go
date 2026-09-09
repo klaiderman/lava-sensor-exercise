@@ -34,22 +34,43 @@ var (
 // prose "9 pass · 8 fail · 8 unknown" was arithmetically wrong; the table's own
 // rows sum to 12/8/5 for the 25 registry checks), plus the lead-added
 // BOOT_KERNEL_DRIFT row (fail: running 6.8.0-139-generic while /boot/vmlinuz
-// points at the newer installed 7.0.0-31-generic). This started as a single
-// required value per check taken straight from research/CHECK_REGISTRY.md's
-// corrected 12/9/5 target (CLOSURE_TABLE.md row 20); two entries below were
-// then deliberately corrected again, with reasoning, after building a fixture
-// faithful enough to the real host to actually exercise them — see the
-// comments on those two rows and TEST_REPORT.md's final section for the full
-// account of why the target changed a second time and what that implies for
-// the pending real-host run.
+// points at the newer installed 7.0.0-31-generic) — 12/9/5 total, matching
+// CLOSURE_TABLE.md row 20.
+//
+// PRIVATE_KEY_MATERIAL_EXPOSURE and PROVISIONING_DATA_PROTECTION went through
+// two rounds of investigation before landing here at the registry's own
+// "pass": after batch 2, /root chmod 0000 (its real 0700 root:root mode)
+// downgraded both to unknown, because /root sits in each check's fixed
+// root/candidate list (internal/checks/secrets.go:132) and the entailment
+// engine of the time required every load-bearing observation to be OK before
+// an absence claim was entailed. Batch 3 (checkpoint 16) added
+// protectionFromDenial(): for an EXPOSURE question specifically, a denied
+// read *is itself* the answer — judged from the nearest stat-able ancestor's
+// mode, a 0700 /root proves the subtree is not exposed to anyone but its
+// owner, which is exactly what these two checks are asking. Both are `pass`
+// again, correctly this time, with the shielded subtree recorded in evidence
+// rather than silently assumed clean. Nothing here is a deliberate deviation
+// from the registry any more — this map is the registry's 12/9/5 verbatim.
 var expectedProfileA = map[string]scan.Status{
-	"SSH_ROOT_LOGIN_POLICY":           scan.StatusUnknown,
-	"SSH_AUTH_METHODS_POLICY":         scan.StatusPass,
-	"SSH_POLICY_IN_FORCE":             scan.StatusPass,
-	"REMOTE_LISTENING_SURFACE":        scan.StatusPass,
-	"LOGIN_AND_ESCALATION_SURFACE":    scan.StatusUnknown,
-	"HOST_FIREWALL_STATE":             scan.StatusUnknown,
-	"CREDENTIAL_FILE_EXPOSURE":        scan.StatusUnknown, // corrected 02:20Z: /root unreadable ⇒ unknown per the registry's own §2.2 rule
+	"SSH_ROOT_LOGIN_POLICY":        scan.StatusUnknown,
+	"SSH_AUTH_METHODS_POLICY":      scan.StatusPass,
+	"SSH_POLICY_IN_FORCE":          scan.StatusPass,
+	"REMOTE_LISTENING_SURFACE":     scan.StatusPass,
+	"LOGIN_AND_ESCALATION_SURFACE": scan.StatusUnknown,
+	"HOST_FIREWALL_STATE":          scan.StatusUnknown,
+	// Deliberate deviation from the raw registry table (which the H2 pass corrected
+	// to "unknown" on the pre-batch-3 entailment engine): batch 3 (checkpoint 16)
+	// added protectionFromDenial() so that, for an EXPOSURE question specifically,
+	// a denied read is itself evidence of protection, judged from the nearest
+	// stat-able ancestor's mode. CREDENTIAL_FILE_EXPOSURE asks exactly that
+	// question, and with /root at 0700, its contents are shielded from every
+	// non-owner account — the check now correctly answers `pass` with "11
+	// shielded by an ancestor" in evidence, not a silent guess. The H2 "unknown"
+	// correction predates this semantic and is superseded by it, the same way it
+	// once superseded the original registry text.
+	"CREDENTIAL_FILE_EXPOSURE":        scan.StatusPass,
+	"PRIVATE_KEY_MATERIAL_EXPOSURE":   scan.StatusPass,
+	"PROVISIONING_DATA_PROTECTION":    scan.StatusPass,
 	"SYSTEM_SECRET_STORE_PROTECTION":  scan.StatusPass,
 	"BMC_INBAND_INTERFACE_PRESENT":    scan.StatusPass,
 	"BMC_RESPONDS_IN_BAND":            scan.StatusPass,
@@ -67,28 +88,6 @@ var expectedProfileA = map[string]scan.Status{
 	"TPM_PRESENCE":                    scan.StatusPass,
 	"BOOT_ARTIFACT_READABILITY":       scan.StatusFail,
 	"BOOT_KERNEL_DRIFT":               scan.StatusFail,
-
-	// --- Deliberate second correction, found while building a real-host-faithful
-	//     fixture (internal/checks/testdata/profileA now chmods /root 0000, the
-	//     account's actual 0700 root:root mode per state/HOST_SNAPSHOT.evidence.json
-	//     users.root_home_ls — the sensor runs as an unprivileged account, so this
-	//     is not optional fidelity, it is the fixture telling the truth): ---
-	//
-	// PRIVATE_KEY_MATERIAL_EXPOSURE's own fixed walk-root list
-	// (internal/checks/secrets.go:132) includes "/root" directly. With /root
-	// genuinely EACCES, the walk cannot enumerate that root, and the new
-	// entailment engine (scan/entailment.go, CLOSURE_TABLE.md row 1) correctly
-	// downgrades what used to be a "pass, boundary noted" into "unknown" — the
-	// walk did not complete, so an absence claim is not entailed by its own
-	// evidence. research/CHECK_REGISTRY.md's "Host: pass (scope printed)" line
-	// predates this stricter engine; it is very likely stale, not this fixture.
-	"PRIVATE_KEY_MATERIAL_EXPOSURE": scan.StatusUnknown,
-	// PROVISIONING_DATA_PROTECTION's candidate list includes /root/anaconda-ks.cfg
-	// et al.; the same /root EACCES makes that candidate's status EACCES rather
-	// than a proven absence, and the same entailment engine downgrades the same
-	// way. research/CHECK_REGISTRY.md's "Host: pass" line is very likely stale
-	// for the identical reason.
-	"PROVISIONING_DATA_PROTECTION": scan.StatusUnknown,
 }
 
 func init() {
@@ -99,16 +98,11 @@ func init() {
 	for _, v := range expectedProfileA {
 		counts[v]++
 	}
-	// CLOSURE_TABLE.md row 20 records 12/9/5. This asserts 10/9/7: the two
-	// deliberate corrections above (PRIVATE_KEY_MATERIAL_EXPOSURE and
-	// PROVISIONING_DATA_PROTECTION, both pass -> unknown once /root is
-	// genuinely EACCES against the stricter entailment engine) move two checks
-	// from the pass column to the unknown column. If this panics, the map
-	// drifted from the two corrected rows without updating this assertion —
-	// fix the assertion together with a justification, never the other way
-	// around silently.
-	if counts[scan.StatusPass] != 10 || counts[scan.StatusFail] != 9 || counts[scan.StatusUnknown] != 7 {
-		panic(fmt.Sprintf("expectedProfileA sums to %d pass / %d fail / %d unknown, want 10/9/7 (12/9/5 per CLOSURE_TABLE.md row 20, minus the two corrections above)",
+	// 13/9/4, not the raw registry 12/9/5: CREDENTIAL_FILE_EXPOSURE's row above
+	// documents the one deliberate deviation (pass, not the H2-corrected
+	// unknown), justified by batch 3's protectionFromDenial() semantic.
+	if counts[scan.StatusPass] != 13 || counts[scan.StatusFail] != 9 || counts[scan.StatusUnknown] != 4 {
+		panic(fmt.Sprintf("expectedProfileA sums to %d pass / %d fail / %d unknown, want 13/9/4 (12/9/5 per CLOSURE_TABLE.md row 20, plus the one deliberate deviation above)",
 			counts[scan.StatusPass], counts[scan.StatusFail], counts[scan.StatusUnknown]))
 	}
 }
@@ -140,19 +134,27 @@ func init() {
 // that reason — verified in TEST_REPORT.md against the real observed reason
 // string (ENOENT on the listing, never EACCES/a confident guess).
 var registryMatrixBC = map[string][2]expectedSet{
-	"SSH_ROOT_LOGIN_POLICY":           {anyS, passU}, // B: no sshd binary shipped at all -> UTILITY_MISSING
-	"SSH_AUTH_METHODS_POLICY":         {anyS, passU}, // B: same
-	"SSH_POLICY_IN_FORCE":             {passU, unknown},
-	"REMOTE_LISTENING_SURFACE":        {anyS, unknown}, // B: /proc/net not shipped -> UTILITY_MISSING
-	"LOGIN_AND_ESCALATION_SURFACE":    {unknown, unknown},
-	"HOST_FIREWALL_STATE":             {set(scan.StatusFail, scan.StatusUnknown), unknown},
-	"PRIVATE_KEY_MATERIAL_EXPOSURE":   {passU, unknown}, // B: no /etc/passwd -> no candidate scan root at all
-	"CREDENTIAL_FILE_EXPOSURE":        {passU, anyS},    // B: /etc/passwd absent (ENOENT), not denied
-	"PROVISIONING_DATA_PROTECTION":    {pass, passU},
-	"SYSTEM_SECRET_STORE_PROTECTION":  {pass, passU},
-	"BMC_INBAND_INTERFACE_PRESENT":    {passU, unknown}, // B: /sys/firmware/dmi/entries ENOENT, capability class absent
-	"BMC_RESPONDS_IN_BAND":            {passU, unknown}, // B: /sys/devices/platform/ipmi_bmc.* ENOENT, same
-	"BMC_DEVICE_NODE_ACCESS":          {passU, unknown}, // B: /dev/ipmi* ENOENT via /sys, same
+	"SSH_ROOT_LOGIN_POLICY":        {anyS, passU}, // B: no sshd binary shipped at all -> UTILITY_MISSING
+	"SSH_AUTH_METHODS_POLICY":      {anyS, passU}, // B: same
+	"SSH_POLICY_IN_FORCE":          {passU, unknown},
+	"REMOTE_LISTENING_SURFACE":     {anyS, unknown}, // B: /proc/net not shipped -> UTILITY_MISSING
+	"LOGIN_AND_ESCALATION_SURFACE": {unknown, unknown},
+	"HOST_FIREWALL_STATE":          {set(scan.StatusFail, scan.StatusUnknown), unknown},
+	// C widened to passU (was unknown-only): profileC's /root is chmod 0000, and
+	// batch 3's protectionFromDenial() now correctly treats that denial as proof
+	// of non-exposure for this exact question, the same reasoning as
+	// expectedProfileA's CREDENTIAL_FILE_EXPOSURE deviation above.
+	"PRIVATE_KEY_MATERIAL_EXPOSURE":  {passU, passU}, // B: no /etc/passwd -> no candidate scan root at all
+	"CREDENTIAL_FILE_EXPOSURE":       {passU, anyS},  // B: /etc/passwd absent (ENOENT), not denied
+	"PROVISIONING_DATA_PROTECTION":   {pass, passU},
+	"SYSTEM_SECRET_STORE_PROTECTION": {pass, passU},
+	"BMC_INBAND_INTERFACE_PRESENT":   {passU, unknown}, // B: /sys/firmware/dmi/entries ENOENT, capability class absent
+	"BMC_RESPONDS_IN_BAND":           {passU, unknown}, // B: /sys/devices/platform/ipmi_bmc.* ENOENT, same
+	// C widened to passU (was unknown-only): batch 3 made probe.Reader decide
+	// AbsenceProven itself (closing the bmc.go:276 defect reported last pass),
+	// so a plain three-for-three ENOENT on /dev/ipmi* now self-proves absence
+	// and legitimately passes, even without a real device node present.
+	"BMC_DEVICE_NODE_ACCESS":          {passU, passU},   // B: /dev/ipmi* ENOENT via /sys, same
 	"BMC_CLIENT_TOOLING_INVENTORY":    {passU, pass},    // B: PATH dirs EACCES-listable in this minimal image
 	"BMC_HOST_INTERFACE_EXPOSURE":     {passU, unknown}, // B: /sys/class/net ENOENT in this minimal image
 	"DISK_ENCRYPTION_AT_REST":         {passF, unknown},
@@ -201,7 +203,7 @@ func TestProfileMatrix_ProfileA_HardGate(t *testing.T) {
 				id, want, f.Status, f.Reason, f.Evidence.Detail)
 		}
 	}
-	t.Logf("profile A observed distribution: %d pass / %d fail / %d unknown (target: 10/9/7 — see expectedProfileA's two corrections)",
+	t.Logf("profile A observed distribution: %d pass / %d fail / %d unknown (target: 13/9/4 — 12/9/5 per CLOSURE_TABLE.md row 20 plus one deliberate deviation)",
 		counts[scan.StatusPass], counts[scan.StatusFail], counts[scan.StatusUnknown])
 }
 

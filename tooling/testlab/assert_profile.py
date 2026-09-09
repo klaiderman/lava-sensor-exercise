@@ -66,7 +66,13 @@ EXPECTED_A = {
     "LOGIN_AND_ESCALATION_SURFACE": {"unknown"},
     "HOST_FIREWALL_STATE": {"unknown"},
     "PRIVATE_KEY_MATERIAL_EXPOSURE": {"pass"},
-    "CREDENTIAL_FILE_EXPOSURE": {"unknown"},
+    # Deliberate deviation from the raw registry table (H2 corrected this to
+    # "unknown" on the pre-batch-3 entailment engine): batch 3 (checkpoint 16)
+    # added protectionFromDenial() — for an EXPOSURE question, a denied read
+    # (here /root at 0700) is itself proof of non-exposure, judged from the
+    # nearest stat-able ancestor's mode. See sensor/internal/lab/profile_matrix_test.go's
+    # matching correction for the full reasoning.
+    "CREDENTIAL_FILE_EXPOSURE": {"pass"},
     "PROVISIONING_DATA_PROTECTION": {"pass"},
     "SYSTEM_SECRET_STORE_PROTECTION": {"pass"},
     "BMC_INBAND_INTERFACE_PRESENT": {"pass"},
@@ -90,7 +96,9 @@ assert len(EXPECTED_A) == 26
 _a_counts = {"pass": 0, "fail": 0, "unknown": 0}
 for _v in EXPECTED_A.values():
     _a_counts[next(iter(_v))] += 1
-assert _a_counts == {"pass": 12, "fail": 9, "unknown": 5}, _a_counts
+# 13/9/4, not the raw registry 12/9/5: CREDENTIAL_FILE_EXPOSURE's row above is
+# the one deliberate deviation (pass, not the H2-corrected unknown).
+assert _a_counts == {"pass": 13, "fail": 9, "unknown": 4}, _a_counts
 
 # EXPECTED_A above is the Lava-*host* target: it is what a fixture built with
 # synthetic DMI/EFI/BMC/TPM/securityfs/boot files (internal/lab's own Go fixtures,
@@ -112,6 +120,8 @@ _DOCKER_A_STRUCTURAL_UNKNOWNS = {
     "SSH_POLICY_IN_FORCE",          # needs a real systemd PID 1 + unit files; containers do not run systemd as init here
     "PROVISIONING_DATA_PROTECTION", # no real cloud-init instance-data artifacts exist in this image
     "BMC_RESPONDS_IN_BAND",         # no real BMC/KCS device exists in any container
+    "BMC_INBAND_INTERFACE_PRESENT", # no real SMBIOS type-38 / ACPI IPI0001 declaration in Docker Desktop's backend VM
+    "BMC_HOST_INTERFACE_EXPOSURE",  # same: no real SMBIOS type-42 or BMC USB gadget in any container
     "ROOT_FILESYSTEM_REDUNDANCY",   # container root is the runtime's storage driver, not a real /sys/block-backed disk
     "SECURE_BOOT_ENABLED",          # no /sys/firmware/efi in a container's mount namespace
     "UEFI_PLATFORM_SETUP_MODE",     # same

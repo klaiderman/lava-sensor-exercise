@@ -523,6 +523,78 @@ runs. Diagnosed and fixed:
   batch 3 is complete and reported, so the expectation table is set against a finished target rather
   than a mid-commit one.
 
+## 13. Fourth (final) lab pass — batch 3 landed (checkpoint 16), gate green
+
+Everything in this section is **the current run only**, against `ab0a959` ("checkpoint 16: fix batch
+3"), rebuilt fresh: `sensor/bin/sensor`, `sensor/bin/lab/lab.test`, and per-package Linux test binaries
+for `checks`, `probe`, `scan`, `cmd/sensor`. Nothing below is inherited from an earlier pass's numbers.
+
+**Semantic change that mattered**: batch 3 added `protectionFromDenial()` — for an EXPOSURE-class
+question specifically, a denied read is itself evidence of protection (judged from the nearest
+stat-able ancestor's mode), not an unresolved unknown. On profile A's `/root` (0700, unreadable to the
+sensor's account), `PRIVATE_KEY_MATERIAL_EXPOSURE` and `PROVISIONING_DATA_PROTECTION` are `pass` again
+as the coordinator directed. `CREDENTIAL_FILE_EXPOSURE` hits the identical code path (the same /root
+shielding) and is *also* `pass` now, with "11 shielded by an ancestor" in evidence — this was not
+separately named but is the same mechanism, verified against the actual observed evidence text, not
+assumed; recorded as the one deliberate deviation from the registry's raw H2-corrected column (which
+predates this semantic). Batch 3 also closed the `bmc.go:276` defect reported two passes ago
+(`probe.Reader` now decides `AbsenceProven` itself), which is why `BMC_DEVICE_NODE_ACCESS` legitimately
+passes on profile C's fixture (no `/dev/ipmi0` workaround file needed any more, though the one added
+two passes ago is harmless and left in place).
+
+**`TestProfileMatrix_ProfileA_HardGate`: GREEN, 13 pass / 9 fail / 4 unknown** — the registry's own
+12/9/5 (CLOSURE_TABLE.md row 20) plus the one documented `CREDENTIAL_FILE_EXPOSURE` deviation above.
+`expectedProfileA`'s `init()` panics if this sum ever drifts without an accompanying comment.
+
+**`TestProfileMatrix_ProfilesBC_HardGate`: GREEN** for both `profileB` and `profileC`. Two rows in
+`registryMatrixBC`'s C column were widened this pass for the identical `protectionFromDenial()` /
+`AbsenceProven` reasons as profile A: `PRIVATE_KEY_MATERIAL_EXPOSURE` (profile C's `/root` is also
+chmod 0000) and `BMC_DEVICE_NODE_ACCESS` (the closed defect). Profile B's rows and C's three
+coordinator-directed corrections from the previous pass are unchanged and still hold.
+
+**Reproducibility, re-verified from a clean rebuild**: `TestProfileMatrix_ProfileA_HardGate` and
+`TestProfileMatrix_ProfilesBC_HardGate` run **3 times back-to-back under WSL uid 1000 against this
+exact binary produced identical results all 3 times** (13/9/4 for A, PASS/PASS for B/C every run). The
+whole `internal/lab` suite (`bin/lab/lab.test`, no arguments) also ran 3x with identical `PASS` each
+time. `go test ./internal/lab/...` on Windows passes cleanly (the four `_modes.txt`-dependent tests
+correctly `SKIP` there, per §12.1's fix — verified still in effect).
+
+**Docker A/B/C, rebuilt binary, assertions wired via `run_in_docker.sh`:**
+
+| Profile | pass/fail/unknown | Runtime | `assert_profile.py` (G1 schema, G2 roster, G3 status, G4 entailment) |
+|---|---|---|---|
+| A (host-shaped) | 10 / 2 / 14 | 243ms | **0 violations** |
+| B (alpine:3.20) | 10 / 2 / 14 | 75ms | **0 violations** |
+| C (hostile) | 5 / 1 / 20 | 144ms | **0 violations** |
+
+A vs C: 6 of 26 check_ids flip status outright (`SSH_AUTH_METHODS_POLICY`, `CREDENTIAL_FILE_EXPOSURE`,
+`PRIVATE_KEY_MATERIAL_EXPOSURE`, `PROVISIONING_DATA_PROTECTION`, `SYSTEM_SECRET_STORE_PROTECTION`,
+`UNUSED_ATTACHED_BLOCK_DEVICES` — all A=pass/fail → C=unknown), and the aggregate distribution itself
+is clearly different (10/2/14 vs 5/1/20) — together the mechanical proof the Docker Gate finding asked
+for: A ≠ C, verified, not asserted. `EXPECTED_A_DOCKER` needed the same `CREDENTIAL_FILE_EXPOSURE` correction as the
+Go-fixture table, plus two more rows widened to structural-unknown for Docker specifically
+(`BMC_INBAND_INTERFACE_PRESENT`, `BMC_HOST_INTERFACE_EXPOSURE` — Docker Desktop's backend VM has no real
+SMBIOS type-38/42 declaration, unlike the Go fixture where these are stubbed sysfs files) — documented
+inline in `assert_profile.py` next to the pre-existing structural-unknown set.
+
+**Entailment audit over all four real-run artifacts** (Docker A/B/C's `findings.profile{A,B,C}.json`
+via `assert_profile.py`'s G4, and `sensor/bin/findings.wsl.json` via the same G4 logic invoked directly):
+**0 violations on all four** — no finding anywhere claims completeness or proven absence while a
+load-bearing observation is EACCES/EPERM/TIMEOUT/EXEC_ERROR/UTILITY_MISSING/ENOENT-unproven/truncated.
+Schema validation (`tooling/validate_findings.py`): 0 violations on all four.
+
+**Module tests**: `go test ./... -count=1` on Windows — all 5 packages `ok` (`cmd/sensor`,
+`internal/checks` 32.0s, `internal/lab` 3.5s, `internal/probe`, `internal/scan`). Under WSL uid 1000,
+cross-compiled per-package Linux test binaries: `checks.test`, `probe.test`, `scan.test`,
+`cmd_sensor.test` — all `PASS` (run from their own package directory, matching how `go test` itself
+would `chdir`). `bin/sensor` itself: `26 checks in 2277ms — 8 pass, 2 fail, 16 unknown`, schema-valid,
+0 entailment violations. `GOOS=linux staticcheck ./internal/lab/...`: clean.
+
+**Remaining red rows: none.** Every hard gate (`TestProfileMatrix_ProfileA_HardGate`,
+`TestProfileMatrix_ProfilesBC_HardGate`, both Docker `assert_profile.py` runs) is green as of this
+commit. No new sensor defect found this pass — the one previously reported (`bmc.go:276`) is confirmed
+closed by batch 3's `probe.Reader`-decided `AbsenceProven`.
+
 ## 14. Files
 
 - Tests: `sensor/internal/lab/support_test.go`, `profile_matrix_test.go`, `fault_injection_test.go`,
