@@ -1,3 +1,0 @@
-24 30 259:2 / / rw,relatime shared:1 - ext4 /dev/nvme0n1p2 rw,errors=remount-ro
-25 24 0:22 / /proc rw,nosuid,nodev,noexec,relatime shared:14 - proc proc rw
-31 24 259:1 / /boot/efi rw,relatime shared:42 - vfat /dev/nvme0n1p1 rw,fmask=0077

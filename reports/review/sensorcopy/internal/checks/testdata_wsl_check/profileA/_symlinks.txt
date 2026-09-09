@@ -1,9 +1,0 @@
-# <path> -> <target>
-etc/os-release -> ../usr/lib/os-release
-sys/block/nvme0n1 -> ../devices/nvme0n1
-sys/block/nvme1n1 -> ../devices/nvme1n1
-sys/block/loop0 -> ../devices/loop0
-sys/devices/nvme0n1/device -> ../../class/nvme/nvme0
-sys/devices/nvme1n1/device -> ../../class/nvme/nvme0
-sys/class/nvme/nvme0/subsystem -> ../../../class/nvme
-boot/vmlinuz -> vmlinuz-7.0.0-31-generic
