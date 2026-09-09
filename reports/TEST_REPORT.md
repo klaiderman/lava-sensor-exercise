@@ -523,9 +523,13 @@ runs. Diagnosed and fixed:
   batch 3 is complete and reported, so the expectation table is set against a finished target rather
   than a mid-commit one.
 
-## 13. Fourth (final) lab pass — batch 3 landed (checkpoint 16), gate green
+## 13. Fourth lab pass — batch 3 landed (checkpoint 16), gate green
 
-Everything in this section is **the current run only**, against `ab0a959` ("checkpoint 16: fix batch
+**Superseded by §15.** This section's Docker A/B/C numbers and profile-A expectation table
+predate fix batch 4 (checkpoint 18) and `Dockerfile.profileA`'s `sudo`/`ssl-cert` fixtures; kept
+below only as a dated historical record of that checkpoint, not as a claim about the current tree.
+
+Everything in this section is **the run at that time**, against `ab0a959` ("checkpoint 16: fix batch
 3"), rebuilt fresh: `sensor/bin/sensor`, `sensor/bin/lab/lab.test`, and per-package Linux test binaries
 for `checks`, `probe`, `scan`, `cmd/sensor`. Nothing below is inherited from an earlier pass's numbers.
 
@@ -595,7 +599,97 @@ would `chdir`). `bin/sensor` itself: `26 checks in 2277ms — 8 pass, 2 fail, 16
 commit. No new sensor defect found this pass — the one previously reported (`bmc.go:276`) is confirmed
 closed by batch 3's `probe.Reader`-decided `AbsenceProven`.
 
-## 14. Files
+## 15. Fifth (final) lab pass — batch 4 landed (checkpoint 18, `a17501d`), Docker sudo/ssl-cert gate closed
+
+**This section is the current run only.** Everything below supersedes §§10-13's numbers wherever they
+overlap. Rebuilt from HEAD (checkpoint 18, review-3 closure — owner subtracted from the reader model,
+undetermined group model, traverse-bit protection, `recordProtection()` opt-out):
+
+- `sensor/bin/sensor` (linux/amd64): **sha256 `2e338db91babff78d8059cf5cc94f789b47d31da2e8eddb50e5ee75960f9818c`**
+- `sensor/bin/lab/lab.test` (linux/amd64 test binary), rebuilt from the same tree.
+
+### 15.1 Why this pass exists
+
+`reports/REVIEW_FINDINGS_3.md` (DO-NOT-SHIP: 1 Critical, 3 High) found that three previously-green
+Docker gates had missed a CRITICAL bug class (C1: the owner counted as a reader of its own file, e.g.
+`/etc/sudoers` 0440 root:root judged "reachable beyond owner"; H2: a group-traversable ancestor like
+`/etc/ssl/private` 0710 root:ssl-cert wrongly called "protected"; H3: a denial correctly judged
+protection never opted out of the load-bearing set, so the check could never pass) because
+`Dockerfile.profileA` shipped no `sudo` package at all (no `/etc/sudoers` to even exercise C1) and no
+populated `ssl-cert`-style group (no real H2 scenario). Fix batch 4 (checkpoint 18) closed C1/H1/H2/H3
+in the sensor; this pass closed the matching **test-lab** gap (`CLOSURE_TABLE.md` row 49):
+
+- `tooling/testlab/Dockerfile.profileA` now installs `sudo` (ships `/etc/sudoers` 0440 root:root and
+  `/etc/sudoers.d` 0755 root:root — verified by building the image; the CLOSURE_TABLE row 42 guess of
+  0750 was wrong) plus `/etc/sudoers.d/99-lab-owner-only-fixture` (0640 root:root, the C1 owner-as-
+  sole-group-member contrast case) and installs `ssl-cert`, adds a real member (`postgres`, a system
+  account with no login shell) to the group, and ships `/etc/ssl/private` 0710 root:ssl-cert containing
+  `lab-dummy.key` (0640 root:ssl-cert, a `-----BEGIN PRIVATE KEY-----` header only — no real key
+  material, per CLAUDE.md's "no secret values" rule).
+- No sudoers entry is ever granted and `sudo` is never invoked — the package and its stock, unmodified
+  permission bits are the fixture; CLAUDE.md's "never sudo/su/doas" is unaffected.
+
+### 15.2 Reconciling the two profile-A expectations against real, observed behaviour
+
+Both new expectations were **drafted from a hypothesis first, then corrected against the actual
+output** — the hypothesis was wrong on both:
+
+| Check | Hypothesis (mine/coordinator's) | **Actually observed** | Verdict |
+|---|---|---|---|
+| `SYSTEM_SECRET_STORE_PROTECTION` | pass | `unknown`/`EACCES`: *"the permissions of 1 system secret store(s) could not be established from this account (/etc/ssl/private listing (the ancestor /etc/ssl/private (mode 0710) does not shield what is behind it: the 1 effective member(s) of group ssl-cert other than the owner can traverse it (postgres))); reporting that boundary is the point"* | **Correct as observed** |
+| `PRIVATE_KEY_MATERIAL_EXPOSURE` | fail | `unknown`/`EACCES`: *"the search could not cover everything it was pointed at: 1 directory/ies under /etc/ssl could not be read (/etc/ssl/private); exposed key material there can neither be confirmed nor excluded"* | **Correct as observed** |
+
+Reasoning for why `unknown` (not `fail`) is the *right* answer, not just the observed one: batch 4's
+row-44 `Traversers()` fix correctly determines that `/etc/ssl/private`'s traverse bit is **not**
+protective, because `ssl-cert` has a real non-owner member (`postgres`) who can traverse it. But the
+sensor's own account (`ubuntu`) is in *neither* the owner nor the `ssl-cert` group, so it cannot itself
+traverse into `/etc/ssl/private` and never actually observes `lab-dummy.key`'s own mode. Asserting
+`fail` from that would be exactly the over-claim CLAUDE.md's evidence semantics forbid — reporting an
+exposure that was never observed, only inferred from what a *different* hypothetical account could do.
+`unknown` is the honest answer: the ancestor's own permissions prove it is not shielding anyone, and
+the sensor is separately, honestly unable to see what is actually behind it.
+
+A third, unplanned mismatch appeared on profile C: `CREDENTIAL_FILE_EXPOSURE` now observes `pass`
+("21 shielded by an ancestor an unprivileged account cannot traverse") where the table previously
+required `unknown` only — the identical `protectionFromDenial()`/`Traversers()` semantic already
+applied to profile A's `CREDENTIAL_FILE_EXPOSURE` (§13), correctly recognising that profile C's
+root:root ancestors with no populated non-owner group are protected, not merely denied. Widened to
+allow `pass`, same reasoning as profile A's row.
+
+`tooling/testlab/assert_profile.py`'s `EXPECTED_A_DOCKER` and `EXPECTED_C` now carry these three
+corrections with the full reasoning and the exact observed evidence text inline, so a future reader
+does not have to re-derive it. None of the three changes `EXPECTED_A` (the raw Lava-host target used by
+the Go-fixture hard gate): this is a Docker-image-only stress fixture, and the real host's `ssl-cert`
+group membership is unverified (`REVIEW_FINDINGS_3.md`'s own "what I could not verify" section).
+
+### 15.3 Results
+
+**`TestProfileMatrix_ProfileA_HardGate` / `TestProfileMatrix_ProfilesBC_HardGate`: GREEN, 3/3 identical
+runs under WSL uid 1000** against the checkpoint-18 binary — profile A 13 pass / 9 fail / 4 unknown
+every time (this gate uses the author's Go fixtures, which do not model the sudo/ssl-cert scenario, so
+it is unaffected by §15.1-15.2's Docker-specific changes). Whole `internal/lab` suite: 3/3 identical
+`PASS`.
+
+**Docker A/B/C, rebuilt binary + `sudo`/`ssl-cert` fixtures, `run_in_docker.sh` assertions:**
+
+| Profile | pass/fail/unknown | `assert_profile.py` |
+|---|---|---|
+| A (host-shaped, now with sudo+ssl-cert) | 8 / 2 / 16 | **0 violations** |
+| B (alpine:3.20) | 10 / 2 / 14 | **0 violations** |
+| C (hostile) | 8 / 1 / 17 | **0 violations** |
+
+**Entailment audit + schema, all four real artifacts** (`findings.profile{A,B,C}.json` +
+`sensor/bin/findings.wsl.json`, fresh WSL run, `9 pass / 2 fail / 15 unknown`): **0 entailment
+violations and 0 schema violations on every one.**
+
+**Module tests**: `go test ./... -count=1` on Windows — all 5 packages `ok` (`internal/checks` 36.4s).
+`GOOS=linux staticcheck ./...`: clean, whole module, no findings.
+
+**Remaining red rows: none.** Every gate — Go-fixture hard gate (A and B/C), all three Docker profiles,
+the entailment audit, module tests, staticcheck — is green against checkpoint 18. `CLOSURE_TABLE.md`
+rows 34 and 49 updated to CLOSED with this evidence.
+
+## 16. Files
 
 - Tests: `sensor/internal/lab/support_test.go`, `profile_matrix_test.go`, `fault_injection_test.go`,
   `storage_matrix_test.go`, `schema_test.go`.
@@ -606,3 +700,8 @@ closed by batch 3's `probe.Reader`-decided `AbsenceProven`.
 - New this pass: `tooling/testlab/Dockerfile.profileC`, `tooling/testlab/assert_profile.py`,
   `tooling/testlab/run_in_docker.sh` (updated: real profile C build/run, MSYS path fixes, the
   docker-volume output path for uid 4242, and the `assert_profile.py` gate wired in after every run).
+- §15 (fifth pass): `tooling/testlab/Dockerfile.profileA` (sudo + ssl-cert fixtures),
+  `tooling/testlab/assert_profile.py` (`EXPECTED_A_DOCKER`/`EXPECTED_C` corrections with observed
+  evidence text inline), `sensor/bin/findings.wsl.json` and `reports/testlab/findings.profile{A,B,C}.json`
+  (all rebuilt against checkpoint 18, `sensor/bin/sensor` sha256
+  `2e338db91babff78d8059cf5cc94f789b47d31da2e8eddb50e5ee75960f9818c`).

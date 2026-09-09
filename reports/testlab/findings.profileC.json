@@ -1,12 +1,12 @@
 {
   "schema_version": "1",
-  "collected_at": "2026-09-09T04:43:26Z",
+  "collected_at": "2026-09-09T06:11:19Z",
   "sensor_version": "0.1.0-dev",
   "machine": {
-    "host_id": "b3699e34d2c903fc97b80751870a0e4dc2fc14cccc609102aaff81ebedc572e3",
+    "host_id": "b7ae280d57194475ddc5776501216fc58700079db1d6b73e7530eae1be4e4d68",
     "host_id_source": "machine-id (keyed hash)",
     "host_id_caveat": "stable across reboots; regenerated on re-image; clone-vulnerable",
-    "hostname": "ca618fd9ed22",
+    "hostname": "c511a4523926",
     "hostname_source": "/proc/sys/kernel/hostname",
     "owner": "unknown",
     "owner_source": "none (all sources placeholder, absent or denied)",
@@ -85,7 +85,7 @@
       "cpu_vendor": "GenuineIntel",
       "source": "/proc/cpuinfo"
     },
-    "memory_bytes": 8095678464,
+    "memory_bytes": 8095674368,
     "memory_source": "/proc/meminfo:MemTotal",
     "swap_total_bytes": 2147483648,
     "storage": [
@@ -705,7 +705,7 @@
         ],
         "inventory_note": "the absence of a client tool says nothing about whether a management controller exists or answers; it never sets another check to unknown"
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "info",
       "duration_ms": 0
     },
@@ -770,21 +770,18 @@
           {
             "path": "/dev/ipmi0",
             "exists": false,
-            "group_member_count": 0,
             "access_permitted": "unknown",
             "errno": "ENOENT"
           },
           {
             "path": "/dev/ipmi/0",
             "exists": false,
-            "group_member_count": 0,
             "access_permitted": "unknown",
             "errno": "ENOENT"
           },
           {
             "path": "/dev/ipmidev/0",
             "exists": false,
-            "group_member_count": 0,
             "access_permitted": "unknown",
             "errno": "ENOENT"
           }
@@ -792,9 +789,9 @@
         "udev_or_modprobe_rules_matching_ipmi": null,
         "ipmi_class_device_present": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
-      "duration_ms": 1
+      "duration_ms": 0
     },
     {
       "category": "BMC_INBAND_ACCESS",
@@ -843,7 +840,7 @@
         "smbios_type42_present": false,
         "interfaces": null
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -906,7 +903,7 @@
         "interface_declared": false,
         "never_issued_ipmi_command": true
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "info",
       "duration_ms": 0
     },
@@ -947,7 +944,7 @@
         "module_note": "a loaded ipmi_si is a capability signal; only a populated identity attribute proves the controller answered",
         "ipmi_class_device_present": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "info",
       "duration_ms": 0
     },
@@ -973,9 +970,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "895 780 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1119/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1060/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1059/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1058/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
+            "value": "169 70 0:39 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1169/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1165/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1164/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1163/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/11",
             "value_truncated_in_evidence": true,
-            "bytes": 3573,
+            "bytes": 3722,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 292,
@@ -996,7 +993,7 @@
         "scope_note": "the initramfs is never opened; extracting it to look for embedded provisioning material would be unbounded and outside read-only intent. Mode and size are the finding",
         "artifacts": null
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "low",
       "duration_ms": 0
     },
@@ -1064,9 +1061,9 @@
           "present": false
         }
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
-      "duration_ms": 1
+      "duration_ms": 0
     },
     {
       "category": "BOOT_CHAIN",
@@ -1102,7 +1099,7 @@
         "securityfs_mounted": true,
         "applicable": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -1156,9 +1153,9 @@
         "efi_present": false,
         "applicable": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
-      "duration_ms": 6
+      "duration_ms": 5
     },
     {
       "category": "BOOT_CHAIN",
@@ -1204,7 +1201,7 @@
         ],
         "tpm_present": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "info",
       "duration_ms": 1
     },
@@ -1243,7 +1240,7 @@
         "key_variables_present": null,
         "applicable": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "critical",
       "duration_ms": 0
     },
@@ -1418,7 +1415,7 @@
         "enforcement_note": "taint bit E records that an unsigned module was loaded, even on a kernel that does not enforce module signatures; enforcement is read separately and never inferred from taint",
         "modules_disabled": "0"
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
       "duration_ms": 3
     },
@@ -1438,7 +1435,7 @@
             "status": "OK",
             "value": "# /etc/ufw/ufw.conf\n#\n\n# Set to yes to start on boot. If setting this remotely, be sure to add a rule\n# to allow your remote connection before starting ufw. Eg: 'ufw allow 22/tcp'\nENABLED=no\n\n# Please use the 'ufw' command to set the loglevel. Eg: 'ufw logging medium'.\n# See 'man ufw' for details.\nLOGLEVEL=low",
             "bytes": 312,
-            "duration_ms": 21,
+            "duration_ms": 0,
             "load_bearing": true,
             "mode": 420,
             "uid": 0,
@@ -1543,7 +1540,7 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "exit_code": 4,
-            "duration_ms": 9,
+            "duration_ms": 1,
             "load_bearing": true,
             "detail": "exit status 4",
             "command": [
@@ -1561,7 +1558,7 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "exit_code": 4,
-            "duration_ms": 3,
+            "duration_ms": 1,
             "load_bearing": true,
             "detail": "exit status 4",
             "command": [
@@ -1675,9 +1672,9 @@
         "netfilter_modules_note": "a loaded module is a capability signal, not evidence that any rule is loaded",
         "global_scope_listener_present": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
-      "duration_ms": 37
+      "duration_ms": 4
     },
     {
       "category": "REMOTE_ACCESS",
@@ -1687,7 +1684,7 @@
       "title": "Who can log in to this machine and who can escalate to root",
       "reason": "EACCES",
       "evidence": {
-        "detail": "the enumerable part is complete and in evidence, but this account cannot establish: the password state of other accounts (/etc/shadow EACCES) — unreadable is not 'no password set'; the sudo policy behind group membership (/etc/sudoers ENOENT); key material in /root, /home/ubuntu (EACCES)",
+        "detail": "the enumerable part is complete and in evidence, but this account cannot establish: the password state of other accounts (/etc/shadow EACCES) — unreadable is not 'no password set'; the sudo policy behind group membership (/etc/sudoers EACCES); key material in /root, /home/ubuntu (EACCES)",
         "observations": [
           {
             "source": "/etc/passwd",
@@ -1695,7 +1692,7 @@
             "status": "OK",
             "value": "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nsync:x:4:65534:sync:/bin:/bin/sync\ngames:x:5:60:games:/usr/games:/usr/sbin/nologin\nman:x:6:12:man:/var/cache/man:/usr/sbin/nologin\nlp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin\nmail:x:8:8:mail:/var/mail:/usr/sbin/nologin\nnews:x:9:9:news:/var/spool/news:/usr/sbin/nologin\nuucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin\nproxy:x:13:13:proxy:/bin:/usr/sbin/n",
             "value_truncated_in_evidence": true,
-            "bytes": 1053,
+            "bytes": 1106,
             "duration_ms": 0,
             "load_bearing": true,
             "detail": "account inventory; the file is primary because it needs no tool",
@@ -1709,7 +1706,7 @@
             "status": "OK",
             "value": "root:x:0:\ndaemon:x:1:\nbin:x:2:\nsys:x:3:\nadm:x:4:ubuntu\ntty:x:5:\ndisk:x:6:\nlp:x:7:\nmail:x:8:\nnews:x:9:\nuucp:x:10:\nman:x:12:\nproxy:x:13:\nkmem:x:15:\ndialout:x:20:ubuntu\nfax:x:21:\nvoice:x:22:\ncdrom:x:24:ubuntu\nfloppy:x:25:ubuntu\ntape:x:26:\nsudo:x:27:ubuntu\naudio:x:29:ubuntu\ndip:x:30:ubuntu\nwww-data:x:33:\nbackup:x:34:\noperator:x:37:\nlist:x:38:\nirc:x:39:\nsrc:x:40:\nshadow:x:42:\nutmp:x:43:\nvideo:x:44:ubuntu\nsasl:x:45:\nplugdev:x:46:ubuntu\nstaff:x:50:\ngames:x:60:\nusers:x:100:\nnogroup:x:65534:\nubuntu:x:1000:\nuuidd:x:1",
             "value_truncated_in_evidence": true,
-            "bytes": 623,
+            "bytes": 639,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 420,
@@ -1734,7 +1731,7 @@
             "status": "EXEC_ERROR",
             "reason": "EXECUTION_ERROR",
             "exit_code": 1,
-            "duration_ms": 12,
+            "duration_ms": 3,
             "not_load_bearing_because": "the password state of the calling account is context; the verdict is about accounts, groups and policy files",
             "detail": "passwd -S reports the caller only; it is never generalised to other accounts",
             "command": [
@@ -1757,7 +1754,7 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 572
+            "size": 595
           },
           {
             "source": "/etc/gshadow",
@@ -1771,31 +1768,35 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 531
+            "size": 544
           },
           {
             "source": "/etc/sudoers",
             "observation_type": "file_metadata",
-            "status": "ENOENT",
-            "reason": "ENOENT",
-            "errno": "ENOENT",
+            "status": "OK",
+            "value": "regular",
             "duration_ms": 0,
             "load_bearing": true,
-            "absence_proven": true,
-            "detail": "lstat: no such file or directory",
-            "exists": false
+            "exists": true,
+            "file_type": "regular",
+            "mode": 288,
+            "uid": 0,
+            "gid": 0,
+            "size": 1800
           },
           {
             "source": "/etc/sudoers.d",
             "observation_type": "file_metadata",
-            "status": "ENOENT",
-            "reason": "ENOENT",
-            "errno": "ENOENT",
+            "status": "OK",
+            "value": "dir",
             "duration_ms": 0,
             "load_bearing": true,
-            "absence_proven": true,
-            "detail": "lstat: no such file or directory",
-            "exists": false
+            "exists": true,
+            "file_type": "dir",
+            "mode": 493,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.ssh",
@@ -2012,6 +2013,14 @@
             "shell_class": "nologin",
             "home": "/run/sshd",
             "authorized_keys_status": ""
+          },
+          {
+            "name": "postgres",
+            "uid": 999,
+            "shell": "/usr/sbin/nologin",
+            "shell_class": "nologin",
+            "home": "/home/postgres",
+            "authorized_keys_status": ""
           }
         ],
         "unreadable_homes": [
@@ -2068,7 +2077,7 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 572,
+            "size": 595,
             "status": "OK"
           },
           {
@@ -2078,20 +2087,28 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 531,
+            "size": 544,
             "status": "OK"
           },
           {
             "path": "/etc/sudoers",
-            "exists": false,
-            "errno": "ENOENT",
-            "status": "ENOENT"
+            "exists": true,
+            "file_type": "regular",
+            "mode": 288,
+            "uid": 0,
+            "gid": 0,
+            "size": 1800,
+            "status": "OK"
           },
           {
             "path": "/etc/sudoers.d",
-            "exists": false,
-            "errno": "ENOENT",
-            "status": "ENOENT"
+            "exists": true,
+            "file_type": "dir",
+            "mode": 493,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096,
+            "status": "OK"
           },
           {
             "path": "/root/.ssh",
@@ -2105,9 +2122,9 @@
           }
         ]
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
-      "duration_ms": 15
+      "duration_ms": 4
     },
     {
       "category": "REMOTE_ACCESS",
@@ -2208,7 +2225,7 @@
         "global_scope_listeners": null,
         "attribution_gaps": null
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
       "duration_ms": 1
     },
@@ -2283,7 +2300,7 @@
           "status": "OK"
         }
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
       "duration_ms": 0
     },
@@ -2320,7 +2337,7 @@
           "statement": "0 of 1 load-bearing observations succeeded; not observed: /etc/ssh/sshd_config (EACCES) — an absence is not provable from this"
         }
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
       "duration_ms": 0
     },
@@ -2379,19 +2396,18 @@
           "found": false
         }
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
-      "duration_ms": 5
+      "duration_ms": 1
     },
     {
       "category": "SECRETS_ON_DISK",
       "check_id": "CREDENTIAL_FILE_EXPOSURE",
-      "status": "unknown",
-      "severity": "high",
+      "status": "pass",
+      "severity": "info",
       "title": "Application credential files against the permission rules their own software documents",
-      "reason": "EACCES",
       "evidence": {
-        "detail": "at least one credential path could not be inspected (denied home directory or unreadable ACL), so that account's credential exposure is unknown rather than clean",
+        "detail": "each credential file the search reached satisfies the permission rule its own software documents (21 inspected across 2 home directory/ies; 21 shielded by an ancestor an unprivileged account cannot traverse)",
         "observations": [
           {
             "source": "/etc/passwd",
@@ -2399,12 +2415,27 @@
             "status": "OK",
             "value": "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nsync:x:4:65534:sync:/bin:/bin/sync\ngames:x:5:60:games:/usr/games:/usr/sbin/nologin\nman:x:6:12:man:/var/cache/man:/usr/sbin/nologin\nlp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin\nmail:x:8:8:mail:/var/mail:/usr/sbin/nologin\nnews:x:9:9:news:/var/spool/news:/usr/sbin/nologin\nuucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin\nproxy:x:13:13:proxy:/bin:/usr/sbin/n",
             "value_truncated_in_evidence": true,
-            "bytes": 1053,
+            "bytes": 1106,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 420,
             "uid": 0,
             "gid": 0
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.pgpass",
@@ -2413,8 +2444,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.netrc",
@@ -2423,8 +2469,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.my.cnf",
@@ -2433,8 +2494,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.docker/config.json",
@@ -2443,8 +2519,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.aws/credentials",
@@ -2453,8 +2544,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.kube/config",
@@ -2463,8 +2569,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.git-credentials",
@@ -2473,8 +2594,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.npmrc",
@@ -2483,8 +2619,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.pypirc",
@@ -2493,8 +2644,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.ssh/config",
@@ -2503,8 +2669,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.pgpass",
@@ -2513,8 +2694,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.netrc",
@@ -2523,8 +2719,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.my.cnf",
@@ -2533,8 +2744,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.docker/config.json",
@@ -2543,8 +2769,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.aws/credentials",
@@ -2553,8 +2794,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.kube/config",
@@ -2563,8 +2819,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.git-credentials",
@@ -2573,8 +2844,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.npmrc",
@@ -2583,8 +2869,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.pypirc",
@@ -2593,8 +2894,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
           },
           {
             "source": "/home/ubuntu/.ssh/config",
@@ -2603,8 +2919,47 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /home/ubuntu mode 0750, readers beyond owner: none)",
             "detail": "lstat: permission denied"
+          },
+          {
+            "source": "/etc/docker/config.json",
+            "observation_type": "file_metadata",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "absence_proven": true,
+            "detail": "credential file candidate; absent",
+            "exists": false
+          },
+          {
+            "source": "/etc/kubernetes/admin.conf",
+            "observation_type": "file_metadata",
+            "status": "ENOENT",
+            "reason": "ENOENT",
+            "errno": "ENOENT",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "absence_proven": true,
+            "detail": "credential file candidate; absent",
+            "exists": false
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/root/.aws/credentials",
@@ -2613,29 +2968,18 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "lstat: permission denied"
           }
         ],
         "completeness": {
-          "observations_total": 22,
-          "observations_ok": 1,
-          "load_bearing_total": 11,
-          "load_bearing_ok": 1,
-          "not_ok": [
-            "/home/ubuntu/.aws/credentials (EACCES)",
-            "/home/ubuntu/.docker/config.json (EACCES)",
-            "/home/ubuntu/.git-credentials (EACCES)",
-            "/home/ubuntu/.kube/config (EACCES)",
-            "/home/ubuntu/.my.cnf (EACCES)",
-            "/home/ubuntu/.netrc (EACCES)",
-            "/home/ubuntu/.npmrc (EACCES)",
-            "/home/ubuntu/.pgpass (EACCES)",
-            "/home/ubuntu/.pypirc (EACCES)",
-            "/home/ubuntu/.ssh/config (EACCES)"
-          ],
-          "absence_provable": false,
-          "statement": "1 of 11 load-bearing observations succeeded; not observed: /home/ubuntu/.aws/credentials (EACCES), /home/ubuntu/.docker/config.json (EACCES), /home/ubuntu/.git-credentials (EACCES), /home/ubuntu/.kube/config (EACCES), /home/ubuntu/.my.cnf (EACCES), /home/ubuntu/.netrc (EACCES), and 4 more — an absence is not provable from this"
+          "observations_total": 45,
+          "observations_ok": 24,
+          "load_bearing_total": 24,
+          "load_bearing_ok": 24,
+          "not_ok": [],
+          "absence_provable": true,
+          "statement": "24 of 24 load-bearing observations succeeded, so an absence found by them is evidence"
         },
         "homes_skipped": [
           "/bin (a placeholder home for service accounts, not a user's home)"
@@ -2646,12 +2990,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2663,12 +3007,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2680,12 +3024,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2697,12 +3041,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2714,12 +3058,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2731,12 +3075,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2748,12 +3092,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2765,12 +3109,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2782,12 +3126,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2799,12 +3143,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -2816,12 +3160,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2833,12 +3177,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2850,12 +3194,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2867,12 +3211,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2884,12 +3228,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2901,12 +3245,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2918,12 +3262,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2935,12 +3279,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2952,12 +3296,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2969,12 +3313,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "unknown (EACCES)",
+            "effective_readers": "the owner only (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
-              "protected": false,
-              "basis": "the nearest stat-able ancestor /home/ubuntu (mode 0750) does not explain the denial",
+              "protected": true,
+              "basis": "the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/home/ubuntu",
               "ancestor_mode": 488
             },
@@ -2986,12 +3330,12 @@
             "file_type": "",
             "magic_class": "",
             "group_member_count": 0,
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "errno": "EACCES",
             "adverse": false,
             "protection": {
               "protected": true,
-              "basis": "the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+              "basis": "the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it",
               "ancestor": "/root",
               "ancestor_mode": 448
             },
@@ -3003,33 +3347,30 @@
           "/root",
           "/home/ubuntu"
         ],
-        "unreadable_homes": [
-          "/home/ubuntu"
-        ],
-        "protected_by_ancestor": 11,
+        "unreadable_homes": [],
+        "protected_by_ancestor": 21,
         "decoding_note": "a Docker config auths entry is base64, which is not encryption; it is never decoded"
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
-      "duration_ms": 1
+      "duration_ms": 0
     },
     {
       "category": "SECRETS_ON_DISK",
       "check_id": "PRIVATE_KEY_MATERIAL_EXPOSURE",
-      "status": "unknown",
-      "severity": "high",
+      "status": "pass",
+      "severity": "info",
       "title": "Readability of private key material on disk",
-      "reason": "EACCES",
       "evidence": {
-        "detail": "the search could not cover everything it was pointed at: 1 directory/ies under /home could not be read (/home/ubuntu); exposed key material there can neither be confirmed nor excluded",
+        "detail": "each private-key-class candidate the search reached is restricted to its owner (0 candidate(s) across 4 searched root(s), 4 root(s) or subtree(s) shielded by an ancestor an unprivileged account cannot traverse)",
         "observations": [
           {
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "895 780 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1119/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1060/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1059/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1058/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
+            "value": "169 70 0:39 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1169/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1165/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1164/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1163/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/11",
             "value_truncated_in_evidence": true,
-            "bytes": 3573,
+            "bytes": 3722,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 292,
@@ -3037,16 +3378,45 @@
             "gid": 4242
           },
           {
+            "source": "/etc/ssh",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "not_load_bearing_because": "protection (ancestor /etc/ssh mode 0000, readers beyond owner: none)",
+            "detail": "scan root shielded from other unprivileged accounts: the owner only",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
+          },
+          {
+            "source": "/etc/ssl/private",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "not_load_bearing_because": "recorded to show what decided the protection question for /etc/ssl/private",
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 102,
+            "size": 4096
+          },
+          {
             "source": "/etc/ssl",
             "observation_type": "dir_walk",
             "status": "OK",
-            "truncated": true,
-            "bytes": 2,
+            "bytes": 6,
             "duration_ms": 0,
             "load_bearing": true,
-            "detail": "bounded key-material enumeration under /etc/ssl",
+            "detail": "bounded key-material enumeration under /etc/ssl; every subtree it could not enter is shielded from other unprivileged accounts",
             "root": "/etc/ssl",
-            "entries_scanned": 2,
+            "entries_scanned": 6,
             "unreadable_dirs": [
               "/etc/ssl/private"
             ]
@@ -3146,37 +3516,63 @@
             "entries_scanned": 1
           },
           {
+            "source": "/home/ubuntu",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "not_load_bearing_because": "recorded to show what decided the protection question for /home/ubuntu",
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only: group ubuntu has no effective member besides ubuntu)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 488,
+            "uid": 1000,
+            "gid": 1000,
+            "size": 4096
+          },
+          {
             "source": "/home",
             "observation_type": "dir_walk",
             "status": "OK",
-            "truncated": true,
             "bytes": 2,
             "duration_ms": 0,
             "load_bearing": true,
-            "detail": "bounded key-material enumeration under /home",
+            "detail": "bounded key-material enumeration under /home; every subtree it could not enter is shielded from other unprivileged accounts",
             "root": "/home",
             "entries_scanned": 2,
             "unreadable_dirs": [
               "/home/ubuntu"
             ]
+          },
+          {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
+            "detail": "scan root shielded from other unprivileged accounts: the owner only",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           }
         ],
         "completeness": {
-          "observations_total": 11,
-          "observations_ok": 9,
+          "observations_total": 15,
+          "observations_ok": 15,
           "load_bearing_total": 11,
-          "load_bearing_ok": 9,
-          "not_ok": [
-            "/etc/ssl (OK but truncated)",
-            "/home (OK but truncated)"
-          ],
-          "absence_provable": false,
-          "statement": "9 of 11 load-bearing observations succeeded; not observed: /etc/ssl (OK but truncated), /home (OK but truncated) — an absence is not provable from this"
+          "load_bearing_ok": 11,
+          "not_ok": [],
+          "absence_provable": true,
+          "statement": "11 of 11 load-bearing observations succeeded, so an absence found by them is evidence"
         },
         "walks": [
           {
             "root": "/etc/ssl",
-            "entries_scanned": 2,
+            "entries_scanned": 6,
             "dirs_pruned": [],
             "unreadable_dirs": [
               "/etc/ssl/private"
@@ -3234,22 +3630,24 @@
           "/etc/httpd"
         ],
         "scan_roots_protected": [
-          "/etc/ssh (mode 0000, not traversable by other, so nothing under it is reachable by an unprivileged account)",
-          "/etc/ssl/private (the ancestor /etc/ssl/private (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
-          "/root (mode 0700, not traversable by other, so nothing under it is reachable by an unprivileged account)"
+          "/etc/ssh (mode 0000; the owner only)",
+          "/etc/ssl/private (the ancestor /etc/ssl/private (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
+          "/home/ubuntu (the ancestor /home/ubuntu (mode 0750) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
+          "/root (mode 0700; the owner only)"
         ],
         "scan_roots_on_network_storage": null,
-        "boundaries": [
-          "1 directory/ies under /home could not be read (/home/ubuntu)"
-        ],
+        "root_symlink_followed": null,
+        "scan_roots_not_enumerated": null,
+        "boundaries": null,
+        "candidates_with_an_unresolved_reader_set": null,
         "symlinks_skipped": 0,
         "non_regular_skipped": 0,
         "private_key_files": null,
         "content_read": "at most 64 bytes per candidate, used to classify and immediately discarded"
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
-      "duration_ms": 1
+      "duration_ms": 0
     },
     {
       "category": "SECRETS_ON_DISK",
@@ -3262,14 +3660,44 @@
         "detail": "part of the provisioning surface could not be inspected (/var/lib/cloud/instances (EACCES), /var/lib/cloud/seed (EACCES)), so whether it exposes injected credentials is unknown",
         "observations": [
           {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
+          },
+          {
             "source": "/var/lib/cloud/instance/user-data.txt",
             "observation_type": "file_metadata",
             "status": "EACCES",
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/instance/user-data.txt.i",
@@ -3278,8 +3706,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/instance/vendor-data.txt",
@@ -3288,8 +3731,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/instance/vendor-data.txt.i",
@@ -3298,8 +3756,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/instance/obj.pkl",
@@ -3308,8 +3781,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/seed/nocloud/user-data",
@@ -3318,8 +3806,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/seed/nocloud/meta-data",
@@ -3328,8 +3831,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/seed/nocloud-net/user-data",
@@ -3338,8 +3856,23 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
+          },
+          {
+            "source": "/var/lib/cloud",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
           },
           {
             "source": "/var/lib/cloud/seed/nocloud-net/meta-data",
@@ -3348,7 +3881,7 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /var/lib/cloud mode 0000, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
           },
           {
@@ -3376,13 +3909,28 @@
             "exists": false
           },
           {
+            "source": "/root",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 448,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
+          },
+          {
             "source": "/root/anaconda-ks.cfg",
             "observation_type": "file_metadata",
             "status": "EACCES",
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "not_load_bearing_because": "the denial itself answers the exposure question: the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it",
+            "not_load_bearing_because": "protection (ancestor /root mode 0700, readers beyond owner: none)",
             "detail": "provisioning artifact candidate (payload)"
           },
           {
@@ -3481,22 +4029,22 @@
           }
         ],
         "completeness": {
-          "observations_total": 20,
-          "observations_ok": 8,
-          "load_bearing_total": 10,
-          "load_bearing_ok": 8,
+          "observations_total": 30,
+          "observations_ok": 18,
+          "load_bearing_total": 20,
+          "load_bearing_ok": 18,
           "not_ok": [
             "/var/lib/cloud/instances (EACCES)",
             "/var/lib/cloud/seed (EACCES)"
           ],
           "absence_provable": false,
-          "statement": "8 of 10 load-bearing observations succeeded; not observed: /var/lib/cloud/instances (EACCES), /var/lib/cloud/seed (EACCES) — an absence is not provable from this"
+          "statement": "18 of 20 load-bearing observations succeeded; not observed: /var/lib/cloud/instances (EACCES), /var/lib/cloud/seed (EACCES) — an absence is not provable from this"
         },
         "artifacts": [
           {
             "path": "/var/lib/cloud/instance/user-data.txt",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3504,7 +4052,7 @@
           {
             "path": "/var/lib/cloud/instance/user-data.txt.i",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3512,7 +4060,7 @@
           {
             "path": "/var/lib/cloud/instance/vendor-data.txt",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3520,7 +4068,7 @@
           {
             "path": "/var/lib/cloud/instance/vendor-data.txt.i",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3528,7 +4076,7 @@
           {
             "path": "/var/lib/cloud/instance/obj.pkl",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3536,7 +4084,7 @@
           {
             "path": "/var/lib/cloud/seed/nocloud/user-data",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3544,7 +4092,7 @@
           {
             "path": "/var/lib/cloud/seed/nocloud/meta-data",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3552,7 +4100,7 @@
           {
             "path": "/var/lib/cloud/seed/nocloud-net/user-data",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3560,7 +4108,7 @@
           {
             "path": "/var/lib/cloud/seed/nocloud-net/meta-data",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /var/lib/cloud (mode 0000) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3568,7 +4116,7 @@
           {
             "path": "/root/anaconda-ks.cfg",
             "class": "payload",
-            "effective_readers": "the owner only (the ancestor /root (mode 0700) is not traversable by other, so nothing beneath it is reachable by an unprivileged account - which is also why this sensor could not read it)",
+            "effective_readers": "the owner only (the ancestor /root (mode 0700) cannot be traversed by anyone beyond its owner, so nothing beneath it is reachable by another unprivileged account - which is also why this sensor could not read it)",
             "adverse": false,
             "errno": "EACCES",
             "note": "not readable by this account, and the ancestor that explains it excludes every unprivileged account"
@@ -3584,19 +4132,18 @@
         "classification_note": "payload artifacts (user-data, vendor-data, seeds, obj.pkl, the sensitive and combined configs) carry the verdict; instance-data.json and the .cfg drop-ins are published readable by design with their sensitive keys redacted, and are reported as inventory",
         "content_read": "key names only; no provisioning payload value is read or emitted"
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
-      "duration_ms": 1
+      "duration_ms": 0
     },
     {
       "category": "SECRETS_ON_DISK",
       "check_id": "SYSTEM_SECRET_STORE_PROTECTION",
-      "status": "unknown",
-      "severity": "high",
+      "status": "pass",
+      "severity": "info",
       "title": "Permissions of the operating system's own secret stores",
-      "reason": "EACCES",
       "evidence": {
-        "detail": "each system secret store the search reached keeps its expected restrictive permissions (3 inspected, 1 shielded by an unreadable ancestor) [downgraded from pass: a load-bearing observation did not succeed (/etc/ssl/private: EACCES)]",
+        "detail": "each system secret store the search reached keeps its expected restrictive permissions (7 inspected, 1 shielded by an unreadable ancestor)",
         "observations": [
           {
             "source": "/etc/shadow",
@@ -3611,7 +4158,7 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 572
+            "size": 595
           },
           {
             "source": "/etc/shadow [system.posix_acl_access]",
@@ -3635,7 +4182,7 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 531
+            "size": 544
           },
           {
             "source": "/etc/gshadow [system.posix_acl_access]",
@@ -3658,7 +4205,22 @@
             "file_type": "dir",
             "mode": 0,
             "uid": 0,
-            "gid": 0,
+            "gid": 102,
+            "size": 4096
+          },
+          {
+            "source": "/etc/ssl/private",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "dir",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "ancestor of a denied candidate; traversal decides what is reachable behind it (the owner only)",
+            "exists": true,
+            "file_type": "dir",
+            "mode": 0,
+            "uid": 0,
+            "gid": 102,
             "size": 4096
           },
           {
@@ -3668,7 +4230,7 @@
             "reason": "EACCES",
             "errno": "EACCES",
             "duration_ms": 0,
-            "load_bearing": true,
+            "not_load_bearing_because": "protection (ancestor /etc/ssl/private mode 0000, readers beyond owner: none)",
             "detail": "contents of /etc/ssl/private",
             "root": "/etc/ssl/private"
           },
@@ -3687,26 +4249,100 @@
           {
             "source": "/etc/sudoers",
             "observation_type": "file_metadata",
-            "status": "ENOENT",
-            "reason": "ENOENT",
-            "errno": "ENOENT",
+            "status": "OK",
+            "value": "regular",
             "duration_ms": 0,
             "load_bearing": true,
-            "absence_proven": true,
             "detail": "system secret store (not readable beyond its owner)",
-            "exists": false
+            "exists": true,
+            "file_type": "regular",
+            "mode": 288,
+            "uid": 0,
+            "gid": 0,
+            "size": 1800
+          },
+          {
+            "source": "/etc/sudoers [system.posix_acl_access]",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "no ACL (ENODATA)",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "the file carries no POSIX access ACL"
           },
           {
             "source": "/etc/sudoers.d",
             "observation_type": "file_metadata",
-            "status": "ENOENT",
-            "reason": "ENOENT",
-            "errno": "ENOENT",
+            "status": "OK",
+            "value": "dir",
             "duration_ms": 0,
             "load_bearing": true,
-            "absence_proven": true,
             "detail": "system secret store directory",
-            "exists": false
+            "exists": true,
+            "file_type": "dir",
+            "mode": 493,
+            "uid": 0,
+            "gid": 0,
+            "size": 4096
+          },
+          {
+            "source": "/etc/sudoers.d",
+            "observation_type": "dir_walk",
+            "status": "OK",
+            "bytes": 2,
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "contents of /etc/sudoers.d",
+            "root": "/etc/sudoers.d",
+            "entries_scanned": 2
+          },
+          {
+            "source": "/etc/sudoers.d/99-lab-owner-only-fixture",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "regular",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "system secret store (not readable beyond its owner)",
+            "exists": true,
+            "file_type": "regular",
+            "mode": 416,
+            "uid": 0,
+            "gid": 0,
+            "size": 88
+          },
+          {
+            "source": "/etc/sudoers.d/99-lab-owner-only-fixture [system.posix_acl_access]",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "no ACL (ENODATA)",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "the file carries no POSIX access ACL"
+          },
+          {
+            "source": "/etc/sudoers.d/README",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "regular",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "system secret store (not readable beyond its owner)",
+            "exists": true,
+            "file_type": "regular",
+            "mode": 288,
+            "uid": 0,
+            "gid": 0,
+            "size": 1068
+          },
+          {
+            "source": "/etc/sudoers.d/README [system.posix_acl_access]",
+            "observation_type": "file_metadata",
+            "status": "OK",
+            "value": "no ACL (ENODATA)",
+            "duration_ms": 0,
+            "load_bearing": true,
+            "detail": "the file carries no POSIX access ACL"
           },
           {
             "source": "/var/lib/systemd/random-seed",
@@ -3734,15 +4370,13 @@
           }
         ],
         "completeness": {
-          "observations_total": 11,
-          "observations_ok": 10,
-          "load_bearing_total": 11,
-          "load_bearing_ok": 10,
-          "not_ok": [
-            "/etc/ssl/private (EACCES)"
-          ],
-          "absence_provable": false,
-          "statement": "10 of 11 load-bearing observations succeeded; not observed: /etc/ssl/private (EACCES) — an absence is not provable from this"
+          "observations_total": 18,
+          "observations_ok": 17,
+          "load_bearing_total": 17,
+          "load_bearing_ok": 17,
+          "not_ok": [],
+          "absence_provable": true,
+          "statement": "17 of 17 load-bearing observations succeeded, so an absence found by them is evidence"
         },
         "stores": [
           {
@@ -3751,11 +4385,11 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 572,
+            "size": 595,
             "magic_class": "",
             "group_name": "shadow",
             "group_member_count": 0,
-            "effective_readers": "group shadow has no members by list or primary gid, so this is owner-only in practice",
+            "effective_readers": "the owner only: group shadow has no effective member besides root",
             "acl": {
               "path": "/etc/shadow",
               "present": false,
@@ -3774,11 +4408,11 @@
             "mode": 416,
             "uid": 0,
             "gid": 42,
-            "size": 531,
+            "size": 544,
             "magic_class": "",
             "group_name": "shadow",
             "group_member_count": 0,
-            "effective_readers": "group shadow has no members by list or primary gid, so this is owner-only in practice",
+            "effective_readers": "the owner only: group shadow has no effective member besides root",
             "acl": {
               "path": "/etc/gshadow",
               "present": false,
@@ -3796,12 +4430,94 @@
             "file_type": "dir",
             "mode": 0,
             "uid": 0,
+            "gid": 102,
+            "magic_class": "",
+            "group_member_count": 0,
+            "effective_readers": "judged by its contents",
+            "adverse": false,
+            "rule": "its contents are not readable beyond their owner",
+            "rule_source": "distribution-shipped permission class"
+          },
+          {
+            "path": "/etc/sudoers",
+            "file_type": "regular",
+            "mode": 288,
+            "uid": 0,
+            "gid": 0,
+            "size": 1800,
+            "magic_class": "",
+            "group_name": "root",
+            "group_member_count": 0,
+            "effective_readers": "the owner only: group root has no effective member besides root",
+            "acl": {
+              "path": "/etc/sudoers",
+              "present": false,
+              "grants_non_owner_read": false,
+              "named_principals": 0,
+              "errno": "ENODATA",
+              "determined": true
+            },
+            "adverse": false,
+            "rule": "not readable beyond its owner",
+            "rule_source": "distribution-shipped permission class"
+          },
+          {
+            "path": "/etc/sudoers.d",
+            "file_type": "dir",
+            "mode": 493,
+            "uid": 0,
             "gid": 0,
             "magic_class": "",
             "group_member_count": 0,
             "effective_readers": "judged by its contents",
             "adverse": false,
             "rule": "its contents are not readable beyond their owner",
+            "rule_source": "distribution-shipped permission class"
+          },
+          {
+            "path": "/etc/sudoers.d/99-lab-owner-only-fixture",
+            "file_type": "regular",
+            "mode": 416,
+            "uid": 0,
+            "gid": 0,
+            "size": 88,
+            "magic_class": "",
+            "group_name": "root",
+            "group_member_count": 0,
+            "effective_readers": "the owner only: group root has no effective member besides root",
+            "acl": {
+              "path": "/etc/sudoers.d/99-lab-owner-only-fixture",
+              "present": false,
+              "grants_non_owner_read": false,
+              "named_principals": 0,
+              "errno": "ENODATA",
+              "determined": true
+            },
+            "adverse": false,
+            "rule": "not readable beyond its owner",
+            "rule_source": "distribution-shipped permission class"
+          },
+          {
+            "path": "/etc/sudoers.d/README",
+            "file_type": "regular",
+            "mode": 288,
+            "uid": 0,
+            "gid": 0,
+            "size": 1068,
+            "magic_class": "",
+            "group_name": "root",
+            "group_member_count": 0,
+            "effective_readers": "the owner only: group root has no effective member besides root",
+            "acl": {
+              "path": "/etc/sudoers.d/README",
+              "present": false,
+              "grants_non_owner_read": false,
+              "named_principals": 0,
+              "errno": "ENODATA",
+              "determined": true
+            },
+            "adverse": false,
+            "rule": "not readable beyond its owner",
             "rule_source": "distribution-shipped permission class"
           }
         ],
@@ -3810,9 +4526,9 @@
         "directory_rule": "a directory store is judged by the secrets inside it: sudo ships /etc/sudoers.d world-listable with 0440 files, and a listable directory is not exposure",
         "acl_note": "ENODATA from system.posix_acl_access means the file has no ACL, which is a positive answer, not an unknown"
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
-      "duration_ms": 2
+      "duration_ms": 1
     },
     {
       "category": "STORAGE_POSTURE",
@@ -3850,9 +4566,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "895 780 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1119/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1060/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1059/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1058/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
+            "value": "169 70 0:39 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1169/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1165/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1164/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1163/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/11",
             "value_truncated_in_evidence": true,
-            "bytes": 3573,
+            "bytes": 3722,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 292,
@@ -3929,9 +4645,9 @@
           }
         ]
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "high",
-      "duration_ms": 15
+      "duration_ms": 13
     },
     {
       "category": "STORAGE_POSTURE",
@@ -3947,11 +4663,11 @@
             "source": "/sys/fs/ext4",
             "observation_type": "dir_walk",
             "status": "OK",
-            "bytes": 6,
+            "bytes": 5,
             "duration_ms": 0,
             "load_bearing": true,
             "root": "/sys/fs/ext4",
-            "entries_scanned": 6
+            "entries_scanned": 5
           },
           {
             "source": "/sys/block",
@@ -4005,19 +4721,6 @@
             "value": "0"
           },
           {
-            "path": "/sys/fs/ext4/sdd/errors_count",
-            "value": "0",
-            "clean": true
-          },
-          {
-            "path": "/sys/fs/ext4/sdd/first_error_time",
-            "value": "0"
-          },
-          {
-            "path": "/sys/fs/ext4/sdd/lifetime_write_kbytes",
-            "value": "20749649"
-          },
-          {
             "path": "/sys/fs/ext4/sde/errors_count",
             "value": "0",
             "clean": true
@@ -4028,7 +4731,7 @@
           },
           {
             "path": "/sys/fs/ext4/sde/lifetime_write_kbytes",
-            "value": "69541"
+            "value": "69652"
           },
           {
             "path": "/sys/fs/ext4/sdf/errors_count",
@@ -4041,7 +4744,7 @@
           },
           {
             "path": "/sys/fs/ext4/sdf/lifetime_write_kbytes",
-            "value": "34252809"
+            "value": "34475265"
           },
           {
             "path": "/sys/block/sda/device/state",
@@ -4125,9 +4828,9 @@
         ],
         "smart_obtained": false
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
-      "duration_ms": 4
+      "duration_ms": 0
     },
     {
       "category": "STORAGE_POSTURE",
@@ -4143,9 +4846,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "895 780 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1119/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1060/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1059/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1058/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
+            "value": "169 70 0:39 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1169/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1165/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1164/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1163/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/11",
             "value_truncated_in_evidence": true,
-            "bytes": 3573,
+            "bytes": 3722,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 292,
@@ -4185,7 +4888,7 @@
         },
         "root_mount": {
           "fstype": "overlay",
-          "major_minor": "0:129",
+          "major_minor": "0:39",
           "source": "overlay"
         },
         "backing_devices": [],
@@ -4201,9 +4904,9 @@
         ],
         "distinct_backing_disks": 0
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "low",
-      "duration_ms": 6
+      "duration_ms": 8
     },
     {
       "category": "STORAGE_POSTURE",
@@ -4229,9 +4932,9 @@
             "source": "/proc/self/mountinfo",
             "observation_type": "file_read",
             "status": "OK",
-            "value": "895 780 0:129 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1119/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1060/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1059/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1058/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/",
+            "value": "169 70 0:39 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1169/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1165/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1164/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1163/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/11",
             "value_truncated_in_evidence": true,
-            "bytes": 3573,
+            "bytes": 3722,
             "duration_ms": 0,
             "load_bearing": true,
             "mode": 292,
@@ -4359,14 +5062,14 @@
           }
         ]
       },
-      "collected_at": "2026-09-09T04:43:26Z",
+      "collected_at": "2026-09-09T06:11:19Z",
       "impact": "medium",
-      "duration_ms": 2
+      "duration_ms": 1
     }
   ],
   "scan": {
-    "started_at": "2026-09-09T04:43:26Z",
-    "duration_ms": 124,
+    "started_at": "2026-09-09T06:11:19Z",
+    "duration_ms": 63,
     "deadline_ms": 60000,
     "checks_run": 26,
     "budget_cut": false,

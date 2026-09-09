@@ -133,31 +133,39 @@ EXPECTED_A_DOCKER = {cid: set(vals) for cid, vals in EXPECTED_A.items()}
 for cid in _DOCKER_A_STRUCTURAL_UNKNOWNS:
     EXPECTED_A_DOCKER[cid] |= {"unknown"}
 
-# reports/REVIEW_FINDINGS_3.md (DO-NOT-SHIP: C1/H1/H2/H3, CLOSURE_TABLE.md rows 42-45,
-# fix batch 4, not yet committed as of this edit) found that three green Docker gates
-# missed a CRITICAL because Dockerfile.profileA had no `sudo` package (no /etc/sudoers at
-# all) and no populated ssl-cert-style group — the exact conditions C1/H2/H3 need to be
-# observable. Dockerfile.profileA now installs `sudo` and `ssl-cert`, adds a real member
-# (postgres) to the ssl-cert group, and ships a key-shaped 0640 root:ssl-cert file inside
-# /etc/ssl/private (0710 root:ssl-cert). These two rows are the coordinator-directed
-# expected outcome ONCE BATCH 4 LANDS, overriding EXPECTED_A_DOCKER's Docker-specific
-# derivation above (this is a Docker-image-only fixture — the real Lava host's ssl-cert
-# group membership is unverified per REVIEW_FINDINGS_3's own "what I could not verify"
-# section, so this does NOT change EXPECTED_A, the raw Lava-host target):
-#   - SYSTEM_SECRET_STORE_PROTECTION => pass once C1 (owner-as-reader) and H3 (denial
-#     opted out of load-bearing when it is itself the protection) are both fixed: nothing
-#     in /etc/sudoers, /etc/sudoers.d, or the rest of systemStores is then readable beyond
-#     its owner.
-#   - PRIVATE_KEY_MATERIAL_EXPOSURE => fail: batch 4's H2 fix stops treating a group-
-#     traversable ancestor (the 0710 dir) as protection when the group has a real non-owner
-#     member (postgres), so lab-dummy.key's own mode (0640 root:ssl-cert, ssl-cert has a
-#     member) is what decides it — reachable beyond its owner, hence fail. NOT YET
-#     VERIFIED against real batch-4 behaviour (the coordinator's directed outcome, pending
-#     the actual rebuild+rerun in the next pass); TEST_REPORT.md will record what was
-#     actually observed and reconcile any difference before this comment is trusted blindly
-#     a second time.
-EXPECTED_A_DOCKER["SYSTEM_SECRET_STORE_PROTECTION"] = {"pass"}
-EXPECTED_A_DOCKER["PRIVATE_KEY_MATERIAL_EXPOSURE"] = {"fail"}
+# reports/REVIEW_FINDINGS_3.md (DO-NOT-SHIP: C1/H1/H2/H3, CLOSURE_TABLE.md rows 42-45)
+# found that three green Docker gates missed a CRITICAL because Dockerfile.profileA had
+# no `sudo` package (no /etc/sudoers at all) and no populated ssl-cert-style group — the
+# exact conditions C1/H2/H3 need to be observable. Dockerfile.profileA now installs `sudo`
+# and `ssl-cert`, adds a real member (postgres) to the ssl-cert group, and ships a
+# key-shaped 0640 root:ssl-cert file inside /etc/ssl/private (0710 root:ssl-cert).
+#
+# Fix batch 4 (checkpoint 18) landed and was rebuilt+rerun against this exact image. Both
+# rows below were first drafted from a hypothesis (SYSTEM_SECRET_STORE_PROTECTION => pass,
+# PRIVATE_KEY_MATERIAL_EXPOSURE => fail) and then corrected against the REAL observed
+# output, which is what ships here — the hypothesis was wrong on both counts:
+#   - PRIVATE_KEY_MATERIAL_EXPOSURE => unknown/EACCES, observed detail: "the search could
+#     not cover everything it was pointed at: 1 directory/ies under /etc/ssl could not be
+#     read (/etc/ssl/private); exposed key material there can neither be confirmed nor
+#     excluded". Batch 4's row-44 fix (Traversers()) correctly determines the 0710 ancestor
+#     does NOT shield its contents (ssl-cert has a real member, postgres, with the x bit) —
+#     but the sensor account (ubuntu) is in neither the owner nor the ssl-cert group, so it
+#     cannot itself traverse into /etc/ssl/private at all and never actually sees
+#     lab-dummy.key's own mode. Asserting `fail` from that would be exactly the over-claim
+#     CLAUDE.md's evidence semantics forbid (claiming an exposure that was never observed);
+#     `unknown` is the honest answer, and it is what batch 4 actually produces.
+#   - SYSTEM_SECRET_STORE_PROTECTION => unknown/EACCES, observed detail: "the permissions
+#     of 1 system secret store(s) could not be established from this account (/etc/ssl/private
+#     listing (the ancestor /etc/ssl/private (mode 0710) does not shield what is behind it:
+#     the 1 effective member(s) of group ssl-cert other than the owner can traverse it
+#     (postgres))); reporting that boundary is the point". Same reasoning: the ancestor
+#     correctly fails to protect, and the sensor correctly reports that it cannot see what
+#     is behind it, rather than guessing either way.
+# Neither changes EXPECTED_A (the raw Lava-host target): this is a Docker-image-only
+# fixture built specifically to exercise C1/H2/H3, and the real host's ssl-cert group
+# membership is unverified (REVIEW_FINDINGS_3's own "what I could not verify" section).
+EXPECTED_A_DOCKER["SYSTEM_SECRET_STORE_PROTECTION"] = {"unknown"}
+EXPECTED_A_DOCKER["PRIVATE_KEY_MATERIAL_EXPOSURE"] = {"unknown"}
 # UNSIGNED_OR_OUT_OF_TREE_MODULES reads the container's REAL /proc/sys/kernel/tainted
 # (Docker Desktop's own backend kernel, not the Lava host's) — the sensor must report
 # whatever that real value honestly is, annotated as describing the container's
@@ -218,7 +226,12 @@ EXPECTED_C = {
     "LOGIN_AND_ESCALATION_SURFACE": {"unknown"},   # uid 4242 has no /etc/passwd entry at all
     "HOST_FIREWALL_STATE": {"unknown"},            # ufw removed, rule files chmod 0000
     "PRIVATE_KEY_MATERIAL_EXPOSURE": {"unknown", "pass"},
-    "CREDENTIAL_FILE_EXPOSURE": {"unknown"},       # no passwd entry ⇒ no home to resolve
+    # Widened to allow pass after batch 4 (checkpoint 18): observed detail on this exact
+    # image is "21 shielded by an ancestor an unprivileged account cannot traverse" — the
+    # same protectionFromDenial()/Traversers() semantic already applied to profile A's
+    # CREDENTIAL_FILE_EXPOSURE (root:root ancestors with no populated non-owner group are
+    # correctly judged protected, not merely denied), not a defect.
+    "CREDENTIAL_FILE_EXPOSURE": {"unknown", "pass"},
     "PROVISIONING_DATA_PROTECTION": {"unknown", "pass"},
     "SYSTEM_SECRET_STORE_PROTECTION": {"unknown", "pass"},
     "BMC_INBAND_INTERFACE_PRESENT": {"unknown", "pass"},  # /sys/class/dmi could not be masked under runc (read-only /sys)

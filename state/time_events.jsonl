@@ -32,3 +32,5 @@
 {"event":"PHASE","phase":"20b-correctness-closure","ts":"2026-09-09T02:56:48Z","note":"external review ADVANCE 6.7 as baseline; closure table drives fixes; no CRITICAL/HIGH into final host run"}
 {"ts":"2026-09-09T05:02:34Z","event":"review3_do_not_ship_fix_batch4_sent","detail":"REVIEW_FINDINGS_3: 1C/3H/5M/6L shared root cause Readers owner-in-own-group; batch 4 to author; lab extends profile A with sudo + ssl-cert group; closure rows 42-49"}
 {"ts":"2026-09-09T06:05:19Z","event":"fix_batch4_complete","detail":"author report: 244 WSL tests, validator PASS, fixtures expected; Docker rerun deferred to lab (row 49)"}
+{"ts":"2026-09-09T06:07:51Z","event":"checkpoint_18_pushed","detail":"a17501d fix batch 4 + review-3 artefacts; prefilter clean 06:05Z; lab gate rerun + review-4 launched"}
+{"ts":"2026-09-09T06:16:21Z","event":"lab_gate_rerun_green","detail":"checkpoint 18 binary; gate 3x; Docker A/B/C 0 violations with sudo+ssl-cert profile A"}
